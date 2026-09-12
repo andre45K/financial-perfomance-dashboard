@@ -113,7 +113,6 @@
     .item-light-sub-val { font-size: 14px; font-weight: 800; color: #0b63ce; margin-top: 1px; }
     .sub-teal { color: #008767; }
 
-    /* Wajib Beri Dimensi Tegas pada Box Chart */
     .chart-box-light { position: relative; height: 230px; width: 100%; min-height: 230px; }
 
     .total-box-light { border-left: 2px dashed #cbd5e1; padding-left: 15px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
@@ -144,7 +143,7 @@
 </head>
 <body>
 
-  <!-- HEADER & DASHBOARD UTAMA -->
+  <!-- HEADER -->
   <div class="header-container">
     <div class="title-area">
       <h1>FINANCIAL PERFORMANCE DASHBOARD</h1>
@@ -404,7 +403,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Register Plugin Sekali saja secara Global Aman
     if (typeof ChartDataLabels !== 'undefined') {
       Chart.register(ChartDataLabels);
     }
@@ -446,7 +444,7 @@
         const querySnapshot = await getDocs(collection(db, "financial_data", "2026", "months"));
         querySnapshot.forEach((doc) => { dataStore[doc.id] = doc.data(); });
       } catch (e) {
-        console.warn("Menggunakan data default karena koneksi firebase:", e);
+        console.warn("Menggunakan data default:", e);
       }
       renderDashboard(dataStore);
     }
@@ -518,8 +516,17 @@
       renderDarkCharts({ revActArr, bppActArr, gpActArr, gpmActArr, statusArr });
       renderDynamicTable({ revPlanArr, revActArr, bppPlanArr, bppActArr, gpPlanArr, gpActArr, gpmPlanArr, gpmActArr, statusArr, lastRealIndex, realText, progText });
 
-      // Memanggil fungsi Light Section (01 & 02)
-      renderLightSection({ revActArr, bppActArr, gpActArr, gpmActArr, totalRevAct, totalBppAct, totalGpAct, totalGpmAct });
+      // Memanggil fungsi Light Section 1 & 2 DENGAN MENGGUNAKAN DATA RENCANA
+      renderLightSection({ 
+        revPlanArr, 
+        bppPlanArr, 
+        gpPlanArr, 
+        gpmPlanArr, 
+        totalRevPlan, 
+        totalBppPlan, 
+        totalGpPlan, 
+        totalGpmPlan 
+      });
     }
 
     function updateBadge(id, actual, plan, isCost = false) {
@@ -610,36 +617,37 @@
     }
 
     function renderLightSection(d) {
-      const avgRev = d.totalRevAct / 12;
-      const avgBpp = d.totalBppAct / 12;
+      // PERHITUNGAN MENGGUNAKAN ANGKAN RENCANA
+      const avgRev = d.totalRevPlan / 12;
+      const avgBpp = d.totalBppPlan / 12;
 
-      document.getElementById('sec1-tot-rev').textContent = Math.round(d.totalRevAct).toLocaleString('id-ID');
+      document.getElementById('sec1-tot-rev').textContent = Math.round(d.totalRevPlan).toLocaleString('id-ID');
       document.getElementById('sec1-avg-rev').textContent = Math.round(avgRev).toLocaleString('id-ID');
-      document.getElementById('sec1-tot-bpp').textContent = Math.round(d.totalBppAct).toLocaleString('id-ID');
+      document.getElementById('sec1-tot-bpp').textContent = Math.round(d.totalBppPlan).toLocaleString('id-ID');
       document.getElementById('sec1-avg-bpp').textContent = Math.round(avgBpp).toLocaleString('id-ID');
 
-      document.getElementById('sec1-side-tot').textContent = Math.round(d.totalRevAct).toLocaleString('id-ID');
-      document.getElementById('side-val-rev').textContent = Math.round(d.totalRevAct).toLocaleString('id-ID');
-      document.getElementById('side-val-bpp').textContent = Math.round(d.totalBppAct).toLocaleString('id-ID');
+      document.getElementById('sec1-side-tot').textContent = Math.round(d.totalRevPlan).toLocaleString('id-ID');
+      document.getElementById('side-val-rev').textContent = Math.round(d.totalRevPlan).toLocaleString('id-ID');
+      document.getElementById('side-val-bpp').textContent = Math.round(d.totalBppPlan).toLocaleString('id-ID');
       
-      const bppHeight = d.totalRevAct > 0 ? (d.totalBppAct / d.totalRevAct * 100) : 55;
+      const bppHeight = d.totalRevPlan > 0 ? (d.totalBppPlan / d.totalRevPlan * 100) : 55;
       document.getElementById('side-bar-bpp-col').style.height = bppHeight + '%';
 
-      const avgGp = d.totalGpAct / 12;
-      const avgGpm = d.gpmActArr.reduce((a, b) => a + b, 0) / 12;
+      const avgGp = d.totalGpPlan / 12;
+      const avgGpm = d.gpmPlanArr.reduce((a, b) => a + b, 0) / 12;
 
-      document.getElementById('sec2-tot-gp').textContent = Math.round(d.totalGpAct).toLocaleString('id-ID');
+      document.getElementById('sec2-tot-gp').textContent = Math.round(d.totalGpPlan).toLocaleString('id-ID');
       document.getElementById('sec2-avg-gp').textContent = Math.round(avgGp).toLocaleString('id-ID');
-      document.getElementById('sec2-tot-gpm').textContent = d.totalGpmAct.toFixed(1).replace('.', ',') + '%';
+      document.getElementById('sec2-tot-gpm').textContent = d.totalGpmPlan.toFixed(1).replace('.', ',') + '%';
       document.getElementById('sec2-avg-gpm').textContent = avgGpm.toFixed(1).replace('.', ',') + '%';
 
-      document.getElementById('sec2-side-tot').textContent = Math.round(d.totalGpAct).toLocaleString('id-ID');
-      document.getElementById('side-val-gp').textContent = Math.round(d.totalGpAct).toLocaleString('id-ID');
-      document.getElementById('side-val-gpm').textContent = d.totalGpmAct.toFixed(1).replace('.', ',') + '%';
+      document.getElementById('sec2-side-tot').textContent = Math.round(d.totalGpPlan).toLocaleString('id-ID');
+      document.getElementById('side-val-gp').textContent = Math.round(d.totalGpPlan).toLocaleString('id-ID');
+      document.getElementById('side-val-gpm').textContent = d.totalGpmPlan.toFixed(1).replace('.', ',') + '%';
 
       const lightLabels = monthLabels.map(m => m.replace('-26', ''));
 
-      // 1. Chart Section 01
+      // 1. Chart Section 01 (Rencana)
       if (chartInstances['chartSec1']) chartInstances['chartSec1'].destroy();
       const ctx1 = document.getElementById('chartSec1').getContext('2d');
       chartInstances['chartSec1'] = new Chart(ctx1, {
@@ -648,8 +656,8 @@
           labels: lightLabels,
           datasets: [
             {
-              label: 'Pendapatan Usaha',
-              data: d.revActArr,
+              label: 'Pendapatan Usaha (Rencana)',
+              data: d.revPlanArr,
               backgroundColor: '#0b63ce',
               borderRadius: 3,
               barPercentage: 0.7,
@@ -660,8 +668,8 @@
               }
             },
             {
-              label: 'Beban Pokok Pendapatan',
-              data: d.bppActArr,
+              label: 'Beban Pokok Pendapatan (Rencana)',
+              data: d.bppPlanArr,
               backgroundColor: '#008767',
               borderRadius: 3,
               barPercentage: 0.7,
@@ -686,7 +694,7 @@
         }
       });
 
-      // 2. Chart Section 02
+      // 2. Chart Section 02 (Rencana)
       if (chartInstances['chartSec2']) chartInstances['chartSec2'].destroy();
       const ctx2 = document.getElementById('chartSec2').getContext('2d');
       chartInstances['chartSec2'] = new Chart(ctx2, {
@@ -696,7 +704,7 @@
             {
               type: 'line',
               label: 'Gross Profit Margin (%)',
-              data: d.gpmActArr,
+              data: d.gpmPlanArr,
               borderColor: '#e67e22',
               backgroundColor: '#e67e22',
               borderWidth: 2,
@@ -711,7 +719,7 @@
             {
               type: 'bar',
               label: 'Gross Profit (Rp)',
-              data: d.gpActArr,
+              data: d.gpPlanArr,
               backgroundColor: '#7c3aed',
               borderRadius: 3,
               barPercentage: 0.45,
