@@ -650,478 +650,480 @@
 
 
   <!-- SCRIPT UTAMA -->
-  <script type="module">
-    if (typeof ChartDataLabels !== 'undefined') {
-      Chart.register(ChartDataLabels);
-    }
-
-    const monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const fullMonthsList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-    const monthLabels = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26", "Oct-26", "Nov-26", "Des-26"];
-
-    // Default Fallback Data
-    const defaultData = {
-      revPlan: [554, 554, 449, 380, 502, 879, 927, 1042, 2196, 2196, 2145, 1678],
-      revAct:  [823, 787, 99, 782, 688, 1117, 1668, 1703, 1786, 1670, 1393, 1393],
-      bppPlan: [195, 195, 195, 165, 308, 495, 531, 613, 1218, 1218, 1198, 1013],
-      bppAct:  [647, 632, 92, 680, 404, 913, 1342, 1164, 1340, 1280, 1088, 1088],
-      status:  ["REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","PROGNOSA","PROGNOSA","PROGNOSA","PROGNOSA"]
-    };
-
-    function getAppData() {
-      const saved = localStorage.getItem('financial_performance_data');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          if (parsed && parsed.revAct && parsed.bppAct && parsed.status) {
-            return parsed;
-          }
-        } catch(e) {}
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (typeof ChartDataLabels !== 'undefined') {
+        Chart.register(ChartDataLabels);
       }
-      return defaultData;
-    }
 
-    const appData = getAppData();
-    const revActVal = appData.revAct;
-    const bppActVal = appData.bppAct;
-    const revPlanArr = appData.revPlan;
-    const bppPlanArr = appData.bppPlan;
-    const statusArr = appData.status;
+      const monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const fullMonthsList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+      const monthLabels = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26", "Oct-26", "Nov-26", "Des-26"];
 
-    let realCount = statusArr.filter(s => s === 'REALISASI').length;
-    if (realCount < 1) realCount = 8;
+      // Default Fallback Data
+      const defaultData = {
+        revPlan: [554, 554, 449, 380, 502, 879, 927, 1042, 2196, 2196, 2145, 1678],
+        revAct:  [823, 787, 99, 782, 688, 1117, 1668, 1703, 1786, 1670, 1393, 1393],
+        bppPlan: [195, 195, 195, 165, 308, 495, 531, 613, 1218, 1218, 1198, 1013],
+        bppAct:  [647, 632, 92, 680, 404, 913, 1342, 1164, 1340, 1280, 1088, 1088],
+        status:  ["REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","PROGNOSA","PROGNOSA","PROGNOSA","PROGNOSA"]
+      };
 
-    const lastRealShort = monthsList[realCount - 1];
-    const lastRealFull = fullMonthsList[realCount - 1];
-    const nextMonthShort = monthsList[realCount] || "Dec";
+      function getAppData() {
+        const saved = localStorage.getItem('financial_performance_data');
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            if (parsed && parsed.revAct && parsed.bppAct && parsed.status) {
+              return parsed;
+            }
+          } catch(e) {}
+        }
+        return defaultData;
+      }
 
-    document.getElementById('badge-realisasi-text').textContent = `Jan - ${lastRealShort} 2026 (Realisasi)`;
-    document.getElementById('badge-prognosa-text').textContent = `${nextMonthShort} - Dec 2026 (Prognosa)`;
-    document.getElementById('legend-real-text').textContent = `Data Jan - ${lastRealShort} 2026 merupakan Realisasi`;
-    document.getElementById('legend-prog-text').textContent = `Data ${nextMonthShort} - Dec 2026 merupakan Prognosa`;
+      const appData = getAppData();
+      const revActVal = appData.revAct;
+      const bppActVal = appData.bppAct;
+      const revPlanArr = appData.revPlan;
+      const bppPlanArr = appData.bppPlan;
+      const statusArr = appData.status;
 
-    document.getElementById('th-realisasi-hdr').setAttribute('colspan', realCount + 1);
-    document.getElementById('th-realisasi-hdr').textContent = `JAN - ${lastRealShort.toUpperCase()} 2026 (REALISASI)`;
-    document.getElementById('th-prognosa-hdr').setAttribute('colspan', 13 - realCount);
-    document.getElementById('th-prognosa-hdr').textContent = `${nextMonthShort.toUpperCase()} - DES 2026 (PROGNOSA)`;
+      let realCount = statusArr.filter(s => s === 'REALISASI').length;
+      if (realCount < 1) realCount = 8;
 
-    let subheadersHtml = '';
-    for(let i=0; i<12; i++) {
-      if(i === realCount) {
+      const lastRealShort = monthsList[realCount - 1];
+      const lastRealFull = fullMonthsList[realCount - 1];
+      const nextMonthShort = monthsList[realCount] || "Dec";
+
+      document.getElementById('badge-realisasi-text').textContent = `Jan - ${lastRealShort} 2026 (Realisasi)`;
+      document.getElementById('badge-prognosa-text').textContent = `${nextMonthShort} - Dec 2026 (Prognosa)`;
+      document.getElementById('legend-real-text').textContent = `Data Jan - ${lastRealShort} 2026 merupakan Realisasi`;
+      document.getElementById('legend-prog-text').textContent = `Data ${nextMonthShort} - Dec 2026 merupakan Prognosa`;
+
+      document.getElementById('th-realisasi-hdr').setAttribute('colspan', realCount + 1);
+      document.getElementById('th-realisasi-hdr').textContent = `JAN - ${lastRealShort.toUpperCase()} 2026 (REALISASI)`;
+      document.getElementById('th-prognosa-hdr').setAttribute('colspan', 13 - realCount);
+      document.getElementById('th-prognosa-hdr').textContent = `${nextMonthShort.toUpperCase()} - DES 2026 (PROGNOSA)`;
+
+      let subheadersHtml = '';
+      for(let i=0; i<12; i++) {
+        if(i === realCount) {
+          subheadersHtml += `<th class="th-realisasi">TOTAL</th>`;
+        }
+        subheadersHtml += `<th>${monthLabels[i]}</th>`;
+      }
+      if(realCount === 12) {
         subheadersHtml += `<th class="th-realisasi">TOTAL</th>`;
       }
-      subheadersHtml += `<th>${monthLabels[i]}</th>`;
-    }
-    if(realCount === 12) {
-      subheadersHtml += `<th class="th-realisasi">TOTAL</th>`;
-    }
-    subheadersHtml += `<th class="th-prognosa">TOTAL</th><th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>`;
-    document.getElementById('main-table-subheaders').innerHTML = subheadersHtml;
+      subheadersHtml += `<th class="th-prognosa">TOTAL</th><th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>`;
+      document.getElementById('main-table-subheaders').innerHTML = subheadersHtml;
 
-    const gpActVal = revActVal.map((r, i) => r - bppActVal[i]);
-    const gpmActVal = revActVal.map((r, i) => r > 0 ? (gpActVal[i] / r * 100) : 0);
-    const gpPlanArr = revPlanArr.map((r, i) => r - bppPlanArr[i]);
-    const gpmPlanArr = revPlanArr.map((r, i) => r > 0 ? (gpPlanArr[i] / r * 100) : 0);
+      const gpActVal = revActVal.map((r, i) => r - bppActVal[i]);
+      const gpmActVal = revActVal.map((r, i) => r > 0 ? (gpActVal[i] / r * 100) : 0);
+      const gpPlanArr = revPlanArr.map((r, i) => r - bppPlanArr[i]);
+      const gpmPlanArr = revPlanArr.map((r, i) => r > 0 ? (gpPlanArr[i] / r * 100) : 0);
 
-    const sum = arr => arr.reduce((a, b) => a + b, 0);
-    const totRevReal = sum(revActVal.slice(0, realCount));
-    const totRevProg = sum(revActVal.slice(realCount, 12));
-    const totRevFull = sum(revActVal);
-    const planRevFull = sum(revPlanArr);
+      const sum = arr => arr.reduce((a, b) => a + b, 0);
+      const totRevReal = sum(revActVal.slice(0, realCount));
+      const totRevProg = sum(revActVal.slice(realCount, 12));
+      const totRevFull = sum(revActVal);
+      const planRevFull = sum(revPlanArr);
 
-    const totBppReal = sum(bppActVal.slice(0, realCount));
-    const totBppProg = sum(bppActVal.slice(realCount, 12));
-    const totBppFull = sum(bppActVal);
-    const planBppFull = sum(bppPlanArr);
+      const totBppReal = sum(bppActVal.slice(0, realCount));
+      const totBppProg = sum(bppActVal.slice(realCount, 12));
+      const totBppFull = sum(bppActVal);
+      const planBppFull = sum(bppPlanArr);
 
-    const totGpReal = sum(gpActVal.slice(0, realCount));
-    const totGpProg = sum(gpActVal.slice(realCount, 12));
-    const totGpFull = sum(gpActVal);
-    const planGpFull = sum(gpPlanArr);
+      const totGpReal = sum(gpActVal.slice(0, realCount));
+      const totGpProg = sum(gpActVal.slice(realCount, 12));
+      const totGpFull = sum(gpActVal);
+      const planGpFull = sum(gpPlanArr);
 
-    const avgGpmReal = totRevReal > 0 ? (totGpReal / totRevReal * 100) : 0;
-    const avgGpmProg = totRevProg > 0 ? (totGpProg / totRevProg * 100) : 0;
-    const avgGpmFull = totRevFull > 0 ? (totGpFull / totRevFull * 100) : 0;
-    const planGpmFull = planRevFull > 0 ? (planGpFull / planRevFull * 100) : 0;
+      const avgGpmReal = totRevReal > 0 ? (totGpReal / totRevReal * 100) : 0;
+      const avgGpmProg = totRevProg > 0 ? (totGpProg / totRevProg * 100) : 0;
+      const avgGpmFull = totRevFull > 0 ? (totGpFull / totRevFull * 100) : 0;
+      const planGpmFull = planRevFull > 0 ? (planGpFull / planRevFull * 100) : 0;
 
-    function buildTableHTML() {
-      let tbodyHtml = '';
+      function buildTableHTML() {
+        let tbodyHtml = '';
 
-      let rowRev = `<td class="row-label">PENDAPATAN USAHA (Juta Rp)</td>`;
-      for(let i=0; i<12; i++) {
-        if(i === realCount) rowRev += `<td class="txt-green">${Math.round(totRevReal).toLocaleString('id-ID')}</td>`;
-        rowRev += `<td>${Math.round(revActVal[i]).toLocaleString('id-ID')}</td>`;
-      }
-      if(realCount === 12) rowRev += `<td class="txt-green">${Math.round(totRevReal).toLocaleString('id-ID')}</td>`;
-      const pctRev = planRevFull > 0 ? (totRevFull / planRevFull * 100) : 0;
-      rowRev += `<td class="txt-green">${Math.round(totRevProg).toLocaleString('id-ID')}</td>
-                 <td>${Math.round(planRevFull).toLocaleString('id-ID')}</td>
-                 <td class="metric-actual">${Math.round(totRevFull).toLocaleString('id-ID')}</td>
-                 <td class="${pctRev >= 100 ? 'txt-green' : 'txt-red'}">${pctRev.toFixed(2).replace('.', ',')}%</td>`;
-      tbodyHtml += `<tr>${rowRev}</tr>`;
-
-      let rowBpp = `<td class="row-label">BEBAN POKOK PENDAPATAN (Juta Rp)</td>`;
-      for(let i=0; i<12; i++) {
-        if(i === realCount) rowBpp += `<td class="txt-green">${Math.round(totBppReal).toLocaleString('id-ID')}</td>`;
-        rowBpp += `<td>${Math.round(bppActVal[i]).toLocaleString('id-ID')}</td>`;
-      }
-      if(realCount === 12) rowBpp += `<td class="txt-green">${Math.round(totBppReal).toLocaleString('id-ID')}</td>`;
-      const pctBpp = planBppFull > 0 ? (totBppFull / planBppFull * 100) : 0;
-      rowBpp += `<td class="txt-green">${Math.round(totBppProg).toLocaleString('id-ID')}</td>
-                 <td>${Math.round(planBppFull).toLocaleString('id-ID')}</td>
-                 <td class="metric-actual">${Math.round(totBppFull).toLocaleString('id-ID')}</td>
-                 <td class="${pctBpp <= 100 ? 'txt-green' : 'txt-red'}">${pctBpp.toFixed(2).replace('.', ',')}%</td>`;
-      tbodyHtml += `<tr>${rowBpp}</tr>`;
-
-      let rowGp = `<td class="row-label">GROSS PROFIT (Juta Rp)</td>`;
-      for(let i=0; i<12; i++) {
-        if(i === realCount) rowGp += `<td class="txt-green">${Math.round(totGpReal).toLocaleString('id-ID')}</td>`;
-        rowGp += `<td>${Math.round(gpActVal[i]).toLocaleString('id-ID')}</td>`;
-      }
-      if(realCount === 12) rowGp += `<td class="txt-green">${Math.round(totGpReal).toLocaleString('id-ID')}</td>`;
-      const pctGp = planGpFull > 0 ? (totGpFull / planGpFull * 100) : 0;
-      rowGp += `<td class="txt-green">${Math.round(totGpProg).toLocaleString('id-ID')}</td>
-                <td>${Math.round(planGpFull).toLocaleString('id-ID')}</td>
-                <td class="metric-actual">${Math.round(totGpFull).toLocaleString('id-ID')}</td>
-                <td class="${pctGp >= 100 ? 'txt-green' : 'txt-red'}">${pctGp.toFixed(2).replace('.', ',')}%</td>`;
-      tbodyHtml += `<tr>${rowGp}</tr>`;
-
-      let rowGpm = `<td class="row-label">GROSS PROFIT MARGIN (%)</td>`;
-      for(let i=0; i<12; i++) {
-        if(i === realCount) rowGpm += `<td class="txt-green">${avgGpmReal.toFixed(2).replace('.', ',')}%</td>`;
-        rowGpm += `<td>${gpmActVal[i].toFixed(2).replace('.', ',')}%</td>`;
-      }
-      if(realCount === 12) rowGpm += `<td class="txt-green">${avgGpmReal.toFixed(2).replace('.', ',')}%</td>`;
-      const pctGpmRatio = planGpmFull > 0 ? (avgGpmFull / planGpmFull * 100) : 0;
-      rowGpm += `<td class="txt-green">${avgGpmProg.toFixed(2).replace('.', ',')}%</td>
-                 <td>${planGpmFull.toFixed(2).replace('.', ',')}%</td>
-                 <td class="metric-actual">${avgGpmFull.toFixed(2).replace('.', ',')}%</td>
-                 <td class="${pctGpmRatio >= 100 ? 'txt-green' : 'txt-red'}">${pctGpmRatio.toFixed(2).replace('.', ',')}%</td>`;
-      tbodyHtml += `<tr>${rowGpm}</tr>`;
-
-      document.querySelector('#main-table tbody').innerHTML = tbodyHtml;
-    }
-
-    buildTableHTML();
-
-    document.getElementById('kpi-rev-plan').textContent = Math.round(planRevFull).toLocaleString('id-ID');
-    document.getElementById('kpi-rev-act').textContent = Math.round(totRevFull).toLocaleString('id-ID');
-    const revRatio = planRevFull > 0 ? (totRevFull / planRevFull * 100) : 0;
-    document.getElementById('kpi-rev-badge').className = `kpi-badge ${revRatio >= 100 ? 'badge-up' : 'badge-down'}`;
-    document.getElementById('kpi-rev-badge').innerHTML = `${revRatio >= 100 ? '▲' : '▼'} ${revRatio.toFixed(2).replace('.', ',')}%`;
-
-    document.getElementById('kpi-bpp-plan').textContent = Math.round(planBppFull).toLocaleString('id-ID');
-    document.getElementById('kpi-bpp-act').textContent = Math.round(totBppFull).toLocaleString('id-ID');
-    const bppRatio = planBppFull > 0 ? (totBppFull / planBppFull * 100) : 0;
-    document.getElementById('kpi-bpp-badge').className = `kpi-badge ${bppRatio <= 100 ? 'badge-up' : 'badge-down'}`;
-    document.getElementById('kpi-bpp-badge').innerHTML = `${bppRatio >= 100 ? '▲' : '▼'} ${bppRatio.toFixed(2).replace('.', ',')}%`;
-
-    document.getElementById('kpi-gp-plan').textContent = Math.round(planGpFull).toLocaleString('id-ID');
-    document.getElementById('kpi-gp-act').textContent = Math.round(totGpFull).toLocaleString('id-ID');
-    const gpRatio = planGpFull > 0 ? (totGpFull / planGpFull * 100) : 0;
-    document.getElementById('kpi-gp-badge').className = `kpi-badge ${gpRatio >= 100 ? 'badge-up' : 'badge-down'}`;
-    document.getElementById('kpi-gp-badge').innerHTML = `${gpRatio >= 100 ? '▲' : '▼'} ${gpRatio.toFixed(2).replace('.', ',')}%`;
-
-    document.getElementById('kpi-gpm-plan').textContent = planGpmFull.toFixed(2).replace('.', ',') + '%';
-    document.getElementById('kpi-gpm-act').textContent = avgGpmFull.toFixed(2).replace('.', ',') + '%';
-    document.getElementById('kpi-gpm-badge').className = `kpi-badge ${pctGpmRatio >= 100 ? 'badge-up' : 'badge-down'}`;
-    document.getElementById('kpi-gpm-badge').innerHTML = `${pctGpmRatio >= 100 ? '▲' : '▼'} ${pctGpmRatio.toFixed(2).replace('.', ',')}%`;
-
-    function safeDestroy(canvasId) {
-      const existingChart = Chart.getChart(canvasId);
-      if (existingChart) {
-        existingChart.destroy();
-      }
-    }
-
-    function renderDarkCharts() {
-      const realBg = statusArr.map(s => s === 'REALISASI' ? '#1d4ed8' : '#d97706');
-      const realBppBg = statusArr.map(s => s === 'REALISASI' ? '#ea580c' : '#d97706');
-      const realGpBg = statusArr.map(s => s === 'REALISASI' ? '#16a34a' : '#d97706');
-      const realGpmBg = statusArr.map(s => s === 'REALISASI' ? '#9333ea' : '#d97706');
-
-      createComboChart('chartRevenue', revActVal, realBg, '#ffffff', false);
-      createComboChart('chartBPP', bppActVal, realBppBg, '#ffffff', false);
-      createComboChart('chartGP', gpActVal, realGpBg, '#ffffff', false);
-      createComboChart('chartGPM', gpmActVal, realGpmBg, '#ffffff', true);
-    }
-
-    function createComboChart(id, data, barColors, lineColor, isPercentage = false) {
-      safeDestroy(id);
-      const el = document.getElementById(id);
-      if (!el) return;
-      const ctx = el.getContext('2d');
-      new Chart(ctx, {
-        data: {
-          labels: monthLabels.map(m => m.replace('-26', '')),
-          datasets: [
-            {
-              type: 'line', data, borderColor: lineColor, borderWidth: 1.5,
-              pointBackgroundColor: '#ffffff', pointBorderColor: lineColor, pointRadius: 3.5, tension: 0.1,
-              datalabels: { align: 'top', anchor: 'end', offset: 2, color: '#ffffff', font: { size: 8, weight: 'bold' }, formatter: (val) => isPercentage ? val.toFixed(2).replace('.', ',') + '%' : Math.round(val).toLocaleString('id-ID') }
-            },
-            { type: 'bar', data, backgroundColor: barColors, borderRadius: 2, barPercentage: 0.6, datalabels: { display: false } }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } },
-          plugins: { legend: { display: false }, tooltip: { enabled: true } },
-          scales: {
-            x: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { display: false } },
-            y: { ticks: { color: '#94a3b8', font: { size: 8 }, callback: (val) => isPercentage ? val + '%' : val }, grid: { color: '#1e2d42' } }
-          }
+        let rowRev = `<td class="row-label">PENDAPATAN USAHA (Juta Rp)</td>`;
+        for(let i=0; i<12; i++) {
+          if(i === realCount) rowRev += `<td class="txt-green">${Math.round(totRevReal).toLocaleString('id-ID')}</td>`;
+          rowRev += `<td>${Math.round(revActVal[i]).toLocaleString('id-ID')}</td>`;
         }
-      });
-    }
+        if(realCount === 12) rowRev += `<td class="txt-green">${Math.round(totRevReal).toLocaleString('id-ID')}</td>`;
+        const pctRev = planRevFull > 0 ? (totRevFull / planRevFull * 100) : 0;
+        rowRev += `<td class="txt-green">${Math.round(totRevProg).toLocaleString('id-ID')}</td>
+                   <td>${Math.round(planRevFull).toLocaleString('id-ID')}</td>
+                   <td class="metric-actual">${Math.round(totRevFull).toLocaleString('id-ID')}</td>
+                   <td class="${pctRev >= 100 ? 'txt-green' : 'txt-red'}">${pctRev.toFixed(2).replace('.', ',')}%</td>`;
+        tbodyHtml += `<tr>${rowRev}</tr>`;
 
-    function renderLightSectionDirect() {
-      const lightLabels = monthsList;
+        let rowBpp = `<td class="row-label">BEBAN POKOK PENDAPATAN (Juta Rp)</td>`;
+        for(let i=0; i<12; i++) {
+          if(i === realCount) rowBpp += `<td class="txt-green">${Math.round(totBppReal).toLocaleString('id-ID')}</td>`;
+          rowBpp += `<td>${Math.round(bppActVal[i]).toLocaleString('id-ID')}</td>`;
+        }
+        if(realCount === 12) rowBpp += `<td class="txt-green">${Math.round(totBppReal).toLocaleString('id-ID')}</td>`;
+        const pctBpp = planBppFull > 0 ? (totBppFull / planBppFull * 100) : 0;
+        rowBpp += `<td class="txt-green">${Math.round(totBppProg).toLocaleString('id-ID')}</td>
+                   <td>${Math.round(planBppFull).toLocaleString('id-ID')}</td>
+                   <td class="metric-actual">${Math.round(totBppFull).toLocaleString('id-ID')}</td>
+                   <td class="${pctBpp <= 100 ? 'txt-green' : 'txt-red'}">${pctBpp.toFixed(2).replace('.', ',')}%</td>`;
+        tbodyHtml += `<tr>${rowBpp}</tr>`;
 
-      safeDestroy('chartSec1');
-      const ctx1 = document.getElementById('chartSec1').getContext('2d');
-      new Chart(ctx1, {
-        type: 'bar',
-        data: {
-          labels: lightLabels,
-          datasets: [
-            {
-              label: 'Pendapatan Usaha (Rencana)',
-              data: revPlanArr,
-              backgroundColor: '#0b63ce',
-              borderRadius: 4,
-              barPercentage: 0.65,
-              categoryPercentage: 0.6,
-              datalabels: {
-                align: 'top', anchor: 'end', color: '#0b63ce', font: { size: 8.5, weight: 'bold' }, offset: 2,
-                formatter: v => Math.round(v).toLocaleString('id-ID')
-              }
-            },
-            {
-              label: 'Beban Pokok Pendapatan (Rencana)',
-              data: bppPlanArr,
-              backgroundColor: '#008767',
-              borderRadius: 4,
-              barPercentage: 0.65,
-              categoryPercentage: 0.6,
-              datalabels: {
-                align: 'top', anchor: 'end', color: '#008767', font: { size: 8.5, weight: 'bold' }, offset: 2,
-                formatter: v => Math.round(v).toLocaleString('id-ID')
-              }
-            }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          layout: { padding: { top: 32 } },
-          plugins: {
-            legend: { display: true, position: 'top', labels: { color: '#334155', font: { size: 10, weight: 'bold' }, usePointStyle: true, boxWidth: 8 } }
+        let rowGp = `<td class="row-label">GROSS PROFIT (Juta Rp)</td>`;
+        for(let i=0; i<12; i++) {
+          if(i === realCount) rowGp += `<td class="txt-green">${Math.round(totGpReal).toLocaleString('id-ID')}</td>`;
+          rowGp += `<td>${Math.round(gpActVal[i]).toLocaleString('id-ID')}</td>`;
+        }
+        if(realCount === 12) rowGp += `<td class="txt-green">${Math.round(totGpReal).toLocaleString('id-ID')}</td>`;
+        const pctGp = planGpFull > 0 ? (totGpFull / planGpFull * 100) : 0;
+        rowGp += `<td class="txt-green">${Math.round(totGpProg).toLocaleString('id-ID')}</td>
+                  <td>${Math.round(planGpFull).toLocaleString('id-ID')}</td>
+                  <td class="metric-actual">${Math.round(totGpFull).toLocaleString('id-ID')}</td>
+                  <td class="${pctGp >= 100 ? 'txt-green' : 'txt-red'}">${pctGp.toFixed(2).replace('.', ',')}%</td>`;
+        tbodyHtml += `<tr>${rowGp}</tr>`;
+
+        let rowGpm = `<td class="row-label">GROSS PROFIT MARGIN (%)</td>`;
+        for(let i=0; i<12; i++) {
+          if(i === realCount) rowGpm += `<td class="txt-green">${avgGpmReal.toFixed(2).replace('.', ',')}%</td>`;
+          rowGpm += `<td>${gpmActVal[i].toFixed(2).replace('.', ',')}%</td>`;
+        }
+        if(realCount === 12) rowGpm += `<td class="txt-green">${avgGpmReal.toFixed(2).replace('.', ',')}%</td>`;
+        const pctGpmRatio = planGpmFull > 0 ? (avgGpmFull / planGpmFull * 100) : 0;
+        rowGpm += `<td class="txt-green">${avgGpmProg.toFixed(2).replace('.', ',')}%</td>
+                   <td>${planGpmFull.toFixed(2).replace('.', ',')}%</td>
+                   <td class="metric-actual">${avgGpmFull.toFixed(2).replace('.', ',')}%</td>
+                   <td class="${pctGpmRatio >= 100 ? 'txt-green' : 'txt-red'}">${pctGpmRatio.toFixed(2).replace('.', ',')}%</td>`;
+        tbodyHtml += `<tr>${rowGpm}</tr>`;
+
+        document.querySelector('#main-table tbody').innerHTML = tbodyHtml;
+      }
+
+      buildTableHTML();
+
+      document.getElementById('kpi-rev-plan').textContent = Math.round(planRevFull).toLocaleString('id-ID');
+      document.getElementById('kpi-rev-act').textContent = Math.round(totRevFull).toLocaleString('id-ID');
+      const revRatio = planRevFull > 0 ? (totRevFull / planRevFull * 100) : 0;
+      document.getElementById('kpi-rev-badge').className = `kpi-badge ${revRatio >= 100 ? 'badge-up' : 'badge-down'}`;
+      document.getElementById('kpi-rev-badge').innerHTML = `${revRatio >= 100 ? '▲' : '▼'} ${revRatio.toFixed(2).replace('.', ',')}%`;
+
+      document.getElementById('kpi-bpp-plan').textContent = Math.round(planBppFull).toLocaleString('id-ID');
+      document.getElementById('kpi-bpp-act').textContent = Math.round(totBppFull).toLocaleString('id-ID');
+      const bppRatio = planBppFull > 0 ? (totBppFull / planBppFull * 100) : 0;
+      document.getElementById('kpi-bpp-badge').className = `kpi-badge ${bppRatio <= 100 ? 'badge-up' : 'badge-down'}`;
+      document.getElementById('kpi-bpp-badge').innerHTML = `${bppRatio >= 100 ? '▲' : '▼'} ${bppRatio.toFixed(2).replace('.', ',')}%`;
+
+      document.getElementById('kpi-gp-plan').textContent = Math.round(planGpFull).toLocaleString('id-ID');
+      document.getElementById('kpi-gp-act').textContent = Math.round(totGpFull).toLocaleString('id-ID');
+      const gpRatio = planGpFull > 0 ? (totGpFull / planGpFull * 100) : 0;
+      document.getElementById('kpi-gp-badge').className = `kpi-badge ${gpRatio >= 100 ? 'badge-up' : 'badge-down'}`;
+      document.getElementById('kpi-gp-badge').innerHTML = `${gpRatio >= 100 ? '▲' : '▼'} ${gpRatio.toFixed(2).replace('.', ',')}%`;
+
+      document.getElementById('kpi-gpm-plan').textContent = planGpmFull.toFixed(2).replace('.', ',') + '%';
+      document.getElementById('kpi-gpm-act').textContent = avgGpmFull.toFixed(2).replace('.', ',') + '%';
+      document.getElementById('kpi-gpm-badge').className = `kpi-badge ${pctGpmRatio >= 100 ? 'badge-up' : 'badge-down'}`;
+      document.getElementById('kpi-gpm-badge').innerHTML = `${pctGpmRatio >= 100 ? '▲' : '▼'} ${pctGpmRatio.toFixed(2).replace('.', ',')}%`;
+
+      function safeDestroy(canvasId) {
+        const existingChart = Chart.getChart(canvasId);
+        if (existingChart) {
+          existingChart.destroy();
+        }
+      }
+
+      function renderDarkCharts() {
+        const realBg = statusArr.map(s => s === 'REALISASI' ? '#1d4ed8' : '#d97706');
+        const realBppBg = statusArr.map(s => s === 'REALISASI' ? '#ea580c' : '#d97706');
+        const realGpBg = statusArr.map(s => s === 'REALISASI' ? '#16a34a' : '#d97706');
+        const realGpmBg = statusArr.map(s => s === 'REALISASI' ? '#9333ea' : '#d97706');
+
+        createComboChart('chartRevenue', revActVal, realBg, '#ffffff', false);
+        createComboChart('chartBPP', bppActVal, realBppBg, '#ffffff', false);
+        createComboChart('chartGP', gpActVal, realGpBg, '#ffffff', false);
+        createComboChart('chartGPM', gpmActVal, realGpmBg, '#ffffff', true);
+      }
+
+      function createComboChart(id, data, barColors, lineColor, isPercentage = false) {
+        safeDestroy(id);
+        const el = document.getElementById(id);
+        if (!el) return;
+        const ctx = el.getContext('2d');
+        new Chart(ctx, {
+          data: {
+            labels: monthLabels.map(m => m.replace('-26', '')),
+            datasets: [
+              {
+                type: 'line', data, borderColor: lineColor, borderWidth: 1.5,
+                pointBackgroundColor: '#ffffff', pointBorderColor: lineColor, pointRadius: 3.5, tension: 0.1,
+                datalabels: { align: 'top', anchor: 'end', offset: 2, color: '#ffffff', font: { size: 8, weight: 'bold' }, formatter: (val) => isPercentage ? val.toFixed(2).replace('.', ',') + '%' : Math.round(val).toLocaleString('id-ID') }
+              },
+              { type: 'bar', data, backgroundColor: barColors, borderRadius: 2, barPercentage: 0.6, datalabels: { display: false } }
+            ]
           },
-          scales: {
-            x: { ticks: { color: '#475569', font: { size: 9, weight: '600' } }, grid: { display: false } },
-            y: { ticks: { color: '#475569', font: { size: 9 } }, grid: { color: '#f1f5f9' }, min: 0 }
+          options: {
+            responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } },
+            plugins: { legend: { display: false }, tooltip: { enabled: true } },
+            scales: {
+              x: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { display: false } },
+              y: { ticks: { color: '#94a3b8', font: { size: 8 }, callback: (val) => isPercentage ? val + '%' : val }, grid: { color: '#1e2d42' } }
+            }
           }
-        }
-      });
+        });
+      }
 
-      safeDestroy('chartSec2');
-      const ctx2 = document.getElementById('chartSec2').getContext('2d');
-      new Chart(ctx2, {
-        data: {
-          labels: lightLabels,
-          datasets: [
-            {
-              type: 'line',
-              label: 'Gross Profit Margin (%)',
-              data: gpmPlanArr,
-              borderColor: '#e67e22',
-              backgroundColor: '#e67e22',
-              borderWidth: 2.5,
-              pointRadius: 5,
-              pointBackgroundColor: '#e67e22',
-              yAxisID: 'y1',
-              datalabels: {
-                align: 'top',
-                anchor: 'end',
-                color: '#e67e22',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      function renderLightSectionDirect() {
+        const lightLabels = monthsList;
+
+        safeDestroy('chartSec1');
+        const ctx1 = document.getElementById('chartSec1').getContext('2d');
+        new Chart(ctx1, {
+          type: 'bar',
+          data: {
+            labels: lightLabels,
+            datasets: [
+              {
+                label: 'Pendapatan Usaha (Rencana)',
+                data: revPlanArr,
+                backgroundColor: '#0b63ce',
+                borderRadius: 4,
+                barPercentage: 0.65,
+                categoryPercentage: 0.6,
+                datalabels: {
+                  align: 'top', anchor: 'end', color: '#0b63ce', font: { size: 8.5, weight: 'bold' }, offset: 2,
+                  formatter: v => Math.round(v).toLocaleString('id-ID')
+                }
+              },
+              {
+                label: 'Beban Pokok Pendapatan (Rencana)',
+                data: bppPlanArr,
+                backgroundColor: '#008767',
+                borderRadius: 4,
+                barPercentage: 0.65,
+                categoryPercentage: 0.6,
+                datalabels: {
+                  align: 'top', anchor: 'end', color: '#008767', font: { size: 8.5, weight: 'bold' }, offset: 2,
+                  formatter: v => Math.round(v).toLocaleString('id-ID')
+                }
+              }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            layout: { padding: { top: 32 } },
+            plugins: {
+              legend: { display: true, position: 'top', labels: { color: '#334155', font: { size: 10, weight: 'bold' }, usePointStyle: true, boxWidth: 8 } }
+            },
+            scales: {
+              x: { ticks: { color: '#475569', font: { size: 9, weight: '600' } }, grid: { display: false } },
+              y: { ticks: { color: '#475569', font: { size: 9 } }, grid: { color: '#f1f5f9' }, min: 0 }
+            }
+          }
+        });
+
+        safeDestroy('chartSec2');
+        const ctx2 = document.getElementById('chartSec2').getContext('2d');
+        new Chart(ctx2, {
+          data: {
+            labels: lightLabels,
+            datasets: [
+              {
+                type: 'line',
+                label: 'Gross Profit Margin (%)',
+                data: gpmPlanArr,
                 borderColor: '#e67e22',
-                borderWidth: 1.5,
-                borderRadius: 12,
-                padding: { top: 3, bottom: 3, left: 6, right: 6 },
-                font: { size: 9, weight: 'bold' },
-                offset: 6,
-                formatter: v => v.toFixed(0) + '%'
+                backgroundColor: '#e67e22',
+                borderWidth: 2.5,
+                pointRadius: 5,
+                pointBackgroundColor: '#e67e22',
+                yAxisID: 'y1',
+                datalabels: {
+                  align: 'top',
+                  anchor: 'end',
+                  color: '#e67e22',
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  borderColor: '#e67e22',
+                  borderWidth: 1.5,
+                  borderRadius: 12,
+                  padding: { top: 3, bottom: 3, left: 6, right: 6 },
+                  font: { size: 9, weight: 'bold' },
+                  offset: 6,
+                  formatter: v => v.toFixed(0) + '%'
+                }
+              },
+              {
+                type: 'bar',
+                label: 'Gross Profit (Rp)',
+                data: gpPlanArr,
+                backgroundColor: '#7c3aed',
+                borderRadius: 4,
+                barPercentage: 0.45,
+                yAxisID: 'y',
+                datalabels: {
+                  align: 'start',
+                  anchor: 'end',
+                  color: '#ffffff',
+                  font: { size: 8.5, weight: 'bold' },
+                  offset: 4,
+                  formatter: v => Math.round(v).toLocaleString('id-ID')
+                }
               }
-            },
-            {
-              type: 'bar',
-              label: 'Gross Profit (Rp)',
-              data: gpPlanArr,
-              backgroundColor: '#7c3aed',
-              borderRadius: 4,
-              barPercentage: 0.45,
-              yAxisID: 'y',
-              datalabels: {
-                align: 'start',
-                anchor: 'end',
-                color: '#ffffff',
-                font: { size: 8.5, weight: 'bold' },
-                offset: 4,
-                formatter: v => Math.round(v).toLocaleString('id-ID')
-              }
-            }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          layout: { padding: { top: 38 } },
-          plugins: {
-            legend: { display: true, position: 'top', labels: { color: '#334155', font: { size: 10, weight: 'bold' }, usePointStyle: true, boxWidth: 8 } }
+            ]
           },
-          scales: {
-            x: { ticks: { color: '#475569', font: { size: 9, weight: '600' } }, grid: { display: false } },
-            y: { 
-              type: 'linear', display: true, position: 'left',
-              ticks: { color: '#475569', font: { size: 9 } }, grid: { color: '#f1f5f9' }, min: 0
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            layout: { padding: { top: 38 } },
+            plugins: {
+              legend: { display: true, position: 'top', labels: { color: '#334155', font: { size: 10, weight: 'bold' }, usePointStyle: true, boxWidth: 8 } }
             },
-            y1: {
-              type: 'linear', display: true, position: 'right',
-              ticks: { color: '#e67e22', font: { size: 9 }, callback: v => v + '%' },
-              grid: { drawOnChartArea: false }, min: 0, max: 100
+            scales: {
+              x: { ticks: { color: '#475569', font: { size: 9, weight: '600' } }, grid: { display: false } },
+              y: { 
+                type: 'linear', display: true, position: 'left',
+                ticks: { color: '#475569', font: { size: 9 } }, grid: { color: '#f1f5f9' }, min: 0
+              },
+              y1: {
+                type: 'linear', display: true, position: 'right',
+                ticks: { color: '#e67e22', font: { size: 9 }, callback: v => v + '%' },
+                grid: { drawOnChartArea: false }, min: 0, max: 100
+              }
             }
           }
-        }
-      });
-    }
+        });
+      }
 
-    function renderDashboard3() {
-      const activeMonthsCount = realCount;
-      const subMonths = monthsList.slice(0, activeMonthsCount);
-      
-      const planRevSub = revPlanArr.slice(0, activeMonthsCount);
-      const actRevSub  = revActVal.slice(0, activeMonthsCount);
-      const planBppSub = bppPlanArr.slice(0, activeMonthsCount);
-      const actBppSub  = bppActVal.slice(0, activeMonthsCount);
-      const planGpSub  = planRevSub.map((r, i) => r - planBppSub[i]);
-      const actGpSub   = actRevSub.map((r, i) => r - actBppSub[i]);
-      const planGpmSub = planRevSub.map((r, i) => r > 0 ? (planGpSub[i] / r * 100) : 0);
-      const actGpmSub  = actRevSub.map((r, i) => r > 0 ? (actGpSub[i] / r * 100) : 0);
+      function renderDashboard3() {
+        const activeMonthsCount = realCount;
+        const subMonths = monthsList.slice(0, activeMonthsCount);
+        
+        const planRevSub = revPlanArr.slice(0, activeMonthsCount);
+        const actRevSub  = revActVal.slice(0, activeMonthsCount);
+        const planBppSub = bppPlanArr.slice(0, activeMonthsCount);
+        const actBppSub  = bppActVal.slice(0, activeMonthsCount);
+        const planGpSub  = planRevSub.map((r, i) => r - planBppSub[i]);
+        const actGpSub   = actRevSub.map((r, i) => r - actBppSub[i]);
+        const planGpmSub = planRevSub.map((r, i) => r > 0 ? (planGpSub[i] / r * 100) : 0);
+        const actGpmSub  = actRevSub.map((r, i) => r > 0 ? (actGpSub[i] / r * 100) : 0);
 
-      document.getElementById('d3-subtitle').textContent = `Rencana vs Realisasi | Januari – ${lastRealFull} 2026 | Outlook Full Year 2026`;
-      document.getElementById('d3-badge').textContent = `Data s.d. ${lastRealFull} 2026`;
-      document.getElementById('d3-sec1-sub').textContent = `Monthly performance – actual data available through ${lastRealFull} 2026`;
-      document.getElementById('d3-target-fy-lbl').textContent = `--- Target FY ${planGpmFull.toFixed(2).replace('.', ',')}%`;
+        document.getElementById('d3-subtitle').textContent = `Rencana vs Realisasi | Januari – ${lastRealFull} 2026 | Outlook Full Year 2026`;
+        document.getElementById('d3-badge').textContent = `Data s.d. ${lastRealFull} 2026`;
+        document.getElementById('d3-sec1-sub').textContent = `Monthly performance – actual data available through ${lastRealFull} 2026`;
+        document.getElementById('d3-target-fy-lbl').textContent = `--- Target FY ${planGpmFull.toFixed(2).replace('.', ',')}%`;
 
-      const cumulPlanRev = sum(planRevSub);
-      const cumulActRev = sum(actRevSub);
-      const cumulPlanBpp = sum(planBppSub);
-      const cumulActBpp = sum(actBppSub);
-      const cumulPlanGp = sum(planGpSub);
-      const cumulActGp = sum(actGpSub);
-      const cumulActGpm = cumulActRev > 0 ? (cumulActGp / cumulActRev * 100) : 0;
+        const cumulPlanRev = sum(planRevSub);
+        const cumulActRev = sum(actRevSub);
+        const cumulPlanBpp = sum(planBppSub);
+        const cumulActBpp = sum(actBppSub);
+        const cumulPlanGp = sum(planGpSub);
+        const cumulActGp = sum(actGpSub);
+        const cumulActGpm = cumulActRev > 0 ? (cumulActGp / cumulActRev * 100) : 0;
 
-      document.getElementById('d3-kpi-rev').textContent = Math.round(cumulActRev).toLocaleString('id-ID');
-      document.getElementById('d3-kpi-rev-sub').textContent = `${(cumulActRev / planRevFull * 100).toFixed(2).replace('.', ',')}% dari target 2026`;
+        document.getElementById('d3-kpi-rev').textContent = Math.round(cumulActRev).toLocaleString('id-ID');
+        document.getElementById('d3-kpi-rev-sub').textContent = `${(cumulActRev / planRevFull * 100).toFixed(2).replace('.', ',')}% dari target 2026`;
 
-      document.getElementById('d3-kpi-bpp').textContent = Math.round(cumulActBpp).toLocaleString('id-ID');
-      document.getElementById('d3-kpi-bpp-sub').textContent = `${(cumulActBpp / planBppFull * 100).toFixed(2).replace('.', ',')}% dari target 2026`;
+        document.getElementById('d3-kpi-bpp').textContent = Math.round(cumulActBpp).toLocaleString('id-ID');
+        document.getElementById('d3-kpi-bpp-sub').textContent = `${(cumulActBpp / planBppFull * 100).toFixed(2).replace('.', ',')}% dari target 2026`;
 
-      document.getElementById('d3-kpi-gp').textContent = Math.round(cumulActGp).toLocaleString('id-ID');
-      document.getElementById('d3-kpi-gp-sub').textContent = `${(cumulActGp / planGpFull * 100).toFixed(2).replace('.', ',')}% dari target 2026`;
+        document.getElementById('d3-kpi-gp').textContent = Math.round(cumulActGp).toLocaleString('id-ID');
+        document.getElementById('d3-kpi-gp-sub').textContent = `${(cumulActGp / planGpFull * 100).toFixed(2).replace('.', ',')}% dari target 2026`;
 
-      document.getElementById('d3-kpi-gpm').textContent = cumulActGpm.toFixed(2).replace('.', ',') + '%';
+        document.getElementById('d3-kpi-gpm').textContent = cumulActGpm.toFixed(2).replace('.', ',') + '%';
 
-      document.getElementById('d3-cumul-rev-title').textContent = `Pencapaian s.d. ${lastRealShort} 2026`;
-      document.getElementById('d3-cumul-rev-act').textContent = Math.round(cumulActRev).toLocaleString('id-ID');
-      document.getElementById('d3-cumul-rev-plan').textContent = Math.round(cumulPlanRev).toLocaleString('id-ID');
+        document.getElementById('d3-cumul-rev-title').textContent = `Pencapaian s.d. ${lastRealShort} 2026`;
+        document.getElementById('d3-cumul-rev-act').textContent = Math.round(cumulActRev).toLocaleString('id-ID');
+        document.getElementById('d3-cumul-rev-plan').textContent = Math.round(cumulPlanRev).toLocaleString('id-ID');
 
-      document.getElementById('d3-cumul-bpp-title').textContent = `Pencapaian s.d. ${lastRealShort} 2026`;
-      document.getElementById('d3-cumul-bpp-act').textContent = Math.round(cumulActBpp).toLocaleString('id-ID');
-      document.getElementById('d3-cumul-bpp-plan').textContent = Math.round(cumulPlanBpp).toLocaleString('id-ID');
+        document.getElementById('d3-cumul-bpp-title').textContent = `Pencapaian s.d. ${lastRealShort} 2026`;
+        document.getElementById('d3-cumul-bpp-act').textContent = Math.round(cumulActBpp).toLocaleString('id-ID');
+        document.getElementById('d3-cumul-bpp-plan').textContent = Math.round(cumulPlanBpp).toLocaleString('id-ID');
 
-      document.getElementById('d3-cumul-gp-title').textContent = `Pencapaian s.d. ${lastRealShort} 2026`;
-      document.getElementById('d3-cumul-gp-act').textContent = Math.round(cumulActGp).toLocaleString('id-ID');
-      document.getElementById('d3-cumul-gp-plan').textContent = Math.round(cumulPlanGp).toLocaleString('id-ID');
+        document.getElementById('d3-cumul-gp-title').textContent = `Pencapaian s.d. ${lastRealShort} 2026`;
+        document.getElementById('d3-cumul-gp-act').textContent = Math.round(cumulActGp).toLocaleString('id-ID');
+        document.getElementById('d3-cumul-gp-plan').textContent = Math.round(cumulPlanGp).toLocaleString('id-ID');
 
-      document.getElementById('d3-cumul-gpm-title').textContent = `Pencapaian s.d. ${lastRealShort} 2026`;
-      document.getElementById('d3-cumul-gpm-act').textContent = cumulActGpm.toFixed(2).replace('.', ',') + '%';
-      const cumulPlanGpm = cumulPlanRev > 0 ? (cumulPlanGp / cumulPlanRev * 100) : 0;
-      document.getElementById('d3-cumul-gpm-plan').textContent = cumulPlanGpm.toFixed(2).replace('.', ',') + '%';
+        document.getElementById('d3-cumul-gpm-title').textContent = `Pencapaian s.d. ${lastRealShort} 2026`;
+        document.getElementById('d3-cumul-gpm-act').textContent = cumulActGpm.toFixed(2).replace('.', ',') + '%';
+        const cumulPlanGpm = cumulPlanRev > 0 ? (cumulPlanGp / cumulPlanRev * 100) : 0;
+        document.getElementById('d3-cumul-gpm-plan').textContent = cumulPlanGpm.toFixed(2).replace('.', ',') + '%';
 
-      // 1. Pendapatan Usaha
-      safeDestroy('d3ChartRev');
-      new Chart(document.getElementById('d3ChartRev').getContext('2d'), {
-        data: {
-          labels: subMonths,
-          datasets: [
-            { type: 'bar', label: 'Rencana', data: planRevSub, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
-            { type: 'bar', label: 'Realisasi', data: actRevSub, backgroundColor: '#0b63ce', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#0b63ce', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } }
-        }
-      });
+        // 1. Pendapatan Usaha
+        safeDestroy('d3ChartRev');
+        new Chart(document.getElementById('d3ChartRev').getContext('2d'), {
+          data: {
+            labels: subMonths,
+            datasets: [
+              { type: 'bar', label: 'Rencana', data: planRevSub, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
+              { type: 'bar', label: 'Realisasi', data: actRevSub, backgroundColor: '#0b63ce', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#0b63ce', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } }
+          }
+        });
 
-      // 2. Beban Pokok
-      safeDestroy('d3ChartBpp');
-      new Chart(document.getElementById('d3ChartBpp').getContext('2d'), {
-        data: {
-          labels: subMonths,
-          datasets: [
-            { type: 'bar', label: 'Rencana', data: planBppSub, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
-            { type: 'bar', label: 'Realisasi', data: actBppSub, backgroundColor: '#008767', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#008767', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } }
-        }
-      });
+        // 2. Beban Pokok
+        safeDestroy('d3ChartBpp');
+        new Chart(document.getElementById('d3ChartBpp').getContext('2d'), {
+          data: {
+            labels: subMonths,
+            datasets: [
+              { type: 'bar', label: 'Rencana', data: planBppSub, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
+              { type: 'bar', label: 'Realisasi', data: actBppSub, backgroundColor: '#008767', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#008767', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } }
+          }
+        });
 
-      // 3. Gross Profit
-      safeDestroy('d3ChartGp');
-      new Chart(document.getElementById('d3ChartGp').getContext('2d'), {
-        data: {
-          labels: subMonths,
-          datasets: [
-            { type: 'bar', label: 'Rencana', data: planGpSub, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
-            { type: 'bar', label: 'Realisasi', data: actGpSub, backgroundColor: '#7c3aed', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#7c3aed', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } }
-        }
-      });
+        // 3. Gross Profit
+        safeDestroy('d3ChartGp');
+        new Chart(document.getElementById('d3ChartGp').getContext('2d'), {
+          data: {
+            labels: subMonths,
+            datasets: [
+              { type: 'bar', label: 'Rencana', data: planGpSub, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
+              { type: 'bar', label: 'Realisasi', data: actGpSub, backgroundColor: '#7c3aed', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#7c3aed', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } }
+          }
+        });
 
-      // 4. Gross Profit Margin
-      safeDestroy('d3ChartGpm');
-      const targetLine = subMonths.map(() => planGpmFull);
-      new Chart(document.getElementById('d3ChartGpm').getContext('2d'), {
-        data: {
-          labels: subMonths,
-          datasets: [
-            { type: 'line', label: 'Target FY', data: targetLine, borderColor: '#e67e22', borderDash: [4,4], borderWidth: 1.5, pointRadius: 0, datalabels: { display: false } },
-            { type: 'line', label: 'Rencana', data: planGpmSub, borderColor: '#e67e22', backgroundColor: '#e67e22', borderWidth: 2, pointRadius: 4, datalabels: { align: 'top', anchor: 'end', color: '#e67e22', font: { size: 8, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' } },
-            { type: 'line', label: 'Realisasi', data: actGpmSub, borderColor: '#1e293b', backgroundColor: '#1e293b', borderWidth: 2, pointRadius: 4, datalabels: { align: 'bottom', anchor: 'start', color: '#1e293b', font: { size: 8, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' } }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, max: 100, ticks: { font: { size: 9 }, callback: v => v + '%' } } }
-        }
-      });
-    }
+        // 4. Gross Profit Margin
+        safeDestroy('d3ChartGpm');
+        const targetLine = subMonths.map(() => planGpmFull);
+        new Chart(document.getElementById('d3ChartGpm').getContext('2d'), {
+          data: {
+            labels: subMonths,
+            datasets: [
+              { type: 'line', label: 'Target FY', data: targetLine, borderColor: '#e67e22', borderDash: [4,4], borderWidth: 1.5, pointRadius: 0, datalabels: { display: false } },
+              { type: 'line', label: 'Rencana', data: planGpmSub, borderColor: '#e67e22', backgroundColor: '#e67e22', borderWidth: 2, pointRadius: 4, datalabels: { align: 'top', anchor: 'end', color: '#e67e22', font: { size: 8, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' } },
+              { type: 'line', label: 'Realisasi', data: actGpmSub, borderColor: '#1e293b', backgroundColor: '#1e293b', borderWidth: 2, pointRadius: 4, datalabels: { align: 'bottom', anchor: 'start', color: '#1e293b', font: { size: 8, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' } }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, max: 100, ticks: { font: { size: 9 }, callback: v => v + '%' } } }
+          }
+        });
+      }
 
-    renderDarkCharts();
-    renderLightSectionDirect();
-    renderDashboard3();
+      renderDarkCharts();
+      renderLightSectionDirect();
+      renderDashboard3();
+    });
   </script>
 </body>
 </html>
