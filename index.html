@@ -1338,12 +1338,12 @@
               </span>
 
               <span style="display:inline-flex; align-items:center; gap:2px;">
-                <span style="width:8px; height:8px; border:1px dashed #7c3aed; display:inline-block;"></span>
+                <span style="width:8px; height:8px; border:1px dashed #1e293b; display:inline-block;"></span>
                 Realisasi s.d. Sep
               </span>
 
               <span style="display:inline-flex; align-items:center; gap:2px;">
-                <span style="width:8px; height:8px; border:1px dashed #94a3b8; display:inline-block;"></span>
+                <span style="width:8px; height:8px; border:1px dashed #e67e22; display:inline-block;"></span>
                 Rencana s.d. Sep
               </span>
 
@@ -1368,16 +1368,17 @@
 
               <div class="d3-cumul-cols">
 
+                <!-- Realisasi Kumulatif GPM (Warna disamakan dengan Line Realisasi: #1e293b) -->
                 <div class="d3-cumul-item">
 
-                  <div id="d3-gpm-act-cumul" class="d3-cumul-val" style="color:#7c3aed;">
+                  <div id="d3-gpm-act-cumul" class="d3-gpm-act-cumul-val d3-cumul-val" style="color:#1e293b;">
                     23,69%
                   </div>
 
                   <div class="d3-cumul-bar-wrap">
 
                     <div id="d3-gpm-act-bar"
-                      style="width:100%; height:23.69%; background:#7c3aed; border-radius:3px 3px 0 0;">
+                      style="width:100%; height:23.69%; background:#1e293b; border-radius:3px 3px 0 0;">
                     </div>
 
                   </div>
@@ -1389,16 +1390,17 @@
                 </div>
 
 
+                <!-- Rencana Kumulatif GPM (Warna disamakan dengan Line Rencana: #e67e22) -->
                 <div class="d3-cumul-item">
 
-                  <div id="d3-gpm-plan-cumul" class="d3-cumul-val" style="color:#475569;">
+                  <div id="d3-gpm-plan-cumul" class="d3-gpm-plan-cumul-val d3-cumul-val" style="color:#e67e22;">
                     47,68%
                   </div>
 
                   <div class="d3-cumul-bar-wrap">
 
                     <div id="d3-gpm-plan-bar"
-                      style="width:100%; height:47.68%; background:#cbd5e1; border:1px dashed #94a3b8; border-radius:3px 3px 0 0;">
+                      style="width:100%; height:47.68%; background:#e67e22; opacity:0.85; border-radius:3px 3px 0 0;">
                     </div>
 
                   </div>
@@ -2009,7 +2011,7 @@
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, max: 1200, ticks: { font: { size: 9 }, stepSize: 200 } } } }
       });
 
-      // 4. Gross Profit Margin (Diperbarui agar tidak tumpang tindih pada titik berdekatan seperti Mei)
+      // 4. Gross Profit Margin
       const targetLine = shortMonths.map(() => financialData.targetGPM);
       destroyChart("d3ChartGpm");
       chartInstances["d3ChartGpm"] = new Chart(document.getElementById("d3ChartGpm").getContext("2d"), {
