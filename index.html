@@ -169,52 +169,12 @@
     .d3-cumul-val { font-size: 10px; font-weight: 800; margin-bottom: 3px; }
     .d3-cumul-label { font-size: 7.5px; font-weight: 700; color: #475569; margin-top: 4px; line-height: 1.1; }
 
-    /* NEW DASHBOARD NKB STYLING (DI PALING BAWAH) */
-    .nkb-dashboard-wrap { background: #ffffff; color: #333333; border-radius: 14px; padding: 24px; margin-top: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-    .nkb-header { display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #0b63ce 0%, #0f4c81 100%); padding: 16px 24px; border-radius: 10px; margin-bottom: 20px; color: white; }
-    .nkb-title-area h2 { font-size: 18px; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
-    .nkb-title-area p { font-size: 11.5px; color: #cbd5e1; margin-top: 3px; }
-    .nkb-year-box { background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 8px 16px; border-radius: 8px; display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: bold; }
-    
-    .nkb-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
-    .nkb-kpi-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 16px; border-top: 4px solid #0b63ce; }
-    .nkb-kpi-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-    .nkb-kpi-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 15px; color: white; }
-    .nkb-kpi-title { font-size: 10.5px; font-weight: 800; color: #475569; text-transform: uppercase; }
-    .nkb-kpi-val { font-size: 20px; font-weight: 900; color: #0f4c81; line-height: 1.1; }
-    .nkb-kpi-sub { font-size: 10px; font-weight: 700; color: #64748b; margin-top: 3px; text-transform: uppercase; }
-
-    .nkb-charts-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 15px; margin-bottom: 20px; }
-    .nkb-chart-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; }
-    .nkb-chart-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #ffffff; background: #0f4c81; padding: 8px 12px; border-radius: 4px; margin-bottom: 14px; }
-    .nkb-chart-container { position: relative; height: 260px; width: 100%; }
-
-    .nkb-donut-layout { display: grid; grid-template-columns: 1fr 180px; gap: 10px; align-items: center; height: 100%; }
-    .nkb-custom-legend { display: flex; flex-direction: column; gap: 8px; font-size: 11px; }
-    .nkb-legend-row { display: flex; align-items: flex-start; gap: 6px; }
-    .nkb-legend-bullet { width: 10px; height: 10px; border-radius: 50%; margin-top: 3px; flex-shrink: 0; }
-    .nkb-legend-text { display: flex; flex-direction: column; line-height: 1.2; }
-
-    .nkb-tables-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-    .nkb-table-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
-    .nkb-table-header { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #ffffff; background: #0f4c81; padding: 10px 14px; }
-    
-    .nkb-data-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; }
-    .nkb-data-table th { background: #e2e8f0; color: #334155; font-weight: 700; padding: 8px 12px; border-bottom: 2px solid #cbd5e1; text-transform: uppercase; font-size: 10px; }
-    .nkb-data-table td { padding: 7px 12px; border-bottom: 1px solid #cbd5e1; color: #1e293b; }
-    .nkb-total-row td { background: #0f4c81 !important; color: white !important; font-weight: 800; font-size: 11.5px; }
-
-    .nkb-progress-cell { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
-    .nkb-progress-bg { width: 60px; height: 6px; background: #cbd5e1; border-radius: 3px; overflow: hidden; display: inline-block; }
-    .nkb-progress-fill { height: 100%; border-radius: 3px; }
-
     @media (max-width: 1024px) {
       .panel-light-grid { grid-template-columns: 1fr; }
       .total-box-light { border-left: none; border-top: 2px dashed #cbd5e1; padding-left: 0; padding-top: 15px; }
       .d3-charts-row { grid-template-columns: 1fr; }
       .d3-kpi-grid { grid-template-columns: repeat(2, 1fr); }
       .d3-panel-flex { grid-template-columns: 1fr; }
-      .nkb-kpi-grid, .nkb-charts-grid, .nkb-tables-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -861,7 +821,9 @@
   </div>
 
 
-  <!-- DASHBOARD 3 (PERSIS GAMBAR REFERENSI 3) -->
+  <!-- ======================================================== -->
+  <!-- DASHBOARD 3 (PERSIS GAMBAR REFERENSI 3)                  -->
+  <!-- ======================================================== -->
 
   <div class="dashboard-3-container">
 
@@ -1406,6 +1368,7 @@
 
               <div class="d3-cumul-cols">
 
+                <!-- Realisasi Kumulatif GPM (Warna disamakan dengan Line Realisasi: #1e293b) -->
                 <div class="d3-cumul-item">
 
                   <div id="d3-gpm-act-cumul" class="d3-gpm-act-cumul-val d3-cumul-val" style="color:#1e293b;">
@@ -1427,6 +1390,7 @@
                 </div>
 
 
+                <!-- Rencana Kumulatif GPM (Warna disamakan dengan Line Rencana: #e67e22) -->
                 <div class="d3-cumul-item">
 
                   <div id="d3-gpm-plan-cumul" class="d3-gpm-plan-cumul-val d3-cumul-val" style="color:#e67e22;">
@@ -1462,234 +1426,6 @@
         *Angka dalam miliar Rupiah (kecuali margin dalam %)
       </div>
 
-    </div>
-
-  </div>
-
-
-  <!-- ======================================================== -->
-  <!-- DASHBOARD BARU: RENCANA NILAI KONTRAK BARU 2026          -->
-  <!-- ======================================================== -->
-  <div class="nkb-dashboard-wrap">
-    
-    <!-- HEADER NKB -->
-    <div class="nkb-header">
-      <div class="nkb-title-area">
-        <h2><i class="fa-solid fa-chart-pie"></i> Dashboard Rencana Kontrak 2026</h2>
-        <p>Rencana Nilai Kontrak Baru</p>
-      </div>
-      <div class="nkb-year-box">
-        <i class="fa-solid fa-calendar-days"></i>
-        <span>TAHUN 2026</span>
-      </div>
-    </div>
-
-    <!-- 4 KPI CARDS NKB -->
-    <div class="nkb-kpi-grid">
-      <div class="nkb-kpi-card">
-        <div class="nkb-kpi-head">
-          <div class="nkb-kpi-icon icon-blue"><i class="fa-solid fa-file-invoice-dollar"></i></div>
-          <div class="nkb-kpi-title">Total Rencana Kontrak 2026</div>
-        </div>
-        <div class="nkb-kpi-val">13.155.200.000</div>
-        <div class="nkb-kpi-sub">Juta Rupiah</div>
-      </div>
-
-      <div class="nkb-kpi-card" style="border-top-color: #7c3aed;">
-        <div class="nkb-kpi-head">
-          <div class="nkb-kpi-icon icon-purple"><i class="fa-solid fa-chart-line"></i></div>
-          <div class="nkb-kpi-title">Rata-Rata Per Bulan</div>
-        </div>
-        <div class="nkb-kpi-val">1.096.266.667</div>
-        <div class="nkb-kpi-sub">Juta Rupiah</div>
-      </div>
-
-      <div class="nkb-kpi-card" style="border-top-color: #d97706;">
-        <div class="nkb-kpi-head">
-          <div class="nkb-kpi-icon icon-orange"><i class="fa-solid fa-arrow-trend-up"></i></div>
-          <div class="nkb-kpi-title">Bulan Tertinggi</div>
-        </div>
-        <div class="nkb-kpi-val" style="font-size: 22px;">Mei</div>
-        <div class="nkb-kpi-sub">3.893.000.000 Juta Rupiah</div>
-      </div>
-
-      <div class="nkb-kpi-card" style="border-top-color: #008767;">
-        <div class="nkb-kpi-head">
-          <div class="nkb-kpi-icon icon-teal"><i class="fa-solid fa-screwdriver-wrench"></i></div>
-          <div class="nkb-kpi-title">Jenis Alat</div>
-        </div>
-        <div class="nkb-kpi-val">5</div>
-        <div class="nkb-kpi-sub">Kategori</div>
-      </div>
-    </div>
-
-    <!-- 2 CHARTS GRID NKB -->
-    <div class="nkb-charts-grid">
-      <div class="nkb-chart-card">
-        <div class="nkb-chart-title">Rencana Nilai Kontrak Baru Per Bulan</div>
-        <div class="nkb-chart-container">
-          <canvas id="nkbChartMonthly"></canvas>
-        </div>
-      </div>
-
-      <div class="nkb-chart-card">
-        <div class="nkb-chart-title">Rencana Nilai Kontrak Baru Per Jenis Alat</div>
-        <div class="nkb-chart-container">
-          <div class="nkb-donut-layout">
-            <div style="position: relative; height: 100%; width: 100%;">
-              <canvas id="nkbChartEquipment"></canvas>
-            </div>
-            <div class="nkb-custom-legend">
-              <div class="nkb-legend-row">
-                <div class="nkb-legend-bullet" style="background: #1d4ed8;"></div>
-                <div class="nkb-legend-text">
-                  <span style="font-weight: 700; color: #334155;">Truck Mixer</span>
-                  <span style="font-size: 9.5px; color: #64748b;">8.165.200.000 (62,07%)</span>
-                </div>
-              </div>
-              <div class="nkb-legend-row">
-                <div class="nkb-legend-bullet" style="background: #3b82f6;"></div>
-                <div class="nkb-legend-text">
-                  <span style="font-weight: 700; color: #334155;">Truck Trailer</span>
-                  <span style="font-size: 9.5px; color: #64748b;">2.766.000.000 (21,03%)</span>
-                </div>
-              </div>
-              <div class="nkb-legend-row">
-                <div class="nkb-legend-bullet" style="background: #ea580c;"></div>
-                <div class="nkb-legend-text">
-                  <span style="font-weight: 700; color: #334155;">Stone Crusher</span>
-                  <span style="font-size: 9.5px; color: #64748b;">1.140.000.000 (8,67%)</span>
-                </div>
-              </div>
-              <div class="nkb-legend-row">
-                <div class="nkb-legend-bullet" style="background: #7c3aed;"></div>
-                <div class="nkb-legend-text">
-                  <span style="font-weight: 700; color: #334155;">Batching Plant</span>
-                  <span style="font-size: 9.5px; color: #64748b;">994.000.000 (7,56%)</span>
-                </div>
-              </div>
-              <div class="nkb-legend-row">
-                <div class="nkb-legend-bullet" style="background: #f59e0b;"></div>
-                <div class="nkb-legend-text">
-                  <span style="font-weight: 700; color: #334155;">Silo</span>
-                  <span style="font-size: 9.5px; color: #64748b;">90.000.000 (0,68%)</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2 TABLES GRID NKB -->
-    <div class="nkb-tables-grid">
-      <div class="nkb-table-card">
-        <div class="nkb-table-header">Rincian Rencana Nilai Kontrak Baru Per Bulan</div>
-        <table class="nkb-data-table">
-          <thead>
-            <tr>
-              <th>Bulan</th>
-              <th style="text-align: right;">Nilai Kontrak Baru (Juta Rupiah)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>Januari</td><td style="text-align: right;">1.140.000.000</td></tr>
-            <tr><td>Februari</td><td style="text-align: right;">2.416.000.000</td></tr>
-            <tr><td>Maret</td><td style="text-align: right;">-</td></tr>
-            <tr><td>April</td><td style="text-align: right;">760.000.000</td></tr>
-            <tr><td>Mei</td><td style="text-align: right;">3.893.000.000</td></tr>
-            <tr><td>Juni</td><td style="text-align: right;">-</td></tr>
-            <tr><td>Juli</td><td style="text-align: right;">2.304.000.000</td></tr>
-            <tr><td>Agustus</td><td style="text-align: right;">2.642.200.000</td></tr>
-            <tr><td>September</td><td style="text-align: right;">-</td></tr>
-            <tr><td>Oktober</td><td style="text-align: right;">-</td></tr>
-            <tr><td>November</td><td style="text-align: right;">-</td></tr>
-            <tr><td>Desember</td><td style="text-align: right;">-</td></tr>
-          </tbody>
-          <tfoot>
-            <tr class="nkb-total-row">
-              <td>Total</td>
-              <td style="text-align: right;">13.155.200.000</td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-
-      <div class="nkb-table-card">
-        <div class="nkb-table-header">Rincian Rencana Nilai Kontrak Baru Per Jenis Alat</div>
-        <table class="nkb-data-table">
-          <thead>
-            <tr>
-              <th>Jenis Alat</th>
-              <th style="text-align: right;">Nilai Kontrak Baru (Juta Rupiah)</th>
-              <th style="text-align: center; width: 120px;">% Kontribusi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="font-weight: 700;">Truck Mixer</td>
-              <td style="text-align: right;">8.165.200.000</td>
-              <td>
-                <div class="nkb-progress-cell">
-                  <span style="font-weight: 700; font-size: 10px;">62.07%</span>
-                  <div class="nkb-progress-bg"><div class="nkb-progress-fill" style="width: 62.07%; background: #1d4ed8;"></div></div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td style="font-weight: 700;">Truck Trailer</td>
-              <td style="text-align: right;">2.766.000.000</td>
-              <td>
-                <div class="nkb-progress-cell">
-                  <span style="font-weight: 700; font-size: 10px;">21.03%</span>
-                  <div class="nkb-progress-bg"><div class="nkb-progress-fill" style="width: 21.03%; background: #3b82f6;"></div></div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td style="font-weight: 700;">Stone Crusher</td>
-              <td style="text-align: right;">1.140.000.000</td>
-              <td>
-                <div class="nkb-progress-cell">
-                  <span style="font-weight: 700; font-size: 10px;">8.67%</span>
-                  <div class="nkb-progress-bg"><div class="nkb-progress-fill" style="width: 8.67%; background: #ea580c;"></div></div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td style="font-weight: 700;">Batching Plant</td>
-              <td style="text-align: right;">994.000.000</td>
-              <td>
-                <div class="nkb-progress-cell">
-                  <span style="font-weight: 700; font-size: 10px;">7.56%</span>
-                  <div class="nkb-progress-bg"><div class="nkb-progress-fill" style="width: 7.56%; background: #7c3aed;"></div></div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td style="font-weight: 700;">Silo</td>
-              <td style="text-align: right;">90.000.000</td>
-              <td>
-                <div class="nkb-progress-cell">
-                  <span style="font-weight: 700; font-size: 10px;">0.68%</span>
-                  <div class="nkb-progress-bg"><div class="nkb-progress-fill" style="width: 0.68%; background: #f59e0b;"></div></div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr class="nkb-total-row">
-              <td>Total</td>
-              <td style="text-align: right;">13.155.200.000</td>
-              <td style="text-align: center;">100.00%</td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-    </div>
-
-    <div style="font-size: 11px; color: #64748b; font-style: italic; margin-top: 10px; display: flex; align-items: center; gap: 6px;">
-      <i class="fa-solid fa-circle-info"></i> Data dalam juta rupiah (IDR)
     </div>
 
   </div>
@@ -2404,111 +2140,5 @@
 
   </script>
 
-  <!-- SCRIPT FOR NEW NKB DASHBOARD CHARTS -->
-  <script>
-    // 1. NKB Monthly Bar Chart
-    const ctxNkbMonthly = document.getElementById('nkbChartMonthly').getContext('2d');
-    new Chart(ctxNkbMonthly, {
-      type: 'bar',
-      data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Juni', 'Juli', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'],
-        datasets: [{
-          data: [1140000000, 2416000000, 0, 760000000, 3893000000, 0, 2304000000, 2642200000, 0, 0, 0, 0],
-          backgroundColor: '#0b63ce',
-          borderRadius: 3,
-          barPercentage: 0.6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                return ' Nilai: ' + Number(context.raw).toLocaleString('id-ID');
-              }
-            }
-          },
-          datalabels: {
-            align: 'top',
-            anchor: 'end',
-            color: '#1e293b',
-            font: { size: 9, weight: 'bold' },
-            formatter: function(value) {
-              if (value === 0) return '';
-              if (value >= 1000000000) {
-                return (value / 1000000000).toFixed(3).replace('.', ',') + 'M';
-              }
-              return (value / 1000000).toFixed(0) + 'M';
-            }
-          }
-        },
-        scales: {
-          x: {
-            grid: { display: false },
-            ticks: { font: { size: 10 }, color: '#475569' }
-          },
-          y: {
-            min: 0,
-            max: 5000000000,
-            ticks: {
-              stepSize: 1000000000,
-              font: { size: 9 },
-              color: '#475569',
-              callback: function(value) {
-                return (value / 1000000000) + 'M';
-              }
-            },
-            grid: { color: '#e2e8f0', borderDash: [4, 4] }
-          }
-        }
-      }
-    });
-
-    // 2. NKB Equipment Donut Chart
-    const ctxNkbEquipment = document.getElementById('nkbChartEquipment').getContext('2d');
-    new Chart(ctxNkbEquipment, {
-      type: 'doughnut',
-      data: {
-        labels: ['Truck Mixer', 'Truck Trailer', 'Stone Crusher', 'Batching Plant', 'Silo'],
-        datasets: [{
-          data: [8165200000, 2766000000, 1140000000, 994000000, 90000000],
-          backgroundColor: ['#1d4ed8', '#3b82f6', '#ea580c', '#7c3aed', '#f59e0b'],
-          borderWidth: 2,
-          borderColor: '#ffffff'
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                const total = 13155200000;
-                const val = context.raw;
-                const pct = ((val / total) * 100).toFixed(2);
-                return ' ' + Number(val).toLocaleString('id-ID') + ' (' + pct + '%)';
-              }
-            }
-          },
-          datalabels: {
-            color: '#ffffff',
-            font: { size: 9, weight: 'bold' },
-            formatter: function(value) {
-              const total = 13155200000;
-              const pct = (value / total) * 100;
-              if (pct < 5) return '';
-              return pct.toFixed(2).replace('.', ',') + '%';
-            }
-          }
-        },
-        cutout: '55%'
-      }
-    });
-  </script>
 </body>
 </html>
