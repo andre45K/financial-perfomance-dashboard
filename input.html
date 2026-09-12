@@ -16,9 +16,6 @@
     input, select { width: 100%; padding: 0.75rem; border-radius: 4px; border: 1px solid #3a506b; background-color: #0b132b; color: #fff; }
     .divider { border: 0; height: 1px; background: #3a506b; margin: 1.5rem 0; }
     .form-section-title { font-weight: bold; font-size: 1.05rem; color: #6fffe9; margin-bottom: 0.8rem; }
-    .preview-box { background-color: #0b132b; padding: 1rem; border-radius: 6px; margin: 1.5rem 0; border: 1px solid #3a506b; }
-    .preview-item { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem; }
-    .preview-item strong { color: #5bc0be; }
     button { padding: 0.75rem 1.5rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
     .btn-primary { background-color: #3a86ff; color: white; width: 100%; }
     .btn-secondary { background-color: #4a5568; color: white; text-decoration: none; padding: 0.6rem 1rem; border-radius: 4px; font-size: 0.9rem; }
@@ -135,7 +132,6 @@
       loadMonthData(parseInt(e.target.value));
     });
 
-    // Muat bulan pertama saat pertama kali dibuka
     loadMonthData(0);
 
     document.getElementById('financial-form').addEventListener('submit', (e) => {
