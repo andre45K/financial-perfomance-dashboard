@@ -71,7 +71,7 @@
     .box-blue { width: 12px; height: 12px; background: #0056b3; }
     .box-orange { width: 12px; height: 12px; background: #d97706; }
 
-    /* DASHBOARD 2 (LIGHT THEME - EXACT MATCH) */
+    /* DASHBOARD 2 (LIGHT THEME) */
     .section-divider-title { color: #94a3b8; font-size: 12px; font-weight: bold; margin-bottom: 15px; letter-spacing: 1px; text-transform: uppercase; border-left: 4px solid #0052cc; padding-left: 8px; }
 
     .panel-card-light { background: #ffffff; color: #333333; border-radius: 14px; margin-bottom: 25px; padding: 18px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
@@ -113,7 +113,8 @@
     .item-light-sub-val { font-size: 14px; font-weight: 800; color: #0b63ce; margin-top: 1px; }
     .sub-teal { color: #008767; }
 
-    .chart-box-light { position: relative; height: 230px; width: 100%; }
+    /* Wajib Beri Dimensi Tegas pada Box Chart */
+    .chart-box-light { position: relative; height: 230px; width: 100%; min-height: 230px; }
 
     .total-box-light { border-left: 2px dashed #cbd5e1; padding-left: 15px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
     .total-icons-top { display: flex; gap: 4px; margin-bottom: 4px; }
@@ -398,10 +399,15 @@
     </div>
   </div>
 
-  <!-- SCRIPT FIREBASE & DASHBOARD LOGIC -->
+  <!-- SCRIPT UTAMA -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Register Plugin Sekali saja secara Global Aman
+    if (typeof ChartDataLabels !== 'undefined') {
+      Chart.register(ChartDataLabels);
+    }
 
     const firebaseConfig = {
       apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
@@ -411,9 +417,6 @@
       messagingSenderId: "136866453174",
       appId: "1:136866453174:web:b69a3e14672eb96cc53817"
     };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
 
     const monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const monthLabels = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26", "Oct-26", "Nov-26", "Dec-26"];
@@ -435,13 +438,15 @@
 
     let chartInstances = {};
 
-    async function loadDashboardData() {
+    async function initDashboard() {
       let dataStore = { ...defaultData };
       try {
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
         const querySnapshot = await getDocs(collection(db, "financial_data", "2026", "months"));
         querySnapshot.forEach((doc) => { dataStore[doc.id] = doc.data(); });
       } catch (e) {
-        console.warn("Fallback data.");
+        console.warn("Menggunakan data default karena koneksi firebase:", e);
       }
       renderDashboard(dataStore);
     }
@@ -510,10 +515,10 @@
       document.getElementById('kpi-gpm-act').textContent = totalGpmAct.toFixed(2) + '%';
       updateBadge('kpi-gpm-badge', totalGpmAct, totalGpmPlan);
 
-      renderCharts({ revActArr, bppActArr, gpActArr, gpmActArr, statusArr });
+      renderDarkCharts({ revActArr, bppActArr, gpActArr, gpmActArr, statusArr });
       renderDynamicTable({ revPlanArr, revActArr, bppPlanArr, bppActArr, gpPlanArr, gpActArr, gpmPlanArr, gpmActArr, statusArr, lastRealIndex, realText, progText });
 
-      // Memanggil fungsi Light Section 2
+      // Memanggil fungsi Light Section (01 & 02)
       renderLightSection({ revActArr, bppActArr, gpActArr, gpmActArr, totalRevAct, totalBppAct, totalGpAct, totalGpmAct });
     }
 
@@ -526,10 +531,8 @@
       el.className = 'kpi-badge ' + (isGood ? 'badge-up' : 'badge-down');
     }
 
-    function renderCharts(d) {
-      Chart.register(ChartDataLabels);
+    function renderDarkCharts(d) {
       const realBg = (c) => d.statusArr.map(s => s === 'REALISASI' ? c : '#d97706');
-      
       createComboChart('chartRevenue', d.revActArr, realBg('#1d4ed8'), '#ffffff', false);
       createComboChart('chartBPP', d.bppActArr, realBg('#ea580c'), '#ffffff', false);
       createComboChart('chartGP', d.gpActArr, realBg('#16a34a'), '#ffffff', false);
@@ -584,7 +587,7 @@
       const revRealTot = sliceSum(d.revActArr, 0, idx), revProgTot = sliceSum(d.revActArr, idx, 12), revPlanTot = sliceSum(d.revPlanArr, 0, 12), revActTot = sliceSum(d.revActArr, 0, 12), revPct = revPlanTot > 0 ? (revActTot / revPlanTot * 100) : 0;
       const bppRealTot = sliceSum(d.bppActArr, 0, idx), bppProgTot = sliceSum(d.bppActArr, idx, 12), bppPlanTot = sliceSum(d.bppPlanArr, 0, 12), bppActTot = sliceSum(d.bppActArr, 0, 12), bppPct = bppPlanTot > 0 ? (bppActTot / bppPlanTot * 100) : 0;
       const gpRealTot = revRealTot - bppRealTot, gpProgTot = revProgTot - bppProgTot, gpPlanTot = revPlanTot - bppPlanTot, gpActTot = revActTot - bppActTot, gpPct = gpPlanTot > 0 ? (gpActTot / gpPlanTot * 100) : 0;
-      const gpmRealTot = revRealTot > 0 ? (gpRealTot / revRealTot * 100) : 0, gpmProgTot = revProgTot > 0 ? (gpProgTot / revProgTot * 100) : 0, gpmPlanTot = revPlanTot > 0 ? (gpmPlanTot / revPlanTot * 100) : 0, gpmActTot = revActTot > 0 ? (gpActTot / revActTot * 100) : 0, gpmPct = gpmPlanTot > 0 ? (gpmActTot / gpmPlanTot * 100) : 0;
+      const gpmRealTot = revRealTot > 0 ? (gpRealTot / revRealTot * 100) : 0, gpmProgTot = revProgTot > 0 ? (gpProgTot / revProgTot * 100) : 0, gpmPlanTot = revPlanTot > 0 ? (gpPlanTot / revPlanTot * 100) : 0, gpmActTot = revActTot > 0 ? (gpActTot / revActTot * 100) : 0, gpmPct = gpmPlanTot > 0 ? (gpmActTot / gpmPlanTot * 100) : 0;
 
       const buildRow = (title, actArr, realTot, progTot, planTot, actTot, pct, isMargin = false) => {
         let fmt = v => isMargin ? v.toFixed(2).replace('.', ',') + '%' : Math.round(v).toLocaleString('id-ID');
@@ -636,7 +639,7 @@
 
       const lightLabels = monthLabels.map(m => m.replace('-26', ''));
 
-      // 1. Chart Light Panel 01
+      // 1. Chart Section 01
       if (chartInstances['chartSec1']) chartInstances['chartSec1'].destroy();
       const ctx1 = document.getElementById('chartSec1').getContext('2d');
       chartInstances['chartSec1'] = new Chart(ctx1, {
@@ -683,7 +686,7 @@
         }
       });
 
-      // 2. Chart Light Panel 02
+      // 2. Chart Section 02
       if (chartInstances['chartSec2']) chartInstances['chartSec2'].destroy();
       const ctx2 = document.getElementById('chartSec2').getContext('2d');
       chartInstances['chartSec2'] = new Chart(ctx2, {
@@ -742,7 +745,7 @@
       });
     }
 
-    loadDashboardData();
+    initDashboard();
   </script>
 </body>
 </html>
