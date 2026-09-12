@@ -191,8 +191,8 @@
       <div class="period-box">
         <span>📅 Periode: <strong>Jan - Dec 2026</strong></span>
       </div>
-      <!-- Diperbaiki: Menggunakan tag <button> dengan event onclick murni agar tidak terpengaruh routing default yang menyebabkan refresh berulang -->
-      <button onclick="window.location.href='input.html'" class="admin-link" style="background:transparent; cursor:pointer;">Admin Input</button>
+      <!-- Diarahkan ke input.html (disamakan dengan file input) -->
+      <a href="input.html" class="admin-link">Admin Input</a>
     </div>
   </div>
 
@@ -664,7 +664,7 @@
     </div>
   </div>
 
-  <!-- SCRIPT UTAMA (Membaca localStorage untuk Sinkronisasi Dinamis) -->
+  <!-- SCRIPT UTAMA -->
   <script type="module">
     if (typeof ChartDataLabels !== 'undefined') {
       Chart.register(ChartDataLabels);
@@ -674,7 +674,6 @@
     const fullMonthsList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
     const monthLabels = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26", "Oct-26", "Nov-26", "Dec-26"];
 
-    // Default Data awal jika localStorage kosong
     const defaultData = {
       revPlan: [554, 554, 449, 380, 502, 879, 927, 1042, 2196, 2196, 2145, 1678],
       revAct:  [823, 787, 99, 782, 688, 1117, 1668, 1703, 1786, 1670, 1393, 1393],
@@ -748,7 +747,6 @@
       const avgGpmAct = totRevFull > 0 ? (totGpFull / totRevFull * 100) : 0;
       const planGpmFull = planRevFull > 0 ? (planGpFull / planRevFull * 100) : 0;
 
-      // Update isi tabel per bulan
       for(let i=0; i<12; i++) {
         document.getElementById(`t-rev-${i}`).textContent = revActVal[i];
         document.getElementById(`t-bpp-${i}`).textContent = bppActVal[i];
@@ -786,7 +784,6 @@
       const gpmPctVsPlan = (planGpmFull > 0 ? (avgGpmAct / planGpmFull * 100) : 0).toFixed(2).replace('.', ',');
       document.getElementById('tbl-gpm-pct').textContent = gpmPctVsPlan + '%';
 
-      // Update KPI Cards Dark
       document.getElementById('kpi-rev-plan').textContent = Math.round(planRevFull).toLocaleString('id-ID');
       document.getElementById('kpi-rev-act').textContent = Math.round(totRevFull).toLocaleString('id-ID');
       document.getElementById('kpi-rev-badge').textContent = `▲ ${revPctVsPlan}%`;
