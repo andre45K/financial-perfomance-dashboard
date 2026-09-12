@@ -186,8 +186,8 @@
       <p>Rencana vs Realisasi | Januari - Desember 2026</p>
     </div>
     <div class="header-info">
-      <span id="badge-realisasi-text" class="badge-status badge-realisasi">Jan - Aug 2026 (Realisasi)</span>
-      <span id="badge-prognosa-text" class="badge-status badge-prognosa">Sep - Dec 2026 (Prognosa)</span>
+      <span id="badge-realisasi-text" class="badge-status badge-realisasi">Jan - Sep 2026 (Realisasi)</span>
+      <span id="badge-prognosa-text" class="badge-status badge-prognosa">Okt - Dec 2026 (Prognosa)</span>
       <div class="period-box">
         <span>📅 Periode: <strong>Jan - Dec 2026</strong></span>
       </div>
@@ -292,50 +292,50 @@
       <thead>
         <tr>
           <th rowspan="2" class="th-header-main" style="width: 14%;">URAIAN</th>
-          <th colspan="9" class="th-realisasi">JAN - AUG 2026 (REALISASI)</th>
-          <th colspan="5" class="th-prognosa">SEP - DES 2026 (PROGNOSA)</th>
+          <th colspan="10" id="th-realisasi-header" class="th-realisasi">JAN - SEP 2026 (REALISASI)</th>
+          <th colspan="4" id="th-prognosa-header" class="th-prognosa">OKT - DES 2026 (PROGNOSA)</th>
           <th colspan="3" class="th-total">TOTAL 2026</th>
         </tr>
         <tr>
-          <th>Jan-26</th><th>Feb-26</th><th>Mar-26</th><th>Apr-26</th><th>Mei-26</th><th>Jun-26</th><th>Jul-26</th><th>Aug-26</th>
-          <th class="th-realisasi">TOTAL</th>
-          <th>Sep-26</th><th>Okt-26</th><th>Nov-26</th><th>Des-26</th>
-          <th class="th-prognosa">TOTAL</th>
+          <th>Jan-26</th><th>Feb-26</th><th>Mar-26</th><th>Apr-26</th><th>Mei-26</th><th>Jun-26</th><th>Jul-26</th><th>Aug-26</th><th>Sep-26</th>
+          <th class="th-realisasi" id="th-realisasi-sub">TOTAL</th>
+          <th>Okt-26</th><th>Nov-26</th><th>Des-26</th>
+          <th class="th-prognosa" id="th-prognosa-sub">TOTAL</th>
           <th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td class="row-label">PENDAPATAN USAHA (Juta Rp)</td>
-          <td>823</td><td>787</td><td>99</td><td>782</td><td>688</td><td>1.117</td><td>1.668</td><td>1.703</td>
-          <td class="txt-green">7.667</td>
-          <td>1.786</td><td>1.670</td><td>1.393</td><td>1.393</td>
-          <td class="txt-green">6.242</td>
-          <td>13.502</td><td>13.909</td><td class="txt-green">103,01%</td>
+          <td>823</td><td>787</td><td>99</td><td>782</td><td>688</td><td>1.117</td><td>1.668</td><td>1.703</td><td>1.786</td>
+          <td id="tbl-rev-real" class="txt-green">9.453</td>
+          <td>1.670</td><td>1.393</td><td>1.393</td>
+          <td id="tbl-rev-prog" class="txt-green">4.456</td>
+          <td>13.502</td><td id="tbl-rev-tot">13.909</td><td class="txt-green">103,01%</td>
         </tr>
         <tr>
           <td class="row-label">BEBAN POKOK PENDAPATAN (Juta Rp)</td>
-          <td>647</td><td>632</td><td>92</td><td>680</td><td>404</td><td>913</td><td>1.342</td><td>1.164</td>
-          <td class="txt-green">5.874</td>
-          <td>1.340</td><td>1.280</td><td>1.088</td><td>1.088</td>
-          <td class="txt-green">4.796</td>
-          <td>7.344</td><td>10.670</td><td class="txt-red">145,29%</td>
+          <td>647</td><td>632</td><td>92</td><td>680</td><td>404</td><td>913</td><td>1.342</td><td>1.164</td><td>1.340</td>
+          <td id="tbl-bpp-real" class="txt-green">7.214</td>
+          <td>1.280</td><td>1.088</td><td>1.088</td>
+          <td id="tbl-bpp-prog" class="txt-green">3.456</td>
+          <td>7.344</td><td id="tbl-bpp-tot">10.670</td><td class="txt-red">145,29%</td>
         </tr>
         <tr>
           <td class="row-label">GROSS PROFIT (Juta Rp)</td>
-          <td>176</td><td>155</td><td>7</td><td>102</td><td>284</td><td>204</td><td>326</td><td>539</td>
-          <td class="txt-green">1.793</td>
-          <td>446</td><td>390</td><td>305</td><td>305</td>
-          <td class="txt-green">1.446</td>
-          <td>6.158</td><td>3.239</td><td class="txt-red">52,60%</td>
+          <td>176</td><td>155</td><td>7</td><td>102</td><td>284</td><td>204</td><td>326</td><td>539</td><td>446</td>
+          <td id="tbl-gp-real" class="txt-green">2.239</td>
+          <td>390</td><td>305</td><td>305</td>
+          <td id="tbl-gp-prog" class="txt-green">1.000</td>
+          <td>6.158</td><td id="tbl-gp-tot">3.239</td><td class="txt-red">52,60%</td>
         </tr>
         <tr>
           <td class="row-label">GROSS PROFIT MARGIN (%)</td>
-          <td>21,39%</td><td>19,70%</td><td>7,07%</td><td>13,04%</td><td>41,28%</td><td>18,26%</td><td>19,54%</td><td>31,65%</td>
-          <td class="txt-green">23,39%</td>
-          <td>24,97%</td><td>23,35%</td><td>21,90%</td><td>21,90%</td>
-          <td class="txt-green">23,17%</td>
-          <td>45,61%</td><td>23,29%</td><td class="txt-red">51,06%</td>
+          <td>21,39%</td><td>19,70%</td><td>7,07%</td><td>13,04%</td><td>41,28%</td><td>18,26%</td><td>19,54%</td><td>31,65%</td><td>24,97%</td>
+          <td id="tbl-gpm-real" class="txt-green">23,69%</td>
+          <td>23,35%</td><td>21,90%</td><td>21,90%</td>
+          <td id="tbl-gpm-prog" class="txt-green">22,44%</td>
+          <td>45,61%</td><td id="tbl-gpm-tot">23,29%</td><td class="txt-red">51,06%</td>
         </tr>
       </tbody>
     </table>
@@ -344,8 +344,8 @@
   <!-- LEGEND DARK -->
   <div class="footer-legend">
     <strong>CATATAN :</strong>
-    <div class="legend-item"><div class="box-blue"></div> <span>Data Jan - Aug 2026 merupakan Realisasi</span></div>
-    <div class="legend-item"><div class="box-orange"></div> <span>Data Sep - Dec 2026 merupakan Prognosa</span></div>
+    <div class="legend-item"><div class="box-blue"></div> <span>Data Jan - Sep 2026 merupakan Realisasi</span></div>
+    <div class="legend-item"><div class="box-orange"></div> <span>Data Okt - Dec 2026 merupakan Prognosa</span></div>
   </div>
 
   <!-- DASHBOARD 2 (LIGHT MODE KOMPARATIF) -->
@@ -482,15 +482,15 @@
 
 
   <!-- ======================================================== -->
-  <!-- DASHBOARD 3 (PERSIS GAMBAR REFERENSI 3)                  -->
+  <!-- DASHBOARD 3 (OTOMATIS & DINAMIS S.D. SEPTEMBER)          -->
   <!-- ======================================================== -->
   <div class="dashboard-3-container">
     <div class="d3-header">
       <div>
         <div class="d3-title">FINANCIAL PERFORMANCE DASHBOARD</div>
-        <div id="d3-subtitle" class="d3-subtitle">Rencana vs Realisasi | Januari – Agustus 2026 | Outlook Full Year 2026</div>
+        <div id="d3-subtitle" class="d3-subtitle">Rencana vs Realisasi | Januari – September 2026 | Outlook Full Year 2026</div>
       </div>
-      <div id="d3-badge" class="d3-badge-top">Data s.d. Agustus 2026</div>
+      <div id="d3-badge" class="d3-badge-top">Data s.d. September 2026</div>
     </div>
 
     <!-- 4 KPI CARDS ATAS -->
@@ -500,8 +500,8 @@
           <div class="d3-kpi-icon" style="background: #0b63ce;"><i class="fa-solid fa-chart-simple"></i></div>
           <div class="d3-kpi-title">Pendapatan Usaha</div>
         </div>
-        <div id="d3-kpi-rev" class="d3-kpi-val">7.666</div>
-        <div id="d3-kpi-rev-pct" class="d3-kpi-sub">56,80% dari target 2026</div>
+        <div id="d3-kpi-rev" class="d3-kpi-val">9.453</div>
+        <div id="d3-kpi-rev-pct" class="d3-kpi-sub">70,01% dari target 2026</div>
       </div>
 
       <div class="d3-kpi-card" style="border-left: 5px solid #008767;">
@@ -509,8 +509,8 @@
           <div class="d3-kpi-icon" style="background: #008767;"><i class="fa-solid fa-receipt"></i></div>
           <div class="d3-kpi-title">Beban Pokok Pendapatan</div>
         </div>
-        <div id="d3-kpi-bpp" class="d3-kpi-val">5.873</div>
-        <div id="d3-kpi-bpp-pct" class="d3-kpi-sub">79,98% dari target 2026</div>
+        <div id="d3-kpi-bpp" class="d3-kpi-val">7.214</div>
+        <div id="d3-kpi-bpp-pct" class="d3-kpi-sub">98,23% dari target 2026</div>
       </div>
 
       <div class="d3-kpi-card" style="border-left: 5px solid #4a154b;">
@@ -518,8 +518,8 @@
           <div class="d3-kpi-icon" style="background: #4a154b;"><i class="fa-solid fa-chart-line"></i></div>
           <div class="d3-kpi-title">Gross Profit</div>
         </div>
-        <div id="d3-kpi-gp" class="d3-kpi-val">1.793</div>
-        <div id="d3-kpi-gp-pct" class="d3-kpi-sub">29,13% dari target 2026</div>
+        <div id="d3-kpi-gp" class="d3-kpi-val">2.239</div>
+        <div id="d3-kpi-gp-pct" class="d3-kpi-sub">36,36% dari target 2026</div>
       </div>
 
       <div class="d3-kpi-card" style="border-left: 5px solid #e67e22;">
@@ -527,7 +527,7 @@
           <div class="d3-kpi-icon" style="background: #e67e22;"><i class="fa-solid fa-percent"></i></div>
           <div class="d3-kpi-title">Gross Profit Margin</div>
         </div>
-        <div id="d3-kpi-gpm" class="d3-kpi-val">23,39%</div>
+        <div id="d3-kpi-gpm" class="d3-kpi-val">23,69%</div>
         <div class="d3-kpi-sub">Target 2026: 45,59%</div>
       </div>
     </div>
@@ -538,7 +538,7 @@
         <span style="background: #0f4c81; color: white; padding: 2px 8px; border-radius: 4px; font-size: 13px;">01</span> 
         PENDAPATAN USAHA vs BEBAN POKOK PENDAPATAN
       </div>
-      <div id="d3-sec-sub" class="d3-section-sub">Monthly performance – actual data available through August 2026</div>
+      <div id="d3-sec-sub" class="d3-section-sub">Monthly performance – actual data available through September 2026</div>
 
       <div class="d3-charts-row">
         <!-- Pendapatan Usaha -->
@@ -548,22 +548,22 @@
             <div class="d3-chart-sub">
               <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#cbd5e1; display:inline-block;"></span> Rencana (per bulan)</span>
               <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#0b63ce; display:inline-block;"></span> Realisasi</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #0b63ce; display:inline-block;"></span> <span id="lbl-d3-cum-rev">Realisasi s.d. Ags (Kumulatif)</span></span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #94a3b8; display:inline-block;"></span> <span id="lbl-d3-cum-rev-p">Rencana s.d. Ags (Kumulatif)</span></span>
+              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #0b63ce; display:inline-block;"></span> <span id="lbl-d3-cum-rev">Realisasi s.d. Sep (Kumulatif)</span></span>
+              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #94a3b8; display:inline-block;"></span> <span id="lbl-d3-cum-rev-p">Rencana s.d. Sep (Kumulatif)</span></span>
             </div>
           </div>
           <div class="d3-panel-flex">
             <div class="d3-canvas-wrap"><canvas id="d3ChartRev"></canvas></div>
             <div class="d3-cumul-box">
-              <div id="d3-cum-title-1" class="d3-cumul-title">Pencapaian s.d. Ags 2026</div>
+              <div id="d3-cum-title-1" class="d3-cumul-title">Pencapaian s.d. Sep 2026</div>
               <div class="d3-cumul-cols">
                 <div class="d3-cumul-item">
-                  <div id="d3-cum-rev-val" class="d3-cumul-val" style="color:#0b63ce;">7.666</div>
+                  <div id="d3-cum-rev-val" class="d3-cumul-val" style="color:#0b63ce;">9.453</div>
                   <div class="d3-cumul-bar-wrap"><div style="width:100%; height:82%; background:#0b63ce; border-radius:3px 3px 0 0;"></div></div>
                   <div class="d3-cumul-label">Realisasi (Kumulatif)</div>
                 </div>
                 <div class="d3-cumul-item">
-                  <div id="d3-cum-rev-plan-val" class="d3-cumul-val" style="color:#475569;">13.498</div>
+                  <div id="d3-cum-rev-plan-val" class="d3-cumul-val" style="color:#475569;">15.698</div>
                   <div class="d3-cumul-bar-wrap"><div style="width:100%; height:100%; background:#cbd5e1; border:1px dashed #94a3b8; border-radius:3px 3px 0 0;"></div></div>
                   <div class="d3-cumul-label">Rencana (Kumulatif)</div>
                 </div>
@@ -579,22 +579,22 @@
             <div class="d3-chart-sub">
               <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#cbd5e1; display:inline-block;"></span> Rencana (per bulan)</span>
               <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#008767; display:inline-block;"></span> Realisasi</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #008767; display:inline-block;"></span> <span id="lbl-d3-cum-bpp">Realisasi s.d. Ags (Kumulatif)</span></span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #94a3b8; display:inline-block;"></span> <span id="lbl-d3-cum-bpp-p">Rencana s.d. Ags (Kumulatif)</span></span>
+              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #008767; display:inline-block;"></span> <span id="lbl-d3-cum-bpp">Realisasi s.d. Sep (Kumulatif)</span></span>
+              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #94a3b8; display:inline-block;"></span> <span id="lbl-d3-cum-bpp-p">Rencana s.d. Sep (Kumulatif)</span></span>
             </div>
           </div>
           <div class="d3-panel-flex">
             <div class="d3-canvas-wrap"><canvas id="d3ChartBpp"></canvas></div>
             <div class="d3-cumul-box">
-              <div id="d3-cum-title-2" class="d3-cumul-title">Pencapaian s.d. Ags 2026</div>
+              <div id="d3-cum-title-2" class="d3-cumul-title">Pencapaian s.d. Sep 2026</div>
               <div class="d3-cumul-cols">
                 <div class="d3-cumul-item">
-                  <div id="d3-cum-bpp-val" class="d3-cumul-val" style="color:#008767;">5.873</div>
+                  <div id="d3-cum-bpp-val" class="d3-cumul-val" style="color:#008767;">7.214</div>
                   <div class="d3-cumul-bar-wrap"><div style="width:100%; height:80%; background:#008767; border-radius:3px 3px 0 0;"></div></div>
                   <div class="d3-cumul-label">Realisasi (Kumulatif)</div>
                 </div>
                 <div class="d3-cumul-item">
-                  <div id="d3-cum-bpp-plan-val" class="d3-cumul-val" style="color:#475569;">7.344</div>
+                  <div id="d3-cum-bpp-plan-val" class="d3-cumul-val" style="color:#475569;">8.562</div>
                   <div class="d3-cumul-bar-wrap"><div style="width:100%; height:100%; background:#cbd5e1; border:1px dashed #94a3b8; border-radius:3px 3px 0 0;"></div></div>
                   <div class="d3-cumul-label">Rencana (Kumulatif)</div>
                 </div>
@@ -621,22 +621,22 @@
             <div class="d3-chart-sub">
               <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#cbd5e1; display:inline-block;"></span> Rencana (per bulan)</span>
               <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#7c3aed; display:inline-block;"></span> Realisasi</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #7c3aed; display:inline-block;"></span> <span id="lbl-d3-cum-gp">Realisasi s.d. Ags (Kumulatif)</span></span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #94a3b8; display:inline-block;"></span> <span id="lbl-d3-cum-gp-p">Rencana s.d. Ags (Kumulatif)</span></span>
+              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #7c3aed; display:inline-block;"></span> <span id="lbl-d3-cum-gp">Realisasi s.d. Sep (Kumulatif)</span></span>
+              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #94a3b8; display:inline-block;"></span> <span id="lbl-d3-cum-gp-p">Rencana s.d. Sep (Kumulatif)</span></span>
             </div>
           </div>
           <div class="d3-panel-flex">
             <div class="d3-canvas-wrap"><canvas id="d3ChartGp"></canvas></div>
             <div class="d3-cumul-box">
-              <div id="d3-cum-title-3" class="d3-cumul-title">Pencapaian s.d. Ags 2026</div>
+              <div id="d3-cum-title-3" class="d3-cumul-title">Pencapaian s.d. Sep 2026</div>
               <div class="d3-cumul-cols">
                 <div class="d3-cumul-item">
-                  <div id="d3-cum-gp-val" class="d3-cumul-val" style="color:#7c3aed;">1.793</div>
+                  <div id="d3-cum-gp-val" class="d3-cumul-val" style="color:#7c3aed;">2.239</div>
                   <div class="d3-cumul-bar-wrap"><div style="width:100%; height:29%; background:#7c3aed; border-radius:3px 3px 0 0;"></div></div>
                   <div class="d3-cumul-label">Realisasi (Kumulatif)</div>
                 </div>
                 <div class="d3-cumul-item">
-                  <div id="d3-cum-gp-plan-val" class="d3-cumul-val" style="color:#475569;">6.154</div>
+                  <div id="d3-cum-gp-plan-val" class="d3-cumul-val" style="color:#475569;">7.136</div>
                   <div class="d3-cumul-bar-wrap"><div style="width:100%; height:100%; background:#cbd5e1; border:1px dashed #94a3b8; border-radius:3px 3px 0 0;"></div></div>
                   <div class="d3-cumul-label">Rencana (Kumulatif)</div>
                 </div>
@@ -653,23 +653,23 @@
               <span style="display:inline-flex; align-items:center; gap:2px;"><span style="width:8px; height:8px; background:#e67e22; border-radius:50%; display:inline-block;"></span> Rencana</span>
               <span style="display:inline-flex; align-items:center; gap:2px;"><span style="width:8px; height:8px; background:#1e293b; border-radius:50%; display:inline-block;"></span> Realisasi</span>
               <span>--- Target FY 45,59%</span>
-              <span style="display:inline-flex; align-items:center; gap:2px;"><span style="width:8px; height:8px; border:1px dashed #7c3aed; display:inline-block;"></span> <span id="lbl-d3-cum-gpm">Realisasi s.d. Ags</span></span>
-              <span style="display:inline-flex; align-items:center; gap:2px;"><span style="width:8px; height:8px; border:1px dashed #94a3b8; display:inline-block;"></span> <span id="lbl-d3-cum-gpm-p">Rencana s.d. Ags</span></span>
+              <span style="display:inline-flex; align-items:center; gap:2px;"><span style="width:8px; height:8px; border:1px dashed #7c3aed; display:inline-block;"></span> <span id="lbl-d3-cum-gpm">Realisasi s.d. Sep</span></span>
+              <span style="display:inline-flex; align-items:center; gap:2px;"><span style="width:8px; height:8px; border:1px dashed #94a3b8; display:inline-block;"></span> <span id="lbl-d3-cum-gpm-p">Rencana s.d. Sep</span></span>
             </div>
           </div>
           <div class="d3-panel-flex">
             <div class="d3-canvas-wrap"><canvas id="d3ChartGpm"></canvas></div>
             <div class="d3-cumul-box">
-              <div id="d3-cum-title-4" class="d3-cumul-title">Pencapaian s.d. Ags 2026</div>
+              <div id="d3-cum-title-4" class="d3-cumul-title">Pencapaian s.d. Sep 2026</div>
               <div class="d3-cumul-cols">
                 <div class="d3-cumul-item">
-                  <div id="d3-cum-gpm-val" class="d3-cumul-val" style="color:#7c3aed;">23,39%</div>
-                  <div class="d3-cumul-bar-wrap"><div style="width:100%; height:23.39%; background:#7c3aed; border-radius:3px 3px 0 0;"></div></div>
+                  <div id="d3-cum-gpm-val" class="d3-cumul-val" style="color:#7c3aed;">23,69%</div>
+                  <div class="d3-cumul-bar-wrap"><div style="width:100%; height:23.69%; background:#7c3aed; border-radius:3px 3px 0 0;"></div></div>
                   <div class="d3-cumul-label">Realisasi (Kumulatif)</div>
                 </div>
                 <div class="d3-cumul-item">
-                  <div id="d3-cum-gpm-plan-val" class="d3-cumul-val" style="color:#475569;">45,59%</div>
-                  <div class="d3-cumul-bar-wrap"><div style="width:100%; height:45.59%; background:#cbd5e1; border:1px dashed #94a3b8; border-radius:3px 3px 0 0;"></div></div>
+                  <div id="d3-cum-gpm-plan-val" class="d3-cumul-val" style="color:#475569;">45,46%</div>
+                  <div class="d3-cumul-bar-wrap"><div style="width:100%; height:45.46%; background:#cbd5e1; border:1px dashed #94a3b8; border-radius:3px 3px 0 0;"></div></div>
                   <div class="d3-cumul-label">Rencana (Kumulatif)</div>
                 </div>
               </div>
@@ -692,55 +692,48 @@
     const fullMonthsList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
     const monthLabels = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26", "Oct-26", "Nov-26", "Dec-26"];
 
-    // Default data arrays
-    let revActVal = [823, 787, 99, 782, 688, 1117, 1668, 1703, 1786, 1670, 1393, 1393];
-    let bppActVal = [647, 632, 92, 680, 404, 913, 1342, 1164, 1340, 1280, 1088, 1088];
-    let revPlanArr = [554, 554, 449, 380, 502, 879, 927, 1042, 2196, 2196, 2145, 1678];
-    let bppPlanArr = [195, 195, 195, 165, 308, 495, 531, 613, 1218, 1218, 1198, 1013];
+    const revActVal = [823, 787, 99, 782, 688, 1117, 1668, 1703, 1786, 1670, 1393, 1393];
+    const bppActVal = [647, 632, 92, 680, 404, 913, 1342, 1164, 1340, 1280, 1088, 1088];
+    const revPlanArr = [554, 554, 449, 380, 502, 879, 927, 1042, 2196, 2196, 2145, 1678];
+    const bppPlanArr = [195, 195, 195, 165, 308, 495, 531, 613, 1218, 1218, 1198, 1013];
 
-    // Status array (REALISASI vs PROGNOSA) dapat diubah secara dinamis, default s.d. Agustus (8 bulan pertama)
-    let statusArr = ["REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","PROGNOSA","PROGNOSA","PROGNOSA","PROGNOSA"];
+    // Status array diperbarui: September (index 8) diubah menjadi "REALISASI"
+    const statusArr = ["REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","PROGNOSA","PROGNOSA","PROGNOSA"];
 
     let chartInstances = {};
 
     function recalculateAndUpdateAll() {
-      // Hitung ulang turunan GP & GPM
       const gpActVal = revActVal.map((r, i) => r - bppActVal[i]);
       const gpmActVal = revActVal.map((r, i) => r > 0 ? (gpActVal[i] / r * 100) : 0);
       const gpPlanArr = revPlanArr.map((r, i) => r - bppPlanArr[i]);
       const gpmPlanArr = revPlanArr.map((r, i) => r > 0 ? (gpPlanArr[i] / r * 100) : 0);
 
-      // Tentukan batas realisasi berdasarkan statusArr
       let realCount = 0;
       for (let i = 0; i < statusArr.length; i++) {
         if (statusArr[i] === 'REALISASI') realCount = i + 1;
       }
-      if (realCount === 0) realCount = 8; // fallback default
+      if (realCount === 0) realCount = 8;
 
       const lastRealMonthShort = monthsList[realCount - 1];
       const lastRealMonthFull = fullMonthsList[realCount - 1];
+      const nextMonthShort = monthsList[realCount] || 'Dec';
 
-      // Update Header & Badge Text
+      // Update Header Badge Text
       document.getElementById('badge-realisasi-text').textContent = `Jan - ${lastRealMonthShort} 2026 (Realisasi)`;
-      document.getElementById('badge-prognosa-text').textContent = `${monthsList[realCount] || 'Dec'} - Dec 2026 (Prognosa)`;
+      document.getElementById('badge-prognosa-text').textContent = `${nextMonthShort} - Dec 2026 (Prognosa)`;
 
-      // Update Tabel Utama (HTML Table)
-      const tableRows = document.querySelectorAll('#main-table tbody tr');
-      
-      // Update header kolom tabel juga jika perlu secara dinamis
+      // Update Tabel Utama Header
       const theadTrs = document.querySelectorAll('#main-table thead tr');
       if(theadTrs.length >= 1) {
-        theadTrs[0].children[1].setAttribute('colspan', realCount);
+        theadTrs[0].children[1].setAttribute('colspan', realCount + 1); // +1 untuk kolom total realisasi
         theadTrs[0].children[1].textContent = `JAN - ${lastRealMonthShort.toUpperCase()} 2026 (REALISASI)`;
         
         const progCount = 12 - realCount;
-        theadTrs[0].children[2].setAttribute('colspan', progCount > 0 ? progCount : 1);
-        theadTrs[0].children[2].textContent = `${progCount > 0 ? (monthsList[realCount].toUpperCase() + ' - DEC 2026 (PROGNOSA)') : 'PROGNOSA'}`;
+        theadTrs[0].children[2].setAttribute('colspan', (progCount > 0 ? progCount : 1) + 1); // +1 untuk kolom total prognosa
+        theadTrs[0].children[2].textContent = progCount > 0 ? `${nextMonthShort.toUpperCase()} - DEC 2026 (PROGNOSA)` : 'PROGNOSA';
       }
 
-      // Hitung total realisasi, prognosa, dan tahunan
       const sum = arr => arr.reduce((a, b) => a + b, 0);
-      
       const totRevAct = sum(revActVal.slice(0, realCount));
       const totRevProg = sum(revActVal.slice(realCount));
       const totRevFull = sum(revActVal);
@@ -759,19 +752,25 @@
       const avgGpmAct = totRevFull > 0 ? (totGpFull / totRevFull * 100) : 0;
       const planGpmFull = planRevFull > 0 ? (planGpFull / planRevFull * 100) : 0;
 
-      // Update baris-baris tabel HTML
-      // 1. Pendapatan
-      let revColsHTML = '';
-      for(let i=0; i<12; i++) {
-        if(i === realCount) revColsHTML += `<td class="txt-green">${Math.round(totRevAct).toLocaleString('id-ID')}</td>`; // cell pemisah total realisasi
-        revColsHTML += `<td>${revActVal[i]}</td>`;
-      }
-      // Perbarui cell tabel secara presisi
-      // Baris 0: Pendapatan
-      const r0 = tableRows[0].children;
-      for(let i=0; i<8; i++) r0[i+1].textContent = revActVal[i];
-      // (Sesuaikan dengan struktur kolom tabel bawaan)
-      
+      // Update isi cell total pada tabel HTML utama
+      document.getElementById('tbl-rev-real').textContent = Math.round(totRevAct).toLocaleString('id-ID');
+      document.getElementById('tbl-rev-prog').textContent = Math.round(totRevProg).toLocaleString('id-ID');
+      document.getElementById('tbl-rev-tot').textContent = Math.round(totRevFull).toLocaleString('id-ID');
+
+      document.getElementById('tbl-bpp-real').textContent = Math.round(totBppAct).toLocaleString('id-ID');
+      document.getElementById('tbl-bpp-prog').textContent = Math.round(totBppProg).toLocaleString('id-ID');
+      document.getElementById('tbl-bpp-tot').textContent = Math.round(totBppFull).toLocaleString('id-ID');
+
+      document.getElementById('tbl-gp-real').textContent = Math.round(totGpAct).toLocaleString('id-ID');
+      document.getElementById('tbl-gp-prog').textContent = Math.round(totGpProg).toLocaleString('id-ID');
+      document.getElementById('tbl-gp-tot').textContent = Math.round(totGpFull).toLocaleString('id-ID');
+
+      const avgGpmReal = totRevAct > 0 ? (totGpAct / totRevAct * 100) : 0;
+      const avgGpmProg = totRevProg > 0 ? (totGpProg / totRevProg * 100) : 0;
+      document.getElementById('tbl-gpm-real').textContent = avgGpmReal.toFixed(2).replace('.', ',') + '%';
+      document.getElementById('tbl-gpm-prog').textContent = avgGpmProg.toFixed(2).replace('.', ',') + '%';
+      document.getElementById('tbl-gpm-tot').textContent = avgGpmAct.toFixed(2).replace('.', ',') + '%';
+
       // Update KPI Cards Dark (Dashboard 1)
       document.getElementById('kpi-rev-plan').textContent = Math.round(planRevFull).toLocaleString('id-ID');
       document.getElementById('kpi-rev-act').textContent = Math.round(totRevFull).toLocaleString('id-ID');
@@ -791,11 +790,8 @@
       document.getElementById('kpi-gpm-plan').textContent = planGpmFull.toFixed(2).replace('.', ',') + '%';
       document.getElementById('kpi-gpm-act').textContent = avgGpmAct.toFixed(2).replace('.', ',') + '%';
 
-      // Render Charts Dashboard 1 (Dark)
       renderDarkCharts();
-      // Render Dashboard 2 (Light Komparatif)
       renderLightSectionDirect();
-      // Render Dashboard 3 (Otomatis & Dinamis)
       renderDashboard3(realCount, lastRealMonthShort, lastRealMonthFull);
     }
 
@@ -962,9 +958,6 @@
       });
     }
 
-    // ==========================================
-    // RENDER DASHBOARD 3 OTOMATIS & DINAMIS
-    // ==========================================
     function renderDashboard3(count, shortMonth, fullMonth) {
       const shortMonths = monthsList.slice(0, count);
       const planRev = revPlanArr.slice(0, count);
@@ -1098,7 +1091,7 @@
       });
     }
 
-    // Inisialisasi awal saat halaman dimuat
+    // Jalankan kalkulasi otomatis saat halaman dimuat
     recalculateAndUpdateAll();
   </script>
 </body>
