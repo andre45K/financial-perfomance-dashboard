@@ -576,7 +576,7 @@
       if (idx > 0) headHtml += `<th class="th-realisasi">TOTAL</th>`;
 
       for (let i = idx; i < 12; i++) headHtml += `<th>${monthLabels[i]}</th>`;
-      if (progCount > 0) html += `<th class="th-prognosa">TOTAL</th>`;
+      if (progCount > 0) headHtml += `<th class="th-prognosa">TOTAL</th>`;
 
       headHtml += `<th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th></tr></thead>`;
 
@@ -661,7 +661,7 @@
         }
       });
 
-      // 2. Chart Section 02 (GROSS PROFIT MARGIN DENGAN BACKGROUND BULAT PUTIH)
+      // 2. Chart Section 02 (TANPA PENUMPUKAN ANGKA BAR & LINE)
       if (chartInstances['chartSec2']) chartInstances['chartSec2'].destroy();
       const ctx2 = document.getElementById('chartSec2').getContext('2d');
       chartInstances['chartSec2'] = new Chart(ctx2, {
@@ -701,11 +701,11 @@
               barPercentage: 0.45,
               yAxisID: 'y',
               datalabels: {
-                align: 'top',
+                align: 'start', // Ditempatkan di dalam bagian atas batang
                 anchor: 'end',
-                color: '#7c3aed',
+                color: '#ffffff', // Teks warna putih bersih agar mudah dibaca di dalam batang ungu
                 font: { size: 8.5, weight: 'bold' },
-                offset: 2,
+                offset: 4,
                 formatter: v => Math.round(v).toLocaleString('id-ID')
               }
             }
