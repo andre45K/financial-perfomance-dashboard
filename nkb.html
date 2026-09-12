@@ -48,9 +48,9 @@
     .charts-grid { display: grid; grid-template-columns: 1.3fr 1.2fr; gap: 15px; margin-bottom: 20px; }
     .chart-card { background: #ffffff; color: #1e293b; border-radius: 8px; padding: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); display: flex; flex-direction: column; }
     .chart-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #ffffff; background: #0f4c81; padding: 8px 12px; border-radius: 4px; margin-bottom: 14px; letter-spacing: 0.5px; }
-    .chart-container { position: relative; height: 280px; width: 100%; }
+    .chart-container { position: relative; height: 300px; width: 100%; }
 
-    /* DONUT LAYOUT WITH COMBINED LEGEND */
+    /* DONUT LAYOUT WITH LEGEND */
     .donut-layout { display: grid; grid-template-columns: 1fr 140px; gap: 5px; align-items: center; height: 100%; }
     .custom-legend { display: flex; flex-direction: column; gap: 8px; font-size: 10.5px; }
     .legend-category-title { font-weight: 800; color: #1e293b; font-size: 11px; margin-bottom: 1px; }
@@ -168,7 +168,7 @@
         </div>
       </div>
 
-      <!-- Chart 2: Per Jenis Alat (Donut) - Sizing Adjusted & Legend Included -->
+      <!-- Chart 2: Per Jenis Alat (Donut) with Non-overlapping Callout Labels -->
       <div class="chart-card">
         <div class="chart-title">RENCANA NILAI KONTRAK BARU PER JENIS ALAT</div>
         <div class="chart-container">
@@ -390,7 +390,7 @@
       }
     });
 
-    // 2. Equipment Donut Chart - Adjusted Size & External Callout Labels with Legend
+    // 2. Equipment Donut Chart with Staggered Offset & Callout Plugin
     const ctxEquipment = document.getElementById('chartEquipment').getContext('2d');
     new Chart(ctxEquipment, {
       type: 'doughnut',
@@ -407,7 +407,7 @@
         responsive: true,
         maintainAspectRatio: false,
         layout: {
-          padding: { top: 30, bottom: 30, left: 20, right: 20 }
+          padding: { top: 45, bottom: 25, left: 25, right: 25 }
         },
         plugins: {
           legend: { display: false },
@@ -431,8 +431,18 @@
               return formattedVal + '\n(' + pct + '%)';
             },
             anchor: 'end',
-            align: 'end',
-            offset: 10,
+            align: function(context) {
+              // Stagger top-left items to prevent overlap
+              const idx = context.dataIndex;
+              if (idx === 3) return 'start'; // Batching Plant pushed inward slightly
+              return 'end';
+            },
+            offset: function(context) {
+              const idx = context.dataIndex;
+              if (idx === 4) return 28; // Push Silo slightly higher/outwards
+              if (idx === 3) return 12;
+              return 15;
+            },
             textAlign: 'center',
             backgroundColor: '#ffffff',
             borderColor: '#cbd5e1',
@@ -454,15 +464,19 @@
             const angle = element.startAngle + (element.endAngle - element.startAngle) / 2;
             
             const r1 = element.outerRadius;
-            const r2 = r1 + 10;
+            let r2 = r1 + 12;
+            if (index === 4) r2 = r1 + 24; // Extra headroom for Silo
             
             const startX = element.x + Math.cos(angle) * r1;
             const startY = element.y + Math.sin(angle) * r1;
             const midX = element.x + Math.cos(angle) * r2;
-            const midY = element.y + Math.sin(angle) * r2;
+            let midY = element.y + Math.sin(angle) * r2;
             
+            if (index === 4) midY -= 6; // Shift Silo label line up
+            if (index === 3) midY -= 4; // Shift Batching plant line up
+
             const isRightSide = Math.cos(angle) >= 0;
-            const endX = midX + (isRightSide ? 15 : -15);
+            const endX = midX + (isRightSide ? 18 : -18);
             const endY = midY;
 
             ctx.save();
