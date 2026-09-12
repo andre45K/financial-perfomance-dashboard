@@ -164,7 +164,7 @@
     <div class="kpi-card">
       <div class="kpi-header">
         <div class="kpi-icon icon-blue">Rp</div>
-        <div class="kpi-title">PENDAPATAN USAHA (Juta Rp)</div>
+        <div class="kpi-title">PENDAPATAN USAHA (JUTA RP)</div>
       </div>
       <div class="kpi-body">
         <div class="kpi-metrics">
@@ -181,7 +181,7 @@
     <div class="kpi-card">
       <div class="kpi-header">
         <div class="kpi-icon icon-orange">Rp</div>
-        <div class="kpi-title">BEBAN POKOK PENDAPATAN (Juta Rp)</div>
+        <div class="kpi-title">BEBAN POKOK PENDAPATAN (JUTA RP)</div>
       </div>
       <div class="kpi-body">
         <div class="kpi-metrics">
@@ -198,7 +198,7 @@
     <div class="kpi-card">
       <div class="kpi-header">
         <div class="kpi-icon icon-green">Rp</div>
-        <div class="kpi-title">GROSS PROFIT (Juta Rp)</div>
+        <div class="kpi-title">GROSS PROFIT (JUTA RP)</div>
       </div>
       <div class="kpi-body">
         <div class="kpi-metrics">
@@ -250,7 +250,7 @@
     </div>
   </div>
 
-  <!-- TABEL UTAMA DARK -->
+  <!-- TABEL UTAMA DARK (DIMUNCULKAN KEMBALI SEPERTI REFERENSI) -->
   <div class="table-container">
     <table id="main-table"></table>
   </div>
@@ -427,7 +427,7 @@
       "May": { status: "REALISASI", revenuePlan: 502, revenueActual: 688, bppPlan: 308, bppActual: 404 },
       "Jun": { status: "REALISASI", revenuePlan: 879, revenueActual: 1117, bppPlan: 495, bppActual: 913 },
       "Jul": { status: "REALISASI", revenuePlan: 927, revenueActual: 1668, bppPlan: 531, bppActual: 1342 },
-      "Aug": { status: "PROGNOSA", revenuePlan: 1042, revenueActual: 1703, bppPlan: 613, bppActual: 1164 },
+      "Aug": { status: "REALISASI", revenuePlan: 1042, revenueActual: 1703, bppPlan: 613, bppActual: 1164 },
       "Sep": { status: "PROGNOSA", revenuePlan: 2196, revenueActual: 1786, bppPlan: 1218, bppActual: 1340 },
       "Oct": { status: "PROGNOSA", revenuePlan: 2196, revenueActual: 1670, bppPlan: 1218, bppActual: 1280 },
       "Nov": { status: "PROGNOSA", revenuePlan: 2145, revenueActual: 1393, bppPlan: 1198, bppActual: 1088 },
@@ -437,6 +437,7 @@
     let chartInstances = {};
 
     renderLightSectionDirect();
+    initDashboard();
 
     async function initDashboard() {
       let dataStore = { ...defaultData };
@@ -661,7 +662,7 @@
         }
       });
 
-      // 2. Chart Section 02 (TANPA PENUMPUKAN ANGKA BAR & LINE)
+      // 2. Chart Section 02
       if (chartInstances['chartSec2']) chartInstances['chartSec2'].destroy();
       const ctx2 = document.getElementById('chartSec2').getContext('2d');
       chartInstances['chartSec2'] = new Chart(ctx2, {
@@ -701,9 +702,9 @@
               barPercentage: 0.45,
               yAxisID: 'y',
               datalabels: {
-                align: 'start', // Ditempatkan di dalam bagian atas batang
+                align: 'start',
                 anchor: 'end',
-                color: '#ffffff', // Teks warna putih bersih agar mudah dibaca di dalam batang ungu
+                color: '#ffffff',
                 font: { size: 8.5, weight: 'bold' },
                 offset: 4,
                 formatter: v => Math.round(v).toLocaleString('id-ID')
@@ -732,8 +733,6 @@
         }
       });
     }
-
-    initDashboard();
   </script>
 </body>
 </html>
