@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Financial Performance Dashboard</title>
+  <!-- Library Chart.js & Plugin Datalabels -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
     body { background-color: #060d1a; color: #ffffff; padding: 15px; font-size: 13px; }
@@ -48,9 +50,9 @@
 
     /* Charts Grid */
     .charts-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 15px; }
-    .chart-card { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; padding: 10px; height: 220px; }
+    .chart-card { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; padding: 10px; height: 230px; }
     .chart-title { font-size: 10px; font-weight: bold; text-align: center; margin-bottom: 8px; color: #cbd5e1; }
-    .chart-container { position: relative; height: 175px; width: 100%; }
+    .chart-container { position: relative; height: 185px; width: 100%; }
 
     /* Table Section */
     .table-container { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; overflow-x: auto; margin-bottom: 10px; }
@@ -246,9 +248,9 @@
     const db = getFirestore(app);
 
     const monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const monthLabels = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "Mei-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26", "Okt-26", "Nov-26", "Des-26"];
+    const monthLabels = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Des"];
 
-    // Default template fallback data jika Firestore masih kosong
+    // Data Fallback bawaan template
     const defaultData = {
       "Jan": { status: "REALISASI", revenuePlan: 554, revenueActual: 823, bppPlan: 195, bppActual: 647 },
       "Feb": { status: "REALISASI", revenuePlan: 554, revenueActual: 787, bppPlan: 195, bppActual: 632 },
@@ -275,14 +277,13 @@
           dataStore[doc.id] = doc.data();
         });
       } catch (e) {
-        console.warn("Menggunakan data fallback template karena Firestore belum diisi.");
+        console.warn("Menggunakan data fallback template.");
       }
 
       renderDashboard(dataStore);
     }
 
     function renderDashboard(data) {
-      // Arrays penampung data bulanan
       let revPlanArr = [], revActArr = [], bppPlanArr = [], bppActArr = [];
       let gpPlanArr = [], gpActArr = [], gpmPlanArr = [], gpmActArr = [];
       let statusArr = [];
@@ -306,7 +307,6 @@
         statusArr.push(item.status || 'PROGNOSA');
       });
 
-      // Kalkulasi Totals
       const sum = arr => arr.reduce((a, b) => a + b, 0);
       const totalRevPlan = sum(revPlanArr);
       const totalRevAct = sum(revActArr);
@@ -319,7 +319,7 @@
       const totalGpmPlan = totalRevPlan > 0 ? (totalGpPlan / totalRevPlan * 100) : 0;
       const totalGpmAct = totalRevAct > 0 ? (totalGpAct / totalRevAct * 100) : 0;
 
-      // Update Cards KPI
+      // KPI Cards
       document.getElementById('kpi-rev-plan').textContent = totalRevPlan.toLocaleString('id-ID');
       document.getElementById('kpi-rev-act').textContent = totalRevAct.toLocaleString('id-ID');
       updateBadge('kpi-rev-badge', totalRevAct, totalRevPlan);
@@ -336,7 +336,7 @@
       document.getElementById('kpi-gpm-act').textContent = totalGpmAct.toFixed(2) + '%';
       updateBadge('kpi-gpm-badge', totalGpmAct, totalGpmPlan);
 
-      // Render Charts & Table
+      // Render Combo Charts & Table
       renderCharts({ revActArr, bppActArr, gpActArr, gpmActArr, statusArr });
       renderTable({ revPlanArr, revActArr, bppPlanArr, bppActArr, gpPlanArr, gpActArr, gpmPlanArr, gpmActArr, statusArr });
     }
@@ -352,52 +352,85 @@
     }
 
     function renderCharts(d) {
-      const colors = (stat, realColor, progColor) => d.statusArr.map(s => s === 'REALISASI' ? realColor : progColor);
+      // Registrasi Plugin DataLabels
+      Chart.register(ChartDataLabels);
 
-      createBarChart('chartRevenue', d.revActArr, colors('status', '#1d4ed8', '#d97706'));
-      createBarChart('chartBPP', d.bppActArr, colors('status', '#ea580c', '#d97706'));
-      createBarChart('chartGP', d.gpActArr, colors('status', '#16a34a', '#d97706'));
-      createLineChart('chartGPM', d.gpmActArr, colors('status', '#9333ea', '#d97706'));
+      const realBg = (c) => d.statusArr.map(s => s === 'REALISASI' ? c : '#d97706');
+      
+      // 1. Pendapatan (Biru = Realisasi, Kuning = Prognosa)
+      createComboChart('chartRevenue', d.revActArr, realBg('#1d4ed8'), '#ffffff', false);
+      
+      // 2. BPP (Oranye = Realisasi, Kuning = Prognosa)
+      createComboChart('chartBPP', d.bppActArr, realBg('#ea580c'), '#ffffff', false);
+      
+      // 3. Gross Profit (Hijau = Realisasi, Kuning = Prognosa)
+      createComboChart('chartGP', d.gpActArr, realBg('#16a34a'), '#ffffff', false);
+      
+      // 4. GPM (Ungu = Realisasi, Kuning = Prognosa)
+      createComboChart('chartGPM', d.gpmActArr, realBg('#9333ea'), '#ffffff', true);
     }
 
-    function createBarChart(id, data, bgColors) {
+    function createComboChart(id, data, barColors, lineColor, isPercentage = false) {
       if (chartInstances[id]) chartInstances[id].destroy();
       const ctx = document.getElementById(id).getContext('2d');
+      
       chartInstances[id] = new Chart(ctx, {
-        type: 'bar',
         data: {
           labels: monthLabels,
-          datasets: [{ data, backgroundColor: bgColors, borderRadius: 2 }]
+          datasets: [
+            // Line Chart
+            {
+              type: 'line',
+              data: data,
+              borderColor: lineColor,
+              borderWidth: 1.5,
+              pointBackgroundColor: '#ffffff',
+              pointBorderColor: lineColor,
+              pointRadius: 3.5,
+              tension: 0.1,
+              datalabels: {
+                align: 'top',
+                anchor: 'end',
+                offset: 2,
+                color: '#ffffff',
+                font: { size: 8, weight: 'bold' },
+                formatter: (val) => isPercentage ? val.toFixed(2).replace('.', ',') + '%' : Math.round(val).toLocaleString('id-ID')
+              }
+            },
+            // Bar Chart
+            {
+              type: 'bar',
+              data: data,
+              backgroundColor: barColors,
+              borderRadius: 2,
+              barPercentage: 0.6,
+              datalabels: { display: false }
+            }
+          ]
         },
         options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: {
+            padding: { top: 20 }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: { enabled: true }
+          },
           scales: {
-            x: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { display: false } },
-            y: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { color: '#1e2d42' } }
-          }
-        }
-      });
-    }
-
-    function createLineChart(id, data, pointColors) {
-      if (chartInstances[id]) chartInstances[id].destroy();
-      const ctx = document.getElementById(id).getContext('2d');
-      chartInstances[id] = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: monthLabels,
-          datasets: [{
-            data, borderColor: '#9333ea', backgroundColor: '#9333ea',
-            pointBackgroundColor: pointColors, pointRadius: 4, tension: 0.2
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { display: false } },
-            y: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { color: '#1e2d42' } }
+            x: { 
+              ticks: { color: '#94a3b8', font: { size: 8 } }, 
+              grid: { display: false } 
+            },
+            y: { 
+              ticks: { 
+                color: '#94a3b8', 
+                font: { size: 8 },
+                callback: (val) => isPercentage ? val + '%' : val
+              }, 
+              grid: { color: '#1e2d42' } 
+            }
           }
         }
       });
@@ -405,7 +438,6 @@
 
     function renderTable(d) {
       const tbody = document.getElementById('table-body');
-      
       const sliceSum = (arr, start, end) => arr.slice(start, end).reduce((a, b) => a + b, 0);
       
       const revRealTot = sliceSum(d.revActArr, 0, 7);
