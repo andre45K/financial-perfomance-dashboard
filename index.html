@@ -135,9 +135,39 @@
     .val-purple-text { color: #7c3aed; }
     .val-orange-text { color: #e67e22; }
 
+    /* DASHBOARD 3 (STYLE PERSIS GAMBAR TERBARU) */
+    .dashboard-3-container { background: #ffffff; color: #333333; border-radius: 14px; padding: 24px; margin-top: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+    .d3-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 20px; }
+    .d3-title { font-size: 22px; font-weight: 900; color: #0f4c81; text-transform: uppercase; letter-spacing: 0.5px; }
+    .d3-subtitle { font-size: 11px; color: #64748b; font-weight: 700; margin-top: 2px; }
+    .d3-badge-top { background: #0f4c81; color: white; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; }
+
+    .d3-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
+    .d3-kpi-card { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px 16px; position: relative; }
+    .d3-kpi-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .d3-kpi-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; }
+    .d3-kpi-title { font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; }
+    .d3-kpi-val { font-size: 24px; font-weight: 900; color: #0f4c81; line-height: 1.1; margin-top: 4px; }
+    .d3-kpi-sub { font-size: 9px; font-weight: 700; color: #64748b; margin-top: 4px; }
+
+    .d3-section-title { font-size: 16px; font-weight: 900; color: #0f4c81; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+    .d3-section-sub { font-size: 10px; color: #64748b; font-weight: 600; margin-bottom: 15px; }
+    
+    .d3-charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+    .d3-chart-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 15px; position: relative; height: 340px; }
+    .d3-chart-title { font-weight: 800; font-size: 13px; color: #1e293b; margin-bottom: 4px; }
+    .d3-chart-sub { font-size: 8.5px; color: #64748b; margin-bottom: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .d3-canvas-wrap { position: relative; height: 260px; width: 100%; }
+
+    .d3-target-box { position: absolute; right: 12px; top: 40px; border: 1.5px dashed #0b63ce; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 6px; text-align: center; width: 130px; z-index: 5; }
+    .d3-target-title { font-size: 8px; font-weight: 800; color: #0b63ce; text-transform: uppercase; }
+    .d3-target-num { font-size: 18px; font-weight: 900; color: #0b63ce; margin-top: 2px; }
+
     @media (max-width: 1024px) {
       .panel-light-grid { grid-template-columns: 1fr; }
       .total-box-light { border-left: none; border-top: 2px dashed #cbd5e1; padding-left: 0; padding-top: 15px; }
+      .d3-charts-row { grid-template-columns: 1fr; }
+      .d3-kpi-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -250,7 +280,7 @@
     </div>
   </div>
 
-  <!-- TABEL UTAMA DARK (PASTI MUNCUL LANGSUNG) -->
+  <!-- TABEL UTAMA DARK -->
   <div class="table-container">
     <table id="main-table">
       <thead>
@@ -312,7 +342,7 @@
     <div class="legend-item"><div class="box-orange"></div> <span>Data Sep - Dec 2026 merupakan Prognosa</span></div>
   </div>
 
-  <!-- DASHBOARD 2 (LIGHT MODE) -->
+  <!-- DASHBOARD 2 (LIGHT MODE KOMPARATIF) -->
   <div class="section-divider-title">VISUALISASI ANALISIS KOMPARATIF</div>
 
   <!-- PANEL 01 -->
@@ -339,9 +369,7 @@
               <div id="sec1-avg-rev" class="item-light-sub-val">1.125</div>
             </div>
           </div>
-
           <hr style="border:none; border-top: 1px solid #cbd5e1; margin: 4px 0;">
-
           <div class="item-light">
             <div class="icon-circle-custom bg-circle-teal">
               <i class="fa-solid fa-receipt" style="font-size: 20px;"></i>
@@ -406,9 +434,7 @@
               <div id="sec2-avg-gp" class="item-light-sub-val" style="color:#7c3aed;">513</div>
             </div>
           </div>
-
           <hr style="border:none; border-top: 1px solid #cbd5e1; margin: 4px 0;">
-
           <div class="item-light">
             <div class="icon-circle-custom bg-circle-orange">
               <i class="fa-solid fa-percent" style="font-size: 20px;"></i>
@@ -447,6 +473,151 @@
       </div>
     </div>
   </div>
+
+
+  <!-- ======================================================== -->
+  <!-- DASHBOARD 3 (PERSIS SEPERTI GAMBAR REFERENSI TERBARU)      -->
+  <!-- ======================================================== -->
+  <div class="dashboard-3-container">
+    <div class="d3-header">
+      <div>
+        <div class="d3-title">FINANCIAL PERFORMANCE DASHBOARD</div>
+        <div class="d3-subtitle">Rencana vs Realisasi | Januari – Agustus 2026 | Outlook Full Year 2026</div>
+      </div>
+      <div class="d3-badge-top">Data s.d. Agustus 2026</div>
+    </div>
+
+    <!-- 4 KPI CARDS ATAS -->
+    <div class="d3-kpi-grid">
+      <div class="d3-kpi-card" style="border-left: 5px solid #0b63ce;">
+        <div class="d3-kpi-head">
+          <div class="d3-kpi-icon" style="background: #0b63ce;"><i class="fa-solid fa-chart-simple"></i></div>
+          <div class="d3-kpi-title">Pendapatan Usaha</div>
+        </div>
+        <div class="d3-kpi-val">7.666</div>
+        <div class="d3-kpi-sub">56,80% dari target 2026</div>
+      </div>
+
+      <div class="d3-kpi-card" style="border-left: 5px solid #008767;">
+        <div class="d3-kpi-head">
+          <div class="d3-kpi-icon" style="background: #008767;"><i class="fa-solid fa-receipt"></i></div>
+          <div class="d3-kpi-title">Beban Pokok Pendapatan</div>
+        </div>
+        <div class="d3-kpi-val">5.873</div>
+        <div class="d3-kpi-sub">79,98% dari target 2026</div>
+      </div>
+
+      <div class="d3-kpi-card" style="border-left: 5px solid #4a154b;">
+        <div class="d3-kpi-head">
+          <div class="d3-kpi-icon" style="background: #4a154b;"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="d3-kpi-title">Gross Profit</div>
+        </div>
+        <div class="d3-kpi-val">1.793</div>
+        <div class="d3-kpi-sub">29,13% dari target 2026</div>
+      </div>
+
+      <div class="d3-kpi-card" style="border-left: 5px solid #e67e22;">
+        <div class="d3-kpi-head">
+          <div class="d3-kpi-icon" style="background: #e67e22;"><i class="fa-solid fa-percent"></i></div>
+          <div class="d3-kpi-title">Gross Profit Margin</div>
+        </div>
+        <div class="d3-kpi-val">23,39%</div>
+        <div class="d3-kpi-sub">Target 2026: 45,59%</div>
+      </div>
+    </div>
+
+    <!-- BAGIAN 01 -->
+    <div style="margin-bottom: 25px;">
+      <div class="d3-section-title">
+        <span style="background: #0f4c81; color: white; padding: 2px 8px; border-radius: 4px; font-size: 13px;">01</span> 
+        PENDAPATAN USAHA vs BEBAN POKOK PENDAPATAN
+      </div>
+      <div class="d3-section-sub">Monthly performance – actual data available through August 2026</div>
+
+      <div class="d3-charts-row">
+        <!-- Grafik Pendapatan Usaha -->
+        <div class="d3-chart-box">
+          <div class="d3-chart-title">Pendapatan Usaha</div>
+          <div class="d3-chart-sub">
+            <span>⬛ Rencana (per bulan)</span>
+            <span>⬛ Realisasi</span>
+            <span>◻ Realisasi s.d. Ags 2026 (Kumulatif)</span>
+          </div>
+          <div class="d3-target-box">
+            <div class="d3-target-title">Pencapaian s.d. Ags 2026</div>
+            <div class="d3-target-num" style="color:#0b63ce;">13.498</div>
+          </div>
+          <div class="d3-canvas-wrap">
+            <canvas id="d3ChartRev"></canvas>
+          </div>
+        </div>
+
+        <!-- Grafik Beban Pokok -->
+        <div class="d3-chart-box">
+          <div class="d3-chart-title">Beban Pokok Pendapatan</div>
+          <div class="d3-chart-sub">
+            <span>⬛ Rencana (per bulan)</span>
+            <span>⬛ Realisasi</span>
+            <span>◻ Realisasi s.d. Ags 2026 (Kumulatif)</span>
+          </div>
+          <div class="d3-target-box">
+            <div class="d3-target-title">Pencapaian s.d. Ags 2026</div>
+            <div class="d3-target-num" style="color:#008767;">7.344</div>
+          </div>
+          <div class="d3-canvas-wrap">
+            <canvas id="d3ChartBpp"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BAGIAN 02 -->
+    <div>
+      <div class="d3-section-title">
+        <span style="background: #4a154b; color: white; padding: 2px 8px; border-radius: 4px; font-size: 13px;">02</span> 
+        Gross Profit & Gross Profit Margin
+      </div>
+      <div class="d3-section-sub">Monthly profitability performance and full-year target positioning</div>
+
+      <div class="d3-charts-row">
+        <!-- Grafik Gross Profit -->
+        <div class="d3-chart-box">
+          <div class="d3-chart-title">Gross Profit</div>
+          <div class="d3-chart-sub">
+            <span>⬛ Rencana (per bulan)</span>
+            <span>⬛ Realisasi</span>
+            <span>◻ Realisasi s.d. Ags 2026 (Kumulatif)</span>
+          </div>
+          <div class="d3-target-box">
+            <div class="d3-target-title">Pencapaian s.d. Ags 2026</div>
+            <div class="d3-target-num" style="color:#7c3aed;">6.154</div>
+          </div>
+          <div class="d3-canvas-wrap">
+            <canvas id="d3ChartGp"></canvas>
+          </div>
+        </div>
+
+        <!-- Grafik Gross Profit Margin -->
+        <div class="d3-chart-box">
+          <div class="d3-chart-title">Gross Profit Margin</div>
+          <div class="d3-chart-sub">
+            <span>🟠 Rencana</span>
+            <span>⚫ Realisasi</span>
+            <span>--- Target FY 45,59%</span>
+          </div>
+          <div class="d3-target-box">
+            <div class="d3-target-title">Pencapaian s.d. Ags 2026</div>
+            <div class="d3-target-num" style="color:#e67e22;">45,59%</div>
+          </div>
+          <div class="d3-canvas-wrap">
+            <canvas id="d3ChartGpm"></canvas>
+          </div>
+        </div>
+      </div>
+      <div style="font-size: 9px; color: #64748b; font-style: italic; margin-top: -15px;">*Angka dalam miliar Rupiah (kecuali margin dalam %)</div>
+    </div>
+  </div>
+
 
   <!-- SCRIPT UTAMA -->
   <script type="module">
@@ -631,8 +802,103 @@
       });
     }
 
+    // ==========================================
+    // RENDER DASHBOARD 3 (BAWAH SEKALI SESUAI GAMBAR)
+    // ==========================================
+    function renderDashboard3() {
+      const planRev = [554, 554, 449, 380, 502, 879, 927, 1042];
+      const actRev  = [823, 787, 99, 782, 688, 1117, 1668, 1703];
+      const planBpp = [195, 195, 195, 165, 308, 495, 531, 613];
+      const actBpp  = [647, 632, 92, 680, 404, 913, 1342, 1164];
+      const planGp  = planRev.map((r, i) => r - planBpp[i]);
+      const actGp   = actRev.map((r, i) => r - actBpp[i]);
+      const planGpm = planRev.map((r, i) => r > 0 ? (planGp[i] / r * 100) : 0);
+      const actGpm  = actRev.map((r, i) => r > 0 ? (actGp[i] / r * 100) : 0);
+      const shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"];
+
+      // 1. D3 Rev Chart
+      new Chart(document.getElementById('d3ChartRev').getContext('2d'), {
+        data: {
+          labels: shortMonths,
+          datasets: [
+            { type: 'bar', label: 'Rencana', data: planRev, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { display: false } },
+            { type: 'bar', label: 'Realisasi', data: actRev, backgroundColor: '#0b63ce', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#0b63ce', font: { size: 8, weight: 'bold' }, formatter: v => v } },
+            { type: 'bar', label: 'Realisasi Kumulatif', data: [null,null,null,null,null,null,null, 7.666], backgroundColor: '#0b63ce', barPercentage: 0.4, datalabels: { align: 'top', anchor: 'end', color: '#0b63ce', font: { size: 9, weight: 'bold' } } },
+            { type: 'bar', label: 'Rencana Kumulatif', data: [null,null,null,null,null,null,null, 13.498], backgroundColor: '#cbd5e1', barPercentage: 0.4, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 9, weight: 'bold' } } }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { enabled: true } },
+          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, max: 3500, ticks: { font: { size: 9 } } } }
+        }
+      });
+
+      // 2. D3 Bpp Chart
+      new Chart(document.getElementById('d3ChartBpp').getContext('2d'), {
+        data: {
+          labels: shortMonths,
+          datasets: [
+            { type: 'bar', label: 'Rencana', data: planBpp, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { display: false } },
+            { type: 'bar', label: 'Realisasi', data: actBpp, backgroundColor: '#008767', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#008767', font: { size: 8, weight: 'bold' }, formatter: v => v } },
+            { type: 'bar', label: 'Realisasi Kumulatif', data: [null,null,null,null,null,null,null, 5.873], backgroundColor: '#008767', barPercentage: 0.4, datalabels: { align: 'top', anchor: 'end', color: '#008767', font: { size: 9, weight: 'bold' } } },
+            { type: 'bar', label: 'Rencana Kumulatif', data: [null,null,null,null,null,null,null, 7.344], backgroundColor: '#cbd5e1', barPercentage: 0.4, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 9, weight: 'bold' } } }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, max: 2000, ticks: { font: { size: 9 } } } }
+        }
+      });
+
+      // 3. D3 Gp Chart
+      const planGpKum = [null,null,null,null,null,null,null, 1.793];
+      const actGpKum  = [null,null,null,null,null,null,null, 6.154];
+      new Chart(document.getElementById('d3ChartGp').getContext('2d'), {
+        data: {
+          labels: shortMonths,
+          datasets: [
+            { type: 'bar', label: 'Rencana', data: planGp, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { display: false } },
+            { type: 'bar', label: 'Realisasi', data: actGp, backgroundColor: '#7c3aed', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#7c3aed', font: { size: 8, weight: 'bold' }, formatter: v => v } },
+            { type: 'bar', label: 'Realisasi Kumulatif', data: planGpKum, backgroundColor: '#7c3aed', barPercentage: 0.4, datalabels: { align: 'top', anchor: 'end', color: '#7c3aed', font: { size: 9, weight: 'bold' } } },
+            { type: 'bar', label: 'Rencana Kumulatif', data: actGpKum, backgroundColor: '#cbd5e1', barPercentage: 0.4, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 9, weight: 'bold' } } }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, max: 1200, ticks: { font: { size: 9 } } } }
+        }
+      });
+
+      // 4. D3 Gpm Chart
+      const gpmRealKum = [null,null,null,null,null,null,null, 23.39];
+      const gpmPlanKum = [null,null,null,null,null,null,null, 45.59];
+      const targetLine = shortMonths.map(() => 45.59);
+
+      new Chart(document.getElementById('d3ChartGpm').getContext('2d'), {
+        data: {
+          labels: shortMonths,
+          datasets: [
+            { type: 'line', label: 'Target FY', data: targetLine, borderColor: '#e67e22', borderDash: [4,4], borderWidth: 1.5, pointRadius: 0, datalabels: { display: false } },
+            { type: 'line', label: 'Rencana', data: planGpm, borderColor: '#e67e22', backgroundColor: '#e67e22', borderWidth: 2, pointRadius: 3, datalabels: { align: 'top', anchor: 'end', color: '#e67e22', font: { size: 8, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' } },
+            { type: 'line', label: 'Realisasi', data: actGpm, borderColor: '#1e293b', backgroundColor: '#1e293b', borderWidth: 2, pointRadius: 3, datalabels: { align: 'bottom', anchor: 'start', color: '#1e293b', font: { size: 8, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' } },
+            { type: 'bar', label: 'Kum Realisasi', data: gpmRealKum, backgroundColor: '#7c3aed', barPercentage: 0.4, datalabels: { align: 'top', anchor: 'end', color: '#7c3aed', font: { size: 9, weight: 'bold' }, formatter: v => v + '%' } },
+            { type: 'bar', label: 'Kum Rencana', data: gpmPlanKum, backgroundColor: '#cbd5e1', barPercentage: 0.4, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 9, weight: 'bold' }, formatter: v => v + '%' } }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, max: 100, ticks: { font: { size: 9 }, callback: v => v + '%' } } }
+        }
+      });
+    }
+
     renderDarkCharts();
     renderLightSectionDirect();
+    renderDashboard3();
   </script>
 </body>
 </html>
