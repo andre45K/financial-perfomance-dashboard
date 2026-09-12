@@ -8,137 +8,308 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-    body { background-color: #f1f5f9; color: #1e293b; padding: 20px; font-size: 13px; }
-
-    /* Header Navigasi */
-    .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #ffffff; padding: 12px 20px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
-    .top-title h1 { font-size: 18px; color: #0f172a; font-weight: 800; }
-    .admin-btn { background: #0b4e9b; color: white; text-decoration: none; padding: 6px 14px; border-radius: 6px; font-weight: bold; font-size: 12px; }
-
-    /* Container Panel Utifik */
-    .panel-card { background: #ffffff; border-radius: 16px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    body { background-color: #060d1a; color: #ffffff; padding: 15px; font-size: 13px; }
     
-    .panel-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-    .badge-num { background: #0b4e9b; color: white; font-size: 14px; font-weight: 800; padding: 4px 10px; border-radius: 6px; }
-    .badge-num-purple { background: #581c87; }
+    /* ================= DASHBOARD 1 (DARK THEME) ================= */
+    .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #1a2a40; padding-bottom: 10px; }
+    .title-area h1 { font-size: 20px; letter-spacing: 1px; color: #ffffff; text-transform: uppercase; font-weight: 800; }
+    .title-area p { color: #8ba0b8; font-size: 12px; margin-top: 2px; }
     
-    .header-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
-    .bg-blue { background: #0b4e9b; }
-    .bg-purple { background: #581c87; }
-    .bg-green { background: #009879; }
-    .bg-orange { background: #f59e0b; }
+    .header-info { display: flex; gap: 15px; align-items: center; }
+    .badge-status { font-size: 11px; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
+    .badge-realisasi { background-color: #0056b3; color: white; }
+    .badge-prognosa { background-color: #d97706; color: white; }
+    .period-box { background: #111d2e; border: 1px solid #2a3d54; padding: 4px 10px; border-radius: 4px; display: flex; align-items: center; gap: 8px; font-size: 12px; }
 
-    .panel-title { font-size: 16px; font-weight: 800; color: #0b4e9b; letter-spacing: 0.5px; }
-    .title-purple { color: #581c87; }
+    .admin-link { color: #3b82f6; text-decoration: none; font-size: 12px; font-weight: bold; border: 1px solid #3b82f6; padding: 4px 8px; border-radius: 4px; }
+    .admin-link:hover { background: #3b82f6; color: white; }
 
-    /* Grid Layout Panel */
-    .panel-grid { display: grid; grid-template-columns: 240px 1fr 150px; gap: 20px; align-items: stretch; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 15px; }
+    .kpi-card { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; padding: 10px 12px; position: relative; }
+    .kpi-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .kpi-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
+    .icon-blue { background: #1d4ed8; color: white; }
+    .icon-orange { background: #d97706; color: white; }
+    .icon-green { background: #15803d; color: white; }
+    .icon-purple { background: #6b21a8; color: white; }
+    .kpi-title { font-size: 11px; font-weight: bold; color: #94a3b8; text-transform: uppercase; }
 
-    /* Box Ringkasan Kiri */
-    .summary-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: center; }
-    .summary-badge { background: #0b4e9b; color: white; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 6px; width: fit-content; margin-bottom: 16px; }
-    .badge-purple-bg { background: #7e22ce; }
+    .kpi-body { display: flex; justify-content: space-between; align-items: flex-end; }
+    .kpi-metrics { display: flex; gap: 15px; }
+    .metric-item span { display: block; font-size: 9px; color: #64748b; font-weight: bold; }
+    .metric-item strong { font-size: 15px; color: #ffffff; }
+    .metric-actual { color: #ffffff; }
+    
+    .kpi-badge { text-align: right; font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 3px; display: flex; align-items: center; gap: 3px; }
+    .badge-up { color: #22c55e; background: rgba(34, 197, 94, 0.1); }
+    .badge-down { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+    .kpi-subtext { font-size: 8px; color: #64748b; display: block; text-align: right; margin-top: 2px; }
 
-    .summary-item { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-    .summary-item:last-child { margin-bottom: 0; }
-    .circle-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; shrink: 0; }
+    .charts-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 15px; }
+    .chart-card { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; padding: 10px; height: 230px; }
+    .chart-title { font-size: 10px; font-weight: bold; text-align: center; margin-bottom: 8px; color: #cbd5e1; }
+    .chart-container { position: relative; height: 185px; width: 100%; }
 
-    .sum-text-group { display: flex; flex-direction: column; }
-    .sum-label { font-size: 9px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.3px; }
-    .sum-val { font-size: 20px; font-weight: 800; color: #0b4e9b; line-height: 1.1; margin: 2px 0; }
-    .sum-val-green { color: #009879; }
-    .sum-val-purple { color: #581c87; }
-    .sum-val-orange { color: #f59e0b; }
-    .sum-sub { font-size: 12px; font-weight: 700; color: #334155; }
+    .table-container { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; overflow-x: auto; margin-bottom: 15px; }
+    table { width: 100%; border-collapse: collapse; text-align: center; font-size: 10.5px; }
+    th, td { border: 1px solid #1e2d42; padding: 6px 4px; }
+    
+    .th-header-main { background: #09121d; color: #ffffff; font-weight: bold; }
+    .th-realisasi { background: #0f4c81; color: #ffffff; }
+    .th-prognosa { background: #b45309; color: #ffffff; }
+    .th-total { background: #0f4c81; color: #ffffff; }
+    
+    tr:nth-child(even) { background-color: #0b1420; }
+    td.row-label { text-align: left; font-weight: bold; padding-left: 8px; background: #09121d; }
+    .txt-green { color: #22c55e; font-weight: bold; }
+    .txt-red { color: #ef4444; font-weight: bold; }
 
-    /* Canvas Grafik Tengah */
-    .chart-box { position: relative; height: 260px; width: 100%; }
+    .footer-legend { display: flex; gap: 20px; font-size: 10px; align-items: center; background: #09121d; padding: 6px 12px; border-radius: 4px; border: 1px solid #1e2d42; margin-bottom: 30px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .box-blue { width: 12px; height: 12px; background: #0056b3; }
+    .box-orange { width: 12px; height: 12px; background: #d97706; }
 
-    /* Side Total Kanan */
-    .side-total-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 12px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
-    .side-header-icons { display: flex; gap: 6px; margin-bottom: 4px; }
-    .side-title { font-size: 9px; font-weight: 800; color: #64748b; text-transform: uppercase; text-align: center; }
-    .side-val-main { font-size: 18px; font-weight: 800; color: #0b4e9b; margin-top: 2px; text-align: center; }
-    .side-val-purple { color: #581c87; }
+    /* ================= DASHBOARD 2 (LIGHT THEME SEMIRIP GAMBAR) ================= */
+    .section-divider-title { color: #94a3b8; font-size: 12px; font-weight: bold; margin-bottom: 15px; letter-spacing: 1px; text-transform: uppercase; border-left: 4px solid #0052cc; padding-left: 8px; }
 
-    .side-bars-container { display: flex; width: 100%; gap: 10px; height: 160px; align-items: flex-end; justify-content: center; padding: 0 10px; }
-    .side-bar-item { flex: 1; border-radius: 4px 4px 0 0; position: relative; }
-    .bar-val-top { position: absolute; top: -18px; width: 100%; text-align: center; font-size: 9px; font-weight: 800; color: #334155; }
+    .panel-card-light { background: #ffffff; color: #333333; border-radius: 12px; margin-bottom: 25px; padding: 15px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+    
+    /* Header Panel */
+    .panel-light-head { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+    .num-badge-light { font-size: 15px; font-weight: 800; padding: 4px 10px; border-radius: 6px; color: #ffffff; }
+    .num-blue { background: #0f4c81; }
+    .num-purple { background: #4a154b; }
+    .panel-light-title { font-size: 16px; font-weight: 800; color: #0f4c81; letter-spacing: 0.5px; }
+    .title-purple { color: #4a154b; }
 
-    /* Responsive */
+    /* Content Layout */
+    .panel-light-grid { display: grid; grid-template-columns: 210px 1fr 150px; gap: 15px; align-items: stretch; }
+
+    /* Ringkasan Kiri */
+    .ringkasan-box-light { background: #f4f6f9; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #e2e8f0; }
+    .ringkasan-header-btn { font-size: 10px; font-weight: bold; color: white; padding: 5px 10px; border-radius: 20px; display: flex; align-items: center; gap: 6px; width: fit-content; text-transform: uppercase; margin-bottom: 10px; }
+    .btn-blue-head { background: #0052cc; }
+    .btn-purple-head { background: #8a3ab9; }
+    
+    .item-light { margin-bottom: 8px; }
+    .item-light-title { font-size: 9px; font-weight: 800; color: #64748b; text-transform: uppercase; }
+    .item-light-val { font-size: 20px; font-weight: 900; line-height: 1.1; margin-top: 4px; }
+    .val-blue { color: #0052cc; }
+    .val-teal { color: #00a884; }
+    .val-purple { color: #6b21a8; }
+    .val-orange { color: #e67e22; }
+    
+    .item-light-sub-title { font-size: 8px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-top: 6px; }
+    .item-light-sub-val { font-size: 13px; font-weight: 800; color: #334155; margin-top: 2px; }
+
+    .circle-icon { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 15px; color: white; margin-bottom: 6px; }
+
+    /* Area Chart Tengah */
+    .chart-box-light { position: relative; height: 220px; width: 100%; }
+
+    /* Total Right Box */
+    .total-box-light { border-left: 2px dashed #cbd5e1; padding-left: 15px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
+    .total-icons-top { display: flex; gap: 4px; margin-bottom: 4px; }
+    .icon-small-circle { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; font-weight: bold; }
+
+    .tot-light-title { font-size: 9px; font-weight: 800; color: #475569; text-transform: uppercase; text-align: center; }
+    .tot-light-num { font-size: 18px; font-weight: 900; color: #0052cc; text-align: center; margin-top: 2px; margin-bottom: 10px; }
+    
+    .tot-bars-container { display: flex; width: 100%; height: 130px; align-items: flex-end; justify-content: center; gap: 10px; }
+    .tot-bar-col { width: 38px; border-radius: 4px 4px 0 0; position: relative; }
+    .bg-blue-bar { background: #0052cc; }
+    .bg-teal-bar { background: #00a884; }
+    .bg-purple-bar { background: #6b21a8; }
+    .bg-orange-bar { background: #e67e22; }
+    
+    .bar-val-top { position: absolute; top: -16px; width: 100%; text-align: center; font-size: 9px; font-weight: 800; }
+    .val-blue-text { color: #0052cc; }
+    .val-teal-text { color: #00a884; }
+    .val-purple-text { color: #6b21a8; }
+    .val-orange-text { color: #e67e22; }
+
     @media (max-width: 1024px) {
-      .panel-grid { grid-template-columns: 1fr; }
+      .panel-light-grid { grid-template-columns: 1fr; }
+      .total-box-light { border-left: none; border-top: 2px dashed #cbd5e1; padding-left: 0; padding-top: 15px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- TOP NAV -->
-  <div class="top-nav">
-    <div class="top-title">
+  <!-- ================= HEADER & DASHBOARD UTAMA (DARK THEME) ================= -->
+  <div class="header-container">
+    <div class="title-area">
       <h1>FINANCIAL PERFORMANCE DASHBOARD</h1>
+      <p>Rencana vs Realisasi | Januari - Desember 2026</p>
     </div>
-    <a href="login.html" class="admin-btn">Admin Input</a>
+    <div class="header-info">
+      <span id="badge-realisasi-text" class="badge-status badge-realisasi">Jan - Jul 2026 (Realisasi)</span>
+      <span id="badge-prognosa-text" class="badge-status badge-prognosa">Aug - Dec 2026 (Prognosa)</span>
+      <div class="period-box">
+        <span>📅 Periode: <strong>Jan - Dec 2026</strong></span>
+      </div>
+      <a href="login.html" class="admin-link">Admin Input</a>
+    </div>
   </div>
 
-  <!-- PANEL 01 -->
-  <div class="panel-card">
-    <div class="panel-header">
-      <span class="badge-num">01</span>
-      <div class="header-icon bg-blue">📊</div>
-      <h2 class="panel-title">PENDAPATAN USAHA vs BEBAN POKOK PENDAPATAN</h2>
+  <!-- KPI CARDS DARK -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <div class="kpi-icon icon-blue">Rp</div>
+        <div class="kpi-title">PENDAPATAN USAHA (Juta Rp)</div>
+      </div>
+      <div class="kpi-body">
+        <div class="kpi-metrics">
+          <div class="metric-item"><span>RENCANA</span><strong id="kpi-rev-plan">0</strong></div>
+          <div class="metric-item"><span>REALISASI</span><strong id="kpi-rev-act" class="metric-actual">0</strong></div>
+        </div>
+        <div>
+          <div id="kpi-rev-badge" class="kpi-badge badge-up">▲ 0%</div>
+          <span class="kpi-subtext">vs Rencana</span>
+        </div>
+      </div>
     </div>
-    
-    <div class="panel-grid">
-      <!-- Summary Kiri -->
-      <div class="summary-card">
-        <div class="summary-badge">📋 RINGKASAN</div>
-        
-        <div class="summary-item">
-          <div class="circle-icon bg-blue">Rp</div>
-          <div class="sum-text-group">
-            <span class="sum-label">TOTAL PENDAPATAN USAHA</span>
-            <span id="p1-tot-rev" class="sum-val">13.498</span>
-            <span class="sum-label">RATA-RATA PER BULAN</span>
-            <span id="p1-avg-rev" class="sum-sub">1.125</span>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <div class="kpi-icon icon-orange">Rp</div>
+        <div class="kpi-title">BEBAN POKOK PENDAPATAN (Juta Rp)</div>
+      </div>
+      <div class="kpi-body">
+        <div class="kpi-metrics">
+          <div class="metric-item"><span>RENCANA</span><strong id="kpi-bpp-plan">0</strong></div>
+          <div class="metric-item"><span>REALISASI</span><strong id="kpi-bpp-act" class="metric-actual">0</strong></div>
+        </div>
+        <div>
+          <div id="kpi-bpp-badge" class="kpi-badge badge-down">▲ 0%</div>
+          <span class="kpi-subtext">vs Rencana</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <div class="kpi-icon icon-green">Rp</div>
+        <div class="kpi-title">GROSS PROFIT (Juta Rp)</div>
+      </div>
+      <div class="kpi-body">
+        <div class="kpi-metrics">
+          <div class="metric-item"><span>RENCANA</span><strong id="kpi-gp-plan">0</strong></div>
+          <div class="metric-item"><span>REALISASI</span><strong id="kpi-gp-act" class="metric-actual">0</strong></div>
+        </div>
+        <div>
+          <div id="kpi-gp-badge" class="kpi-badge badge-down">▼ 0%</div>
+          <span class="kpi-subtext">vs Rencana</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <div class="kpi-icon icon-purple">%</div>
+        <div class="kpi-title">GROSS PROFIT MARGIN (%)</div>
+      </div>
+      <div class="kpi-body">
+        <div class="kpi-metrics">
+          <div class="metric-item"><span>RENCANA</span><strong id="kpi-gpm-plan">0%</strong></div>
+          <div class="metric-item"><span>REALISASI</span><strong id="kpi-gpm-act" class="metric-actual">0%</strong></div>
+        </div>
+        <div>
+          <div id="kpi-gpm-badge" class="kpi-badge badge-down">▼ 0%</div>
+          <span class="kpi-subtext">vs Rencana</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHARTS GRID DARK -->
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">PENDAPATAN USAHA (Juta Rp)</div>
+      <div class="chart-container"><canvas id="chartRevenue"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">BEBAN POKOK PENDAPATAN (Juta Rp)</div>
+      <div class="chart-container"><canvas id="chartBPP"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">GROSS PROFIT (Juta Rp)</div>
+      <div class="chart-container"><canvas id="chartGP"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">GROSS PROFIT MARGIN (%)</div>
+      <div class="chart-container"><canvas id="chartGPM"></canvas></div>
+    </div>
+  </div>
+
+  <!-- TABEL UTAMA DARK -->
+  <div class="table-container">
+    <table id="main-table"></table>
+  </div>
+
+  <!-- LEGEND DARK -->
+  <div class="footer-legend">
+    <strong>CATATAN :</strong>
+    <div class="legend-item"><div class="box-blue"></div> <span id="legend-real-text">Data Jan - Jul 2026 merupakan Realisasi</span></div>
+    <div class="legend-item"><div class="box-orange"></div> <span id="legend-prog-text">Data Aug - Dec 2026 merupakan Prognosa</span></div>
+  </div>
+
+  <!-- ================= DASHBOARD 2 (LIGHT MODE - EXACT MATCH TEMPLATE) ================= -->
+  <div class="section-divider-title">VISUALISASI ANALISIS KOMPARATIF</div>
+
+  <!-- PANEL 01 -->
+  <div class="panel-card-light">
+    <div class="panel-light-head">
+      <span class="num-badge-light num-blue">01</span>
+      <h2 class="panel-light-title">PENDAPATAN USAHA vs BEBAN POKOK PENDAPATAN</h2>
+    </div>
+    <div class="panel-light-grid">
+      <!-- Ringkasan Kiri -->
+      <div class="ringkasan-box-light">
+        <div>
+          <div class="ringkasan-header-btn btn-blue-head">📋 RINGKASAN</div>
+          <div class="item-light" style="margin-top: 10px;">
+            <div class="circle-icon" style="background: #0052cc;">📊</div>
+            <div class="item-light-title">TOTAL PENDAPATAN USAHA</div>
+            <div id="sec1-tot-rev" class="item-light-val val-blue">0</div>
+            <div class="item-light-sub-title">RATA-RATA PER BULAN</div>
+            <div id="sec1-avg-rev" class="item-light-sub-val">0</div>
           </div>
         </div>
-
-        <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 10px 0;">
-
-        <div class="summary-item">
-          <div class="circle-icon bg-green">Rp</div>
-          <div class="sum-text-group">
-            <span class="sum-label">TOTAL BEBAN POKOK PENDAPATAN</span>
-            <span id="p1-tot-bpp" class="sum-val sum-val-green">7.344</span>
-            <span class="sum-label">RATA-RATA PER BULAN</span>
-            <span id="p1-avg-bpp" class="sum-sub">612</span>
+        <hr style="border:none; border-top: 1px solid #cbd5e1; margin: 8px 0;">
+        <div>
+          <div class="item-light">
+            <div class="circle-icon" style="background: #00a884;">🏛️</div>
+            <div class="item-light-title">TOTAL BEBAN POKOK PENDAPATAN</div>
+            <div id="sec1-tot-bpp" class="item-light-val val-teal">0</div>
+            <div class="item-light-sub-title">RATA-RATA PER BULAN</div>
+            <div id="sec1-avg-bpp" class="item-light-sub-val">0</div>
           </div>
         </div>
       </div>
 
       <!-- Chart Tengah -->
-      <div class="chart-box">
-        <canvas id="chartPanel1"></canvas>
+      <div class="chart-box-light">
+        <canvas id="chartSec1"></canvas>
       </div>
 
-      <!-- Total Kanan -->
-      <div class="side-total-card">
-        <div style="text-align: center;">
-          <div class="side-header-icons">
-            <div class="circle-icon bg-blue" style="width:24px; height:24px; font-size:10px;">Rp</div>
-            <div class="circle-icon bg-green" style="width:24px; height:24px; font-size:10px;">Rp</div>
+      <!-- Total Right -->
+      <div class="total-box-light">
+        <div>
+          <div class="total-icons-top" style="justify-content: center;">
+            <div class="icon-small-circle" style="background:#0052cc;">📊</div>
+            <div class="icon-small-circle" style="background:#00a884;">🏛️</div>
           </div>
-          <div class="side-title">TOTAL TAHUN 2026</div>
-          <div id="p1-side-tot" class="side-val-main">13.498</div>
+          <div class="tot-light-title">TOTAL TAHUN 2026</div>
+          <div id="sec1-side-tot" class="tot-light-num">0</div>
         </div>
-
-        <div class="side-bars-container">
-          <div class="side-bar-item bg-blue" id="p1-bar-rev" style="height: 100%;">
-            <div id="p1-bar-val-rev" class="bar-val-top">13.498</div>
+        <div class="tot-bars-container">
+          <div class="tot-bar-col bg-blue-bar" style="height: 100%;">
+            <div id="side-val-rev" class="bar-val-top val-blue-text">0</div>
           </div>
-          <div class="side-bar-item bg-green" id="p1-bar-bpp" style="height: 54%;">
-            <div id="p1-bar-val-bpp" class="bar-val-top">7.344</div>
+          <div id="side-bar-bpp-col" class="tot-bar-col bg-teal-bar" style="height: 55%;">
+            <div id="side-val-bpp" class="bar-val-top val-teal-text">0</div>
           </div>
         </div>
       </div>
@@ -146,70 +317,64 @@
   </div>
 
   <!-- PANEL 02 -->
-  <div class="panel-card">
-    <div class="panel-header">
-      <span class="badge-num badge-num-purple">02</span>
-      <div class="header-icon bg-purple">📈</div>
-      <h2 class="panel-title title-purple">GROSS PROFIT & GROSS PROFIT MARGIN</h2>
+  <div class="panel-card-light">
+    <div class="panel-light-head">
+      <span class="num-badge-light num-purple">02</span>
+      <h2 class="panel-light-title title-purple">GROSS PROFIT & GROSS PROFIT MARGIN</h2>
     </div>
-
-    <div class="panel-grid">
-      <!-- Summary Kiri -->
-      <div class="summary-card">
-        <div class="summary-badge badge-purple-bg">📋 RINGKASAN</div>
-        
-        <div class="summary-item">
-          <div class="circle-icon bg-purple">Rp</div>
-          <div class="sum-text-group">
-            <span class="sum-label">TOTAL GROSS PROFIT</span>
-            <span id="p2-tot-gp" class="sum-val sum-val-purple">6.153</span>
-            <span class="sum-label">RATA-RATA PER BULAN</span>
-            <span id="p2-avg-gp" class="sum-sub">513</span>
+    <div class="panel-light-grid">
+      <!-- Ringkasan Kiri -->
+      <div class="ringkasan-box-light">
+        <div>
+          <div class="ringkasan-header-btn btn-purple-head">📋 RINGKASAN</div>
+          <div class="item-light" style="margin-top: 10px;">
+            <div class="circle-icon" style="background: #6b21a8;">📈</div>
+            <div class="item-light-title">TOTAL GROSS PROFIT</div>
+            <div id="sec2-tot-gp" class="item-light-val val-purple">0</div>
+            <div class="item-light-sub-title">RATA-RATA PER BULAN</div>
+            <div id="sec2-avg-gp" class="item-light-sub-val">0</div>
           </div>
         </div>
-
-        <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 10px 0;">
-
-        <div class="summary-item">
-          <div class="circle-icon bg-orange">%</div>
-          <div class="sum-text-group">
-            <span class="sum-label">GROSS PROFIT MARGIN (TAHUNAN)</span>
-            <span id="p2-tot-gpm" class="sum-val sum-val-orange">45,6%</span>
-            <span class="sum-label">RATA-RATA PER BULAN</span>
-            <span id="p2-avg-gpm" class="sum-sub">45,6%</span>
+        <hr style="border:none; border-top: 1px solid #cbd5e1; margin: 8px 0;">
+        <div>
+          <div class="item-light">
+            <div class="circle-icon" style="background: #e67e22;">%</div>
+            <div class="item-light-title">GROSS PROFIT MARGIN (TAHUNAN)</div>
+            <div id="sec2-tot-gpm" class="item-light-val val-orange">0%</div>
+            <div class="item-light-sub-title">RATA-RATA PER BULAN</div>
+            <div id="sec2-avg-gpm" class="item-light-sub-val">0%</div>
           </div>
         </div>
       </div>
 
       <!-- Chart Tengah -->
-      <div class="chart-box">
-        <canvas id="chartPanel2"></canvas>
+      <div class="chart-box-light">
+        <canvas id="chartSec2"></canvas>
       </div>
 
-      <!-- Total Kanan -->
-      <div class="side-total-card">
-        <div style="text-align: center;">
-          <div class="side-header-icons">
-            <div class="circle-icon bg-purple" style="width:24px; height:24px; font-size:10px;">Rp</div>
-            <div class="circle-icon bg-orange" style="width:24px; height:24px; font-size:10px;">%</div>
+      <!-- Total Right -->
+      <div class="total-box-light">
+        <div>
+          <div class="total-icons-top" style="justify-content: center;">
+            <div class="icon-small-circle" style="background:#6b21a8;">📈</div>
+            <div class="icon-small-circle" style="background:#e67e22;">%</div>
           </div>
-          <div class="side-title">TOTAL TAHUN 2026</div>
-          <div id="p2-side-tot" class="side-val-main sum-val-purple">6.153</div>
+          <div class="tot-light-title">TOTAL TAHUN 2026</div>
+          <div id="sec2-side-tot" class="tot-light-num" style="color:#6b21a8;">0</div>
         </div>
-
-        <div class="side-bars-container">
-          <div class="side-bar-item bg-purple" id="p2-bar-gp" style="height: 100%;">
-            <div id="p2-bar-val-gp" class="bar-val-top">6.153</div>
+        <div class="tot-bars-container">
+          <div class="tot-bar-col bg-purple-bar" style="height: 100%;">
+            <div id="side-val-gp" class="bar-val-top val-purple-text">0</div>
           </div>
-          <div class="side-bar-item bg-orange" id="p2-bar-gpm" style="height: 56%;">
-            <div id="p2-bar-val-gpm" class="bar-val-top">45,6%</div>
+          <div id="side-bar-gpm-col" class="tot-bar-col bg-orange-bar" style="height: 60%;">
+            <div id="side-val-gpm" class="bar-val-top val-orange-text">0%</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- FIREBASE & LOGIKA SCRIPT -->
+  <!-- FIREBASE & SCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -229,114 +394,256 @@
     const monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const monthLabels = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26", "Oct-26", "Nov-26", "Dec-26"];
 
-    // Data acuan gambar
     const defaultData = {
-      "Jan": { revenueActual: 554, bppActual: 195 },
-      "Feb": { revenueActual: 554, bppActual: 195 },
-      "Mar": { revenueActual: 449, bppActual: 195 },
-      "Apr": { revenueActual: 380, bppActual: 165 },
-      "May": { revenueActual: 502, bppActual: 308 },
-      "Jun": { revenueActual: 879, bppActual: 495 },
-      "Jul": { revenueActual: 927, bppActual: 531 },
-      "Aug": { revenueActual: 1042, bppActual: 613 },
-      "Sep": { revenueActual: 2196, bppActual: 1218 },
-      "Oct": { revenueActual: 2196, bppActual: 1218 },
-      "Nov": { revenueActual: 2145, bppActual: 1198 },
-      "Dec": { revenueActual: 1678, bppActual: 1013 }
+      "Jan": { status: "REALISASI", revenuePlan: 554, revenueActual: 823, bppPlan: 195, bppActual: 647 },
+      "Feb": { status: "REALISASI", revenuePlan: 554, revenueActual: 787, bppPlan: 195, bppActual: 632 },
+      "Mar": { status: "REALISASI", revenuePlan: 449, revenueActual: 99, bppPlan: 195, bppActual: 92 },
+      "Apr": { status: "REALISASI", revenuePlan: 380, revenueActual: 782, bppPlan: 165, bppActual: 680 },
+      "May": { status: "REALISASI", revenuePlan: 502, revenueActual: 688, bppPlan: 308, bppActual: 404 },
+      "Jun": { status: "REALISASI", revenuePlan: 879, revenueActual: 1117, bppPlan: 495, bppActual: 913 },
+      "Jul": { status: "REALISASI", revenuePlan: 927, revenueActual: 1668, bppPlan: 531, bppActual: 1342 },
+      "Aug": { status: "PROGNOSA", revenuePlan: 1042, revenueActual: 1703, bppPlan: 613, bppActual: 1164 },
+      "Sep": { status: "PROGNOSA", revenuePlan: 2196, revenueActual: 1786, bppPlan: 1218, bppActual: 1340 },
+      "Oct": { status: "PROGNOSA", revenuePlan: 2196, revenueActual: 1670, bppPlan: 1218, bppActual: 1280 },
+      "Nov": { status: "PROGNOSA", revenuePlan: 2145, revenueActual: 1393, bppPlan: 1198, bppActual: 1088 },
+      "Dec": { status: "PROGNOSA", revenuePlan: 1678, revenueActual: 1393, bppPlan: 1013, bppActual: 1088 }
     };
 
-    let chart1, chart2;
+    let chartInstances = {};
 
-    async function loadData() {
+    async function loadDashboardData() {
       let dataStore = { ...defaultData };
       try {
         const querySnapshot = await getDocs(collection(db, "financial_data", "2026", "months"));
         querySnapshot.forEach((doc) => { dataStore[doc.id] = doc.data(); });
       } catch (e) {
-        console.warn("Menggunakan data default.");
+        console.warn("Fallback default data.");
       }
-      render(dataStore);
+      renderDashboard(dataStore);
     }
 
-    function render(data) {
-      let revArr = [], bppArr = [], gpArr = [], gpmArr = [];
+    function renderDashboard(data) {
+      let revPlanArr = [], revActArr = [], bppPlanArr = [], bppActArr = [];
+      let gpPlanArr = [], gpActArr = [], gpmPlanArr = [], gpmActArr = [];
+      let statusArr = [];
 
       monthsList.forEach(m => {
-        const item = data[m] || { revenueActual: 0, bppActual: 0 };
-        const r = item.revenueActual || 0;
-        const b = item.bppActual || 0;
-        const g = r - b;
-        const gm = r > 0 ? (g / r * 100) : 0;
+        const item = data[m] || { revenuePlan: 0, revenueActual: 0, bppPlan: 0, bppActual: 0, status: 'PROGNOSA' };
+        const rPlan = item.revenuePlan || 0;
+        const rAct = item.revenueActual || 0;
+        const bPlan = item.bppPlan || 0;
+        const bAct = item.bppActual || 0;
 
-        revArr.push(r);
-        bppArr.push(b);
-        gpArr.push(g);
-        gpmArr.push(gm);
+        const gPlan = rPlan - bPlan;
+        const gAct = rAct - bAct;
+        const gmPlan = rPlan > 0 ? (gPlan / rPlan * 100) : 0;
+        const gmAct = rAct > 0 ? (gAct / rAct * 100) : 0;
+
+        revPlanArr.push(rPlan); revActArr.push(rAct);
+        bppPlanArr.push(bPlan); bppActArr.push(bAct);
+        gpPlanArr.push(gPlan); gpActArr.push(gAct);
+        gpmPlanArr.push(gmPlan); gpmActArr.push(gmAct);
+        statusArr.push(item.status || 'PROGNOSA');
       });
 
+      let lastRealIndex = 0;
+      for (let i = 0; i < statusArr.length; i++) {
+        if (statusArr[i] === 'REALISASI') lastRealIndex = i + 1;
+      }
+
+      const realEndMonth = lastRealIndex > 0 ? monthLabels[lastRealIndex - 1].split('-')[0] : 'Jan';
+      const progStartMonth = lastRealIndex < 12 ? monthLabels[lastRealIndex].split('-')[0] : 'Des';
+      
+      const realText = lastRealIndex > 0 ? `Jan - ${realEndMonth} 2026 (Realisasi)` : `Non Realisasi`;
+      const progText = lastRealIndex < 12 ? `${progStartMonth} - Des 2026 (Prognosa)` : `Full Realisasi`;
+
+      document.getElementById('badge-realisasi-text').textContent = realText;
+      document.getElementById('badge-prognosa-text').textContent = progText;
+      document.getElementById('legend-real-text').textContent = `Data ${realText.replace(' (Realisasi)', '')} merupakan Realisasi`;
+      document.getElementById('legend-prog-text').textContent = `Data ${progText.replace(' (Prognosa)', '')} merupakan Prognosa`;
+
       const sum = arr => arr.reduce((a, b) => a + b, 0);
-      const totRev = sum(revArr);
-      const totBpp = sum(bppArr);
-      const totGp = totRev - totBpp;
-      const totGpm = totRev > 0 ? (totGp / totRev * 100) : 0;
+      const totalRevPlan = sum(revPlanArr), totalRevAct = sum(revActArr);
+      const totalBppPlan = sum(bppPlanArr), totalBppAct = sum(bppActArr);
+      const totalGpPlan = totalRevPlan - totalBppPlan, totalGpAct = totalRevAct - totalBppAct;
+      const totalGpmPlan = totalRevPlan > 0 ? (totalGpPlan / totalRevPlan * 100) : 0;
+      const totalGpmAct = totalRevAct > 0 ? (totalGpAct / totalRevAct * 100) : 0;
 
-      const avgRev = totRev / 12;
-      const avgBpp = totBpp / 12;
-      const avgGp = totGp / 12;
-      const avgGpm = gpmArr.reduce((a, b) => a + b, 0) / 12;
+      // Dark Cards KPI
+      document.getElementById('kpi-rev-plan').textContent = totalRevPlan.toLocaleString('id-ID');
+      document.getElementById('kpi-rev-act').textContent = totalRevAct.toLocaleString('id-ID');
+      updateBadge('kpi-rev-badge', totalRevAct, totalRevPlan);
 
-      // Panel 01 DOM
-      document.getElementById('p1-tot-rev').textContent = Math.round(totRev).toLocaleString('id-ID');
-      document.getElementById('p1-avg-rev').textContent = Math.round(avgRev).toLocaleString('id-ID');
-      document.getElementById('p1-tot-bpp').textContent = Math.round(totBpp).toLocaleString('id-ID');
-      document.getElementById('p1-avg-bpp').textContent = Math.round(avgBpp).toLocaleString('id-ID');
+      document.getElementById('kpi-bpp-plan').textContent = totalBppPlan.toLocaleString('id-ID');
+      document.getElementById('kpi-bpp-act').textContent = totalBppAct.toLocaleString('id-ID');
+      updateBadge('kpi-bpp-badge', totalBppAct, totalBppPlan, true);
 
-      document.getElementById('p1-side-tot').textContent = Math.round(totRev).toLocaleString('id-ID');
-      document.getElementById('p1-bar-val-rev').textContent = Math.round(totRev).toLocaleString('id-ID');
-      document.getElementById('p1-bar-val-bpp').textContent = Math.round(totBpp).toLocaleString('id-ID');
-      document.getElementById('p1-bar-bpp').style.height = (totRev > 0 ? (totBpp / totRev * 100) : 50) + '%';
+      document.getElementById('kpi-gp-plan').textContent = totalGpPlan.toLocaleString('id-ID');
+      document.getElementById('kpi-gp-act').textContent = totalGpAct.toLocaleString('id-ID');
+      updateBadge('kpi-gp-badge', totalGpAct, totalGpPlan);
 
-      // Panel 02 DOM
-      document.getElementById('p2-tot-gp').textContent = Math.round(totGp).toLocaleString('id-ID');
-      document.getElementById('p2-avg-gp').textContent = Math.round(avgGp).toLocaleString('id-ID');
-      document.getElementById('p2-tot-gpm').textContent = totGpm.toFixed(1).replace('.', ',') + '%';
-      document.getElementById('p2-avg-gpm').textContent = avgGpm.toFixed(1).replace('.', ',') + '%';
+      document.getElementById('kpi-gpm-plan').textContent = totalGpmPlan.toFixed(2) + '%';
+      document.getElementById('kpi-gpm-act').textContent = totalGpmAct.toFixed(2) + '%';
+      updateBadge('kpi-gpm-badge', totalGpmAct, totalGpmPlan);
 
-      document.getElementById('p2-side-tot').textContent = Math.round(totGp).toLocaleString('id-ID');
-      document.getElementById('p2-bar-val-gp').textContent = Math.round(totGp).toLocaleString('id-ID');
-      document.getElementById('p2-bar-val-gpm').textContent = totGpm.toFixed(1).replace('.', ',') + '%';
+      renderCharts({ revActArr, bppActArr, gpActArr, gpmActArr, statusArr });
+      renderDynamicTable({ revPlanArr, revActArr, bppPlanArr, bppActArr, gpPlanArr, gpActArr, gpmPlanArr, gpmActArr, statusArr, lastRealIndex, realText, progText });
 
-      // Render Charts
+      // Render Light Dashboard Section 2
+      renderLightSection({ revActArr, bppActArr, gpActArr, gpmActArr, totalRevAct, totalBppAct, totalGpAct, totalGpmAct });
+    }
+
+    function updateBadge(id, actual, plan, isCost = false) {
+      const el = document.getElementById(id);
+      const pct = plan > 0 ? (actual / plan * 100) : 0;
+      const isUp = actual >= plan;
+      el.textContent = (isUp ? '▲ ' : '▼ ') + pct.toFixed(2).replace('.', ',') + '%';
+      let isGood = isCost ? !isUp : isUp;
+      el.className = 'kpi-badge ' + (isGood ? 'badge-up' : 'badge-down');
+    }
+
+    function renderCharts(d) {
       Chart.register(ChartDataLabels);
+      const realBg = (c) => d.statusArr.map(s => s === 'REALISASI' ? c : '#d97706');
+      
+      createComboChart('chartRevenue', d.revActArr, realBg('#1d4ed8'), '#ffffff', false);
+      createComboChart('chartBPP', d.bppActArr, realBg('#ea580c'), '#ffffff', false);
+      createComboChart('chartGP', d.gpActArr, realBg('#16a34a'), '#ffffff', false);
+      createComboChart('chartGPM', d.gpmActArr, realBg('#9333ea'), '#ffffff', true);
+    }
 
-      // Panel 1 Chart
-      if (chart1) chart1.destroy();
-      chart1 = new Chart(document.getElementById('chartPanel1').getContext('2d'), {
+    function createComboChart(id, data, barColors, lineColor, isPercentage = false) {
+      if (chartInstances[id]) chartInstances[id].destroy();
+      const ctx = document.getElementById(id).getContext('2d');
+      chartInstances[id] = new Chart(ctx, {
+        data: {
+          labels: monthLabels.map(m => m.split('-')[0]),
+          datasets: [
+            {
+              type: 'line', data, borderColor: lineColor, borderWidth: 1.5,
+              pointBackgroundColor: '#ffffff', pointBorderColor: lineColor, pointRadius: 3.5, tension: 0.1,
+              datalabels: { align: 'top', anchor: 'end', offset: 2, color: '#ffffff', font: { size: 8, weight: 'bold' }, formatter: (val) => isPercentage ? val.toFixed(2).replace('.', ',') + '%' : Math.round(val).toLocaleString('id-ID') }
+            },
+            { type: 'bar', data, backgroundColor: barColors, borderRadius: 2, barPercentage: 0.6, datalabels: { display: false } }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } },
+          plugins: { legend: { display: false }, tooltip: { enabled: true } },
+          scales: {
+            x: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { display: false } },
+            y: { ticks: { color: '#94a3b8', font: { size: 8 }, callback: (val) => isPercentage ? val + '%' : val }, grid: { color: '#1e2d42' } }
+          }
+        }
+      });
+    }
+
+    function renderDynamicTable(d) {
+      const table = document.getElementById('main-table');
+      const idx = d.lastRealIndex;
+      const progCount = 12 - idx;
+
+      let headHtml = `<thead><tr><th rowspan="2" class="th-header-main" style="width: 14%;">URAIAN</th>`;
+      if (idx > 0) headHtml += `<th colspan="${idx + 1}" class="th-realisasi">${d.realText.toUpperCase()}</th>`;
+      if (progCount > 0) headHtml += `<th colspan="${progCount + 1}" class="th-prognosa">${d.progText.toUpperCase()}</th>`;
+      headHtml += `<th colspan="3" class="th-total">TOTAL 2026</th></tr><tr>`;
+
+      for (let i = 0; i < idx; i++) headHtml += `<th>${monthLabels[i]}</th>`;
+      if (idx > 0) headHtml += `<th class="th-realisasi">TOTAL</th>`;
+
+      for (let i = idx; i < 12; i++) headHtml += `<th>${monthLabels[i]}</th>`;
+      if (progCount > 0) headHtml += `<th class="th-prognosa">TOTAL</th>`;
+
+      headHtml += `<th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th></tr></thead>`;
+
+      const sliceSum = (arr, start, end) => arr.slice(start, end).reduce((a, b) => a + b, 0);
+      const revRealTot = sliceSum(d.revActArr, 0, idx), revProgTot = sliceSum(d.revActArr, idx, 12), revPlanTot = sliceSum(d.revPlanArr, 0, 12), revActTot = sliceSum(d.revActArr, 0, 12), revPct = revPlanTot > 0 ? (revActTot / revPlanTot * 100) : 0;
+      const bppRealTot = sliceSum(d.bppActArr, 0, idx), bppProgTot = sliceSum(d.bppActArr, idx, 12), bppPlanTot = sliceSum(d.bppPlanArr, 0, 12), bppActTot = sliceSum(d.bppActArr, 0, 12), bppPct = bppPlanTot > 0 ? (bppActTot / bppPlanTot * 100) : 0;
+      const gpRealTot = revRealTot - bppRealTot, gpProgTot = revProgTot - bppProgTot, gpPlanTot = revPlanTot - bppPlanTot, gpActTot = revActTot - bppActTot, gpPct = gpPlanTot > 0 ? (gpActTot / gpPlanTot * 100) : 0;
+      const gpmRealTot = revRealTot > 0 ? (gpRealTot / revRealTot * 100) : 0, gpmProgTot = revProgTot > 0 ? (gpProgTot / revProgTot * 100) : 0, gpmPlanTot = revPlanTot > 0 ? (gpmPlanTot / revPlanTot * 100) : 0, gpmActTot = revActTot > 0 ? (gpActTot / revActTot * 100) : 0, gpmPct = gpmPlanTot > 0 ? (gpmActTot / gpmPlanTot * 100) : 0;
+
+      const buildRow = (title, actArr, realTot, progTot, planTot, actTot, pct, isMargin = false) => {
+        let fmt = v => isMargin ? v.toFixed(2).replace('.', ',') + '%' : Math.round(v).toLocaleString('id-ID');
+        let html = `<tr><td class="row-label">${title}</td>`;
+        for (let i = 0; i < idx; i++) html += `<td>${fmt(actArr[i])}</td>`;
+        if (idx > 0) html += `<td class="txt-green">${fmt(realTot)}</td>`;
+        for (let i = idx; i < 12; i++) html += `<td>${fmt(actArr[i])}</td>`;
+        if (progCount > 0) html += `<td class="txt-green">${fmt(progTot)}</td>`;
+        html += `<td>${fmt(planTot)}</td><td>${fmt(actTot)}</td>`;
+        html += `<td class="${pct >= 100 ? 'txt-green' : 'txt-red'}">${pct.toFixed(2).replace('.', ',')}%</td></tr>`;
+        return html;
+      };
+
+      table.innerHTML = headHtml + `<tbody>` +
+        buildRow("PENDAPATAN USAHA (Juta Rp)", d.revActArr, revRealTot, revProgTot, revPlanTot, revActTot, revPct) +
+        buildRow("BEBAN POKOK PENDAPATAN (Juta Rp)", d.bppActArr, bppRealTot, bppProgTot, bppPlanTot, bppActTot, bppPct) +
+        buildRow("GROSS PROFIT (Juta Rp)", d.gpActArr, gpRealTot, gpProgTot, gpPlanTot, gpActTot, gpPct) +
+        buildRow("GROSS PROFIT MARGIN (%)", d.gpmActArr, gpmRealTot, gpmProgTot, gpmPlanTot, gpmActTot, gpmPct, true) +
+        `</tbody>`;
+    }
+
+    // ==========================================
+    // RENDER SECTION 2 (LIGHT THEME SEMIRIP TEMPLATE GAMBAR)
+    // ==========================================
+    function renderLightSection(d) {
+      // 1. Ringkasan Panel 01
+      const avgRev = d.totalRevAct / 12;
+      const avgBpp = d.totalBppAct / 12;
+
+      document.getElementById('sec1-tot-rev').textContent = Math.round(d.totalRevAct).toLocaleString('id-ID');
+      document.getElementById('sec1-avg-rev').textContent = Math.round(avgRev).toLocaleString('id-ID');
+      document.getElementById('sec1-tot-bpp').textContent = Math.round(d.totalBppAct).toLocaleString('id-ID');
+      document.getElementById('sec1-avg-bpp').textContent = Math.round(avgBpp).toLocaleString('id-ID');
+
+      document.getElementById('sec1-side-tot').textContent = Math.round(d.totalRevAct).toLocaleString('id-ID');
+      document.getElementById('side-val-rev').textContent = Math.round(d.totalRevAct).toLocaleString('id-ID');
+      document.getElementById('side-val-bpp').textContent = Math.round(d.totalBppAct).toLocaleString('id-ID');
+      
+      const bppHeight = d.totalRevAct > 0 ? (d.totalBppAct / d.totalRevAct * 100) : 55;
+      document.getElementById('side-bar-bpp-col').style.height = bppHeight + '%';
+
+      // 2. Ringkasan Panel 02
+      const avgGp = d.totalGpAct / 12;
+      const avgGpm = d.gpmActArr.reduce((a, b) => a + b, 0) / 12;
+
+      document.getElementById('sec2-tot-gp').textContent = Math.round(d.totalGpAct).toLocaleString('id-ID');
+      document.getElementById('sec2-avg-gp').textContent = Math.round(avgGp).toLocaleString('id-ID');
+      document.getElementById('sec2-tot-gpm').textContent = d.totalGpmAct.toFixed(1).replace('.', ',') + '%';
+      document.getElementById('sec2-avg-gpm').textContent = avgGpm.toFixed(1).replace('.', ',') + '%';
+
+      document.getElementById('sec2-side-tot').textContent = Math.round(d.totalGpAct).toLocaleString('id-ID');
+      document.getElementById('side-val-gp').textContent = Math.round(d.totalGpAct).toLocaleString('id-ID');
+      document.getElementById('side-val-gpm').textContent = d.totalGpmAct.toFixed(1).replace('.', ',') + '%';
+
+      // 3. Render Chart Panel 01 (Grouped Bar Light)
+      if (chartInstances['chartSec1']) chartInstances['chartSec1'].destroy();
+      const ctx1 = document.getElementById('chartSec1').getContext('2d');
+      chartInstances['chartSec1'] = new Chart(ctx1, {
         type: 'bar',
         data: {
           labels: monthLabels,
           datasets: [
             {
               label: 'Pendapatan Usaha',
-              data: revArr,
-              backgroundColor: '#0b4e9b',
+              data: d.revActArr,
+              backgroundColor: '#0052cc',
               borderRadius: 3,
               barPercentage: 0.7,
               categoryPercentage: 0.6,
               datalabels: {
-                align: 'top', anchor: 'end', color: '#0b4e9b', font: { size: 9, weight: 'bold' },
+                align: 'top', anchor: 'end', color: '#0052cc', font: { size: 7.5, weight: 'bold' },
                 formatter: v => Math.round(v).toLocaleString('id-ID')
               }
             },
             {
               label: 'Beban Pokok Pendapatan',
-              data: bppArr,
-              backgroundColor: '#009879',
+              data: d.bppActArr,
+              backgroundColor: '#00a884',
               borderRadius: 3,
               barPercentage: 0.7,
               categoryPercentage: 0.6,
               datalabels: {
-                align: 'top', anchor: 'end', color: '#009879', font: { size: 9, weight: 'bold' },
+                align: 'top', anchor: 'end', color: '#00a884', font: { size: 7.5, weight: 'bold' },
                 formatter: v => Math.round(v).toLocaleString('id-ID')
               }
             }
@@ -344,48 +651,49 @@
         },
         options: {
           responsive: true, maintainAspectRatio: false,
-          layout: { padding: { top: 25 } },
+          layout: { padding: { top: 22 } },
           plugins: {
-            legend: { display: true, position: 'top', labels: { usePointStyle: true, pointStyle: 'circle', color: '#334155', font: { size: 10, weight: 'bold' } } }
+            legend: { display: true, position: 'top', labels: { color: '#334155', font: { size: 9, weight: 'bold' }, usePointStyle: true, boxWidth: 8 } }
           },
           scales: {
-            x: { ticks: { color: '#64748b', font: { size: 9, weight: 'bold' } }, grid: { display: false } },
-            y: { ticks: { color: '#64748b', font: { size: 9 } }, grid: { color: '#f1f5f9' }, max: 2500 }
+            x: { ticks: { color: '#475569', font: { size: 8.5, weight: '600' } }, grid: { display: false } },
+            y: { ticks: { color: '#475569', font: { size: 8.5 } }, grid: { color: '#f1f5f9' }, min: 0 }
           }
         }
       });
 
-      // Panel 2 Chart
-      if (chart2) chart2.destroy();
-      chart2 = new Chart(document.getElementById('chartPanel2').getContext('2d'), {
+      // 4. Render Chart Panel 02 (Bar Purple + Line Orange Light)
+      if (chartInstances['chartSec2']) chartInstances['chartSec2'].destroy();
+      const ctx2 = document.getElementById('chartSec2').getContext('2d');
+      chartInstances['chartSec2'] = new Chart(ctx2, {
         data: {
           labels: monthLabels,
           datasets: [
             {
               type: 'line',
               label: 'Gross Profit Margin (%)',
-              data: gpmArr,
-              borderColor: '#f59e0b',
-              backgroundColor: '#f59e0b',
+              data: d.gpmActArr,
+              borderColor: '#e67e22',
+              backgroundColor: '#e67e22',
               borderWidth: 2,
               pointRadius: 4,
-              pointBackgroundColor: '#f59e0b',
+              pointBackgroundColor: '#e67e22',
               yAxisID: 'y1',
               datalabels: {
-                align: 'top', anchor: 'end', color: '#f59e0b', font: { size: 9, weight: 'bold' },
+                align: 'top', anchor: 'end', color: '#e67e22', font: { size: 8, weight: 'bold' },
                 formatter: v => v.toFixed(0) + '%'
               }
             },
             {
               type: 'bar',
               label: 'Gross Profit (Rp)',
-              data: gpArr,
-              backgroundColor: '#581c87',
+              data: d.gpActArr,
+              backgroundColor: '#6b21a8',
               borderRadius: 3,
               barPercentage: 0.45,
               yAxisID: 'y',
               datalabels: {
-                align: 'top', anchor: 'end', color: '#581c87', font: { size: 9, weight: 'bold' },
+                align: 'top', anchor: 'end', color: '#6b21a8', font: { size: 7.5, weight: 'bold' },
                 formatter: v => Math.round(v).toLocaleString('id-ID')
               }
             }
@@ -393,27 +701,27 @@
         },
         options: {
           responsive: true, maintainAspectRatio: false,
-          layout: { padding: { top: 25 } },
+          layout: { padding: { top: 22 } },
           plugins: {
-            legend: { display: true, position: 'top', labels: { usePointStyle: true, pointStyle: 'circle', color: '#334155', font: { size: 10, weight: 'bold' } } }
+            legend: { display: true, position: 'top', labels: { color: '#334155', font: { size: 9, weight: 'bold' }, usePointStyle: true, boxWidth: 8 } }
           },
           scales: {
-            x: { ticks: { color: '#64748b', font: { size: 9, weight: 'bold' } }, grid: { display: false } },
+            x: { ticks: { color: '#475569', font: { size: 8.5, weight: '600' } }, grid: { display: false } },
             y: { 
-              type: 'linear', position: 'left', max: 1200,
-              ticks: { color: '#64748b', font: { size: 9 } }, grid: { color: '#f1f5f9' } 
+              type: 'linear', display: true, position: 'left',
+              ticks: { color: '#475569', font: { size: 8.5 } }, grid: { color: '#f1f5f9' }, min: 0
             },
             y1: {
-              type: 'linear', position: 'right', max: 100,
-              ticks: { color: '#f59e0b', font: { size: 9 }, callback: v => v + '%' },
-              grid: { drawOnChartArea: false }
+              type: 'linear', display: true, position: 'right',
+              ticks: { color: '#e67e22', font: { size: 8.5 }, callback: v => v + '%' },
+              grid: { drawOnChartArea: false }, min: 0, max: 100
             }
           }
         }
       });
     }
 
-    loadData();
+    loadDashboardData();
   </script>
 </body>
 </html>
