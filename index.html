@@ -482,15 +482,15 @@
 
 
   <!-- ======================================================== -->
-  <!-- DASHBOARD 3 (PERSIS GAMBAR REFERENSI 3)                  -->
+  <!-- DASHBOARD 3 (DINAMIS MENGIKUTI LOCALSTORAGE)              -->
   <!-- ======================================================== -->
   <div class="dashboard-3-container">
     <div class="d3-header">
       <div>
         <div class="d3-title">FINANCIAL PERFORMANCE DASHBOARD</div>
-        <div class="d3-subtitle">Rencana vs Realisasi | Januari – Agustus 2026 | Outlook Full Year 2026</div>
+        <div id="d3-subtitle-text" class="d3-subtitle">Rencana vs Realisasi | Januari – September 2026 | Outlook Full Year 2026</div>
       </div>
-      <div class="d3-badge-top">Data s.d. Agustus 2026</div>
+      <div id="d3-badge-text" class="d3-badge-top">Data s.d. September 2026</div>
     </div>
 
     <!-- 4 KPI CARDS ATAS -->
@@ -500,8 +500,8 @@
           <div class="d3-kpi-icon" style="background: #0b63ce;"><i class="fa-solid fa-chart-simple"></i></div>
           <div class="d3-kpi-title">Pendapatan Usaha</div>
         </div>
-        <div class="d3-kpi-val">7.666</div>
-        <div class="d3-kpi-sub">56,80% dari target 2026</div>
+        <div id="d3-kpi-rev" class="d3-kpi-val">0</div>
+        <div id="d3-kpi-rev-sub" class="d3-kpi-sub">0% dari target 2026</div>
       </div>
 
       <div class="d3-kpi-card" style="border-left: 5px solid #008767;">
@@ -509,8 +509,8 @@
           <div class="d3-kpi-icon" style="background: #008767;"><i class="fa-solid fa-receipt"></i></div>
           <div class="d3-kpi-title">Beban Pokok Pendapatan</div>
         </div>
-        <div class="d3-kpi-val">5.873</div>
-        <div class="d3-kpi-sub">79,98% dari target 2026</div>
+        <div id="d3-kpi-bpp" class="d3-kpi-val">0</div>
+        <div id="d3-kpi-bpp-sub" class="d3-kpi-sub">0% dari target 2026</div>
       </div>
 
       <div class="d3-kpi-card" style="border-left: 5px solid #4a154b;">
@@ -518,8 +518,8 @@
           <div class="d3-kpi-icon" style="background: #4a154b;"><i class="fa-solid fa-chart-line"></i></div>
           <div class="d3-kpi-title">Gross Profit</div>
         </div>
-        <div class="d3-kpi-val">1.793</div>
-        <div class="d3-kpi-sub">29,13% dari target 2026</div>
+        <div id="d3-kpi-gp" class="d3-kpi-val">0</div>
+        <div id="d3-kpi-gp-sub" class="d3-kpi-sub">0% dari target 2026</div>
       </div>
 
       <div class="d3-kpi-card" style="border-left: 5px solid #e67e22;">
@@ -527,8 +527,8 @@
           <div class="d3-kpi-icon" style="background: #e67e22;"><i class="fa-solid fa-percent"></i></div>
           <div class="d3-kpi-title">Gross Profit Margin</div>
         </div>
-        <div class="d3-kpi-val">23,39%</div>
-        <div class="d3-kpi-sub">Target 2026: 45,59%</div>
+        <div id="d3-kpi-gpm" class="d3-kpi-val">0%</div>
+        <div id="d3-kpi-gpm-sub" class="d3-kpi-sub">Target 2026: 45,61%</div>
       </div>
     </div>
 
@@ -538,7 +538,7 @@
         <span style="background: #0f4c81; color: white; padding: 2px 8px; border-radius: 4px; font-size: 13px;">01</span> 
         PENDAPATAN USAHA vs BEBAN POKOK PENDAPATAN
       </div>
-      <div class="d3-section-sub">Monthly performance – actual data available through August 2026</div>
+      <div id="d3-sec1-sub" class="d3-section-sub">Monthly performance – actual data available</div>
 
       <div class="d3-charts-row">
         <!-- Pendapatan Usaha -->
@@ -548,22 +548,22 @@
             <div class="d3-chart-sub">
               <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#cbd5e1; display:inline-block;"></span> Rencana (per bulan)</span>
               <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#0b63ce; display:inline-block;"></span> Realisasi</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #0b63ce; display:inline-block;"></span> Realisasi s.d. Ags (Kumulatif)</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #94a3b8; display:inline-block;"></span> Rencana s.d. Ags (Kumulatif)</span>
+              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #0b63ce; display:inline-block;"></span> Realisasi kumulatif</span>
+              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #94a3b8; display:inline-block;"></span> Rencana kumulatif</span>
             </div>
           </div>
           <div class="d3-panel-flex">
             <div class="d3-canvas-wrap"><canvas id="d3ChartRev"></canvas></div>
             <div class="d3-cumul-box">
-              <div class="d3-cumul-title">Pencapaian s.d. Ags 2026</div>
+              <div id="d3-cumul-rev-title" class="d3-cumul-title">Pencapaian</div>
               <div class="d3-cumul-cols">
                 <div class="d3-cumul-item">
-                  <div class="d3-cumul-val" style="color:#0b63ce;">7.666</div>
+                  <div id="d3-cumul-rev-act" class="d3-cumul-val" style="color:#0b63ce;">0</div>
                   <div class="d3-cumul-bar-wrap"><div style="width:100%; height:82%; background:#0b63ce; border-radius:3px 3px 0 0;"></div></div>
                   <div class="d3-cumul-label">Realisasi (Kumulatif)</div>
                 </div>
                 <div class="d3-cumul-item">
-                  <div class="d3-cumul-val" style="color:#475569;">13.498</div>
+                  <div id="d3-cumul-rev-plan" class="d3-cumul-val" style="color:#475569;">0</div>
                   <div class="d3-cumul-bar-wrap"><div style="width:100%; height:100%; background:#cbd5e1; border:1px dashed #94a3b8; border-radius:3px 3px 0 0;"></div></div>
                   <div class="d3-cumul-label">Rencana (Kumulatif)</div>
                 </div>
@@ -579,22 +579,22 @@
             <div class="d3-chart-sub">
               <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#cbd5e1; display:inline-block;"></span> Rencana (per bulan)</span>
               <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#008767; display:inline-block;"></span> Realisasi</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #008767; display:inline-block;"></span> Realisasi s.d. Ags (Kumulatif)</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #94a3b8; display:inline-block;"></span> Rencana s.d. Ags (Kumulatif)</span>
+              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #008767; display:inline-block;"></span> Realisasi kumulatif</span>
+              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #94a3b8; display:inline-block;"></span> Rencana kumulatif</span>
             </div>
           </div>
           <div class="d3-panel-flex">
             <div class="d3-canvas-wrap"><canvas id="d3ChartBpp"></canvas></div>
             <div class="d3-cumul-box">
-              <div class="d3-cumul-title">Pencapaian s.d. Ags 2026</div>
+              <div id="d3-cumul-bpp-title" class="d3-cumul-title">Pencapaian</div>
               <div class="d3-cumul-cols">
                 <div class="d3-cumul-item">
-                  <div class="d3-cumul-val" style="color:#008767;">5.873</div>
+                  <div id="d3-cumul-bpp-act" class="d3-cumul-val" style="color:#008767;">0</div>
                   <div class="d3-cumul-bar-wrap"><div style="width:100%; height:80%; background:#008767; border-radius:3px 3px 0 0;"></div></div>
                   <div class="d3-cumul-label">Realisasi (Kumulatif)</div>
                 </div>
                 <div class="d3-cumul-item">
-                  <div class="d3-cumul-val" style="color:#475569;">7.344</div>
+                  <div id="d3-cumul-bpp-plan" class="d3-cumul-val" style="color:#475569;">0</div>
                   <div class="d3-cumul-bar-wrap"><div style="width:100%; height:100%; background:#cbd5e1; border:1px dashed #94a3b8; border-radius:3px 3px 0 0;"></div></div>
                   <div class="d3-cumul-label">Rencana (Kumulatif)</div>
                 </div>
@@ -621,22 +621,22 @@
             <div class="d3-chart-sub">
               <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#cbd5e1; display:inline-block;"></span> Rencana (per bulan)</span>
               <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#7c3aed; display:inline-block;"></span> Realisasi</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #7c3aed; display:inline-block;"></span> Realisasi s.d. Ags (Kumulatif)</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #94a3b8; display:inline-block;"></span> Rencana s.d. Ags (Kumulatif)</span>
+              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #7c3aed; display:inline-block;"></span> Realisasi kumulatif</span>
+              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #94a3b8; display:inline-block;"></span> Rencana kumulatif</span>
             </div>
           </div>
           <div class="d3-panel-flex">
             <div class="d3-canvas-wrap"><canvas id="d3ChartGp"></canvas></div>
             <div class="d3-cumul-box">
-              <div class="d3-cumul-title">Pencapaian s.d. Ags 2026</div>
+              <div id="d3-cumul-gp-title" class="d3-cumul-title">Pencapaian</div>
               <div class="d3-cumul-cols">
                 <div class="d3-cumul-item">
-                  <div class="d3-cumul-val" style="color:#7c3aed;">1.793</div>
+                  <div id="d3-cumul-gp-act" class="d3-cumul-val" style="color:#7c3aed;">0</div>
                   <div class="d3-cumul-bar-wrap"><div style="width:100%; height:29%; background:#7c3aed; border-radius:3px 3px 0 0;"></div></div>
                   <div class="d3-cumul-label">Realisasi (Kumulatif)</div>
                 </div>
                 <div class="d3-cumul-item">
-                  <div class="d3-cumul-val" style="color:#475569;">6.154</div>
+                  <div id="d3-cumul-gp-plan" class="d3-cumul-val" style="color:#475569;">0</div>
                   <div class="d3-cumul-bar-wrap"><div style="width:100%; height:100%; background:#cbd5e1; border:1px dashed #94a3b8; border-radius:3px 3px 0 0;"></div></div>
                   <div class="d3-cumul-label">Rencana (Kumulatif)</div>
                 </div>
@@ -652,23 +652,23 @@
             <div class="d3-chart-sub">
               <span style="display:inline-flex; align-items:center; gap:2px;"><span style="width:8px; height:8px; background:#e67e22; border-radius:50%; display:inline-block;"></span> Rencana</span>
               <span style="display:inline-flex; align-items:center; gap:2px;"><span style="width:8px; height:8px; background:#1e293b; border-radius:50%; display:inline-block;"></span> Realisasi</span>
-              <span>--- Target FY 45,59%</span>
-              <span style="display:inline-flex; align-items:center; gap:2px;"><span style="width:8px; height:8px; border:1px dashed #7c3aed; display:inline-block;"></span> Realisasi s.d. Ags</span>
-              <span style="display:inline-flex; align-items:center; gap:2px;"><span style="width:8px; height:8px; border:1px dashed #94a3b8; display:inline-block;"></span> Rencana s.d. Ags</span>
+              <span>--- Target FY</span>
+              <span style="display:inline-flex; align-items:center; gap:2px;"><span style="width:8px; height:8px; border:1px dashed #7c3aed; display:inline-block;"></span> Realisasi</span>
+              <span style="display:inline-flex; align-items:center; gap:2px;"><span style="width:8px; height:8px; border:1px dashed #94a3b8; display:inline-block;"></span> Rencana</span>
             </div>
           </div>
           <div class="d3-panel-flex">
             <div class="d3-canvas-wrap"><canvas id="d3ChartGpm"></canvas></div>
             <div class="d3-cumul-box">
-              <div class="d3-cumul-title">Pencapaian s.d. Ags 2026</div>
+              <div id="d3-cumul-gpm-title" class="d3-cumul-title">Pencapaian</div>
               <div class="d3-cumul-cols">
                 <div class="d3-cumul-item">
-                  <div class="d3-cumul-val" style="color:#7c3aed;">23,39%</div>
+                  <div id="d3-cumul-gpm-act" class="d3-cumul-val" style="color:#7c3aed;">0%</div>
                   <div class="d3-cumul-bar-wrap"><div style="width:100%; height:23.39%; background:#7c3aed; border-radius:3px 3px 0 0;"></div></div>
                   <div class="d3-cumul-label">Realisasi (Kumulatif)</div>
                 </div>
                 <div class="d3-cumul-item">
-                  <div class="d3-cumul-val" style="color:#475569;">45,59%</div>
+                  <div id="d3-cumul-gpm-plan" class="d3-cumul-val" style="color:#475569;">0%</div>
                   <div class="d3-cumul-bar-wrap"><div style="width:100%; height:45.59%; background:#cbd5e1; border:1px dashed #94a3b8; border-radius:3px 3px 0 0;"></div></div>
                   <div class="d3-cumul-label">Rencana (Kumulatif)</div>
                 </div>
@@ -689,9 +689,9 @@
     }
 
     const monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const fullMonthsList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
     const monthLabels = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26", "Oct-26", "Nov-26", "Dec-26"];
 
-    // Ambil data dinamis dari localStorage jika ada, atau gunakan default
     const defaultData = {
       revPlan: [554, 554, 449, 380, 502, 879, 927, 1042, 2196, 2196, 2145, 1678],
       revAct:  [823, 787, 99, 782, 688, 1117, 1668, 1703, 1786, 1670, 1393, 1393],
@@ -715,69 +715,132 @@
     const bppActVal = appData.bppAct;
     const statusArr = appData.status;
 
+    // Hitung jumlah bulan REALISASI (misal bulan 0 sampai 8 = 9 bulan, atau sesuai status)
+    let realCount = statusArr.filter(s => s === 'REALISASI').length;
+    if (realCount === 0) realCount = 8; // Default aman
+
+    const lastRealMonthShort = monthsList[realCount - 1];
+    const lastRealMonthFull = fullMonthsList[realCount - 1];
+
+    // Update Header Badge
+    document.getElementById('badge-realisasi-text').textContent = `Jan - ${lastRealMonthShort} 2026 (Realisasi)`;
+    document.getElementById('badge-prognosa-text').textContent = `${monthsList[realCount]} - Dec 2026 (Prognosa)`;
+
+    // Update Header Tabel & Kolom Span
+    const thRealisasi = document.querySelector('.th-realisasi');
+    const thPrognosa = document.querySelector('.th-prognosa');
+    if (thRealisasi) thRealisasi.setAttribute('colspan', realCount + 1);
+    if (thPrognosa) thPrognosa.setAttribute('colspan', (12 - realCount) + 1);
+
+    // Bangun ulang Header Baris Kedua Tabel Utama
+    const tableHeadTr = document.querySelector('#main-table thead tr:nth-child(2)`);
+    if (tableHeadTr) {
+      let htmlTr = '';
+      for(let i=0; i<realCount; i++) {
+        htmlTr += `<th>${monthLabels[i]}</th>`;
+      }
+      htmlTr += `<th class="th-realisasi">TOTAL</th>`;
+      for(let i=realCount; i<12; i++) {
+        htmlTr += `<th>${monthLabels[i]}</th>`;
+      }
+      htmlTr += `<th class="th-prognosa">TOTAL</th>`;
+      htmlTr += `<th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>`;
+      tableHeadTr.innerHTML = htmlTr;
+    }
+
     const gpActVal = revActVal.map((r, i) => r - bppActVal[i]);
     const gpmActVal = revActVal.map((r, i) => r > 0 ? (gpActVal[i] / r * 100) : 0);
-
     const gpPlanArr = revPlanArr.map((r, i) => r - bppPlanArr[i]);
     const gpmPlanArr = revPlanArr.map((r, i) => r > 0 ? (gpPlanArr[i] / r * 100) : 0);
 
-    // Update Tabel Utama secara dinamis berdasarkan localStorage
-    for (let i = 0; i < 12; i++) {
-      document.getElementById(`tbl-rev-${i}`).textContent = revActVal[i].toLocaleString('id-ID');
-      document.getElementById(`tbl-bpp-${i}`).textContent = bppActVal[i].toLocaleString('id-ID');
-      document.getElementById(`tbl-gp-${i}`).textContent = Math.round(gpActVal[i]).toLocaleString('id-ID');
-      document.getElementById(`tbl-gpm-${i}`).textContent = gpmActVal[i].toFixed(2).replace('.', ',') + '%';
+    // Bangun Ulang Baris Data Tabel Utama
+    function renderTableRows() {
+      const tbody = document.querySelector('#main-table tbody');
+      if (!tbody) return;
+
+      const sum = arr => arr.reduce((a, b) => a + b, 0);
+
+      const rReal = sum(revActVal.slice(0, realCount));
+      const rProg = sum(revActVal.slice(realCount, 12));
+      const rFull = sum(revActVal);
+      const rPlan = sum(revPlanArr);
+
+      const bReal = sum(bppActVal.slice(0, realCount));
+      const bProg = sum(bppActVal.slice(realCount, 12));
+      const bFull = sum(bppActVal);
+      const bPlan = sum(bppPlanArr);
+
+      const gReal = sum(gpActVal.slice(0, realCount));
+      const gProg = sum(gpActVal.slice(realCount, 12));
+      const gFull = sum(gpActVal);
+      const gPlan = sum(gpPlanArr);
+
+      const avgGpmReal = rReal > 0 ? (gReal / rReal * 100) : 0;
+      const avgGpmProg = rProg > 0 ? (gProg / rProg * 100) : 0;
+      const avgGpmFull = rFull > 0 ? (gFull / rFull * 100) : 0;
+      const planGpmFull = rPlan > 0 ? (gPlan / rPlan * 100) : 0;
+
+      // HTML Pendapatan Usaha
+      let html = `<tr><td class="row-label">PENDAPATAN USAHA (Juta Rp)</td>`;
+      for(let i=0; i<realCount; i++) html += `<td>${Math.round(revActVal[i]).toLocaleString('id-ID')}</td>`;
+      html += `<td class="txt-green">${Math.round(rReal).toLocaleString('id-ID')}</td>`;
+      for(let i=realCount; i<12; i++) html += `<td>${Math.round(revActVal[i]).toLocaleString('id-ID')}</td>`;
+      html += `<td class="txt-green">${Math.round(rProg).toLocaleString('id-ID')}</td>`;
+      html += `<td>${Math.round(rPlan).toLocaleString('id-ID')}</td><td class="metric-actual">${Math.round(rFull).toLocaleString('id-ID')}</td>`;
+      const pctR = rPlan > 0 ? (rFull / rPlan * 100) : 0;
+      html += `<th class="${pctR >= 100 ? 'txt-green' : 'txt-red'}">${pctR.toFixed(2).replace('.', ',')}%</th></tr>`;
+
+      // HTML Beban Pokok Pendapatan
+      html += `<tr><td class="row-label">BEBAN POKOK PENDAPATAN (Juta Rp)</td>`;
+      for(let i=0; i<realCount; i++) html += `<td>${Math.round(bppActVal[i]).toLocaleString('id-ID')}</td>`;
+      html += `<td class="txt-green">${Math.round(bReal).toLocaleString('id-ID')}</td>`;
+      for(let i=realCount; i<12; i++) html += `<td>${Math.round(bppActVal[i]).toLocaleString('id-ID')}</td>`;
+      html += `<td class="txt-green">${Math.round(bProg).toLocaleString('id-ID')}</td>`;
+      html += `<td>${Math.round(bPlan).toLocaleString('id-ID')}</td><td class="metric-actual">${Math.round(bFull).toLocaleString('id-ID')}</td>`;
+      const pctB = bPlan > 0 ? (bFull / bPlan * 100) : 0;
+      html += `<th class="${pctB <= 100 ? 'txt-green' : 'txt-red'}">${pctB.toFixed(2).replace('.', ',')}%</th></tr>`;
+
+      // HTML Gross Profit
+      html += `<tr><td class="row-label">GROSS PROFIT (Juta Rp)</td>`;
+      for(let i=0; i<realCount; i++) html += `<td>${Math.round(gpActVal[i]).toLocaleString('id-ID')}</td>`;
+      html += `<td class="txt-green">${Math.round(gReal).toLocaleString('id-ID')}</td>`;
+      for(let i=realCount; i<12; i++) html += `<td>${Math.round(gpActVal[i]).toLocaleString('id-ID')}</td>`;
+      html += `<td class="txt-green">${Math.round(gProg).toLocaleString('id-ID')}</td>`;
+      html += `<td>${Math.round(gPlan).toLocaleString('id-ID')}</td><td class="metric-actual">${Math.round(gFull).toLocaleString('id-ID')}</td>`;
+      const pctG = gPlan > 0 ? (gFull / gPlan * 100) : 0;
+      html += `<th class="${pctG >= 100 ? 'txt-green' : 'txt-red'}">${pctG.toFixed(2).replace('.', ',')}%</th></tr>`;
+
+      // HTML Gross Profit Margin
+      html += `<tr><td class="row-label">GROSS PROFIT MARGIN (%)</td>`;
+      for(let i=0; i<realCount; i++) html += `<td>${gpmActVal[i].toFixed(2).replace('.', ',')}%</td>`;
+      html += `<td class="txt-green">${avgGpmReal.toFixed(2).replace('.', ',')}%</td>`;
+      for(let i=realCount; i<12; i++) html += `<td>${gpmActVal[i].toFixed(2).replace('.', ',')}%</td>`;
+      html += `<td class="txt-green">${avgGpmProg.toFixed(2).replace('.', ',')}%</td>`;
+      html += `<td>${planGpmFull.toFixed(2).replace('.', ',')}%</td><td class="metric-actual">${avgGpmFull.toFixed(2).replace('.', ',')}%</td>`;
+      const pctGm = planGpmFull > 0 ? (avgGpmFull / planGpmFull * 100) : 0;
+      html += `<th class="${pctGm >= 100 ? 'txt-green' : 'txt-red'}">${pctGm.toFixed(2).replace('.', ',')}%</th></tr>`;
+
+      tbody.innerHTML = html;
+
+      // Update Top KPI Cards
+      document.getElementById('kpi-rev-plan').textContent = Math.round(rPlan).toLocaleString('id-ID');
+      document.getElementById('kpi-rev-act').textContent = Math.round(rFull).toLocaleString('id-ID');
+      document.getElementById('kpi-rev-badge').textContent = `▲ ${pctR.toFixed(2).replace('.', ',')}%`;
+
+      document.getElementById('kpi-bpp-plan').textContent = Math.round(bPlan).toLocaleString('id-ID');
+      document.getElementById('kpi-bpp-act').textContent = Math.round(bFull).toLocaleString('id-ID');
+      document.getElementById('kpi-bpp-badge').textContent = `▲ ${pctB.toFixed(2).replace('.', ',')}%`;
+
+      document.getElementById('kpi-gp-plan').textContent = Math.round(gPlan).toLocaleString('id-ID');
+      document.getElementById('kpi-gp-act').textContent = Math.round(gFull).toLocaleString('id-ID');
+      document.getElementById('kpi-gp-badge').textContent = `▼ ${pctG.toFixed(2).replace('.', ',')}%`;
+
+      document.getElementById('kpi-gpm-plan').textContent = planGpmFull.toFixed(2).replace('.', ',') + '%';
+      document.getElementById('kpi-gpm-act').textContent = avgGpmFull.toFixed(2).replace('.', ',') + '%';
+      document.getElementById('kpi-gpm-badge').textContent = `▼ ${pctGm.toFixed(2).replace('.', ',')}%`;
     }
 
-    // Hitung total-total pada tabel
-    const sum = arr => arr.reduce((a, b) => a + b, 0);
-    const totRevReal = sum(revActVal.slice(0, 8)); // Jan-Aug
-    const totRevProg = sum(revActVal.slice(8, 12)); // Sep-Dec
-    const totRevFull = sum(revActVal);
-    const planRevFull = sum(revPlanArr);
-
-    const totBppReal = sum(bppActVal.slice(0, 8));
-    const totBppProg = sum(bppActVal.slice(8, 12));
-    const totBppFull = sum(bppActVal);
-    const planBppFull = sum(bppPlanArr);
-
-    const totGpReal = sum(gpActVal.slice(0, 8));
-    const totGpProg = sum(gpActVal.slice(8, 12));
-    const totGpFull = sum(gpActVal);
-    const planGpFull = sum(gpPlanArr);
-
-    const avgGpmReal = totRevReal > 0 ? (totGpReal / totRevReal * 100) : 0;
-    const avgGpmProg = totRevProg > 0 ? (totGpProg / totRevProg * 100) : 0;
-    const avgGpmFull = totRevFull > 0 ? (totGpFull / totRevFull * 100) : 0;
-    const planGpmFull = planRevFull > 0 ? (planGpFull / planRevFull * 100) : 0;
-
-    document.getElementById('tbl-rev-real-tot').textContent = Math.round(totRevReal).toLocaleString('id-ID');
-    document.getElementById('tbl-rev-prog-tot').textContent = Math.round(totRevProg).toLocaleString('id-ID');
-    document.getElementById('tbl-rev-plan-full').textContent = Math.round(planRevFull).toLocaleString('id-ID');
-    document.getElementById('tbl-rev-act-full').textContent = Math.round(totRevFull).toLocaleString('id-ID');
-    const pctRev = planRevFull > 0 ? (totRevFull / planRevFull * 100) : 0;
-    document.getElementById('tbl-rev-pct').textContent = pctRev.toFixed(2).replace('.', ',') + '%';
-
-    document.getElementById('tbl-bpp-real-tot').textContent = Math.round(totBppReal).toLocaleString('id-ID');
-    document.getElementById('tbl-bpp-prog-tot').textContent = Math.round(totBppProg).toLocaleString('id-ID');
-    document.getElementById('tbl-bpp-plan-full').textContent = Math.round(planBppFull).toLocaleString('id-ID');
-    document.getElementById('tbl-bpp-act-full').textContent = Math.round(totBppFull).toLocaleString('id-ID');
-    const pctBpp = planBppFull > 0 ? (totBppFull / planBppFull * 100) : 0;
-    document.getElementById('tbl-bpp-pct').textContent = pctBpp.toFixed(2).replace('.', ',') + '%';
-
-    document.getElementById('tbl-gp-real-tot').textContent = Math.round(totGpReal).toLocaleString('id-ID');
-    document.getElementById('tbl-gp-prog-tot').textContent = Math.round(totGpProg).toLocaleString('id-ID');
-    document.getElementById('tbl-gp-plan-full').textContent = Math.round(planGpFull).toLocaleString('id-ID');
-    document.getElementById('tbl-gp-act-full').textContent = Math.round(totGpFull).toLocaleString('id-ID');
-    const pctGp = planGpFull > 0 ? (totGpFull / planGpFull * 100) : 0;
-    document.getElementById('tbl-gp-pct').textContent = pctGp.toFixed(2).replace('.', ',') + '%';
-
-    document.getElementById('tbl-gpm-real-tot').textContent = avgGpmReal.toFixed(2).replace('.', ',') + '%';
-    document.getElementById('tbl-gpm-prog-tot').textContent = avgGpmProg.toFixed(2).replace('.', ',') + '%';
-    document.getElementById('tbl-gpm-plan-full').textContent = planGpmFull.toFixed(2).replace('.', ',') + '%';
-    document.getElementById('tbl-gpm-act-full').textContent = avgGpmFull.toFixed(2).replace('.', ',') + '%';
-    document.getElementById('tbl-gpm-pct').textContent = (planGpmFull > 0 ? (avgGpmFull / planGpmFull * 100) : 0).toFixed(2).replace('.', ',') + '%';
-
+    renderTableRows();
 
     let chartInstances = {};
 
@@ -939,70 +1002,127 @@
       });
     }
 
+    // ==========================================
+    // RENDER DASHBOARD 3 (DINAMIS MENGIKUTI REALCOUNT)
+    // ==========================================
     function renderDashboard3() {
-      const planRev = [554, 554, 449, 380, 502, 879, 927, 1042];
-      const actRev  = [823, 787, 99, 782, 688, 1117, 1668, 1703];
-      const planBpp = [195, 195, 195, 165, 308, 495, 531, 613];
-      const actBpp  = [647, 632, 92, 680, 404, 913, 1342, 1164];
-      const planGp  = planRev.map((r, i) => r - planBpp[i]);
-      const actGp   = actRev.map((r, i) => r - actBpp[i]);
-      const planGpm = planRev.map((r, i) => r > 0 ? (planGp[i] / r * 100) : 0);
-      const actGpm  = actRev.map((r, i) => r > 0 ? (actGp[i] / r * 100) : 0);
-      const shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"];
+      const sum = arr => arr.reduce((a, b) => a + b, 0);
+      const planRevSub = sum(revPlanArr.slice(0, realCount));
+      const actRevSub  = sum(revActVal.slice(0, realCount));
+      const planBppSub = sum(bppPlanArr.slice(0, realCount));
+      const actBppSub  = sum(bppActVal.slice(0, realCount));
+      const planGpSub  = sum(gpPlanArr.slice(0, realCount));
+      const actGpSub   = sum(gpActVal.slice(0, realCount));
+      const planGpmSub = planRevSub > 0 ? (planGpSub / planRevSub * 100) : 0;
+      const actGpmSub  = actRevSub > 0 ? (actGpSub / actRevSub * 100) : 0;
 
+      const planRevFull = sum(revPlanArr);
+      const planBppFull = sum(bppPlanArr);
+      const planGpFull  = sum(gpPlanArr);
+      const planGpmFull = planRevFull > 0 ? (planGpFull / planRevFull * 100) : 0;
+
+      // Header Dashboard 3
+      document.getElementById('d3-subtitle-text').textContent = `Rencana vs Realisasi | Januari – ${lastRealMonthFull} 2026 | Outlook Full Year 2026`;
+      document.getElementById('d3-badge-text').textContent = `Data s.d. ${lastRealMonthFull} 2026`;
+      document.getElementById('d3-sec1-sub').textContent = `Monthly performance – actual data available through ${lastRealMonthFull} 2026`;
+
+      // 4 KPI Cards Dashboard 3
+      document.getElementById('d3-kpi-rev').textContent = Math.round(actRevSub).toLocaleString('id-ID');
+      document.getElementById('d3-kpi-rev-sub').textContent = `${(actRevSub / planRevFull * 100).toFixed(2).replace('.', ',')}% dari target 2026`;
+
+      document.getElementById('d3-kpi-bpp').textContent = Math.round(actBppSub).toLocaleString('id-ID');
+      document.getElementById('d3-kpi-bpp-sub').textContent = `${(actBppSub / planBppFull * 100).toFixed(2).replace('.', ',')}% dari target 2026`;
+
+      document.getElementById('d3-kpi-gp').textContent = Math.round(actGpSub).toLocaleString('id-ID');
+      document.getElementById('d3-kpi-gp-sub').textContent = `${(actGpSub / planGpFull * 100).toFixed(2).replace('.', ',')}% dari target 2026`;
+
+      document.getElementById('d3-kpi-gpm').textContent = actGpmSub.toFixed(2).replace('.', ',') + '%';
+      document.getElementById('d3-kpi-gpm-sub').textContent = `Target 2026: ${planGpmFull.toFixed(2).replace('.', ',')}%`;
+
+      // Kolom Pencapaian Box Kanan Dashboard 3
+      document.getElementById('d3-cumul-rev-title').textContent = `Pencapaian s.d. ${lastRealMonthShort} 2026`;
+      document.getElementById('d3-cumul-rev-act').textContent = Math.round(actRevSub).toLocaleString('id-ID');
+      document.getElementById('d3-cumul-rev-plan').textContent = Math.round(planRevSub).toLocaleString('id-ID');
+
+      document.getElementById('d3-cumul-bpp-title').textContent = `Pencapaian s.d. ${lastRealMonthShort} 2026`;
+      document.getElementById('d3-cumul-bpp-act').textContent = Math.round(actBppSub).toLocaleString('id-ID');
+      document.getElementById('d3-cumul-bpp-plan').textContent = Math.round(planBppSub).toLocaleString('id-ID');
+
+      document.getElementById('d3-cumul-gp-title').textContent = `Pencapaian s.d. ${lastRealMonthShort} 2026`;
+      document.getElementById('d3-cumul-gp-act').textContent = Math.round(actGpSub).toLocaleString('id-ID');
+      document.getElementById('d3-cumul-gp-plan').textContent = Math.round(planGpSub).toLocaleString('id-ID');
+
+      document.getElementById('d3-cumul-gpm-title').textContent = `Pencapaian s.d. ${lastRealMonthShort} 2026`;
+      document.getElementById('d3-cumul-gpm-act').textContent = actGpmSub.toFixed(2).replace('.', ',') + '%';
+      document.getElementById('d3-cumul-gpm-plan').textContent = planGpmSub.toFixed(2).replace('.', ',') + '%';
+
+      const subMonths = monthsList.slice(0, realCount);
+      const subPlanRev = revPlanArr.slice(0, realCount);
+      const subActRev = revActVal.slice(0, realCount);
+      const subPlanBpp = bppPlanArr.slice(0, realCount);
+      const subActBpp = bppActVal.slice(0, realCount);
+      const subPlanGp = gpPlanArr.slice(0, realCount);
+      const subActGp = gpActVal.slice(0, realCount);
+      const subPlanGpm = gpmPlanArr.slice(0, realCount);
+      const subActGpm = gpmActVal.slice(0, realCount);
+
+      // 1. Pendapatan Usaha D3
       new Chart(document.getElementById('d3ChartRev').getContext('2d'), {
         data: {
-          labels: shortMonths,
+          labels: subMonths,
           datasets: [
-            { type: 'bar', label: 'Rencana', data: planRev, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
-            { type: 'bar', label: 'Realisasi', data: actRev, backgroundColor: '#0b63ce', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#0b63ce', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
+            { type: 'bar', label: 'Rencana', data: subPlanRev, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
+            { type: 'bar', label: 'Realisasi', data: subActRev, backgroundColor: '#0b63ce', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#0b63ce', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
           ]
         },
         options: {
           responsive: true, maintainAspectRatio: false,
           plugins: { legend: { display: false } },
-          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, max: 3000, ticks: { font: { size: 9 }, stepSize: 500 } } }
+          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } }
         }
       });
 
+      // 2. Beban Pokok D3
       new Chart(document.getElementById('d3ChartBpp').getContext('2d'), {
         data: {
-          labels: shortMonths,
+          labels: subMonths,
           datasets: [
-            { type: 'bar', label: 'Rencana', data: planBpp, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
-            { type: 'bar', label: 'Realisasi', data: actBpp, backgroundColor: '#008767', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#008767', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
+            { type: 'bar', label: 'Rencana', data: subPlanBpp, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
+            { type: 'bar', label: 'Realisasi', data: subActBpp, backgroundColor: '#008767', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#008767', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
           ]
         },
         options: {
           responsive: true, maintainAspectRatio: false,
           plugins: { legend: { display: false } },
-          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, max: 2000, ticks: { font: { size: 9 }, stepSize: 250 } } }
+          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } }
         }
       });
 
+      // 3. Gross Profit D3
       new Chart(document.getElementById('d3ChartGp').getContext('2d'), {
         data: {
-          labels: shortMonths,
+          labels: subMonths,
           datasets: [
-            { type: 'bar', label: 'Rencana', data: planGp, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
-            { type: 'bar', label: 'Realisasi', data: actGp, backgroundColor: '#7c3aed', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#7c3aed', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
+            { type: 'bar', label: 'Rencana', data: subPlanGp, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
+            { type: 'bar', label: 'Realisasi', data: subActGp, backgroundColor: '#7c3aed', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#7c3aed', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
           ]
         },
         options: {
           responsive: true, maintainAspectRatio: false,
           plugins: { legend: { display: false } },
-          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, max: 1200, ticks: { font: { size: 9 }, stepSize: 200 } } }
+          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } }
         }
       });
 
-      const targetLine = shortMonths.map(() => 45.59);
+      // 4. Gross Profit Margin D3
+      const targetLine = subMonths.map(() => planGpmFull);
       new Chart(document.getElementById('d3ChartGpm').getContext('2d'), {
         data: {
-          labels: shortMonths,
+          labels: subMonths,
           datasets: [
             { type: 'line', label: 'Target FY', data: targetLine, borderColor: '#e67e22', borderDash: [4,4], borderWidth: 1.5, pointRadius: 0, datalabels: { display: false } },
-            { type: 'line', label: 'Rencana', data: planGpm, borderColor: '#e67e22', backgroundColor: '#e67e22', borderWidth: 2, pointRadius: 4, datalabels: { align: 'top', anchor: 'end', color: '#e67e22', font: { size: 8, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' } },
-            { type: 'line', label: 'Realisasi', data: actGpm, borderColor: '#1e293b', backgroundColor: '#1e293b', borderWidth: 2, pointRadius: 4, datalabels: { align: 'bottom', anchor: 'start', color: '#1e293b', font: { size: 8, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' } }
+            { type: 'line', label: 'Rencana', data: subPlanGpm, borderColor: '#e67e22', backgroundColor: '#e67e22', borderWidth: 2, pointRadius: 4, datalabels: { align: 'top', anchor: 'end', color: '#e67e22', font: { size: 8, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' } },
+            { type: 'line', label: 'Realisasi', data: subActGpm, borderColor: '#1e293b', backgroundColor: '#1e293b', borderWidth: 2, pointRadius: 4, datalabels: { align: 'bottom', anchor: 'start', color: '#1e293b', font: { size: 8, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' } }
           ]
         },
         options: {
