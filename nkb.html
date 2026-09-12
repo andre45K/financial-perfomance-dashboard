@@ -50,7 +50,7 @@
     .chart-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #ffffff; background: #0f4c81; padding: 8px 12px; border-radius: 4px; margin-bottom: 14px; letter-spacing: 0.5px; }
     .chart-container { position: relative; height: 260px; width: 100%; }
 
-    /* CUSTOM DONUT LEGEND LAYOUT MATCHING EXACT IMAGE 2 */
+    /* CLEAN LEGEND LAYOUT */
     .donut-layout { display: grid; grid-template-columns: 1fr 160px; gap: 10px; align-items: center; height: 100%; }
     .custom-legend { display: flex; flex-direction: column; gap: 10px; font-size: 11px; padding-right: 5px; }
     .legend-category-title { font-weight: 800; color: #1e293b; font-size: 11.5px; margin-bottom: 2px; }
@@ -168,7 +168,7 @@
         </div>
       </div>
 
-      <!-- Chart 2: Per Jenis Alat (Donut) - Exactly Matching Image 2 Color Mapping & Legend Layout -->
+      <!-- Chart 2: Per Jenis Alat (Donut) with Clean Legend -->
       <div class="chart-card">
         <div class="chart-title">RENCANA NILAI KONTRAK BARU PER JENIS ALAT</div>
         <div class="chart-container">
@@ -390,7 +390,7 @@
       }
     });
 
-    // 2. Equipment Donut Chart with Exact Colors & Connector Callout Labels Matching Image 2
+    // 2. Equipment Donut Chart with Tooltip-based Professional Info
     const ctxEquipment = document.getElementById('chartEquipment').getContext('2d');
     new Chart(ctxEquipment, {
       type: 'doughnut',
@@ -399,7 +399,7 @@
         datasets: [{
           data: [8165200000, 2766000000, 1140000000, 994000000, 90000000],
           backgroundColor: ['#0b63ce', '#0b2265', '#e65c00', '#5c165c', '#d4a017'],
-          borderWidth: 1,
+          borderWidth: 2,
           borderColor: '#ffffff'
         }]
       },
@@ -419,65 +419,18 @@
             }
           },
           datalabels: {
-            color: '#1e293b',
+            color: '#ffffff',
             font: { size: 9.5, weight: 'bold' },
             formatter: function(value, context) {
               const total = 13155200000;
-              const pct = ((value / total) * 100).toFixed(2).replace('.', ',');
-              const formattedVal = Number(value).toLocaleString('id-ID');
-              return formattedVal + '\n(' + pct + '%)';
-            },
-            anchor: 'outer',
-            align: 'end',
-            offset: 10,
-            textAlign: 'center',
-            display: function(context) {
-              return true; // Display all labels with callout lines
-            },
-            color: '#1e293b',
-            backgroundColor: '#ffffff',
-            borderColor: '#cbd5e1',
-            borderWidth: 1,
-            borderRadius: 4,
-            padding: 4
+              const pct = ((value / total) * 100);
+              if (pct < 5) return ''; // Hide small slices to keep UI clean
+              return pct.toFixed(2).replace('.', ',') + '%';
+            }
           }
         },
-        cutout: '55%',
-        layout: {
-          padding: 25
-        }
-      },
-      plugins: [{
-        id: 'connectorLines',
-        afterDraw(chart) {
-          const { ctx, chartArea } = chart;
-          chart.data.datasets.forEach((dataset, i) => {
-            const meta = chart.getDatasetMeta(i);
-            meta.data.forEach((element, index) => {
-              const { x, y } = element.tooltipPosition();
-              const angle = element.startAngle + (element.endAngle - element.startAngle) / 2;
-              
-              // Calculate outer point for callout connector
-              const outerRadius = element.outerRadius + 15;
-              const cx = element.x + Math.cos(angle) * outerRadius;
-              const cy = element.y + Math.sin(angle) * outerRadius;
-
-              ctx.save();
-              ctx.strokeStyle = '#94a3b8';
-              ctx.lineWidth = 1;
-              ctx.beginPath();
-              ctx.moveTo(x, y);
-              ctx.lineTo(cx, cy);
-              
-              // Horizontal extension
-              const extendX = cx + (Math.cos(angle) > 0 ? 15 : -15);
-              ctx.lineTo(extendX, cy);
-              ctx.stroke();
-              ctx.restore();
-            });
-          });
-        }
-      }]
+        cutout: '55%'
+      }
     });
   </script>
 </body>
