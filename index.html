@@ -10,7 +10,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
     body { background-color: #060d1a; color: #ffffff; padding: 15px; font-size: 13px; }
     
-    /* ================= DASHBOARD 1 (DARK THEME) ================= */
+    /* DASHBOARD 1 (DARK THEME) */
     .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #1a2a40; padding-bottom: 10px; }
     .title-area h1 { font-size: 20px; letter-spacing: 1px; color: #ffffff; text-transform: uppercase; font-weight: 800; }
     .title-area p { color: #8ba0b8; font-size: 12px; margin-top: 2px; }
@@ -69,12 +69,11 @@
     .box-blue { width: 12px; height: 12px; background: #0056b3; }
     .box-orange { width: 12px; height: 12px; background: #d97706; }
 
-    /* ================= DASHBOARD 2 (LIGHT THEME SEMIRIP GAMBAR) ================= */
+    /* DASHBOARD 2 (LIGHT THEME) */
     .section-divider-title { color: #94a3b8; font-size: 12px; font-weight: bold; margin-bottom: 15px; letter-spacing: 1px; text-transform: uppercase; border-left: 4px solid #0052cc; padding-left: 8px; }
 
     .panel-card-light { background: #ffffff; color: #333333; border-radius: 12px; margin-bottom: 25px; padding: 15px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
     
-    /* Header Panel */
     .panel-light-head { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
     .num-badge-light { font-size: 15px; font-weight: 800; padding: 4px 10px; border-radius: 6px; color: #ffffff; }
     .num-blue { background: #0f4c81; }
@@ -82,10 +81,8 @@
     .panel-light-title { font-size: 16px; font-weight: 800; color: #0f4c81; letter-spacing: 0.5px; }
     .title-purple { color: #4a154b; }
 
-    /* Content Layout */
     .panel-light-grid { display: grid; grid-template-columns: 210px 1fr 150px; gap: 15px; align-items: stretch; }
 
-    /* Ringkasan Kiri */
     .ringkasan-box-light { background: #f4f6f9; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #e2e8f0; }
     .ringkasan-header-btn { font-size: 10px; font-weight: bold; color: white; padding: 5px 10px; border-radius: 20px; display: flex; align-items: center; gap: 6px; width: fit-content; text-transform: uppercase; margin-bottom: 10px; }
     .btn-blue-head { background: #0052cc; }
@@ -104,10 +101,8 @@
 
     .circle-icon { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 15px; color: white; margin-bottom: 6px; }
 
-    /* Area Chart Tengah */
     .chart-box-light { position: relative; height: 220px; width: 100%; }
 
-    /* Total Right Box */
     .total-box-light { border-left: 2px dashed #cbd5e1; padding-left: 15px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
     .total-icons-top { display: flex; gap: 4px; margin-bottom: 4px; }
     .icon-small-circle { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; font-weight: bold; }
@@ -136,7 +131,7 @@
 </head>
 <body>
 
-  <!-- ================= HEADER & DASHBOARD UTAMA (DARK THEME) ================= -->
+  <!-- HEADER -->
   <div class="header-container">
     <div class="title-area">
       <h1>FINANCIAL PERFORMANCE DASHBOARD</h1>
@@ -255,7 +250,7 @@
     <div class="legend-item"><div class="box-orange"></div> <span id="legend-prog-text">Data Aug - Dec 2026 merupakan Prognosa</span></div>
   </div>
 
-  <!-- ================= DASHBOARD 2 (LIGHT MODE - EXACT MATCH TEMPLATE) ================= -->
+  <!-- ================= DASHBOARD 2 (LIGHT MODE) ================= -->
   <div class="section-divider-title">VISUALISASI ANALISIS KOMPARATIF</div>
 
   <!-- PANEL 01 -->
@@ -265,7 +260,6 @@
       <h2 class="panel-light-title">PENDAPATAN USAHA vs BEBAN POKOK PENDAPATAN</h2>
     </div>
     <div class="panel-light-grid">
-      <!-- Ringkasan Kiri -->
       <div class="ringkasan-box-light">
         <div>
           <div class="ringkasan-header-btn btn-blue-head">📋 RINGKASAN</div>
@@ -289,12 +283,10 @@
         </div>
       </div>
 
-      <!-- Chart Tengah -->
       <div class="chart-box-light">
         <canvas id="chartSec1"></canvas>
       </div>
 
-      <!-- Total Right -->
       <div class="total-box-light">
         <div>
           <div class="total-icons-top" style="justify-content: center;">
@@ -323,7 +315,6 @@
       <h2 class="panel-light-title title-purple">GROSS PROFIT & GROSS PROFIT MARGIN</h2>
     </div>
     <div class="panel-light-grid">
-      <!-- Ringkasan Kiri -->
       <div class="ringkasan-box-light">
         <div>
           <div class="ringkasan-header-btn btn-purple-head">📋 RINGKASAN</div>
@@ -347,12 +338,10 @@
         </div>
       </div>
 
-      <!-- Chart Tengah -->
       <div class="chart-box-light">
         <canvas id="chartSec2"></canvas>
       </div>
 
-      <!-- Total Right -->
       <div class="total-box-light">
         <div>
           <div class="total-icons-top" style="justify-content: center;">
@@ -374,7 +363,7 @@
     </div>
   </div>
 
-  <!-- FIREBASE & SCRIPT -->
+  <!-- SCRIPT FIREBASE & DASHBOARD LOGIC -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -417,7 +406,7 @@
         const querySnapshot = await getDocs(collection(db, "financial_data", "2026", "months"));
         querySnapshot.forEach((doc) => { dataStore[doc.id] = doc.data(); });
       } catch (e) {
-        console.warn("Fallback default data.");
+        console.warn("Fallback data.");
       }
       renderDashboard(dataStore);
     }
@@ -451,11 +440,11 @@
         if (statusArr[i] === 'REALISASI') lastRealIndex = i + 1;
       }
 
-      const realEndMonth = lastRealIndex > 0 ? monthLabels[lastRealIndex - 1].split('-')[0] : 'Jan';
-      const progStartMonth = lastRealIndex < 12 ? monthLabels[lastRealIndex].split('-')[0] : 'Des';
+      const realEndMonth = lastRealIndex > 0 ? monthLabels[lastRealIndex - 1].replace('-26', '') : 'Jan';
+      const progStartMonth = lastRealIndex < 12 ? monthLabels[lastRealIndex].replace('-26', '') : 'Dec';
       
       const realText = lastRealIndex > 0 ? `Jan - ${realEndMonth} 2026 (Realisasi)` : `Non Realisasi`;
-      const progText = lastRealIndex < 12 ? `${progStartMonth} - Des 2026 (Prognosa)` : `Full Realisasi`;
+      const progText = lastRealIndex < 12 ? `${progStartMonth} - Dec 2026 (Prognosa)` : `Full Realisasi`;
 
       document.getElementById('badge-realisasi-text').textContent = realText;
       document.getElementById('badge-prognosa-text').textContent = progText;
@@ -489,7 +478,6 @@
       renderCharts({ revActArr, bppActArr, gpActArr, gpmActArr, statusArr });
       renderDynamicTable({ revPlanArr, revActArr, bppPlanArr, bppActArr, gpPlanArr, gpActArr, gpmPlanArr, gpmActArr, statusArr, lastRealIndex, realText, progText });
 
-      // Render Light Dashboard Section 2
       renderLightSection({ revActArr, bppActArr, gpActArr, gpmActArr, totalRevAct, totalBppAct, totalGpAct, totalGpmAct });
     }
 
@@ -517,7 +505,7 @@
       const ctx = document.getElementById(id).getContext('2d');
       chartInstances[id] = new Chart(ctx, {
         data: {
-          labels: monthLabels.map(m => m.split('-')[0]),
+          labels: monthLabels.map(m => m.replace('-26', '')),
           datasets: [
             {
               type: 'line', data, borderColor: lineColor, borderWidth: 1.5,
@@ -560,7 +548,7 @@
       const revRealTot = sliceSum(d.revActArr, 0, idx), revProgTot = sliceSum(d.revActArr, idx, 12), revPlanTot = sliceSum(d.revPlanArr, 0, 12), revActTot = sliceSum(d.revActArr, 0, 12), revPct = revPlanTot > 0 ? (revActTot / revPlanTot * 100) : 0;
       const bppRealTot = sliceSum(d.bppActArr, 0, idx), bppProgTot = sliceSum(d.bppActArr, idx, 12), bppPlanTot = sliceSum(d.bppPlanArr, 0, 12), bppActTot = sliceSum(d.bppActArr, 0, 12), bppPct = bppPlanTot > 0 ? (bppActTot / bppPlanTot * 100) : 0;
       const gpRealTot = revRealTot - bppRealTot, gpProgTot = revProgTot - bppProgTot, gpPlanTot = revPlanTot - bppPlanTot, gpActTot = revActTot - bppActTot, gpPct = gpPlanTot > 0 ? (gpActTot / gpPlanTot * 100) : 0;
-      const gpmRealTot = revRealTot > 0 ? (gpRealTot / revRealTot * 100) : 0, gpmProgTot = revProgTot > 0 ? (gpProgTot / revProgTot * 100) : 0, gpmPlanTot = revPlanTot > 0 ? (gpmPlanTot / revPlanTot * 100) : 0, gpmActTot = revActTot > 0 ? (gpActTot / revActTot * 100) : 0, gpmPct = gpmPlanTot > 0 ? (gpmActTot / gpmPlanTot * 100) : 0;
+      const gpmRealTot = revRealTot > 0 ? (gpRealTot / revRealTot * 100) : 0, gpmProgTot = revProgTot > 0 ? (gpProgTot / revProgTot * 100) : 0, gpmPlanTot = revPlanTot > 0 ? (gpPlanTot / revPlanTot * 100) : 0, gpmActTot = revActTot > 0 ? (gpActTot / revActTot * 100) : 0, gpmPct = gpmPlanTot > 0 ? (gpmActTot / gpmPlanTot * 100) : 0;
 
       const buildRow = (title, actArr, realTot, progTot, planTot, actTot, pct, isMargin = false) => {
         let fmt = v => isMargin ? v.toFixed(2).replace('.', ',') + '%' : Math.round(v).toLocaleString('id-ID');
@@ -582,11 +570,7 @@
         `</tbody>`;
     }
 
-    // ==========================================
-    // RENDER SECTION 2 (LIGHT THEME SEMIRIP TEMPLATE GAMBAR)
-    // ==========================================
     function renderLightSection(d) {
-      // 1. Ringkasan Panel 01
       const avgRev = d.totalRevAct / 12;
       const avgBpp = d.totalBppAct / 12;
 
@@ -602,7 +586,6 @@
       const bppHeight = d.totalRevAct > 0 ? (d.totalBppAct / d.totalRevAct * 100) : 55;
       document.getElementById('side-bar-bpp-col').style.height = bppHeight + '%';
 
-      // 2. Ringkasan Panel 02
       const avgGp = d.totalGpAct / 12;
       const avgGpm = d.gpmActArr.reduce((a, b) => a + b, 0) / 12;
 
@@ -615,7 +598,7 @@
       document.getElementById('side-val-gp').textContent = Math.round(d.totalGpAct).toLocaleString('id-ID');
       document.getElementById('side-val-gpm').textContent = d.totalGpmAct.toFixed(1).replace('.', ',') + '%';
 
-      // 3. Render Chart Panel 01 (Grouped Bar Light)
+      // 1. Chart Light Panel 01
       if (chartInstances['chartSec1']) chartInstances['chartSec1'].destroy();
       const ctx1 = document.getElementById('chartSec1').getContext('2d');
       chartInstances['chartSec1'] = new Chart(ctx1, {
@@ -662,7 +645,7 @@
         }
       });
 
-      // 4. Render Chart Panel 02 (Bar Purple + Line Orange Light)
+      // 2. Chart Light Panel 02
       if (chartInstances['chartSec2']) chartInstances['chartSec2'].destroy();
       const ctx2 = document.getElementById('chartSec2').getContext('2d');
       chartInstances['chartSec2'] = new Chart(ctx2, {
