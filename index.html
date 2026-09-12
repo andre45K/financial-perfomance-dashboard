@@ -85,7 +85,6 @@
 
     .panel-light-grid { display: grid; grid-template-columns: 220px 1fr 150px; gap: 15px; align-items: stretch; }
 
-    /* BOX RINGKASAN PERSIS TEMPLATE */
     .ringkasan-box-light { background: #f0f5fc; border-radius: 12px; padding: 0 0 12px 0; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #d0dbe9; overflow: hidden; }
     .ringkasan-header-banner { background: #0b63ce; color: white; padding: 8px 12px; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
     .ringkasan-header-purple { background: #7c3aed; }
@@ -93,7 +92,6 @@
     .ringkasan-content { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
     .item-light { display: flex; gap: 10px; align-items: flex-start; }
     
-    /* ICON LINGKARAN DENGAN BADGE RP PERSIS TEMPLATE */
     .icon-circle-custom { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; color: white; }
     .bg-circle-blue { background: #0b63ce; }
     .bg-circle-teal { background: #008767; }
@@ -274,13 +272,11 @@
       <h2 class="panel-light-title">PENDAPATAN USAHA vs BEBAN POKOK PENDAPATAN</h2>
     </div>
     <div class="panel-light-grid">
-      <!-- Ringkasan Kiri -->
       <div class="ringkasan-box-light">
         <div class="ringkasan-header-banner">
           <i class="fa-solid fa-clipboard-list"></i> RINGKASAN
         </div>
         <div class="ringkasan-content">
-          <!-- Item 1: Pendapatan -->
           <div class="item-light">
             <div class="icon-circle-custom bg-circle-blue">
               <i class="fa-solid fa-chart-simple" style="font-size: 18px;"></i>
@@ -296,7 +292,6 @@
 
           <hr style="border:none; border-top: 1px solid #cbd5e1; margin: 4px 0;">
 
-          <!-- Item 2: BPP -->
           <div class="item-light">
             <div class="icon-circle-custom bg-circle-teal">
               <i class="fa-solid fa-receipt" style="font-size: 18px;"></i>
@@ -312,12 +307,10 @@
         </div>
       </div>
 
-      <!-- Chart Tengah -->
       <div class="chart-box-light">
         <canvas id="chartSec1"></canvas>
       </div>
 
-      <!-- Total Kanan -->
       <div class="total-box-light">
         <div>
           <div class="total-icons-top" style="justify-content: center;">
@@ -346,13 +339,11 @@
       <h2 class="panel-light-title title-purple">GROSS PROFIT & GROSS PROFIT MARGIN</h2>
     </div>
     <div class="panel-light-grid">
-      <!-- Ringkasan Kiri -->
       <div class="ringkasan-box-light">
         <div class="ringkasan-header-banner ringkasan-header-purple">
           <i class="fa-solid fa-clipboard-list"></i> RINGKASAN
         </div>
         <div class="ringkasan-content">
-          <!-- Item 1: Gross Profit -->
           <div class="item-light">
             <div class="icon-circle-custom bg-circle-purple">
               <i class="fa-solid fa-chart-line" style="font-size: 18px;"></i>
@@ -368,7 +359,6 @@
 
           <hr style="border:none; border-top: 1px solid #cbd5e1; margin: 4px 0;">
 
-          <!-- Item 2: GPM -->
           <div class="item-light">
             <div class="icon-circle-custom bg-circle-orange">
               <i class="fa-solid fa-percent" style="font-size: 18px;"></i>
@@ -383,12 +373,10 @@
         </div>
       </div>
 
-      <!-- Chart Tengah -->
       <div class="chart-box-light">
         <canvas id="chartSec2"></canvas>
       </div>
 
-      <!-- Total Kanan -->
       <div class="total-box-light">
         <div>
           <div class="total-icons-top" style="justify-content: center;">
@@ -487,8 +475,8 @@
         if (statusArr[i] === 'REALISASI') lastRealIndex = i + 1;
       }
 
-      const realEndMonth = lastRealIndex > 0 ? monthLabels[lastRealIndex - 1].replace('-26', '') : 'Jan';
-      const progStartMonth = lastRealIndex < 12 ? monthLabels[lastRealIndex].replace('-26', '') : 'Dec';
+      const realEndMonth = lastRealIndex > 0 ? monthLabels[lastRealIndex - 1].split('-')[0] : 'Jan';
+      const progStartMonth = lastRealIndex < 12 ? monthLabels[lastRealIndex].split('-')[0] : 'Dec';
       
       const realText = lastRealIndex > 0 ? `Jan - ${realEndMonth} 2026 (Realisasi)` : `Non Realisasi`;
       const progText = lastRealIndex < 12 ? `${progStartMonth} - Dec 2026 (Prognosa)` : `Full Realisasi`;
@@ -552,7 +540,7 @@
       const ctx = document.getElementById(id).getContext('2d');
       chartInstances[id] = new Chart(ctx, {
         data: {
-          labels: monthLabels.map(m => m.replace('-26', '')),
+          labels: monthLabels.map(m => m.split('-')[0]),
           datasets: [
             {
               type: 'line', data, borderColor: lineColor, borderWidth: 1.5,
@@ -645,13 +633,15 @@
       document.getElementById('side-val-gp').textContent = Math.round(d.totalGpAct).toLocaleString('id-ID');
       document.getElementById('side-val-gpm').textContent = d.totalGpmAct.toFixed(1).replace('.', ',') + '%';
 
+      const lightLabels = monthLabels.map(m => m.replace('-26', ''));
+
       // 1. Chart Light Panel 01
       if (chartInstances['chartSec1']) chartInstances['chartSec1'].destroy();
       const ctx1 = document.getElementById('chartSec1').getContext('2d');
       chartInstances['chartSec1'] = new Chart(ctx1, {
         type: 'bar',
         data: {
-          labels: monthLabels,
+          labels: lightLabels,
           datasets: [
             {
               label: 'Pendapatan Usaha',
@@ -697,7 +687,7 @@
       const ctx2 = document.getElementById('chartSec2').getContext('2d');
       chartInstances['chartSec2'] = new Chart(ctx2, {
         data: {
-          labels: monthLabels,
+          labels: lightLabels,
           datasets: [
             {
               type: 'line',
