@@ -59,7 +59,7 @@
     table { width: 100%; border-collapse: collapse; text-align: center; font-size: 10.5px; }
     th, td { border: 1px solid #1e2d42; padding: 6px 4px; }
     
-    /* Table Headers */
+    /* Table Headers & Highlights */
     .th-header-main { background: #09121d; color: #ffffff; font-weight: bold; }
     .th-realisasi { background: #0f4c81; color: #ffffff; }
     .th-prognosa { background: #b45309; color: #ffffff; }
@@ -95,8 +95,8 @@
       <p>Rencana vs Realisasi | Januari - Desember 2026</p>
     </div>
     <div class="header-info">
-      <span class="badge-status badge-realisasi">Jan - Jul 2026 (Realisasi)</span>
-      <span class="badge-status badge-prognosa">Aug - Dec 2026 (Prognosa)</span>
+      <span id="badge-realisasi-text" class="badge-status badge-realisasi">Jan - Jul 2026 (Realisasi)</span>
+      <span id="badge-prognosa-text" class="badge-status badge-prognosa">Aug - Dec 2026 (Prognosa)</span>
       <div class="period-box">
         <span>📅 Periode: <strong>Jan - Dec 2026</strong></span>
       </div>
@@ -201,33 +201,16 @@
 
   <!-- TABLE -->
   <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th rowspan="2" class="th-header-main" style="width: 14%;">URAIAN</th>
-          <th colspan="7" class="th-realisasi">JAN - JUL 2026 (REALISASI)</th>
-          <th colspan="5" class="th-prognosa">AUG - DEC 2026 (PROGNOSA)</th>
-          <th colspan="3" class="th-total">TOTAL 2026</th>
-        </tr>
-        <tr>
-          <th>Jan-26</th><th>Feb-26</th><th>Mar-26</th><th>Apr-26</th><th>Mei-26</th><th>Jun-26</th><th>Jul-26</th>
-          <th class="th-realisasi">TOTAL</th>
-          <th>Aug-26</th><th>Sep-26</th><th>Okt-26</th><th>Nov-26</th><th>Des-26</th>
-          <th class="th-prognosa">TOTAL</th>
-          <th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>
-        </tr>
-      </thead>
-      <tbody id="table-body">
-        <!-- Generasi Otomatis via JS -->
-      </tbody>
+    <table id="main-table">
+      <!-- Generasi Otomatis via JS (Header & Body) -->
     </table>
   </div>
 
   <!-- FOOTER LEGEND -->
   <div class="footer-legend">
     <strong>CATATAN :</strong>
-    <div class="legend-item"><div class="box-blue"></div> Data Jan - Jul 2026 merupakan Realisasi</div>
-    <div class="legend-item"><div class="box-orange"></div> Data Aug - Dec 2026 merupakan Prognosa</div>
+    <div class="legend-item"><div class="box-blue"></div> <span id="legend-real-text">Data Jan - Jul 2026 merupakan Realisasi</span></div>
+    <div class="legend-item"><div class="box-orange"></div> <span id="legend-prog-text">Data Aug - Dec 2026 merupakan Prognosa</span></div>
   </div>
 
   <!-- FIREBASE & SCRIPT -->
@@ -307,6 +290,27 @@
         statusArr.push(item.status || 'PROGNOSA');
       });
 
+      // Deteksi dinamis indeks bulan realisasi terakhir (1-based index)
+      let lastRealIndex = 0;
+      for (let i = 0; i < statusArr.length; i++) {
+        if (statusArr[i] === 'REALISASI') {
+          lastRealIndex = i + 1;
+        }
+      }
+
+      // Update Teks Badges & Legend secara dinamis
+      const realEndMonth = lastRealIndex > 0 ? monthLabels[lastRealIndex - 1] : 'Jan';
+      const progStartMonth = lastRealIndex < 12 ? monthLabels[lastRealIndex] : 'Des';
+      
+      const realText = lastRealIndex > 0 ? `Jan - ${realEndMonth} 2026 (Realisasi)` : `Non Realisasi`;
+      const progText = lastRealIndex < 12 ? `${progStartMonth} - Des 2026 (Prognosa)` : `Full Realisasi`;
+
+      document.getElementById('badge-realisasi-text').textContent = realText;
+      document.getElementById('badge-prognosa-text').textContent = progText;
+      document.getElementById('legend-real-text').textContent = `Data ${realText.replace(' (Realisasi)', '')} merupakan Realisasi`;
+      document.getElementById('legend-prog-text').textContent = `Data ${progText.replace(' (Prognosa)', '')} merupakan Prognosa`;
+
+      // Kalkulasi Totals KPI
       const sum = arr => arr.reduce((a, b) => a + b, 0);
       const totalRevPlan = sum(revPlanArr);
       const totalRevAct = sum(revActArr);
@@ -336,9 +340,9 @@
       document.getElementById('kpi-gpm-act').textContent = totalGpmAct.toFixed(2) + '%';
       updateBadge('kpi-gpm-badge', totalGpmAct, totalGpmPlan);
 
-      // Render Combo Charts & Table
+      // Render Charts & Table Dinamis
       renderCharts({ revActArr, bppActArr, gpActArr, gpmActArr, statusArr });
-      renderTable({ revPlanArr, revActArr, bppPlanArr, bppActArr, gpPlanArr, gpActArr, gpmPlanArr, gpmActArr, statusArr });
+      renderDynamicTable({ revPlanArr, revActArr, bppPlanArr, bppActArr, gpPlanArr, gpActArr, gpmPlanArr, gpmActArr, statusArr, lastRealIndex, realText, progText });
     }
 
     function updateBadge(id, actual, plan, isCost = false) {
@@ -352,21 +356,12 @@
     }
 
     function renderCharts(d) {
-      // Registrasi Plugin DataLabels
       Chart.register(ChartDataLabels);
-
       const realBg = (c) => d.statusArr.map(s => s === 'REALISASI' ? c : '#d97706');
       
-      // 1. Pendapatan (Biru = Realisasi, Kuning = Prognosa)
       createComboChart('chartRevenue', d.revActArr, realBg('#1d4ed8'), '#ffffff', false);
-      
-      // 2. BPP (Oranye = Realisasi, Kuning = Prognosa)
       createComboChart('chartBPP', d.bppActArr, realBg('#ea580c'), '#ffffff', false);
-      
-      // 3. Gross Profit (Hijau = Realisasi, Kuning = Prognosa)
       createComboChart('chartGP', d.gpActArr, realBg('#16a34a'), '#ffffff', false);
-      
-      // 4. GPM (Ungu = Realisasi, Kuning = Prognosa)
       createComboChart('chartGPM', d.gpmActArr, realBg('#9333ea'), '#ffffff', true);
     }
 
@@ -378,7 +373,6 @@
         data: {
           labels: monthLabels,
           datasets: [
-            // Line Chart
             {
               type: 'line',
               data: data,
@@ -397,7 +391,6 @@
                 formatter: (val) => isPercentage ? val.toFixed(2).replace('.', ',') + '%' : Math.round(val).toLocaleString('id-ID')
               }
             },
-            // Bar Chart
             {
               type: 'bar',
               data: data,
@@ -411,43 +404,53 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          layout: {
-            padding: { top: 20 }
-          },
-          plugins: {
-            legend: { display: false },
-            tooltip: { enabled: true }
-          },
+          layout: { padding: { top: 20 } },
+          plugins: { legend: { display: false }, tooltip: { enabled: true } },
           scales: {
-            x: { 
-              ticks: { color: '#94a3b8', font: { size: 8 } }, 
-              grid: { display: false } 
-            },
-            y: { 
-              ticks: { 
-                color: '#94a3b8', 
-                font: { size: 8 },
-                callback: (val) => isPercentage ? val + '%' : val
-              }, 
-              grid: { color: '#1e2d42' } 
-            }
+            x: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { display: false } },
+            y: { ticks: { color: '#94a3b8', font: { size: 8 }, callback: (val) => isPercentage ? val + '%' : val }, grid: { color: '#1e2d42' } }
           }
         }
       });
     }
 
-    function renderTable(d) {
-      const tbody = document.getElementById('table-body');
+    function renderDynamicTable(d) {
+      const table = document.getElementById('main-table');
+      const idx = d.lastRealIndex; // Jumlah bulan Realisasi
+      const progCount = 12 - idx;
+
+      // 1. Susun Header Tabel Dinamis
+      let headHtml = `<thead><tr>`;
+      headHtml += `<th rowspan="2" class="th-header-main" style="width: 14%;">URAIAN</th>`;
+      
+      if (idx > 0) {
+        headHtml += `<th colspan="${idx + 1}" class="th-realisasi">${d.realText.toUpperCase()}</th>`;
+      }
+      if (progCount > 0) {
+        headHtml += `<th colspan="${progCount + 1}" class="th-prognosa">${d.progText.toUpperCase()}</th>`;
+      }
+      headHtml += `<th colspan="3" class="th-total">TOTAL 2026</th></tr><tr>`;
+
+      // Sub-header Nama Bulan & Total
+      for (let i = 0; i < idx; i++) headHtml += `<th>${monthLabels[i]}-26</th>`;
+      if (idx > 0) headHtml += `<th class="th-realisasi">TOTAL</th>`;
+
+      for (let i = idx; i < 12; i++) headHtml += `<th>${monthLabels[i]}-26</th>`;
+      if (progCount > 0) headHtml += `<th class="th-prognosa">TOTAL</th>`;
+
+      headHtml += `<th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th></tr></thead>`;
+
+      // 2. Susun Baris Data Tabel
       const sliceSum = (arr, start, end) => arr.slice(start, end).reduce((a, b) => a + b, 0);
       
-      const revRealTot = sliceSum(d.revActArr, 0, 7);
-      const revProgTot = sliceSum(d.revActArr, 7, 12);
+      const revRealTot = sliceSum(d.revActArr, 0, idx);
+      const revProgTot = sliceSum(d.revActArr, idx, 12);
       const revPlanTot = sliceSum(d.revPlanArr, 0, 12);
       const revActTot = sliceSum(d.revActArr, 0, 12);
       const revPct = revPlanTot > 0 ? (revActTot / revPlanTot * 100) : 0;
 
-      const bppRealTot = sliceSum(d.bppActArr, 0, 7);
-      const bppProgTot = sliceSum(d.bppActArr, 7, 12);
+      const bppRealTot = sliceSum(d.bppActArr, 0, idx);
+      const bppProgTot = sliceSum(d.bppActArr, idx, 12);
       const bppPlanTot = sliceSum(d.bppPlanArr, 0, 12);
       const bppActTot = sliceSum(d.bppActArr, 0, 12);
       const bppPct = bppPlanTot > 0 ? (bppActTot / bppPlanTot * 100) : 0;
@@ -467,20 +470,26 @@
       const buildRow = (title, actArr, realTot, progTot, planTot, actTot, pct, isMargin = false) => {
         let fmt = v => isMargin ? v.toFixed(2).replace('.', ',') + '%' : Math.round(v).toLocaleString('id-ID');
         let html = `<tr><td class="row-label">${title}</td>`;
-        for(let i=0; i<7; i++) html += `<td>${fmt(actArr[i])}</td>`;
-        html += `<td class="txt-green">${fmt(realTot)}</td>`;
-        for(let i=7; i<12; i++) html += `<td>${fmt(actArr[i])}</td>`;
-        html += `<td class="txt-green">${fmt(progTot)}</td>`;
+        
+        for (let i = 0; i < idx; i++) html += `<td>${fmt(actArr[i])}</td>`;
+        if (idx > 0) html += `<td class="txt-green">${fmt(realTot)}</td>`;
+
+        for (let i = idx; i < 12; i++) html += `<td>${fmt(actArr[i])}</td>`;
+        if (progCount > 0) html += `<td class="txt-green">${fmt(progTot)}</td>`;
+
         html += `<td>${fmt(planTot)}</td><td>${fmt(actTot)}</td>`;
         html += `<td class="${pct >= 100 ? 'txt-green' : 'txt-red'}">${pct.toFixed(2).replace('.', ',')}%</td></tr>`;
         return html;
       };
 
-      tbody.innerHTML = 
+      let bodyHtml = `<tbody>` +
         buildRow("PENDAPATAN USAHA (Juta Rp)", d.revActArr, revRealTot, revProgTot, revPlanTot, revActTot, revPct) +
         buildRow("BEBAN POKOK PENDAPATAN (Juta Rp)", d.bppActArr, bppRealTot, bppProgTot, bppPlanTot, bppActTot, bppPct) +
         buildRow("GROSS PROFIT (Juta Rp)", d.gpActArr, gpRealTot, gpProgTot, gpPlanTot, gpActTot, gpPct) +
-        buildRow("GROSS PROFIT MARGIN (%)", d.gpmActArr, gpmRealTot, gpmProgTot, gpmPlanTot, gpmActTot, gpmPct, true);
+        buildRow("GROSS PROFIT MARGIN (%)", d.gpmActArr, gpmRealTot, gpmProgTot, gpmPlanTot, gpmActTot, gpmPct, true) +
+        `</tbody>`;
+
+      table.innerHTML = headHtml + bodyHtml;
     }
 
     loadDashboardData();
