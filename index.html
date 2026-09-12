@@ -48,9 +48,9 @@
     .kpi-subtext { font-size: 8px; color: #64748b; display: block; text-align: right; margin-top: 2px; }
 
     .charts-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 15px; }
-    .chart-card { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; padding: 10px; height: 230px; }
+    .chart-card { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; padding: 10px; height: 230px; display: flex; flex-direction: column; }
     .chart-title { font-size: 10px; font-weight: bold; text-align: center; margin-bottom: 8px; color: #cbd5e1; }
-    .chart-container { position: relative; height: 185px; width: 100%; }
+    .chart-container { position: relative; flex-grow: 1; width: 100%; min-height: 170px; }
 
     .table-container { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; overflow-x: auto; margin-bottom: 15px; }
     table { width: 100%; border-collapse: collapse; text-align: center; font-size: 10.5px; }
@@ -135,7 +135,7 @@
     .val-purple-text { color: #7c3aed; }
     .val-orange-text { color: #e67e22; }
 
-    /* DASHBOARD 3 STYLING (PERSIS GAMBAR REFERENSI 3) */
+    /* DASHBOARD 3 STYLING */
     .dashboard-3-container { background: #ffffff; color: #333333; border-radius: 14px; padding: 24px; margin-top: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
     .d3-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 20px; }
     .d3-title { font-size: 22px; font-weight: 900; color: #0f4c81; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -657,7 +657,7 @@
 
     const monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const fullMonthsList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-    const monthLabels = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26", "Oct-26", "Nov-26", "Dec-26"];
+    const monthLabels = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26", "Oct-26", "Nov-26", "Des-26"];
 
     // Default Fallback Data
     const defaultData = {
@@ -671,7 +671,12 @@
     function getAppData() {
       const saved = localStorage.getItem('financial_performance_data');
       if (saved) {
-        try { return JSON.parse(saved); } catch(e) {}
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.revAct && parsed.bppAct && parsed.status) {
+            return parsed;
+          }
+        } catch(e) {}
       }
       return defaultData;
     }
@@ -683,7 +688,6 @@
     const bppPlanArr = appData.bppPlan;
     const statusArr = appData.status;
 
-    // Hitung berapa bulan yang berstatus REALISASI secara dinamis
     let realCount = statusArr.filter(s => s === 'REALISASI').length;
     if (realCount < 1) realCount = 8;
 
@@ -691,13 +695,11 @@
     const lastRealFull = fullMonthsList[realCount - 1];
     const nextMonthShort = monthsList[realCount] || "Dec";
 
-    // Update Header Badges & Legend
     document.getElementById('badge-realisasi-text').textContent = `Jan - ${lastRealShort} 2026 (Realisasi)`;
     document.getElementById('badge-prognosa-text').textContent = `${nextMonthShort} - Dec 2026 (Prognosa)`;
     document.getElementById('legend-real-text').textContent = `Data Jan - ${lastRealShort} 2026 merupakan Realisasi`;
     document.getElementById('legend-prog-text').textContent = `Data ${nextMonthShort} - Dec 2026 merupakan Prognosa`;
 
-    // Update Tabel Headers & Subheaders
     document.getElementById('th-realisasi-hdr').setAttribute('colspan', realCount + 1);
     document.getElementById('th-realisasi-hdr').textContent = `JAN - ${lastRealShort.toUpperCase()} 2026 (REALISASI)`;
     document.getElementById('th-prognosa-hdr').setAttribute('colspan', 13 - realCount);
@@ -716,7 +718,6 @@
     subheadersHtml += `<th class="th-prognosa">TOTAL</th><th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>`;
     document.getElementById('main-table-subheaders').innerHTML = subheadersHtml;
 
-    // Calculations
     const gpActVal = revActVal.map((r, i) => r - bppActVal[i]);
     const gpmActVal = revActVal.map((r, i) => r > 0 ? (gpActVal[i] / r * 100) : 0);
     const gpPlanArr = revPlanArr.map((r, i) => r - bppPlanArr[i]);
@@ -743,11 +744,9 @@
     const avgGpmFull = totRevFull > 0 ? (totGpFull / totRevFull * 100) : 0;
     const planGpmFull = planRevFull > 0 ? (planGpFull / planRevFull * 100) : 0;
 
-    // Build Table Rows Dynamically
     function buildTableHTML() {
       let tbodyHtml = '';
 
-      // Pendapatan Usaha
       let rowRev = `<td class="row-label">PENDAPATAN USAHA (Juta Rp)</td>`;
       for(let i=0; i<12; i++) {
         if(i === realCount) rowRev += `<td class="txt-green">${Math.round(totRevReal).toLocaleString('id-ID')}</td>`;
@@ -761,7 +760,6 @@
                  <td class="${pctRev >= 100 ? 'txt-green' : 'txt-red'}">${pctRev.toFixed(2).replace('.', ',')}%</td>`;
       tbodyHtml += `<tr>${rowRev}</tr>`;
 
-      // Beban Pokok Pendapatan
       let rowBpp = `<td class="row-label">BEBAN POKOK PENDAPATAN (Juta Rp)</td>`;
       for(let i=0; i<12; i++) {
         if(i === realCount) rowBpp += `<td class="txt-green">${Math.round(totBppReal).toLocaleString('id-ID')}</td>`;
@@ -775,7 +773,6 @@
                  <td class="${pctBpp <= 100 ? 'txt-green' : 'txt-red'}">${pctBpp.toFixed(2).replace('.', ',')}%</td>`;
       tbodyHtml += `<tr>${rowBpp}</tr>`;
 
-      // Gross Profit
       let rowGp = `<td class="row-label">GROSS PROFIT (Juta Rp)</td>`;
       for(let i=0; i<12; i++) {
         if(i === realCount) rowGp += `<td class="txt-green">${Math.round(totGpReal).toLocaleString('id-ID')}</td>`;
@@ -789,7 +786,6 @@
                 <td class="${pctGp >= 100 ? 'txt-green' : 'txt-red'}">${pctGp.toFixed(2).replace('.', ',')}%</td>`;
       tbodyHtml += `<tr>${rowGp}</tr>`;
 
-      // Gross Profit Margin
       let rowGpm = `<td class="row-label">GROSS PROFIT MARGIN (%)</td>`;
       for(let i=0; i<12; i++) {
         if(i === realCount) rowGpm += `<td class="txt-green">${avgGpmReal.toFixed(2).replace('.', ',')}%</td>`;
@@ -808,7 +804,6 @@
 
     buildTableHTML();
 
-    // Update Top KPI Cards
     document.getElementById('kpi-rev-plan').textContent = Math.round(planRevFull).toLocaleString('id-ID');
     document.getElementById('kpi-rev-act').textContent = Math.round(totRevFull).toLocaleString('id-ID');
     const revRatio = planRevFull > 0 ? (totRevFull / planRevFull * 100) : 0;
@@ -832,8 +827,12 @@
     document.getElementById('kpi-gpm-badge').className = `kpi-badge ${pctGpmRatio >= 100 ? 'badge-up' : 'badge-down'}`;
     document.getElementById('kpi-gpm-badge').innerHTML = `${pctGpmRatio >= 100 ? '▲' : '▼'} ${pctGpmRatio.toFixed(2).replace('.', ',')}%`;
 
-
-    let chartInstances = {};
+    function safeDestroy(canvasId) {
+      const existingChart = Chart.getChart(canvasId);
+      if (existingChart) {
+        existingChart.destroy();
+      }
+    }
 
     function renderDarkCharts() {
       const realBg = statusArr.map(s => s === 'REALISASI' ? '#1d4ed8' : '#d97706');
@@ -848,11 +847,11 @@
     }
 
     function createComboChart(id, data, barColors, lineColor, isPercentage = false) {
-      if (chartInstances[id]) chartInstances[id].destroy();
+      safeDestroy(id);
       const el = document.getElementById(id);
       if (!el) return;
       const ctx = el.getContext('2d');
-      chartInstances[id] = new Chart(ctx, {
+      new Chart(ctx, {
         data: {
           labels: monthLabels.map(m => m.replace('-26', '')),
           datasets: [
@@ -878,9 +877,9 @@
     function renderLightSectionDirect() {
       const lightLabels = monthsList;
 
-      if (chartInstances['chartSec1']) chartInstances['chartSec1'].destroy();
+      safeDestroy('chartSec1');
       const ctx1 = document.getElementById('chartSec1').getContext('2d');
-      chartInstances['chartSec1'] = new Chart(ctx1, {
+      new Chart(ctx1, {
         type: 'bar',
         data: {
           labels: lightLabels,
@@ -924,9 +923,9 @@
         }
       });
 
-      if (chartInstances['chartSec2']) chartInstances['chartSec2'].destroy();
+      safeDestroy('chartSec2');
       const ctx2 = document.getElementById('chartSec2').getContext('2d');
-      chartInstances['chartSec2'] = new Chart(ctx2, {
+      new Chart(ctx2, {
         data: {
           labels: lightLabels,
           datasets: [
@@ -995,9 +994,6 @@
       });
     }
 
-    // ==========================================
-    // RENDER DASHBOARD 3 (DINAMIS MENGIKUTI REAL COUNT)
-    // ==========================================
     function renderDashboard3() {
       const activeMonthsCount = realCount;
       const subMonths = monthsList.slice(0, activeMonthsCount);
@@ -1053,6 +1049,7 @@
       document.getElementById('d3-cumul-gpm-plan').textContent = cumulPlanGpm.toFixed(2).replace('.', ',') + '%';
 
       // 1. Pendapatan Usaha
+      safeDestroy('d3ChartRev');
       new Chart(document.getElementById('d3ChartRev').getContext('2d'), {
         data: {
           labels: subMonths,
@@ -1069,6 +1066,7 @@
       });
 
       // 2. Beban Pokok
+      safeDestroy('d3ChartBpp');
       new Chart(document.getElementById('d3ChartBpp').getContext('2d'), {
         data: {
           labels: subMonths,
@@ -1085,6 +1083,7 @@
       });
 
       // 3. Gross Profit
+      safeDestroy('d3ChartGp');
       new Chart(document.getElementById('d3ChartGp').getContext('2d'), {
         data: {
           labels: subMonths,
@@ -1101,6 +1100,7 @@
       });
 
       // 4. Gross Profit Margin
+      safeDestroy('d3ChartGpm');
       const targetLine = subMonths.map(() => planGpmFull);
       new Chart(document.getElementById('d3ChartGpm').getContext('2d'), {
         data: {
