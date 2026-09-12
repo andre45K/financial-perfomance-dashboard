@@ -3,71 +3,245 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Admin - Financial Performance Dashboard</title>
+  <title>Admin Input - Financial Performance</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #0d1b2a; height: 100vh; display: flex; justify-content: center; align-items: center; color: #fff; }
-    .login-card { background: #1b263b; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 100%; max-width: 400px; }
-    .login-card h2 { margin-bottom: 0.5rem; color: #e0e1dd; }
-    .login-card p { font-size: 0.9rem; color: #778da9; margin-bottom: 1.5rem; }
-    .form-group { margin-bottom: 1rem; }
-    .form-group label { display: block; font-size: 0.85rem; margin-bottom: 0.4rem; color: #e0e1dd; }
-    .form-group input { width: 100%; padding: 0.75rem; border-radius: 4px; border: 1px solid #415a77; background-color: #0d1b2a; color: #fff; }
-    button { width: 100%; padding: 0.75rem; border: none; border-radius: 4px; background-color: #1b4965; color: white; font-weight: bold; cursor: pointer; margin-top: 1rem; }
-    button:hover { background-color: #62b6cb; }
-    .error-text { color: #ff4d4d; font-size: 0.85rem; margin-top: 1rem; text-align: center; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+    body { background-color: #060d1a; color: #ffffff; padding: 20px; font-size: 13px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    
+    .admin-container { background: #0f1926; border: 1px solid #1e2d42; border-radius: 12px; padding: 30px; width: 100%; max-width: 650px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #1a2a40; padding-bottom: 12px; }
+    .admin-title { font-size: 18px; font-weight: 800; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .btn-dashboard { background: #334155; color: white; border: none; padding: 6px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 12px; }
+    .btn-dashboard:hover { background: #475569; }
+    
+    .btn-logout { background: #ef4444; color: white; border: none; padding: 6px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; font-size: 12px; }
+    .btn-logout:hover { background: #dc2626; }
+
+    .form-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 11px; font-weight: bold; color: #94a3b8; text-transform: uppercase; }
+    
+    .form-control { background: #0b1420; border: 1px solid #2a3d54; color: white; padding: 8px 12px; border-radius: 6px; font-size: 13px; outline: none; }
+    .form-control:focus { border-color: #3b82f6; }
+
+    .section-box { margin-bottom: 20px; }
+    .section-label { font-size: 12px; font-weight: bold; color: #3b82f6; text-transform: uppercase; margin-bottom: 10px; border-left: 3px solid #3b82f6; padding-left: 8px; }
+
+    .calc-box { background: #09121d; border: 1px solid #1e2d42; border-radius: 8px; padding: 15px; margin-bottom: 25px; display: flex; flex-direction: column; gap: 8px; }
+    .calc-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: bold; color: #cbd5e1; }
+    .calc-val { font-size: 14px; color: #22c55e; }
+
+    .btn-submit { background: #2563eb; color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
+    .btn-submit:hover { background: #1d4ed8; }
+
+    .history-info { font-size: 10px; color: #f59e0b; margin-top: 4px; font-style: italic; }
   </style>
 </head>
 <body>
-  <div class="login-card">
-    <h2>Admin Login</h2>
-    <p>Financial Performance Dashboard</p>
-    <form id="login-form">
-      <div class="form-group">
-        <label for="email">Email Admin</label>
-        <input type="email" id="email" required placeholder="admin@example.com">
+
+  <div class="admin-container">
+    <div class="admin-header">
+      <div class="admin-title">Input Data Financial Performance</div>
+      <div style="display: flex; gap: 8px;">
+        <a href="index.html" class="btn-dashboard">Lihat Dashboard</a>
+        <a href="login.html" class="btn-logout">Logout</a>
       </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" required placeholder="••••••••">
+    </div>
+
+    <form id="inputForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tahun</label>
+          <select id="inputTahun" class="form-control">
+            <option value="2026">2026</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Bulan</label>
+          <select id="inputBulan" class="form-control">
+            <option value="0">Januari (Jan)</option>
+            <option value="1">Februari (Feb)</option>
+            <option value="2">Maret (Mar)</option>
+            <option value="3">April (Apr)</option>
+            <option value="4">Mei (Mei)</option>
+            <option value="5">Juni (Jun)</option>
+            <option value="6">Juli (Jul)</option>
+            <option value="7">Agustus (Aug)</option>
+            <option value="8">September (Sep)</option>
+            <option value="9">Oktober (Okt)</option>
+            <option value="10">November (Nov)</option>
+            <option value="11">Desember (Des)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Status Periode</label>
+          <select id="inputStatus" class="form-control">
+            <option value="REALISASI">REALISASI</option>
+            <option value="PROGNOSA">PROGNOSA</option>
+          </select>
+        </div>
       </div>
-      <button type="submit">Masuk</button>
-      <p id="error-message" class="error-text"></p>
+
+      <div class="section-box">
+        <div class="section-label">Pendapatan Usaha (Juta Rp)</div>
+        <div class="form-row" style="grid-template-columns: 1fr 1fr; margin-bottom: 0;">
+          <div class="form-group">
+            <label>Rencana Pendapatan</label>
+            <input type="number" id="rencanaRev" class="form-control" placeholder="Contoh: 554" required>
+            <span id="histRencanaRev" class="history-info">History bulan lalu: -</span>
+          </div>
+          <div class="form-group">
+            <label>Realisasi / Prognosa Pendapatan</label>
+            <input type="number" id="realisasiRev" class="form-control" placeholder="Contoh: 823" required>
+            <span id="histRealisasiRev" class="history-info">History bulan lalu: -</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-box">
+        <div class="section-label">Beban Pokok Pendapatan (Juta Rp)</div>
+        <div class="form-row" style="grid-template-columns: 1fr 1fr; margin-bottom: 0;">
+          <div class="form-group">
+            <label>Rencana BPP</label>
+            <input type="number" id="rencanaBpp" class="form-control" placeholder="Contoh: 195" required>
+            <span id="histRencanaBpp" class="history-info">History bulan lalu: -</span>
+          </div>
+          <div class="form-group">
+            <label>Realisasi / Prognosa BPP</label>
+            <input type="number" id="realisasiBpp" class="form-control" placeholder="Contoh: 647" required>
+            <span id="histRealisasiBpp" class="history-info">History bulan lalu: -</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-box">
+        <div class="calc-row">
+          <span>Gross Profit (Rencana):</span>
+          <span id="calcGpPlan" class="calc-val">0</span>
+        </div>
+        <div class="calc-row">
+          <span>Gross Profit (Realisasi/Prognosa):</span>
+          <span id="calcGpAct" class="calc-val">0</span>
+        </div>
+        <div class="calc-row">
+          <span>Gross Profit Margin (Rencana):</span>
+          <span id="calcGpmPlan" class="calc-val">0%</span>
+        </div>
+        <div class="calc-row">
+          <span>Gross Profit Margin (Realisasi/Prognosa):</span>
+          <span id="calcGpmAct" class="calc-val">0%</span>
+        </div>
+      </div>
+
+      <button type="button" id="btnSimpan" class="btn-submit">Simpan Ke Firebase</button>
     </form>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-    // Konfigurasi Firebase Kamu
-    const firebaseConfig = {
-      apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
-      authDomain: "financial-perfomance-dashboard.firebaseapp.com",
-      projectId: "financial-perfomance-dashboard",
-      storageBucket: "financial-perfomance-dashboard.firebasestorage.app",
-      messagingSenderId: "136866453174",
-      appId: "1:136866453174:web:b69a3e14672eb96cc53817"
+  <script>
+    // Data default bulan 0-11 sesuai dengan struktur dashboard utama
+    const defaultData = {
+      revPlan: [554, 554, 449, 380, 502, 879, 927, 1042, 2196, 2196, 2145, 1678],
+      revAct:  [823, 787, 99, 782, 688, 1117, 1668, 1703, 1786, 1670, 1393, 1393],
+      bppPlan: [195, 195, 195, 165, 308, 495, 531, 613, 1218, 1218, 1198, 1013],
+      bppAct:  [647, 632, 92, 680, 404, 913, 1342, 1164, 1340, 1280, 1088, 1088],
+      status:  ["REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","PROGNOSA","PROGNOSA","PROGNOSA"]
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    const loginForm = document.getElementById('login-form');
-    const errorMessage = document.getElementById('error-message');
-
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        window.location.href = 'input.html';
-      } catch (error) {
-        errorMessage.textContent = 'Login gagal! Periksa email dan password.';
+    // Ambil data dari localStorage jika ada, atau gunakan default
+    function getStoredData() {
+      const saved = localStorage.getItem('financial_performance_data');
+      if (saved) {
+        try { return JSON.parse(saved); } catch(e) {}
       }
+      return defaultData;
+    }
+
+    const selectBulan = document.getElementById('inputBulan');
+    const inputRencanaRev = document.getElementById('rencanaRev');
+    const inputRealisasiRev = document.getElementById('realisasiRev');
+    const inputRencanaBpp = document.getElementById('rencanaBpp');
+    const inputRealisasiBpp = document.getElementById('realisasiBpp');
+    const inputStatus = document.getElementById('inputStatus');
+
+    const histRencanaRev = document.getElementById('histRencanaRev');
+    const histRealisasiRev = document.getElementById('histRealisasiRev');
+    const histRencanaBpp = document.getElementById('histRencanaBpp');
+    const histRealisasiBpp = document.getElementById('histRealisasiBpp');
+
+    const calcGpPlan = document.getElementById('calcGpPlan');
+    const calcGpAct = document.getElementById('calcGpAct');
+    const calcGpmPlan = document.getElementById('calcGpmPlan');
+    const calcGpmAct = document.getElementById('calcGpmAct');
+
+    function updateFormValues() {
+      const idx = parseInt(selectBulan.value);
+      const data = getStoredData();
+
+      // Isi form dengan nilai bulan terpilih saat ini
+      inputRencanaRev.value = data.revPlan[idx] !== undefined ? data.revPlan[idx] : '';
+      inputRealisasiRev.value = data.revAct[idx] !== undefined ? data.revAct[idx] : '';
+      inputRencanaBpp.value = data.bppPlan[idx] !== undefined ? data.bppPlan[idx] : '';
+      inputRealisasiBpp.value = data.bppAct[idx] !== undefined ? data.bppAct[idx] : '';
+      inputStatus.value = data.status[idx] || 'REALISASI';
+
+      // Tampilkan history bulan sebelumnya sebagai panduan
+      if (idx > 0) {
+        histRencanaRev.textContent = `History bulan lalu: ${data.revPlan[idx-1]}`;
+        histRealisasiRev.textContent = `History bulan lalu: ${data.revAct[idx-1]}`;
+        histRencanaBpp.textContent = `History bulan lalu: ${data.bppPlan[idx-1]}`;
+        histRealisasiBpp.textContent = `History bulan lalu: ${data.bppAct[idx-1]}`;
+      } else {
+        histRencanaRev.textContent = `History bulan lalu: Tidak ada (Bulan Pertama)`;
+        histRealisasiRev.textContent = `History bulan lalu: Tidak ada`;
+        histRencanaBpp.textContent = `History bulan lalu: Tidak ada`;
+        histRealisasiBpp.textContent = `History bulan lalu: Tidak ada`;
+      }
+
+      calculateLive();
+    }
+
+    function calculateLive() {
+      const rRev = parseFloat(inputRencanaRev.value) || 0;
+      const aRev = parseFloat(inputRealisasiRev.value) || 0;
+      const rBpp = parseFloat(inputRencanaBpp.value) || 0;
+      const aBpp = parseFloat(inputRealisasiBpp.value) || 0;
+
+      const gpP = rRev - rBpp;
+      const gpA = aRev - aBpp;
+      const gpmP = rRev > 0 ? (gpP / rRev * 100) : 0;
+      const gpmA = aRev > 0 ? (gpA / aRev * 100) : 0;
+
+      calcGpPlan.textContent = Math.round(gpP).toLocaleString('id-ID');
+      calcGpAct.textContent = Math.round(gpA).toLocaleString('id-ID');
+      calcGpmPlan.textContent = gpmP.toFixed(2).replace('.', ',') + '%';
+      calcGpmAct.textContent = gpmA.toFixed(2).replace('.', ',') + '%';
+    }
+
+    selectBulan.addEventListener('change', updateFormValues);
+    inputRencanaRev.addEventListener('input', calculateLive);
+    inputRealisasiRev.addEventListener('input', calculateLive);
+    inputRencanaBpp.addEventListener('input', calculateLive);
+    inputRealisasiBpp.addEventListener('input', calculateLive);
+
+    document.getElementById('btnSimpan').addEventListener('click', function() {
+      const idx = parseInt(selectBulan.value);
+      let data = getStoredData();
+
+      data.revPlan[idx] = parseFloat(inputRencanaRev.value) || 0;
+      data.revAct[idx] = parseFloat(inputRealisasiRev.value) || 0;
+      data.bppPlan[idx] = parseFloat(inputRencanaBpp.value) || 0;
+      data.bppAct[idx] = parseFloat(inputRealisasiBpp.value) || 0;
+      data.status[idx] = inputStatus.value;
+
+      localStorage.setItem('financial_performance_data', JSON.stringify(data));
+      alert('Data berhasil disimpan dan dashboard akan otomatis terupdate!');
+      window.location.href = 'index.html';
     });
+
+    // Jalankan saat pertama load
+    updateFormValues();
   </script>
 </body>
 </html>
