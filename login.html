@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Input Data 2026</title>
+  <title>Admin Input Data 2026 (Financial & NKB)</title>
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
@@ -22,87 +22,74 @@
 
     .modal-body { padding: 24px; background: #f8fafc; }
 
-    .alert-box { background: #f1f5f9; border: 1px solid #cbd5e1; border-left: 4px solid #0b63ce; padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; font-size: 11.5px; color: #475569; line-height: 1.5; }
-    .alert-box p strong { color: #1e293b; }
+    .section-title { font-size: 14px; font-weight: 800; color: #0f4c81; margin: 20px 0 10px 0; text-transform: uppercase; border-left: 4px solid #0052cc; padding-left: 8px; }
 
-    .admin-table-wrap { background: white; border: 1px solid #cbd5e1; border-radius: 8px; overflow-x: auto; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+    .alert-box { background: #f1f5f9; border: 1px solid #cbd5e1; border-left: 4px solid #0b63ce; padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; font-size: 11.5px; color: #475569; line-height: 1.5; }
+    
+    .admin-table-wrap { background: white; border: 1px solid #cbd5e1; border-radius: 8px; overflow-x: auto; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
     .admin-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; }
     
-    .admin-table th { background: #0f4c81; color: white; padding: 12px 10px; font-weight: 700; text-align: center; border: 1px solid #0b3d6a; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; }
+    .admin-table th { background: #0f4c81; color: white; padding: 12px 10px; font-weight: 700; text-align: center; border: 1px solid #0b3d6a; text-transform: uppercase; font-size: 10px; }
     .admin-table td { border: 1px solid #e2e8f0; padding: 8px 10px; vertical-align: middle; }
-    
     .admin-table tr:nth-child(even) { background-color: #f8fafc; }
     
     .month-label { font-weight: 800; color: #1e293b; font-size: 12px; text-align: center; background: #f1f5f9; }
-    
     .status-select { width: 100%; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 11px; font-weight: bold; background: white; cursor: pointer; }
-    .status-select:focus { outline: none; border-color: #0b63ce; }
-
     .input-field { width: 100%; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; text-align: right; background: white; }
     .input-field:focus { outline: none; border-color: #0b63ce; box-shadow: 0 0 0 2px rgba(11,99,206,0.1); }
-
     .calc-val { font-weight: 800; text-align: right; color: #0f4c81; font-size: 12px; background: #f1f5f9; }
 
     .modal-footer { padding: 16px 24px; background: #ffffff; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-    
     .btn { padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; border: none; }
     .btn-reset { background: #475569; color: white; }
-    .btn-reset:hover { background: #334155; }
-    
     .btn-close { background: #94a3b8; color: white; }
-    .btn-close:hover { background: #64748b; }
-
     .btn-save { background: #0066cc; color: white; box-shadow: 0 2px 5px rgba(0,102,204,0.3); }
     .btn-save:hover { background: #0052a3; }
 
-    .notification-toast { position: fixed; bottom: 20px; right: 20px; background: #22c55e; color: white; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: none; z-index: 1000; transition: all 0.3s ease; }
+    .notification-toast { position: fixed; bottom: 20px; right: 20px; background: #22c55e; color: white; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 13px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: none; z-index: 1000; }
   </style>
 </head>
 <body>
 
   <div class="modal-container">
-    
-    <!-- HEADER -->
     <div class="modal-header">
       <div class="modal-title-area">
-        <h2><i class="fa-solid fa-pen-to-square"></i> ADMIN INPUT DATA 2026</h2>
-        <p>Edit data bulanan di sini. Setelah disimpan, Dashboard 1, 2, dan 3 otomatis diperbarui.</p>
+        <h2><i class="fa-solid fa-pen-to-square"></i> ADMIN INPUT DATA 2026 (FINANCIAL & NKB)</h2>
+        <p>Edit data keuangan dan nilai kontrak baru bulanan di sini.</p>
       </div>
       <a href="index.html" class="close-btn"><i class="fa-solid fa-xmark"></i></a>
     </div>
 
-    <!-- BODY -->
     <div class="modal-body">
-      
       <div class="alert-box">
-        <p><strong>Petunjuk:</strong> Masukkan nilai Rencana Pendapatan, Rencana BPP, Pendapatan Aktual/Prognosa, dan BPP Aktual/Prognosa. Gross Profit dan GPM dihitung otomatis.</p>
-        <p>Untuk bulan yang sudah menjadi realisasi, pilih <strong>REALISASI</strong>. Untuk bulan yang masih merupakan estimasi, pilih <strong>PROGNOSA</strong>.</p>
-        <p>Data disimpan di browser ini sehingga dapat diedit dan disimpan berulang kali.</p>
+        <p><strong>Petunjuk:</strong> Masukkan nilai Rencana & Aktual/Prognosa untuk Pendapatan, BPP, serta Rencana & Prognosa Nilai Kontrak Baru (NKB). Data akan langsung memperbarui Dashboard utama.</p>
       </div>
 
+      <div class="section-title">1. Data Kinerja Keuangan Bulanan</div>
       <div class="admin-table-wrap">
         <table class="admin-table">
           <thead>
             <tr>
-              <th style="width: 11%;">BULAN</th>
-              <th style="width: 14%;">STATUS</th>
-              <th style="width: 15%;">RENCANA PENDAPATAN</th>
-              <th style="width: 14%;">RENCANA BPP</th>
-              <th style="width: 15%;">PENDAPATAN AKTUAL/PROGNOSA</th>
-              <th style="width: 14%;">BPP AKTUAL/PROGNOSA</th>
-              <th style="width: 11%;">GROSS PROFIT</th>
-              <th style="width: 6%;">GPM</th>
+              <th>Bulan</th><th>Status</th><th>Rencana Pendapatan</th><th>Rencana BPP</th><th>Pendapatan Aktual</th><th>BPP Aktual</th><th>Gross Profit</th><th>GPM</th>
             </tr>
           </thead>
-          <tbody id="admin-tbody">
-            <!-- Diisi otomatis via JavaScript -->
-          </tbody>
+          <tbody id="admin-fin-tbody"></tbody>
         </table>
       </div>
 
+      <div class="section-title">2. Data Nilai Kontrak Baru (NKB) Bulanan</div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr style="background: #008767; color: white;">
+              <th>Bulan</th><th>Rencana NKB (Rp)</th><th>Prognosa NKB (Rp)</th><th>Pencapaian (%)</th>
+            </tr>
+          </thead>
+          <tbody id="admin-nkb-tbody"></tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- FOOTER -->
     <div class="modal-footer">
       <button type="button" id="btn-reset" class="btn btn-reset"><i class="fa-solid fa-rotate-left"></i> Reset Data Awal</button>
       <div style="display: flex; gap: 10px;">
@@ -110,15 +97,12 @@
         <button type="button" id="btn-save" class="btn btn-save"><i class="fa-solid fa-floppy-disk"></i> Simpan & Update Dashboard</button>
       </div>
     </div>
-
   </div>
 
-  <!-- TOAST NOTIFICATION -->
   <div id="toast" class="notification-toast">
     <i class="fa-solid fa-circle-check"></i> Data berhasil disimpan & dashboard diperbarui!
   </div>
 
-  <!-- SCRIPT ADMIN INPUT -->
   <script>
     const monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const fullMonthsList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
@@ -139,6 +123,20 @@
         Oct: { revenuePlan: 2196, revenueActual: 1670, bppPlan: 1218, bppActual: 1280, status: "PROGNOSA" },
         Nov: { revenuePlan: 2145, revenueActual: 1393, bppPlan: 1198, bppActual: 1088, status: "PROGNOSA" },
         Dec: { revenuePlan: 1678, revenueActual: 1393, bppPlan: 1013, bppActual: 1088, status: "PROGNOSA" }
+      },
+      nkbMonths: {
+        Jan: { plan: 1140000000, prognosa: 1394500000 },
+        Feb: { plan: 2416000000, prognosa: 1064150000 },
+        Mar: { plan: 0,           prognosa: 326000000 },
+        Apr: { plan: 760000000,  prognosa: 218000000 },
+        May: { plan: 3893000000, prognosa: 2507050000 },
+        Jun: { plan: 0,           prognosa: 2195550000 },
+        Jul: { plan: 2304000000, prognosa: 1081333326 },
+        Aug: { plan: 2642200000, prognosa: 711333333 },
+        Sep: { plan: 0,           prognosa: 2775150000 },
+        Oct: { plan: 0,           prognosa: 233333331 },
+        Nov: { plan: 0,           prognosa: 285000000 },
+        Dec: { plan: 0,           prognosa: 375000000 }
       }
     };
 
@@ -146,7 +144,9 @@
       const saved = localStorage.getItem("financialData2026");
       if (!saved) return structuredClone(defaultFinancialData);
       try {
-        return JSON.parse(saved);
+        let parsed = JSON.parse(saved);
+        if (!parsed.nkbMonths) parsed.nkbMonths = defaultFinancialData.nkbMonths;
+        return parsed;
       } catch(e) {
         return structuredClone(defaultFinancialData);
       }
@@ -154,85 +154,100 @@
 
     let currentData = loadData();
 
-    function renderTableRows() {
-      const tbody = document.getElementById("admin-tbody");
-      let html = "";
-
+    function renderTables() {
+      // 1. Fin Table
+      let finHtml = "";
       monthsList.forEach((mKey, idx) => {
         const mData = currentData.months[mKey];
-        const monthName = fullMonthsList[idx];
-
-        html += `
+        finHtml += `
           <tr>
-            <td class="month-label">${monthName}</td>
+            <td class="month-label">${fullMonthsList[idx]}</td>
             <td>
-              <select class="status-select" data-month="${mKey}" id="status-${mKey}">
+              <select class="status-select" id="status-${mKey}">
                 <option value="REALISASI" ${mData.status === 'REALISASI' ? 'selected' : ''}>REALISASI</option>
                 <option value="PROGNOSA" ${mData.status === 'PROGNOSA' ? 'selected' : ''}>PROGNOSA</option>
               </select>
             </td>
-            <td><input type="number" class="input-field calc-trigger" data-month="${mKey}" data-type="revPlan" id="revPlan-${mKey}" value="${mData.revenuePlan}"></td>
-            <td><input type="number" class="input-field calc-trigger" data-month="${mKey}" data-type="bppPlan" id="bppPlan-${mKey}" value="${mData.bppPlan}"></td>
-            <td><input type="number" class="input-field calc-trigger" data-month="${mKey}" data-type="revAct" id="revAct-${mKey}" value="${mData.revenueActual}"></td>
-            <td><input type="number" class="input-field calc-trigger" data-month="${mKey}" data-type="bppAct" id="bppAct-${mKey}" value="${mData.bppActual}"></td>
+            <td><input type="number" class="input-field fin-trig" id="revPlan-${mKey}" value="${mData.revenuePlan}"></td>
+            <td><input type="number" class="input-field fin-trig" id="bppPlan-${mKey}" value="${mData.bppPlan}"></td>
+            <td><input type="number" class="input-field fin-trig" id="revAct-${mKey}" value="${mData.revenueActual}"></td>
+            <td><input type="number" class="input-field fin-trig" id="bppAct-${mKey}" value="${mData.bppActual}"></td>
             <td class="calc-val" id="gp-${mKey}">0</td>
             <td class="calc-val" id="gpm-${mKey}">0%</td>
           </tr>
         `;
       });
+      document.getElementById("admin-fin-tbody").innerHTML = finHtml;
 
-      tbody.innerHTML = html;
-      updateCalculations();
-      attachListeners();
+      // 2. NKB Table
+      let nkbHtml = "";
+      monthsList.forEach((mKey, idx) => {
+        const nData = currentData.nkbMonths[mKey] || { plan: 0, prognosa: 0 };
+        nkbHtml += `
+          <tr>
+            <td class="month-label">${fullMonthsList[idx]}</td>
+            <td><input type="number" class="input-field nkb-trig" id="nkbPlan-${mKey}" value="${nData.plan}"></td>
+            <td><input type="number" class="input-field nkb-trig" id="nkbProg-${mKey}" value="${nData.prognosa}"></td>
+            <td class="calc-val" id="nkbPct-${mKey}">0%</td>
+          </tr>
+        `;
+      });
+      document.getElementById("admin-nkb-tbody").innerHTML = nkbHtml;
+
+      updateCalcs();
+      attachTriggers();
     }
 
-    function updateCalculations() {
+    function updateCalcs() {
       monthsList.forEach(mKey => {
-        const revAct = Number(document.getElementById(`revAct-${mKey}`).value) || 0;
-        const bppAct = Number(document.getElementById(`bppAct-${mKey}`).value) || 0;
-        const gp = revAct - bppAct;
-        const gpm = revAct > 0 ? (gp / revAct * 100) : 0;
-
+        const rAct = Number(document.getElementById(`revAct-${mKey}`).value) || 0;
+        const bAct = Number(document.getElementById(`bppAct-${mKey}`).value) || 0;
+        const gp = rAct - bAct;
+        const gpm = rAct > 0 ? (gp / rAct * 100) : 0;
         document.getElementById(`gp-${mKey}`).textContent = Math.round(gp).toLocaleString("id-ID");
         document.getElementById(`gpm-${mKey}`).textContent = gpm.toFixed(2).replace(".", ",") + "%";
+
+        const nPlan = Number(document.getElementById(`nkbPlan-${mKey}`).value) || 0;
+        const nProg = Number(document.getElementById(`nkbProg-${mKey}`).value) || 0;
+        const nPct = nPlan > 0 ? (nProg / nPlan * 100) : (nProg > 0 ? 100 : 0);
+        document.getElementById(`nkbPct-${mKey}`).textContent = nPct.toFixed(2).replace(".", ",") + "%";
       });
     }
 
-    function attachListeners() {
-      const triggers = document.querySelectorAll(".calc-trigger");
-      triggers.forEach(input => {
-        input.addEventListener("input", updateCalculations);
-      });
+    function attachTriggers() {
+      document.querySelectorAll(".fin-trig, .nkb-trig").forEach(el => el.addEventListener("input", updateCalcs));
     }
 
-    document.getElementById("btn-save").addEventListener("click", function() {
+    document.getElementById("btn-save").addEventListener("click", () => {
       monthsList.forEach(mKey => {
         currentData.months[mKey].status = document.getElementById(`status-${mKey}`).value;
         currentData.months[mKey].revenuePlan = Number(document.getElementById(`revPlan-${mKey}`).value) || 0;
         currentData.months[mKey].bppPlan = Number(document.getElementById(`bppPlan-${mKey}`).value) || 0;
         currentData.months[mKey].revenueActual = Number(document.getElementById(`revAct-${mKey}`).value) || 0;
         currentData.months[mKey].bppActual = Number(document.getElementById(`bppAct-${mKey}`).value) || 0;
+
+        currentData.nkbMonths[mKey] = {
+          plan: Number(document.getElementById(`nkbPlan-${mKey}`).value) || 0,
+          prognosa: Number(document.getElementById(`nkbProg-${mKey}`).value) || 0
+        };
       });
 
       localStorage.setItem("financialData2026", JSON.stringify(currentData));
-
       const toast = document.getElementById("toast");
       toast.style.display = "block";
-      setTimeout(() => {
-        toast.style.display = "none";
-      }, 3000);
+      setTimeout(() => toast.style.display = "none", 3000);
     });
 
-    document.getElementById("btn-reset").addEventListener("click", function() {
-      if (confirm("Reset data ke pengaturan awal tahun 2026?")) {
+    document.getElementById("btn-reset").addEventListener("click", () => {
+      if (confirm("Reset seluruh data ke awal?")) {
         localStorage.removeItem("financialData2026");
         currentData = loadData();
-        renderTableRows();
-        alert("Data berhasil direset ke awal!");
+        renderTables();
+        alert("Data berhasil direset!");
       }
     });
 
-    renderTableRows();
+    renderTables();
   </script>
 </body>
 </html>
