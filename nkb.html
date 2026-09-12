@@ -45,10 +45,18 @@
     .kpi-sub-unit { font-size: 10px; font-weight: 700; color: #64748b; margin-top: 3px; text-transform: uppercase; }
 
     /* CHARTS GRID */
-    .charts-grid { display: grid; grid-template-columns: 1.3fr 1.1fr; gap: 15px; margin-bottom: 20px; }
+    .charts-grid { display: grid; grid-template-columns: 1.3fr 1.2fr; gap: 15px; margin-bottom: 20px; }
     .chart-card { background: #ffffff; color: #1e293b; border-radius: 8px; padding: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); display: flex; flex-direction: column; }
     .chart-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #ffffff; background: #0f4c81; padding: 8px 12px; border-radius: 4px; margin-bottom: 14px; letter-spacing: 0.5px; }
-    .chart-container { position: relative; height: 320px; width: 100%; }
+    .chart-container { position: relative; height: 280px; width: 100%; }
+
+    /* DONUT LAYOUT WITH COMBINED LEGEND */
+    .donut-layout { display: grid; grid-template-columns: 1fr 140px; gap: 5px; align-items: center; height: 100%; }
+    .custom-legend { display: flex; flex-direction: column; gap: 8px; font-size: 10.5px; }
+    .legend-category-title { font-weight: 800; color: #1e293b; font-size: 11px; margin-bottom: 1px; }
+    .legend-row { display: flex; align-items: center; gap: 6px; }
+    .legend-bullet { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .legend-label { font-weight: 700; color: #334155; font-size: 10px; }
 
     /* TABLES GRID */
     .tables-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
@@ -160,11 +168,38 @@
         </div>
       </div>
 
-      <!-- Chart 2: Per Jenis Alat (Donut) with Exact Matching Labels -->
+      <!-- Chart 2: Per Jenis Alat (Donut) - Sizing Adjusted & Legend Included -->
       <div class="chart-card">
         <div class="chart-title">RENCANA NILAI KONTRAK BARU PER JENIS ALAT</div>
         <div class="chart-container">
-          <canvas id="chartEquipment"></canvas>
+          <div class="donut-layout">
+            <div style="position: relative; height: 100%; width: 100%;">
+              <canvas id="chartEquipment"></canvas>
+            </div>
+            <div class="custom-legend">
+              <div class="legend-category-title">Jenis Alat</div>
+              <div class="legend-row">
+                <div class="legend-bullet" style="background: #0b63ce;"></div>
+                <span class="legend-label">Truck Mixer</span>
+              </div>
+              <div class="legend-row">
+                <div class="legend-bullet" style="background: #0b2265;"></div>
+                <span class="legend-label">Truck Trailer</span>
+              </div>
+              <div class="legend-row">
+                <div class="legend-bullet" style="background: #e65c00;"></div>
+                <span class="legend-label">Stone Crusher</span>
+              </div>
+              <div class="legend-row">
+                <div class="legend-bullet" style="background: #5c165c;"></div>
+                <span class="legend-label">Batching Plant</span>
+              </div>
+              <div class="legend-row">
+                <div class="legend-bullet" style="background: #d4a017;"></div>
+                <span class="legend-label">Silo</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -355,7 +390,7 @@
       }
     });
 
-    // 2. Equipment Donut Chart with External Callout Labels Exactly Matching Reference
+    // 2. Equipment Donut Chart - Adjusted Size & External Callout Labels with Legend
     const ctxEquipment = document.getElementById('chartEquipment').getContext('2d');
     new Chart(ctxEquipment, {
       type: 'doughnut',
@@ -372,7 +407,7 @@
         responsive: true,
         maintainAspectRatio: false,
         layout: {
-          padding: { top: 40, bottom: 40, left: 60, right: 60 }
+          padding: { top: 30, bottom: 30, left: 20, right: 20 }
         },
         plugins: {
           legend: { display: false },
@@ -388,7 +423,7 @@
           },
           datalabels: {
             color: '#1e293b',
-            font: { size: 10, weight: 'bold' },
+            font: { size: 9, weight: 'bold' },
             formatter: function(value, context) {
               const total = 13155200000;
               const pct = ((value / total) * 100).toFixed(2).replace('.', ',');
@@ -397,16 +432,16 @@
             },
             anchor: 'end',
             align: 'end',
-            offset: 12,
+            offset: 10,
             textAlign: 'center',
             backgroundColor: '#ffffff',
             borderColor: '#cbd5e1',
             borderWidth: 1,
             borderRadius: 4,
-            padding: { top: 4, bottom: 4, left: 6, right: 6 }
+            padding: { top: 3, bottom: 3, left: 5, right: 5 }
           }
         },
-        cutout: '52%'
+        cutout: '58%'
       },
       plugins: [{
         id: 'calloutLinesPlugin',
@@ -419,7 +454,7 @@
             const angle = element.startAngle + (element.endAngle - element.startAngle) / 2;
             
             const r1 = element.outerRadius;
-            const r2 = r1 + 14;
+            const r2 = r1 + 10;
             
             const startX = element.x + Math.cos(angle) * r1;
             const startY = element.y + Math.sin(angle) * r1;
@@ -427,12 +462,12 @@
             const midY = element.y + Math.sin(angle) * r2;
             
             const isRightSide = Math.cos(angle) >= 0;
-            const endX = midX + (isRightSide ? 22 : -22);
+            const endX = midX + (isRightSide ? 15 : -15);
             const endY = midY;
 
             ctx.save();
             ctx.strokeStyle = '#94a3b8';
-            ctx.lineWidth = 1.2;
+            ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(startX, startY);
             ctx.lineTo(midX, midY);
