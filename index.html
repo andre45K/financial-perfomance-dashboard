@@ -191,8 +191,8 @@
       <div class="period-box">
         <span>📅 Periode: <strong>Jan - Dec 2026</strong></span>
       </div>
-      <!-- Diarahkan ke input.html -->
-      <a href="input.html" class="admin-link">Admin Input</a>
+      <!-- Diperbaiki: Menggunakan tag <button> dengan event onclick murni agar tidak terpengaruh routing default yang menyebabkan refresh berulang -->
+      <button onclick="window.location.href='input.html'" class="admin-link" style="background:transparent; cursor:pointer;">Admin Input</button>
     </div>
   </div>
 
