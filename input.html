@@ -21,8 +21,7 @@
     .preview-item strong { color: #5bc0be; }
     button { padding: 0.75rem 1.5rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
     .btn-primary { background-color: #3a86ff; color: white; width: 100%; }
-    .btn-secondary { background-color: #4a5568; color: white; text-decoration: none; padding: 0.6rem 1rem; border-radius: 4px; font-size: 0.9rem; margin-right: 0.5rem; }
-    .btn-danger { background-color: #e63946; color: white; }
+    .btn-secondary { background-color: #4a5568; color: white; text-decoration: none; padding: 0.6rem 1rem; border-radius: 4px; font-size: 0.9rem; }
     .msg-status { margin-top: 1rem; text-align: center; font-weight: bold; }
   </style>
 </head>
@@ -32,7 +31,6 @@
       <h2>Input Data Financial Performance</h2>
       <div>
         <a href="index.html" class="btn-secondary">Lihat Dashboard</a>
-        <button id="btn-logout" class="btn-danger">Logout</button>
       </div>
     </header>
 
@@ -40,27 +38,20 @@
       <form id="financial-form">
         <div class="form-row">
           <div class="form-group">
-            <label for="year">Tahun</label>
-            <select id="year" required>
-              <option value="2026" selected>2026</option>
-              <option value="2027">2027</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="month">Bulan</label>
-            <select id="month" required>
-              <option value="Jan">Januari (Jan)</option>
-              <option value="Feb">Februari (Feb)</option>
-              <option value="Mar">Maret (Mar)</option>
-              <option value="Apr">April (Apr)</option>
-              <option value="May">Mei (Mei)</option>
-              <option value="Jun">Juni (Jun)</option>
-              <option value="Jul">Juli (Jul)</option>
-              <option value="Aug">Agustus (Aug)</option>
-              <option value="Sep">September (Sep)</option>
-              <option value="Oct">Oktober (Oct)</option>
-              <option value="Nov">November (Nov)</option>
-              <option value="Dec">Desember (Dec)</option>
+            <label for="monthIndex">Pilih Bulan</label>
+            <select id="monthIndex" required>
+              <option value="0">Januari</option>
+              <option value="1">Februari</option>
+              <option value="2">Maret</option>
+              <option value="3">April</option>
+              <option value="4">Mei</option>
+              <option value="5">Juni</option>
+              <option value="6">Juli</option>
+              <option value="7">Agustus</option>
+              <option value="8">September</option>
+              <option value="9">Oktober</option>
+              <option value="10">November</option>
+              <option value="11">Desember</option>
             </select>
           </div>
           <div class="form-group">
@@ -78,11 +69,11 @@
         <div class="form-row">
           <div class="form-group">
             <label for="revenuePlan">Rencana Pendapatan</label>
-            <input type="number" step="any" id="revenuePlan" placeholder="Contoh: 554" required>
+            <input type="number" step="any" id="revenuePlan" required>
           </div>
           <div class="form-group">
             <label for="revenueActual">Realisasi / Prognosa Pendapatan</label>
-            <input type="number" step="any" id="revenueActual" placeholder="Contoh: 823" required>
+            <input type="number" step="any" id="revenueActual" required>
           </div>
         </div>
 
@@ -90,130 +81,82 @@
         <div class="form-row">
           <div class="form-group">
             <label for="bppPlan">Rencana BPP</label>
-            <input type="number" step="any" id="bppPlan" placeholder="Contoh: 195" required>
+            <input type="number" step="any" id="bppPlan" required>
           </div>
           <div class="form-group">
             <label for="bppActual">Realisasi / Prognosa BPP</label>
-            <input type="number" step="any" id="bppActual" placeholder="Contoh: 647" required>
+            <input type="number" step="any" id="bppActual" required>
           </div>
         </div>
 
-        <div class="preview-box">
-          <div class="preview-item">
-            <span>Gross Profit (Rencana):</span>
-            <strong id="preview-gp-plan">0</strong>
-          </div>
-          <div class="preview-item">
-            <span>Gross Profit (Realisasi/Prognosa):</span>
-            <strong id="preview-gp-actual">0</strong>
-          </div>
-          <div class="preview-item">
-            <span>Gross Profit Margin (Rencana):</span>
-            <strong id="preview-gpm-plan">0%</strong>
-          </div>
-          <div class="preview-item">
-            <span>Gross Profit Margin (Realisasi/Prognosa):</span>
-            <strong id="preview-gpm-actual">0%</strong>
-          </div>
-        </div>
-
-        <button type="submit" class="btn-primary">Simpan Ke Firebase</button>
+        <button type="submit" class="btn-primary">Simpan Perubahan</button>
         <p id="msg-status" class="msg-status"></p>
       </form>
     </div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
-      authDomain: "financial-perfomance-dashboard.firebaseapp.com",
-      projectId: "financial-perfomance-dashboard",
-      storageBucket: "financial-perfomance-dashboard.firebasestorage.app",
-      messagingSenderId: "136866453174",
-      appId: "1:136866453174:web:b69a3e14672eb96cc53817"
+  <script>
+    const monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    
+    const defaultData = {
+      revPlan: [554, 554, 449, 380, 502, 879, 927, 1042, 2196, 2196, 2145, 1678],
+      revAct:  [823, 787, 99, 782, 688, 1117, 1668, 1703, 1786, 1670, 1393, 1393],
+      bppPlan: [195, 195, 195, 165, 308, 495, 531, 613, 1218, 1218, 1198, 1013],
+      bppAct:  [647, 632, 92, 680, 404, 913, 1342, 1164, 1340, 1280, 1088, 1088],
+      status:  ["REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","REALISASI","PROGNOSA","PROGNOSA","PROGNOSA"]
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-
-    // Proteksi Halaman Admin
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = 'login.html';
+    function getData() {
+      const saved = localStorage.getItem('financial_performance_data');
+      if (saved) {
+        try { return JSON.parse(saved); } catch(e) {}
       }
-    });
+      return defaultData;
+    }
 
-    document.getElementById('btn-logout').addEventListener('click', () => {
-      signOut(auth).then(() => window.location.href = 'login.html');
-    });
-
-    const form = document.getElementById('financial-form');
+    const monthSelect = document.getElementById('monthIndex');
     const revenuePlanInput = document.getElementById('revenuePlan');
     const revenueActualInput = document.getElementById('revenueActual');
     const bppPlanInput = document.getElementById('bppPlan');
     const bppActualInput = document.getElementById('bppActual');
+    const statusSelect = document.getElementById('status');
     const msgStatus = document.getElementById('msg-status');
 
-    function calculateValues() {
-      const revPlan = parseFloat(revenuePlanInput.value) || 0;
-      const revActual = parseFloat(revenueActualInput.value) || 0;
-      const bppPlan = parseFloat(bppPlanInput.value) || 0;
-      const bppActual = parseFloat(bppActualInput.value) || 0;
-
-      const gpPlan = revPlan - bppPlan;
-      const gpActual = revActual - bppActual;
-      const gpmPlan = revPlan > 0 ? (gpPlan / revPlan * 100) : 0;
-      const gpmActual = revActual > 0 ? (gpActual / revActual * 100) : 0;
-
-      document.getElementById('preview-gp-plan').textContent = gpPlan.toLocaleString('id-ID');
-      document.getElementById('preview-gp-actual').textContent = gpActual.toLocaleString('id-ID');
-      document.getElementById('preview-gpm-plan').textContent = gpmPlan.toFixed(2) + '%';
-      document.getElementById('preview-gpm-actual').textContent = gpmActual.toFixed(2) + '%';
-
-      return { gpPlan, gpActual, gpmPlan, gpmActual };
+    function loadMonthData(idx) {
+      const data = getData();
+      revenuePlanInput.value = data.revPlan[idx];
+      revenueActualInput.value = data.revAct[idx];
+      bppPlanInput.value = data.bppPlan[idx];
+      bppActualInput.value = data.bppAct[idx];
+      statusSelect.value = data.status[idx];
     }
 
-    [revenuePlanInput, revenueActualInput, bppPlanInput, bppActualInput].forEach(input => {
-      input.addEventListener('input', calculateValues);
+    monthSelect.addEventListener('change', (e) => {
+      loadMonthData(parseInt(e.target.value));
     });
 
-    form.addEventListener('submit', async (e) => {
+    // Muat bulan pertama saat pertama kali dibuka
+    loadMonthData(0);
+
+    document.getElementById('financial-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      msgStatus.textContent = 'Menyimpan data...';
-      msgStatus.style.color = '#3a86ff';
+      const idx = parseInt(monthSelect.value);
+      const data = getData();
 
-      const year = document.getElementById('year').value;
-      const month = document.getElementById('month').value;
-      const status = document.getElementById('status').value;
+      data.revPlan[idx] = parseFloat(revenuePlanInput.value) || 0;
+      data.revAct[idx]  = parseFloat(revenueActualInput.value) || 0;
+      data.bppPlan[idx] = parseFloat(bppPlanInput.value) || 0;
+      data.bppAct[idx]  = parseFloat(bppActualInput.value) || 0;
+      data.status[idx]  = statusSelect.value;
 
-      const revPlan = parseFloat(revenuePlanInput.value) || 0;
-      const revActual = parseFloat(revenueActualInput.value) || 0;
-      const bppPlan = parseFloat(bppPlanInput.value) || 0;
-      const bppActual = parseFloat(bppActualInput.value) || 0;
-      const { gpPlan, gpActual, gpmPlan, gpmActual } = calculateValues();
+      localStorage.setItem('financial_performance_data', JSON.stringify(data));
 
-      try {
-        const docRef = doc(db, 'financial_data', year, 'months', month);
-        await setDoc(docRef, {
-          month, year: parseInt(year), status,
-          revenuePlan: revPlan, revenueActual: revActual,
-          bppPlan, bppActual,
-          grossProfitPlan: gpPlan, grossProfitActual: gpActual,
-          grossProfitMarginPlan: gpmPlan, grossProfitMarginActual: gpmActual,
-          updatedAt: new Date()
-        });
+      msgStatus.textContent = `Data bulan ${monthsList[idx]} berhasil disimpan!`;
+      msgStatus.style.color = '#38b000';
 
-        msgStatus.textContent = `Data bulan ${month} ${year} berhasil disimpan!`;
-        msgStatus.style.color = '#38b000';
-      } catch (error) {
-        msgStatus.textContent = 'Gagal menyimpan: ' + error.message;
-        msgStatus.style.color = '#ff4d4d';
-      }
+      setTimeout(() => {
+        msgStatus.textContent = '';
+      }, 3000);
     });
   </script>
 </body>
