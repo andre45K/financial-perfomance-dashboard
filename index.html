@@ -143,7 +143,7 @@
 </head>
 <body>
 
-  <!-- HEADER & DASHBOARD UTAMA (DARK THEME) -->
+  <!-- HEADER & DASHBOARD UTAMA -->
   <div class="header-container">
     <div class="title-area">
       <h1>FINANCIAL PERFORMANCE DASHBOARD</h1>
@@ -262,7 +262,7 @@
     <div class="legend-item"><div class="box-orange"></div> <span id="legend-prog-text">Data Aug - Dec 2026 merupakan Prognosa</span></div>
   </div>
 
-  <!-- DASHBOARD 2 (LIGHT MODE - PRESISI 100%) -->
+  <!-- DASHBOARD 2 (LIGHT MODE) -->
   <div class="section-divider-title">VISUALISASI ANALISIS KOMPARATIF</div>
 
   <!-- PANEL 01 -->
@@ -441,7 +441,7 @@
         const querySnapshot = await getDocs(collection(db, "financial_data", "2026", "months"));
         querySnapshot.forEach((doc) => { dataStore[doc.id] = doc.data(); });
       } catch (e) {
-        console.warn("Fallback default data.");
+        console.warn("Fallback data.");
       }
       renderDashboard(dataStore);
     }
@@ -453,10 +453,10 @@
 
       monthsList.forEach(m => {
         const item = data[m] || { revenuePlan: 0, revenueActual: 0, bppPlan: 0, bppActual: 0, status: 'PROGNOSA' };
-        const rPlan = item.revenuePlan || 0;
-        const rAct = item.revenueActual || 0;
-        const bPlan = item.bppPlan || 0;
-        const bAct = item.bppActual || 0;
+        const rPlan = Number(item.revenuePlan) || 0;
+        const rAct = Number(item.revenueActual) || 0;
+        const bPlan = Number(item.bppPlan) || 0;
+        const bAct = Number(item.bppActual) || 0;
 
         const gPlan = rPlan - bPlan;
         const gAct = rAct - bAct;
@@ -475,8 +475,8 @@
         if (statusArr[i] === 'REALISASI') lastRealIndex = i + 1;
       }
 
-      const realEndMonth = lastRealIndex > 0 ? monthLabels[lastRealIndex - 1].split('-')[0] : 'Jan';
-      const progStartMonth = lastRealIndex < 12 ? monthLabels[lastRealIndex].split('-')[0] : 'Dec';
+      const realEndMonth = lastRealIndex > 0 ? monthLabels[lastRealIndex - 1].replace('-26', '') : 'Jan';
+      const progStartMonth = lastRealIndex < 12 ? monthLabels[lastRealIndex].replace('-26', '') : 'Dec';
       
       const realText = lastRealIndex > 0 ? `Jan - ${realEndMonth} 2026 (Realisasi)` : `Non Realisasi`;
       const progText = lastRealIndex < 12 ? `${progStartMonth} - Dec 2026 (Prognosa)` : `Full Realisasi`;
@@ -513,6 +513,7 @@
       renderCharts({ revActArr, bppActArr, gpActArr, gpmActArr, statusArr });
       renderDynamicTable({ revPlanArr, revActArr, bppPlanArr, bppActArr, gpPlanArr, gpActArr, gpmPlanArr, gpmActArr, statusArr, lastRealIndex, realText, progText });
 
+      // Memanggil fungsi Light Section 2
       renderLightSection({ revActArr, bppActArr, gpActArr, gpmActArr, totalRevAct, totalBppAct, totalGpAct, totalGpmAct });
     }
 
@@ -540,7 +541,7 @@
       const ctx = document.getElementById(id).getContext('2d');
       chartInstances[id] = new Chart(ctx, {
         data: {
-          labels: monthLabels.map(m => m.split('-')[0]),
+          labels: monthLabels.map(m => m.replace('-26', '')),
           datasets: [
             {
               type: 'line', data, borderColor: lineColor, borderWidth: 1.5,
