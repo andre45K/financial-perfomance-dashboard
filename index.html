@@ -186,8 +186,8 @@
       <p>Rencana vs Realisasi | Januari - Desember 2026</p>
     </div>
     <div class="header-info">
-      <span id="badge-realisasi-text" class="badge-status badge-realisasi">Jan - Aug 2026 (Realisasi)</span>
-      <span id="badge-prognosa-text" class="badge-status badge-prognosa">Sep - Dec 2026 (Prognosa)</span>
+      <span id="badge-realisasi-text" class="badge-status badge-realisasi">Jan - Sep 2026 (Realisasi)</span>
+      <span id="badge-prognosa-text" class="badge-status badge-prognosa">Okt - Dec 2026 (Prognosa)</span>
       <div class="period-box">
         <span>📅 Periode: <strong>Jan - Dec 2026</strong></span>
       </div>
@@ -292,7 +292,7 @@
       <thead>
         <tr>
           <th rowspan="2" class="th-header-main" style="width: 14%;">URAIAN</th>
-          <th colspan="9" id="th-realisasi-hdr" class="th-realisasi">JAN - SEP 2026 (REALISASI)</th>
+          <th colspan="10" id="th-realisasi-hdr" class="th-realisasi">JAN - SEP 2026 (REALISASI)</th>
           <th colspan="4" id="th-prognosa-hdr" class="th-prognosa">OKT - DES 2026 (PROGNOSA)</th>
           <th colspan="3" class="th-total">TOTAL 2026</th>
         </tr>
@@ -305,7 +305,7 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Diisi otomatis via JavaScript -->
+        <!-- Diisi dinamis via JS -->
       </tbody>
     </table>
   </div>
@@ -659,7 +659,6 @@
     const fullMonthsList = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
     const monthLabels = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26", "Oct-26", "Nov-26", "Dec-26"];
 
-    // Default Fallback Data (Jika localStorage kosong)
     const defaultData = {
       revPlan: [554, 554, 449, 380, 502, 879, 927, 1042, 2196, 2196, 2145, 1678],
       revAct:  [823, 787, 99, 782, 688, 1117, 1668, 1703, 1786, 1670, 1393, 1393],
@@ -683,19 +682,16 @@
     const bppActVal = appData.bppAct;
     const statusArr = appData.status;
 
-    // Hitung berapa bulan yang berstatus REALISASI
     let realCount = statusArr.filter(s => s === 'REALISASI').length;
-    if (realCount < 1) realCount = 8; // Default minimal 8 jika belum tersimpan
+    if (realCount < 1) realCount = 8;
 
     const lastRealMonthShort = monthsShortList[realCount - 1];
     const lastRealMonthFull = fullMonthsList[realCount - 1];
     const nextMonthShort = monthsShortList[realCount] || "Dec";
 
-    // Update Header Badge Info
     document.getElementById('badge-realisasi-text').textContent = `Jan - ${lastRealMonthShort} 2026 (Realisasi)`;
     document.getElementById('badge-prognosa-text').textContent = `${nextMonthShort} - Dec 2026 (Prognosa)`;
 
-    // Update Header Tabel Utama
     const realHdrName = `JAN - ${lastRealMonthShort.toUpperCase()} 2026 (REALISASI)`;
     const progHdrName = `${nextMonthShort.toUpperCase()} - DES 2026 (PROGNOSA)`;
     document.getElementById('th-realisasi-hdr').setAttribute('colspan', realCount + 1);
@@ -703,7 +699,6 @@
     document.getElementById('th-prognosa-hdr').setAttribute('colspan', 12 - realCount);
     document.getElementById('th-prognosa-hdr').textContent = progHdrName;
 
-    // Susun sub-header kolom bulan tabel utama secara dinamis
     let thColsHtml = '';
     for(let i=0; i<12; i++) {
       if(i === realCount) {
@@ -717,7 +712,6 @@
     thColsHtml += `<th class="th-prognosa">TOTAL</th><th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>`;
     document.getElementById('main-table-subheaders').innerHTML = thColsHtml;
 
-    // Perhitungan Metrik & Total
     const gpActVal = revActVal.map((r, i) => r - bppActVal[i]);
     const gpmActVal = revActVal.map((r, i) => r > 0 ? (gpActVal[i] / r * 100) : 0);
     const gpPlanArr = revPlanArr.map((r, i) => r - bppPlanArr[i]);
@@ -744,11 +738,9 @@
     const avgGpmFull = totRevFull > 0 ? (totGpFull / totRevFull * 100) : 0;
     const planGpmFull = planRevFull > 0 ? (planGpFull / planRevFull * 100) : 0;
 
-    // Render Baris Tabel Utama
     function buildTableHTML() {
       let tbodyHtml = '';
       
-      // 1. Pendapatan Usaha
       let rowRev = `<td class="row-label">PENDAPATAN USAHA (Juta Rp)</td>`;
       for(let i=0; i<12; i++) {
         if(i === realCount) rowRev += `<td class="txt-green">${Math.round(totRevReal).toLocaleString('id-ID')}</td>`;
@@ -762,7 +754,6 @@
                  <td class="${pctRev >= 100 ? 'txt-green' : 'txt-red'}">${pctRev.toFixed(2).replace('.', ',')}%</td>`;
       tbodyHtml += `<tr>${rowRev}</tr>`;
 
-      // 2. Beban Pokok Pendapatan
       let rowBpp = `<td class="row-label">BEBAN POKOK PENDAPATAN (Juta Rp)</td>`;
       for(let i=0; i<12; i++) {
         if(i === realCount) rowBpp += `<td class="txt-green">${Math.round(totBppReal).toLocaleString('id-ID')}</td>`;
@@ -776,7 +767,6 @@
                  <td class="${pctBpp <= 100 ? 'txt-green' : 'txt-red'}">${pctBpp.toFixed(2).replace('.', ',')}%</td>`;
       tbodyHtml += `<tr>${rowBpp}</tr>`;
 
-      // 3. Gross Profit
       let rowGp = `<td class="row-label">GROSS PROFIT (Juta Rp)</td>`;
       for(let i=0; i<12; i++) {
         if(i === realCount) rowGp += `<td class="txt-green">${Math.round(totGpReal).toLocaleString('id-ID')}</td>`;
@@ -790,7 +780,6 @@
                 <td class="${pctGp >= 100 ? 'txt-green' : 'txt-red'}">${pctGp.toFixed(2).replace('.', ',')}%</td>`;
       tbodyHtml += `<tr>${rowGp}</tr>`;
 
-      // 4. Gross Profit Margin
       let rowGpm = `<td class="row-label">GROSS PROFIT MARGIN (%)</td>`;
       for(let i=0; i<12; i++) {
         if(i === realCount) rowGpm += `<td class="txt-green">${avgGpmReal.toFixed(2).replace('.', ',')}%</td>`;
@@ -809,11 +798,9 @@
 
     buildTableHTML();
 
-    // Update Catatan Legend
     document.getElementById('legend-real-text').textContent = `Data Jan - ${lastRealMonthShort} 2026 merupakan Realisasi`;
     document.getElementById('legend-prog-text').textContent = `Data ${nextMonthShort} - Dec 2026 merupakan Prognosa`;
 
-    // Update Kartu KPI Atas Dashboard 1
     document.getElementById('kpi-rev-plan').textContent = Math.round(planRevFull).toLocaleString('id-ID');
     document.getElementById('kpi-rev-act').textContent = Math.round(totRevFull).toLocaleString('id-ID');
     const revRatio = planRevFull > 0 ? (totRevFull / planRevFull * 100) : 0;
@@ -854,7 +841,9 @@
 
     function createComboChart(id, data, barColors, lineColor, isPercentage = false) {
       if (chartInstances[id]) chartInstances[id].destroy();
-      const ctx = document.getElementById(id).getContext('2d');
+      const el = document.getElementById(id);
+      if (!el) return;
+      const ctx = el.getContext('2d');
       chartInstances[id] = new Chart(ctx, {
         data: {
           labels: monthLabels.map(m => m.replace('-26', '')),
@@ -882,125 +871,128 @@
       const lightLabels = monthsShortList;
 
       if (chartInstances['chartSec1']) chartInstances['chartSec1'].destroy();
-      const ctx1 = document.getElementById('chartSec1').getContext('2d');
-      chartInstances['chartSec1'] = new Chart(ctx1, {
-        type: 'bar',
-        data: {
-          labels: lightLabels,
-          datasets: [
-            {
-              label: 'Pendapatan Usaha (Rencana)',
-              data: revPlanArr,
-              backgroundColor: '#0b63ce',
-              borderRadius: 4,
-              barPercentage: 0.65,
-              categoryPercentage: 0.6,
-              datalabels: {
-                align: 'top', anchor: 'end', color: '#0b63ce', font: { size: 8.5, weight: 'bold' }, offset: 2,
-                formatter: v => Math.round(v).toLocaleString('id-ID')
+      const elSec1 = document.getElementById('chartSec1');
+      if (elSec1) {
+        const ctx1 = elSec1.getContext('2d');
+        chartInstances['chartSec1'] = new Chart(ctx1, {
+          type: 'bar',
+          data: {
+            labels: lightLabels,
+            datasets: [
+              {
+                label: 'Pendapatan Usaha (Rencana)',
+                data: revPlanArr,
+                backgroundColor: '#0b63ce',
+                borderRadius: 4,
+                barPercentage: 0.65,
+                categoryPercentage: 0.6,
+                datalabels: {
+                  align: 'top', anchor: 'end', color: '#0b63ce', font: { size: 8.5, weight: 'bold' }, offset: 2,
+                  formatter: v => Math.round(v).toLocaleString('id-ID')
+                }
+              },
+              {
+                label: 'Beban Pokok Pendapatan (Rencana)',
+                data: bppPlanArr,
+                backgroundColor: '#008767',
+                borderRadius: 4,
+                barPercentage: 0.65,
+                categoryPercentage: 0.6,
+                datalabels: {
+                  align: 'top', anchor: 'end', color: '#008767', font: { size: 8.5, weight: 'bold' }, offset: 2,
+                  formatter: v => Math.round(v).toLocaleString('id-ID')
+                }
               }
-            },
-            {
-              label: 'Beban Pokok Pendapatan (Rencana)',
-              data: bppPlanArr,
-              backgroundColor: '#008767',
-              borderRadius: 4,
-              barPercentage: 0.65,
-              categoryPercentage: 0.6,
-              datalabels: {
-                align: 'top', anchor: 'end', color: '#008767', font: { size: 8.5, weight: 'bold' }, offset: 2,
-                formatter: v => Math.round(v).toLocaleString('id-ID')
-              }
-            }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          layout: { padding: { top: 32 } },
-          plugins: {
-            legend: { display: true, position: 'top', labels: { color: '#334155', font: { size: 10, weight: 'bold' }, usePointStyle: true, boxWidth: 8 } }
+            ]
           },
-          scales: {
-            x: { ticks: { color: '#475569', font: { size: 9, weight: '600' } }, grid: { display: false } },
-            y: { ticks: { color: '#475569', font: { size: 9 } }, grid: { color: '#f1f5f9' }, min: 0 }
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            layout: { padding: { top: 32 } },
+            plugins: {
+              legend: { display: true, position: 'top', labels: { color: '#334155', font: { size: 10, weight: 'bold' }, usePointStyle: true, boxWidth: 8 } }
+            },
+            scales: {
+              x: { ticks: { color: '#475569', font: { size: 9, weight: '600' } }, grid: { display: false } },
+              y: { ticks: { color: '#475569', font: { size: 9 } }, grid: { color: '#f1f5f9' }, min: 0 }
+            }
           }
-        }
-      });
+        });
+      }
 
       if (chartInstances['chartSec2']) chartInstances['chartSec2'].destroy();
-      const ctx2 = document.getElementById('chartSec2').getContext('2d');
-      chartInstances['chartSec2'] = new Chart(ctx2, {
-        data: {
-          labels: lightLabels,
-          datasets: [
-            {
-              type: 'line',
-              label: 'Gross Profit Margin (%)',
-              data: gpmPlanArr,
-              borderColor: '#e67e22',
-              backgroundColor: '#e67e22',
-              borderWidth: 2.5,
-              pointRadius: 5,
-              pointBackgroundColor: '#e67e22',
-              yAxisID: 'y1',
-              datalabels: {
-                align: 'top',
-                anchor: 'end',
-                color: '#e67e22',
-                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      const elSec2 = document.getElementById('chartSec2');
+      if (elSec2) {
+        const ctx2 = elSec2.getContext('2d');
+        chartInstances['chartSec2'] = new Chart(ctx2, {
+          data: {
+            labels: lightLabels,
+            datasets: [
+              {
+                type: 'line',
+                label: 'Gross Profit Margin (%)',
+                data: gpmPlanArr,
                 borderColor: '#e67e22',
-                borderWidth: 1.5,
-                borderRadius: 12,
-                padding: { top: 3, bottom: 3, left: 6, right: 6 },
-                font: { size: 9, weight: 'bold' },
-                offset: 6,
-                formatter: v => v.toFixed(0) + '%'
+                backgroundColor: '#e67e22',
+                borderWidth: 2.5,
+                pointRadius: 5,
+                pointBackgroundColor: '#e67e22',
+                yAxisID: 'y1',
+                datalabels: {
+                  align: 'top',
+                  anchor: 'end',
+                  color: '#e67e22',
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  borderColor: '#e67e22',
+                  borderWidth: 1.5,
+                  borderRadius: 12,
+                  padding: { top: 3, bottom: 3, left: 6, right: 6 },
+                  font: { size: 9, weight: 'bold' },
+                  offset: 6,
+                  formatter: v => v.toFixed(0) + '%'
+                }
+              },
+              {
+                type: 'bar',
+                label: 'Gross Profit (Rp)',
+                data: gpPlanArr,
+                backgroundColor: '#7c3aed',
+                borderRadius: 4,
+                barPercentage: 0.45,
+                yAxisID: 'y',
+                datalabels: {
+                  align: 'start',
+                  anchor: 'end',
+                  color: '#ffffff',
+                  font: { size: 8.5, weight: 'bold' },
+                  offset: 4,
+                  formatter: v => Math.round(v).toLocaleString('id-ID')
+                }
               }
-            },
-            {
-              type: 'bar',
-              label: 'Gross Profit (Rp)',
-              data: gpPlanArr,
-              backgroundColor: '#7c3aed',
-              borderRadius: 4,
-              barPercentage: 0.45,
-              yAxisID: 'y',
-              datalabels: {
-                align: 'start',
-                anchor: 'end',
-                color: '#ffffff',
-                font: { size: 8.5, weight: 'bold' },
-                offset: 4,
-                formatter: v => Math.round(v).toLocaleString('id-ID')
-              }
-            }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          layout: { padding: { top: 38 } },
-          plugins: {
-            legend: { display: true, position: 'top', labels: { color: '#334155', font: { size: 10, weight: 'bold' }, usePointStyle: true, boxWidth: 8 } }
+            ]
           },
-          scales: {
-            x: { ticks: { color: '#475569', font: { size: 9, weight: '600' } }, grid: { display: false } },
-            y: { 
-              type: 'linear', display: true, position: 'left',
-              ticks: { color: '#475569', font: { size: 9 } }, grid: { color: '#f1f5f9' }, min: 0
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            layout: { padding: { top: 38 } },
+            plugins: {
+              legend: { display: true, position: 'top', labels: { color: '#334155', font: { size: 10, weight: 'bold' }, usePointStyle: true, boxWidth: 8 } }
             },
-            y1: {
-              type: 'linear', display: true, position: 'right',
-              ticks: { color: '#e67e22', font: { size: 9 }, callback: v => v + '%' },
-              grid: { drawOnChartArea: false }, min: 0, max: 100
+            scales: {
+              x: { ticks: { color: '#475569', font: { size: 9, weight: '600' } }, grid: { display: false } },
+              y: { 
+                type: 'linear', display: true, position: 'left',
+                ticks: { color: '#475569', font: { size: 9 } }, grid: { color: '#f1f5f9' }, min: 0
+              },
+              y1: {
+                type: 'linear', display: true, position: 'right',
+                ticks: { color: '#e67e22', font: { size: 9 }, callback: v => v + '%' },
+                grid: { drawOnChartArea: false }, min: 0, max: 100
+              }
             }
           }
-        }
-      });
+        });
+      }
     }
 
-    // ==========================================
-    // RENDER DASHBOARD 3 (DINAMIS MENGIKUTI realCount)
-    // ==========================================
     function renderDashboard3() {
       const activeMonthsCount = realCount; 
       const subMonths = monthsShortList.slice(0, activeMonthsCount);
@@ -1055,71 +1047,83 @@
       const cumulPlanGpm = cumulPlanRev > 0 ? (cumulPlanGp / cumulPlanRev * 100) : 0;
       document.getElementById('d3-cumul-gpm-plan').textContent = cumulPlanGpm.toFixed(2).replace('.', ',') + '%';
 
-      // 1. Pendapatan Usaha Chart
-      new Chart(document.getElementById('d3ChartRev').getContext('2d'), {
-        data: {
-          labels: subMonths,
-          datasets: [
-            { type: 'bar', label: 'Rencana', data: planRevSub, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
-            { type: 'bar', label: 'Realisasi', data: actRevSub, backgroundColor: '#0b63ce', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#0b63ce', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } }
-        }
-      });
+      // 1. Pendapatan Usaha Chart D3
+      const elD3Rev = document.getElementById('d3ChartRev');
+      if (elD3Rev) {
+        new Chart(elD3Rev.getContext('2d'), {
+          data: {
+            labels: subMonths,
+            datasets: [
+              { type: 'bar', label: 'Rencana', data: planRevSub, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
+              { type: 'bar', label: 'Realisasi', data: actRevSub, backgroundColor: '#0b63ce', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#0b63ce', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } }
+          }
+        });
+      }
 
-      // 2. Beban Pokok Chart
-      new Chart(document.getElementById('d3ChartBpp').getContext('2d'), {
-        data: {
-          labels: subMonths,
-          datasets: [
-            { type: 'bar', label: 'Rencana', data: planBppSub, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
-            { type: 'bar', label: 'Realisasi', data: actBppSub, backgroundColor: '#008767', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#008767', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } }
-        }
-      });
+      // 2. Beban Pokok Chart D3
+      const elD3Bpp = document.getElementById('d3ChartBpp');
+      if (elD3Bpp) {
+        new Chart(elD3Bpp.getContext('2d'), {
+          data: {
+            labels: subMonths,
+            datasets: [
+              { type: 'bar', label: 'Rencana', data: planBppSub, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
+              { type: 'bar', label: 'Realisasi', data: actBppSub, backgroundColor: '#008767', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#008767', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } }
+          }
+        });
+      }
 
-      // 3. Gross Profit Chart
-      new Chart(document.getElementById('d3ChartGp').getContext('2d'), {
-        data: {
-          labels: subMonths,
-          datasets: [
-            { type: 'bar', label: 'Rencana', data: planGpSub, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
-            { type: 'bar', label: 'Realisasi', data: actGpSub, backgroundColor: '#7c3aed', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#7c3aed', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } }
-        }
-      });
+      // 3. Gross Profit Chart D3
+      const elD3Gp = document.getElementById('d3ChartGp');
+      if (elD3Gp) {
+        new Chart(elD3Gp.getContext('2d'), {
+          data: {
+            labels: subMonths,
+            datasets: [
+              { type: 'bar', label: 'Rencana', data: planGpSub, backgroundColor: '#cbd5e1', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#475569', font: { size: 8, weight: 'bold' }, formatter: v => v } },
+              { type: 'bar', label: 'Realisasi', data: actGpSub, backgroundColor: '#7c3aed', barPercentage: 0.6, borderRadius: 2, datalabels: { align: 'top', anchor: 'end', color: '#7c3aed', font: { size: 8.5, weight: 'bold' }, formatter: v => v } }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } }
+          }
+        });
+      }
 
-      // 4. Gross Profit Margin Chart
-      const targetLine = subMonths.map(() => planGpmFull);
-      new Chart(document.getElementById('d3ChartGpm').getContext('2d'), {
-        data: {
-          labels: subMonths,
-          datasets: [
-            { type: 'line', label: 'Target FY', data: targetLine, borderColor: '#e67e22', borderDash: [4,4], borderWidth: 1.5, pointRadius: 0, datalabels: { display: false } },
-            { type: 'line', label: 'Rencana', data: planGpmSub, borderColor: '#e67e22', backgroundColor: '#e67e22', borderWidth: 2, pointRadius: 4, datalabels: { align: 'top', anchor: 'end', color: '#e67e22', font: { size: 8, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' } },
-            { type: 'line', label: 'Realisasi', data: actGpmSub, borderColor: '#1e293b', backgroundColor: '#1e293b', borderWidth: 2, pointRadius: 4, datalabels: { align: 'bottom', anchor: 'start', color: '#1e293b', font: { size: 8, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' } }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, max: 100, ticks: { font: { size: 9 }, callback: v => v + '%' } } }
-        }
-      });
+      // 4. Gross Profit Margin Chart D3
+      const elD3Gpm = document.getElementById('d3ChartGpm');
+      if (elD3Gpm) {
+        const targetLine = subMonths.map(() => planGpmFull);
+        new Chart(elD3Gpm.getContext('2d'), {
+          data: {
+            labels: subMonths,
+            datasets: [
+              { type: 'line', label: 'Target FY', data: targetLine, borderColor: '#e67e22', borderDash: [4,4], borderWidth: 1.5, pointRadius: 0, datalabels: { display: false } },
+              { type: 'line', label: 'Rencana', data: planGpmSub, borderColor: '#e67e22', backgroundColor: '#e67e22', borderWidth: 2, pointRadius: 4, datalabels: { align: 'top', anchor: 'end', color: '#e67e22', font: { size: 8, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' } },
+              { type: 'line', label: 'Realisasi', data: actGpmSub, borderColor: '#1e293b', backgroundColor: '#1e293b', borderWidth: 2, pointRadius: 4, datalabels: { align: 'bottom', anchor: 'start', color: '#1e293b', font: { size: 8, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' } }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, max: 100, ticks: { font: { size: 9 }, callback: v => v + '%' } } }
+          }
+        });
+      }
     }
 
     renderDarkCharts();
