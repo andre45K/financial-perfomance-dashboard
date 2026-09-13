@@ -101,27 +101,27 @@
     .d2-map-legend { display: flex; align-items: center; gap: 10px; font-size: 9.5px; color: #334155; font-weight: 700; }
     .d2-map-legend span { display: flex; align-items: center; gap: 3px; }
     
-    /* PETA INDONESIA BERDASARKAN GAMBAR REFERENSI */
+    /* PETA INDONESIA MENYERUPAI GAMBAR REFERENSI */
     .d2-map-canvas { 
       width: 100%; 
       height: 395px;
       background-color: #3b5247;
       border-radius: 6px;
       position: relative;
-      background-image: url("https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1000&auto=format&fit=crop"), url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/7QBAUGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAACQcAgAAAgAEHAJuABhhdGF1cjAwMDI5MzYyMjkvVmVjdGVlenn/4Q5uaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49J++7vycgaWQ9J1c1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCc/Pgo8eDp4bXBtZXRh xmlns:x='adobe:ns:meta/' x:xmptk='Image::ExifTool 12.76'>\n <rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'>\n  <rdf:Description rdf:about=''\n   xmlns:dc='http://purl.org/dc/elements/1.1/'>\n   <dc:creator>\n    <rdf:Seq>\n     <rdf:li>ataur0002936229</rdf:li>\n    </rdf:Seq>\n   </dc:creator>\n   <dc:rights>\n    <rdf:Alt>\n     <rdf:li xml:lang='x-default'>ataur0002936229/Vecteezy</rdf:li>\n    </rdf:Alt>\n   </dc:rights>\n  </rdf:Description>\n  <rdf:Description rdf:about=''\n   xmlns:plus='http://ns.useplus.org/ldf/xmp/1.0/'>\n   <plus:Licensor>\n    <rdf:Seq>\n     <rdf:li rdf:parseType='Resource'>\n      <plus:LicensorURL>https://www.vecteezy.com/-/49317295-indonesia-watercolor-map-of-green-color-with-border-lines-of-different-provinces-or-divisions-on-dark-background-using-paint-brush?utm_source=iptc%26utm_medium=googleimages%26utm_campaign=image</plus:LicensorURL>\n     </rdf:li>\n    </rdf:Seq>\n   </plus:Licensor>\n  </rdf:Description>\n  <rdf:Description rdf:about=''\n   xmlns:xmpRights='http://ns.adobe.com/xap/1.0/rights/'>\n   <xmpRights:WebStatement>https://www.vecteezy.com/licensing</xmpRights:WebStatement>\n  </rdf:Description>\n </rdf:RDF>\n</xspan>");
+      background-image: url("https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1000&auto=format&fit=crop");
       background-repeat: no-repeat;
-      background-size: 85% auto;
+      background-size: 85% 85%;
       background-position: center center;
       border: 1px solid #cbd5e1;
     }
 
-    .map-label-box { position: absolute; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 5px; padding: 3px 6px; box-shadow: 0 3px 8px rgba(0,0,0,0.12); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -50%); z-index: 5; text-align: center; white-space: nowrap; }
-    .map-label-box .region-name { font-size: 9px; font-weight: 700; color: #0b2246; }
-    .map-label-box .region-val { font-size: 9.5px; font-weight: 900; color: #0b63ce; }
+    .map-label-box { position: absolute; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 5px; padding: 4px 8px; box-shadow: 0 3px 8px rgba(0,0,0,0.12); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -50%); z-index: 5; text-align: center; white-space: nowrap; }
+    .map-label-box .region-name { font-size: 9.5px; font-weight: 700; color: #0b2246; }
+    .map-label-box .region-val { font-size: 10px; font-weight: 900; color: #0b63ce; }
     
     .map-location-point { position:absolute; width:7px; height:7px; border-radius:50%; background:#ffffff; border:2px solid #0b2246; box-shadow:0 1px 4px rgba(0,0,0,.35); transform:translate(-50%,-50%); z-index:7; }
 
-    .map-badge-pin { position: absolute; width: 16px; height: 16px; border-radius: 50%; color: white; font-size: 8.5px; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 6; transform: translate(-50%, -50%); border: 1.5px solid white; }
+    .map-badge-pin { position: absolute; width: 18px; height: 18px; border-radius: 50%; color: white; font-size: 9px; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 6; transform: translate(-50%, -50%); border: 1.5px solid white; }
     .badge-rendah { background: #3b82f6; }
     .badge-sedang { background: #1d4ed8; }
     .badge-tinggi { background: #0f172a; }
@@ -181,7 +181,7 @@
     <!-- ========================================================= -->
     <div id="tab-nkb-1" class="tab-content active">
       
-      <!-- ADMIN INPUT PANEL -->
+      <!-- ADMIN INPUT PANEL BERDASARKAN TABEL EXCEL 2026 -->
       <div class="d1-table-card" style="margin-bottom: 20px; border-top: 4px solid #0b63ce; background: #f8fafc; color: #1e293b;">
         <div class="d1-table-header" style="display: flex; justify-content: space-between; align-items: center; background: #0b2246;">
           <span><i class="fa-solid fa-gear"></i> Panel Admin: Input, Edit & Perbarui Rencana Kontrak 2026</span>
@@ -189,8 +189,10 @@
         </div>
         <div id="adminFormBody" style="padding: 16px;">
           <p style="font-size: 11.5px; color: #475569; margin-bottom: 12px; font-weight: 600;">
-            Tambahkan atau ubah data kontrak proyek pada form di bawah ini.
+            Tambahkan atau ubah data kontrak proyek pada form di bawah ini. Nilai per bulan, grafik bulanan, grafik donat alat, total KPI, dan tabel rincian akan diperbarui secara otomatis.
           </p>
+          
+          <!-- FORM TAMBAH / EDIT KONTRAK -->
           <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; margin-bottom: 15px;">
             <div id="formTitleMode" style="font-size: 11px; font-weight: 800; color: #0b2246; margin-bottom: 8px; text-transform: uppercase;">Form Tambah Kontrak Baru</div>
             <input type="hidden" id="editIndex" value="-1">
@@ -240,6 +242,12 @@
               </div>
             </div>
           </div>
+
+          <!-- TABEL DAFTAR KONTRAK AKTIF -->
+          <div style="font-size: 11px; font-weight: 800; color: #0b2246; margin-bottom: 6px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center;">
+            <span>Daftar Master Kontrak 2026 (<span id="totalContractCount">14</span> Kontrak)</span>
+            <span style="font-size: 10px; font-weight: normal; color: #64748b;">Klik ikon edit untuk memperbarui atau ikon hapus untuk menghapus</span>
+          </div>
           <div style="max-height: 180px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
             <table class="data-table" id="adminContractsTable">
               <thead>
@@ -270,6 +278,7 @@
             <div class="d1-kpi-sub">Rupiah</div>
           </div>
         </div>
+
         <div class="d1-kpi-card">
           <div class="d1-kpi-header">
             <div class="d1-kpi-icon" style="background: #7c3aed;"><i class="fa-solid fa-chart-line"></i></div>
@@ -280,6 +289,7 @@
             <div class="d1-kpi-sub">Rupiah</div>
           </div>
         </div>
+
         <div class="d1-kpi-card">
           <div class="d1-kpi-header">
             <div class="d1-kpi-icon" style="background: #d97706;"><i class="fa-solid fa-arrow-trend-up"></i></div>
@@ -290,6 +300,7 @@
             <div class="d1-kpi-sub">3.893.000.000 Rupiah</div>
           </div>
         </div>
+
         <div class="d1-kpi-card">
           <div class="d1-kpi-header">
             <div class="d1-kpi-icon" style="background: #008767;"><i class="fa-solid fa-screwdriver-wrench"></i></div>
@@ -304,12 +315,15 @@
 
       <!-- 2 CHARTS GRID -->
       <div class="d1-charts-grid">
+        <!-- Chart 1: Per Bulan -->
         <div class="d1-chart-card">
           <div class="d1-chart-title">RENCANA NILAI KONTRAK BARU PER BULAN</div>
           <div class="d1-chart-container">
             <canvas id="chartMonthly"></canvas>
           </div>
         </div>
+
+        <!-- Chart 2: Per Jenis Alat (Donut) -->
         <div class="d1-chart-card">
           <div class="d1-chart-title">RENCANA NILAI KONTRAK BARU PER JENIS ALAT</div>
           <div class="d1-chart-container">
@@ -359,6 +373,7 @@
             </tfoot>
           </table>
         </div>
+
         <div class="d1-table-card">
           <div class="d1-table-header">RINCIAN RENCANA NILAI KONTRAK BARU PER JENIS ALAT</div>
           <table class="data-table">
@@ -366,11 +381,26 @@
               <tr><th>Jenis Alat</th><th class="text-right">Nilai Kontrak Baru (Rupiah)</th><th class="text-center" style="width: 120px;">% Kontribusi</th></tr>
             </thead>
             <tbody>
-              <tr><td class="font-bold">Truck Mixer</td><td class="text-right">8.165.200.000</td><td><div class="progress-cell"><span class="font-bold" style="font-size: 10px;">62.07%</span><div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 62.07%; background: #0b63ce;"></div></div></div></td></tr>
-              <tr><td class="font-bold">Truck Trailer</td><td class="text-right">2.766.000.000</td><td><div class="progress-cell"><span class="font-bold" style="font-size: 10px;">21.03%</span><div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 21.03%; background: #0b2265;"></div></div></div></td></tr>
-              <tr><td class="font-bold">Stone Crusher</td><td class="text-right">1.140.000.000</td><td><div class="progress-cell"><span class="font-bold" style="font-size: 10px;">8.67%</span><div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 8.67%; background: #e65c00;"></div></div></div></td></tr>
-              <tr><td class="font-bold">Batching Plant</td><td class="text-right">994.000.000</td><td><div class="progress-cell"><span class="font-bold" style="font-size: 10px;">7.56%</span><div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 7.56%; background: #5c165c;"></div></div></div></td></tr>
-              <tr><td class="font-bold">Silo</td><td class="text-right">90.000.000</td><td><div class="progress-cell"><span class="font-bold" style="font-size: 10px;">0.68%</span><div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 0.68%; background: #d4a017;"></div></div></div></td></tr>
+              <tr>
+                <td class="font-bold">Truck Mixer</td><td class="text-right">8.165.200.000</td>
+                <td><div class="progress-cell"><span class="font-bold" style="font-size: 10px;">62.07%</span><div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 62.07%; background: #0b63ce;"></div></div></div></td>
+              </tr>
+              <tr>
+                <td class="font-bold">Truck Trailer</td><td class="text-right">2.766.000.000</td>
+                <td><div class="progress-cell"><span class="font-bold" style="font-size: 10px;">21.03%</span><div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 21.03%; background: #0b2265;"></div></div></div></td>
+              </tr>
+              <tr>
+                <td class="font-bold">Stone Crusher</td><td class="text-right">1.140.000.000</td>
+                <td><div class="progress-cell"><span class="font-bold" style="font-size: 10px;">8.67%</span><div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 8.67%; background: #e65c00;"></div></div></div></td>
+              </tr>
+              <tr>
+                <td class="font-bold">Batching Plant</td><td class="text-right">994.000.000</td>
+                <td><div class="progress-cell"><span class="font-bold" style="font-size: 10px;">7.56%</span><div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 7.56%; background: #5c165c;"></div></div></div></td>
+              </tr>
+              <tr>
+                <td class="font-bold">Silo</td><td class="text-right">90.000.000</td>
+                <td><div class="progress-cell"><span class="font-bold" style="font-size: 10px;">0.68%</span><div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 0.68%; background: #d4a017;"></div></div></div></td>
+              </tr>
             </tbody>
             <tfoot>
               <tr class="table-total-row">
@@ -386,7 +416,7 @@
     <!-- ========================================================= -->
     <!-- TAB 2: DASHBOARD NILAI KONTRAK BARU (S.D AGUSTUS 2026)    -->
     <!-- ========================================================= -->
-    <div id="tab-nkb-2" class="tab-content active">
+    <div id="tab-nkb-2" class="tab-content">
       <div class="d2-container">
         
         <!-- ADMIN INPUT PANEL UNTUK DASHBOARD 2 -->
@@ -397,7 +427,7 @@
           </div>
           <div id="adminFormBodyD2" style="padding: 16px;">
             <p style="font-size: 11.5px; color: #475569; margin-bottom: 12px; font-weight: 600;">
-              Tambahkan, edit, atau hapus data kontrak pada tabel master di bawah ini dengan menyertakan Nomor SPSA dan Bulan Kontrak.
+              Tambahkan, edit, atau hapus data kontrak pada tabel master di bawah ini dengan menyertakan Nomor SPSA dan Bulan Kontrak. Peta Indonesia akan diperbarui secara otomatis berdasarkan Provinsi yang dipilih.
             </p>
             
             <!-- FORM TAMBAH / EDIT KONTRAK D2 -->
@@ -478,7 +508,7 @@
             <!-- TABEL MASTER DATA D2 -->
             <div style="font-size: 11px; font-weight: 800; color: #0b2246; margin-bottom: 6px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center;">
               <span>Daftar Master Data Kontrak Baru s.d Agustus 2026 (<span id="totalD2Count">16</span> Item)</span>
-              <span style="font-size: 10px; font-weight: normal; color: #64748b;">Termasuk kolom No. SPSA & Bulan</span>
+              <span style="font-size: 10px; font-weight: normal; color: #64748b;">Update otomatis ke Peta Indonesia</span>
             </div>
             <div style="max-height: 200px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
               <table class="data-table" id="adminD2Table">
@@ -550,9 +580,9 @@
               </div>
             </div>
             <div style="text-align: right;">
-              <div style="font-size: 9px; font-weight: 700; color: #64748b;">TARGET NILAI KONTRAK</div>
+              <div style="font-size: 9px; font-weight: 700; color: #64748b;">TOTAL TARGET</div>
               <div style="font-size: 12.5px; font-weight: 900; color: #008767;">Rp 13.155.200.000</div>
-              <div style="font-size: 9px; font-weight: 700; color: #64748b; margin-top: 2px;">TOTAL NILAI KONTRAK</div>
+              <div style="font-size: 9px; font-weight: 700; color: #64748b; margin-top: 2px;">TOTAL NILAI KONTRAK BARU</div>
               <div id="d2MetricSubTotal" style="font-size: 12.5px; font-weight: 900; color: #0b63ce;">Rp 8.416.583.326</div>
             </div>
           </div>
@@ -561,7 +591,7 @@
         <!-- D2 MIDDLE SECTION: PROFESSIONAL MAP & TABLE -->
         <div class="d2-middle-grid">
           
-          <!-- PROFESSIONAL MAP CARD DENGAN PETA INDONESIA YANG PAS DAN RAPI -->
+          <!-- PROFESSIONAL MAP CARD DENGAN PETA INDONESIA & PIN DINAMIS -->
           <div class="d2-map-card">
             <div class="d2-map-header-row">
               <div class="d2-map-title">SEBARAN NILAI KONTRAK BARU BERDASARKAN PROVINSI</div>
@@ -573,7 +603,7 @@
               </div>
             </div>
 
-            <!-- MAP CANVAS -->
+            <!-- MAP CANVAS WHERE PINS/LABELS ARE RENDERED DYNAMICALLY -->
             <div class="d2-map-canvas" id="d2MapCanvasContainer"></div>
 
             <!-- RINGKASAN SEBARAN BOX -->
@@ -763,7 +793,11 @@
           maintainAspectRatio: false,
           circumference: 180,
           rotation: 270,
-          plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: { display: false } },
+          plugins: {
+            legend: { display: false },
+            tooltip: { enabled: false },
+            datalabels: { display: false }
+          },
           cutout: '75%'
         }
       });
@@ -1031,25 +1065,46 @@
       "Sulawesi Utara", "Sumatera Barat", "Sumatera Selatan", "Sumatera Utara"
     ];
 
-    // Koordinat yang disesuaikan persis agar titik-titik pin jatuh di atas peta Indonesia pada canvas
+    // Koordinat geografis persis mengikuti layout peta Indonesia pada gambar referensi
     const provinceMapCoords = {
-      'Aceh': { top: '33%', left: '17%', labelTop: '25%', labelLeft: '17%' },
-      'Sumatera Utara': { top: '39%', left: '21%', labelTop: '32%', labelLeft: '21%' },
-      'Sumatera Barat': { top: '48%', left: '25%', labelTop: '41%', labelLeft: '25%' },
-      'Sumatera Selatan': { top: '56%', left: '31%', labelTop: '48%', labelLeft: '31%' },
-      'Lampung': { top: '61%', left: '35%', labelTop: '69%', labelLeft: '35%' },
-      'Kepulauan Bangka Belitung': { top: '52%', left: '35%', labelTop: '45%', labelLeft: '35%' },
-      'DKI Jakarta': { top: '63%', left: '39.5%', labelTop: '55%', labelLeft: '39.5%' },
-      'Banten': { top: '62%', left: '37.5%', labelTop: '54%', labelLeft: '37.5%' },
-      'Jawa Barat': { top: '65%', left: '42.5%', labelTop: '73%', labelLeft: '42.5%' },
-      'Jawa Tengah': { top: '65%', left: '47%', labelTop: '73%', labelLeft: '47%' },
-      'DI Yogyakarta': { top: '67%', left: '49.5%', labelTop: '75%', labelLeft: '49.5%' },
-      'Jawa Timur': { top: '64%', left: '55%', labelTop: '56%', labelLeft: '55%' },
-      'Bali': { top: '68%', left: '61%', labelTop: '76%', labelLeft: '61%' },
-      'Kalimantan Timur': { top: '43%', left: '60%', labelTop: '36%', labelLeft: '60%' },
-      'Kalimantan Selatan': { top: '54%', left: '58%', labelTop: '62%', labelLeft: '58%' },
-      'Sulawesi Selatan': { top: '57%', left: '67%', labelTop: '65%', labelLeft: '67%' },
-      'Papua': { top: '56%', left: '88%', labelTop: '48%', labelLeft: '88%' }
+      'Aceh': { top: '35%', left: '16%', labelTop: '25%', labelLeft: '16%' },
+      'Sumatera Utara': { top: '42%', left: '20%', labelTop: '32%', labelLeft: '20%' },
+      'Sumatera Barat': { top: '50%', left: '23%', labelTop: '62%', labelLeft: '22%' },
+      'Riau': { top: '48%', left: '27%', labelTop: '40%', labelLeft: '27%' },
+      'Jambi': { top: '54%', left: '27%', labelTop: '58%', labelLeft: '27%' },
+      'Sumatera Selatan': { top: '58%', left: '30%', labelTop: '50%', labelLeft: '28%' },
+      'Bengkulu': { top: '61%', left: '25%', labelTop: '68%', labelLeft: '25%' },
+      'Lampung': { top: '63%', left: '32%', labelTop: '73%', labelLeft: '28%' },
+      'Kepulauan Bangka Belitung': { top: '54%', left: '33%', labelTop: '45%', labelLeft: '33%' },
+      'Kepulauan Riau': { top: '38%', left: '35%', labelTop: '28%', labelLeft: '35%' },
+      'DKI Jakarta': { top: '66%', left: '39%', labelTop: '58%', labelLeft: '40%' },
+      'Banten': { top: '64%', left: '35%', labelTop: '56%', labelLeft: '33%' },
+      'Jawa Barat': { top: '67%', left: '43%', labelTop: '73%', labelLeft: '43%' },
+      'DI Yogyakarta': { top: '70%', left: '50%', labelTop: '75%', labelLeft: '50%' },
+      'Jawa Tengah': { top: '68%', left: '47%', labelTop: '73%', labelLeft: '48%' },
+      'Jawa Timur': { top: '67%', left: '57%', labelTop: '58%', labelLeft: '57%' },
+      'Bali': { top: '72%', left: '63%', labelTop: '78%', labelLeft: '63%' },
+      'Nusa Tenggara Barat': { top: '73%', left: '68%', labelTop: '79%', labelLeft: '68%' },
+      'Nusa Tenggara Timur': { top: '76%', left: '77%', labelTop: '82%', labelLeft: '77%' },
+      'Kalimantan Barat': { top: '45%', left: '50%', labelTop: '36%', labelLeft: '50%' },
+      'Kalimantan Tengah': { top: '50%', left: '54%', labelTop: '42%', labelLeft: '54%' },
+      'Kalimantan Selatan': { top: '57%', left: '59%', labelTop: '49%', labelLeft: '59%' },
+      'Kalimantan Timur': { top: '44%', left: '61%', labelTop: '35%', labelLeft: '61%' },
+      'Kalimantan Utara': { top: '35%', left: '60%', labelTop: '26%', labelLeft: '60%' },
+      'Sulawesi Utara': { top: '35%', left: '71%', labelTop: '26%', labelLeft: '71%' },
+      'Gorontalo': { top: '40%', left: '68%', labelTop: '31%', labelLeft: '68%' },
+      'Sulawesi Tengah': { top: '47%', left: '68%', labelTop: '38%', labelLeft: '68%' },
+      'Sulawesi Barat': { top: '54%', left: '66%', labelTop: '45%', labelLeft: '66%' },
+      'Sulawesi Selatan': { top: '60%', left: '69%', labelTop: '67%', labelLeft: '69%' },
+      'Sulawesi Tenggara': { top: '56%', left: '74%', labelTop: '47%', labelLeft: '74%' },
+      'Maluku': { top: '55%', left: '83%', labelTop: '46%', labelLeft: '83%' },
+      'Maluku Utara': { top: '42%', left: '83%', labelTop: '33%', labelLeft: '83%' },
+      'Papua': { top: '58%', left: '92%', labelTop: '49%', labelLeft: '92%' },
+      'Papua Barat': { top: '47%', left: '88%', labelTop: '38%', labelLeft: '88%' },
+      'Papua Tengah': { top: '57%', left: '90%', labelTop: '65%', labelLeft: '90%' },
+      'Papua Pegunungan': { top: '60%', left: '94%', labelTop: '68%', labelLeft: '94%' },
+      'Papua Selatan': { top: '66%', left: '93%', labelTop: '74%', labelLeft: '93%' },
+      'Papua Barat Daya': { top: '45%', left: '86%', labelTop: '36%', labelLeft: '86%' }
     };
 
     let d2MasterData = [
@@ -1379,6 +1434,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       initD2Charts();
       renderAdminTable();
+      recalculationDashboard1 = recalculateDashboard1;
       recalculateDashboard1();
       renderD2AdminTable();
       recalculateDashboard2();
