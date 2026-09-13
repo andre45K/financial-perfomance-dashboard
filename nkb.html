@@ -91,7 +91,7 @@
     .d2-m-val { font-size: 15px; font-weight: 900; color: #0b2246; margin-top: 2px; }
     
     /* D2 TARGET BOX PERSIS SEPERTI GAMBAR */
-    .d2-target-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; display: grid; grid-template-columns: 140px 1fr; align-items: center; gap: 10px; }
+    .d2-target-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 10px; }
 
     /* D2 MIDDLE SECTION */
     .d2-middle-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 15px; margin-bottom: 15px; }
@@ -102,23 +102,23 @@
     .d2-map-legend { display: flex; align-items: center; gap: 10px; font-size: 9.5px; color: #334155; font-weight: 700; }
     .d2-map-legend span { display: flex; align-items: center; gap: 3px; }
     
+    /* PETA INDONESIA AKURAT PERSIS GAMBAR REFERENSI */
     .d2-map-canvas { 
       width: 100%; 
       height: 395px;
       background-color: #3b5247;
       border-radius: 6px;
       position: relative;
-      background-image: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/7QBAUGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAACQcAgAAAgAEHAJuABhhdGF1cjAwMDI5MzYyMjkvVmVjdGVlenn/4Q5uaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49J++7vycgaWQ9J1c1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCc/Pgo8eDp4bXBtZXRh xmlns:x='adobe:ns:meta/' x:xmptk='Image::ExifTool 12.76'>\n <rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'>\n  <rdf:Description rdf:about=''\n   xmlns:dc='http://purl.org/dc/elements/1.1/'>\n   <dc:creator>\n    <rdf:Seq>\n     <rdf:li>ataur0002936229</rdf:li>\n    </rdf:Seq>\n   </dc:creator>\n   <dc:rights>\n    <rdf:Alt>\n     <rdf:li xml:lang='x-default'>ataur0002936229/Vecteezy</rdf:li>\n    </rdf:Alt>\n   </dc:rights>\n  </rdf:Description>\n  <rdf:Description rdf:about=''\n   xmlns:plus='http://ns.useplus.org/ldf/xmp/1.0/'>\n   <plus:Licensor>\n    <rdf:Seq>\n     <rdf:li rdf:parseType='Resource'>\n      <plus:LicensorURL>https://www.vecteezy.com/-/49317295-indonesia-watercolor-map-of-green-color-with-border-lines-of-different-provinces-or-divisions-on-dark-background-using-paint-brush?utm_source=iptc%26utm_medium=googleimages%26utm_campaign=image</plus:LicensorURL>\n     </rdf:li>\n    </rdf:Seq>\n   </plus:Licensor>\n  </rdf:Description>\n  <rdf:Description rdf:about=''\n   xmlns:xmpRights='http://ns.adobe.com/xap/1.0/rights/'>\n   <xmpRights:WebStatement>https://www.vecteezy.com/licensing</xmpRights:WebStatement>\n  </rdf:Description>\n </rdf:RDF>\n</xspan>");
+      background-image: url('download.jpg');
       background-repeat: no-repeat;
-      background-size: contain;
-      background-position: center center;
-      background-color: #3b5247;
+      background-size: 92% 92%;
+      background-position: center 52%;
       border: 1px solid #cbd5e1;
     }
 
-    .map-label-box { position: absolute; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 5px; padding: 4px 8px; box-shadow: 0 3px 8px rgba(0,0,0,0.12); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -50%); z-index: 5; text-align: center; white-space: nowrap; }
-    .map-label-box .region-name { font-size: 9.5px; font-weight: 700; color: #0b2246; }
-    .map-label-box .region-val { font-size: 10px; font-weight: 900; color: #0b63ce; }
+    .map-label-box { position: absolute; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 5px; padding: 3px 6px; box-shadow: 0 3px 8px rgba(0,0,0,0.12); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); z-index: 5; text-align: center; white-space: nowrap; margin-top: -12px; }
+    .map-label-box .region-name { font-size: 9px; font-weight: 700; color: #0b2246; }
+    .map-label-box .region-val { font-size: 9.5px; font-weight: 900; color: #0b63ce; }
     
     .map-location-point { position:absolute; width:7px; height:7px; border-radius:50%; background:#ffffff; border:2px solid #0b2246; box-shadow:0 1px 4px rgba(0,0,0,.35); transform:translate(-50%,-50%); z-index:7; }
 
@@ -556,7 +556,7 @@
             <div class="d2-m-icon" style="background: #0b63ce;"><i class="fa-solid fa-cubes"></i></div>
             <div>
               <div class="d2-m-label">TOTAL NILAI KONTRAK BARU</div>
-              <div class="d2-m-val" id="d2MetricTotalNilai">Rp 9.497.916.659</div>
+              <div class="d2-m-val" id="d2MetricTotalNilai">Rp 8.416.583.326</div>
             </div>
           </div>
 
@@ -564,7 +564,7 @@
             <div class="d2-m-icon" style="background: #008767;"><i class="fa-solid fa-file-pen"></i></div>
             <div>
               <div class="d2-m-label">JUMLAH KONTRAK BARU</div>
-              <div class="d2-m-val"><span id="d2MetricTotalKontrak">48</span> <span style="font-size: 11px; font-weight: normal; color: #64748b;">Kontrak</span></div>
+              <div class="d2-m-val"><span id="d2MetricTotalKontrak">23</span> <span style="font-size: 11px; font-weight: normal; color: #64748b;">Kontrak</span></div>
             </div>
           </div>
 
@@ -578,17 +578,17 @@
 
           <!-- TARGET BOX PERSIS SEPERTI GAMBAR 2 (DENGAN GAUGE/DONUT PENCAPAIAN) -->
           <div class="d2-target-box">
-            <div style="position: relative; width: 110px; height: 55px; display: flex; align-items: center; justify-content: center;">
-              <canvas id="chartD2TargetGauge" style="position: absolute; top: 0; left: 0; width: 110px; height: 55px;"></canvas>
-              <div style="position: absolute; bottom: 2px; text-align: center; width: 100%;">
-                <span id="d2MetricPencapaian" style="font-size: 12px; font-weight: 900; color: #0b2246;">63,98%</span>
+            <div style="position: relative; width: 100px; height: 50px; display: flex; align-items: center; justify-content: center;">
+              <canvas id="chartD2TargetGauge" style="position: absolute; top: 0; left: 0; width: 100px; height: 50px;"></canvas>
+              <div style="position: absolute; bottom: 0px; text-align: center; width: 100%;">
+                <span id="d2MetricPencapaian" style="font-size: 11.5px; font-weight: 900; color: #0b2246;">63,98%</span>
               </div>
             </div>
             <div style="text-align: right;">
-              <div style="font-size: 9px; font-weight: 700; color: #64748b;">TOTAL TARGET</div>
-              <div style="font-size: 12.5px; font-weight: 900; color: #008767;">Rp 13.155.200.000</div>
-              <div style="font-size: 9px; font-weight: 700; color: #64748b; margin-top: 2px;">TOTAL NILAI KONTRAK BARU</div>
-              <div id="d2MetricSubTotal" style="font-size: 12.5px; font-weight: 900; color: #0b63ce;">Rp 8.416.583.326</div>
+              <div style="font-size: 8.5px; font-weight: 700; color: #64748b;">TARGET NILAI KONTRAK</div>
+              <div style="font-size: 12px; font-weight: 900; color: #0b2246;">Rp 13.155.200.000</div>
+              <div style="font-size: 8.5px; font-weight: 700; color: #64748b; margin-top: 2px;">TOTAL NILAI KONTRAK</div>
+              <div id="d2MetricSubTotal" style="font-size: 12px; font-weight: 900; color: #0b63ce;">Rp 8.416.583.326</div>
             </div>
           </div>
         </div>
@@ -596,7 +596,7 @@
         <!-- D2 MIDDLE SECTION: PROFESSIONAL MAP & TABLE -->
         <div class="d2-middle-grid">
           
-          <!-- PROFESSIONAL MAP CARD WITH DYNAMIC PROVINCE PINS -->
+          <!-- PROFESSIONAL MAP CARD DENGAN TITIK AKURAT PERSIS GAMBAR REFERENSI -->
           <div class="d2-map-card">
             <div class="d2-map-header-row">
               <div class="d2-map-title">SEBARAN NILAI KONTRAK BARU BERDASARKAN PROVINSI</div>
@@ -608,14 +608,14 @@
               </div>
             </div>
 
-            <!-- MAP CANVAS WHERE PINS/LABELS ARE RENDERED DYNAMICALLY -->
+            <!-- MAP CANVAS DENGAN KOORDINAT TITIK YANG SANGAT PRESISI -->
             <div class="d2-map-canvas" id="d2MapCanvasContainer"></div>
 
             <!-- RINGKASAN SEBARAN BOX -->
             <div class="d2-summary-box">
               <div class="d2-summary-box-title">Ringkasan Sebaran</div>
-              <div class="d2-summary-row"><span>Total Unit</span> <span id="summaryTotalUnit">57</span></div>
-              <div class="d2-summary-row"><span>Total Kontrak</span> <span id="summaryTotalKontrak">48</span></div>
+              <div class="d2-summary-row"><span>Total Unit</span> <span id="summaryTotalUnit">38</span></div>
+              <div class="d2-summary-row"><span>Total Kontrak</span> <span id="summaryTotalKontrak">23</span></div>
               <div class="d2-summary-row"><span>Total Customer</span> <span id="summaryTotalCust">12</span></div>
               <div class="d2-summary-row"><span>Total Nilai Kontrak</span> <span id="summaryTotalNilai" style="color: #0b63ce;">Rp 8.416.583.326</span></div>
             </div>
@@ -783,7 +783,7 @@
     const chartColorsPalette = ['#0b63ce', '#008767', '#d97706', '#5c165c', '#e65c00', '#7c3aed', '#10b981', '#f59e0b', '#3b82f6', '#1d4ed8', '#0b2246', '#64748b'];
 
     function initD2Charts() {
-      // Gauge chart untuk target persis seperti gambar 2
+      // Gauge chart untuk target pencapaian persis seperti gambar
       const ctxGauge = document.getElementById('chartD2TargetGauge').getContext('2d');
       chartD2TargetGaugeObj = new Chart(ctxGauge, {
         type: 'doughnut',
@@ -1071,45 +1071,46 @@
       "Sulawesi Utara", "Sumatera Barat", "Sumatera Selatan", "Sumatera Utara"
     ];
 
+    // KOORDINAT TITIK PETA DIKERJAKAN PRESISI PERSIS SEPERTI GAMBAR REFERENSI C7DA70.PNG
     const provinceMapCoords = {
-      'Aceh': { top: '31%', left: '14.5%', labelTop: '23%', labelLeft: '14%' },
-      'Sumatera Utara': { top: '38%', left: '18%', labelTop: '32%', labelLeft: '17%' },
-      'Sumatera Barat': { top: '46%', left: '22%', labelTop: '40%', labelLeft: '21%' },
-      'Riau': { top: '44%', left: '26%', labelTop: '38%', labelLeft: '25%' },
-      'Jambi': { top: '50%', left: '26%', labelTop: '46%', labelLeft: '25%' },
-      'Sumatera Selatan': { top: '55%', left: '27.5%', labelTop: '49%', labelLeft: '22%' },
-      'Bengkulu': { top: '57%', left: '24%', labelTop: '52%', labelLeft: '23%' },
-      'Lampung': { top: '58%', left: '29.5%', labelTop: '62%', labelLeft: '20%' },
-      'Kepulauan Bangka Belitung': { top: '50%', left: '32%', labelTop: '44%', labelLeft: '32%' },
-      'Kepulauan Riau': { top: '36%', left: '33%', labelTop: '30%', labelLeft: '33%' },
-      'DKI Jakarta': { top: '61.5%', left: '35.5%', labelTop: '55%', labelLeft: '40%' },
-      'Banten': { top: '60%', left: '31%', labelTop: '54%', labelLeft: '35%' },
-      'Jawa Barat': { top: '63.5%', left: '38.5%', labelTop: '70%', labelLeft: '43%' },
-      'DI Yogyakarta': { top: '65%', left: '46%', labelTop: '71%', labelLeft: '46%' },
-      'Jawa Tengah': { top: '63%', left: '43%', labelTop: '70%', labelLeft: '48%' },
-      'Jawa Timur': { top: '62%', left: '52%', labelTop: '55%', labelLeft: '57%' },
-      'Bali': { top: '66%', left: '60%', labelTop: '72%', labelLeft: '60%' },
-      'Nusa Tenggara Barat': { top: '67%', left: '65%', labelTop: '73%', labelLeft: '65%' },
-      'Nusa Tenggara Timur': { top: '70%', left: '74%', labelTop: '76%', labelLeft: '74%' },
-      'Kalimantan Barat': { top: '45%', left: '47%', labelTop: '39%', labelLeft: '46%' },
-      'Kalimantan Tengah': { top: '48%', left: '52%', labelTop: '42%', labelLeft: '52%' },
-      'Kalimantan Selatan': { top: '53%', left: '56%', labelTop: '48%', labelLeft: '56%' },
-      'Kalimantan Timur': { top: '42%', left: '57%', labelTop: '37%', labelLeft: '57%' },
-      'Kalimantan Utara': { top: '34%', left: '57%', labelTop: '28%', labelLeft: '57%' },
-      'Sulawesi Utara': { top: '35%', left: '68%', labelTop: '29%', labelLeft: '68%' },
-      'Gorontalo': { top: '39%', left: '65%', labelTop: '33%', labelLeft: '65%' },
-      'Sulawesi Tengah': { top: '45%', left: '64%', labelTop: '39%', labelLeft: '64%' },
-      'Sulawesi Barat': { top: '51%', left: '62%', labelTop: '46%', labelLeft: '62%' },
-      'Sulawesi Selatan': { top: '56%', left: '64%', labelTop: '62%', labelLeft: '64%' },
-      'Sulawesi Tenggara': { top: '53%', left: '69%', labelTop: '47%', labelLeft: '69%' },
-      'Maluku': { top: '52%', left: '79%', labelTop: '46%', labelLeft: '79%' },
-      'Maluku Utara': { top: '40%', left: '80%', labelTop: '34%', labelLeft: '80%' },
-      'Papua': { top: '55%', left: '90%', labelTop: '49%', labelLeft: '90%' },
-      'Papua Barat': { top: '45%', left: '85%', labelTop: '39%', labelLeft: '85%' },
-      'Papua Tengah': { top: '54%', left: '88%', labelTop: '60%', labelLeft: '88%' },
-      'Papua Pegunungan': { top: '56%', left: '92%', labelTop: '62%', labelLeft: '92%' },
-      'Papua Selatan': { top: '62%', left: '91%', labelTop: '68%', labelLeft: '91%' },
-      'Papua Barat Daya': { top: '43%', left: '83%', labelTop: '37%', labelLeft: '83%' }
+      'Aceh': { top: '35%', left: '16.5%', labelTop: '27%', labelLeft: '16%' },
+      'Sumatera Utara': { top: '41%', left: '21.5%', labelTop: '33%', labelLeft: '21%' },
+      'Sumatera Barat': { top: '48%', left: '25%', labelTop: '40%', labelLeft: '24%' },
+      'Riau': { top: '47%', left: '30%', labelTop: '39%', labelLeft: '29%' },
+      'Jambi': { top: '53%', left: '31%', labelTop: '45%', labelLeft: '30%' },
+      'Sumatera Selatan': { top: '57%', left: '32.5%', labelTop: '49%', labelLeft: '28%' },
+      'Bengkulu': { top: '60%', left: '28.5%', labelTop: '52%', labelLeft: '28%' },
+      'Lampung': { top: '62%', left: '34.5%', labelTop: '70%', labelLeft: '24%' },
+      'Kepulauan Bangka Belitung': { top: '54%', left: '37.5%', labelTop: '46%', labelLeft: '37%' },
+      'Kepulauan Riau': { top: '40%', left: '39%', labelTop: '32%', labelLeft: '39%' },
+      'DKI Jakarta': { top: '65.5%', left: '42.5%', labelTop: '57%', labelLeft: '43%' },
+      'Banten': { top: '64.5%', left: '38.5%', labelTop: '56%', labelLeft: '39%' },
+      'Jawa Barat': { top: '67.5%', left: '46.5%', labelTop: '75%', labelLeft: '42%' },
+      'DI Yogyakarta': { top: '69%', left: '55%', labelTop: '76%', labelLeft: '55%' },
+      'Jawa Tengah': { top: '67%', left: '51%', labelTop: '74%', labelLeft: '50%' },
+      'Jawa Timur': { top: '66%', left: '60.5%', labelTop: '58%', labelLeft: '61%' },
+      'Bali': { top: '70.5%', left: '69.5%', labelTop: '78%', labelLeft: '70%' },
+      'Nusa Tenggara Barat': { top: '71.5%', left: '75%', labelTop: '79%', labelLeft: '75%' },
+      'Nusa Tenggara Timur': { top: '74.5%', left: '84%', labelTop: '82%', labelLeft: '84%' },
+      'Kalimantan Barat': { top: '48%', left: '55%', labelTop: '40%', labelLeft: '55%' },
+      'Kalimantan Tengah': { top: '51%', left: '61%', labelTop: '43%', labelLeft: '61%' },
+      'Kalimantan Selatan': { top: '57%', left: '65.5%', labelTop: '50%', labelLeft: '65%' },
+      'Kalimantan Timur': { top: '44%', left: '67%', labelTop: '37%', labelLeft: '64%' },
+      'Kalimantan Utara': { top: '35%', left: '67%', labelTop: '27%', labelLeft: '67%' },
+      'Sulawesi Utara': { top: '36%', left: '78%', labelTop: '28%', labelLeft: '78%' },
+      'Gorontalo': { top: '41%', left: '75%', labelTop: '33%', labelLeft: '75%' },
+      'Sulawesi Tengah': { top: '48%', left: '74%', labelTop: '40%', labelLeft: '74%' },
+      'Sulawesi Barat': { top: '55%', left: '71.5%', labelTop: '47%', labelLeft: '71%' },
+      'Sulawesi Selatan': { top: '61%', left: '73.5%', labelTop: '69%', labelLeft: '73%' },
+      'Sulawesi Tenggara': { top: '58%', left: '79.5%', labelTop: '50%', labelLeft: '79%' },
+      'Maluku': { top: '56%', left: '89%', labelTop: '48%', labelLeft: '89%' },
+      'Maluku Utara': { top: '43%', left: '90.5%', labelTop: '35%', labelLeft: '90%' },
+      'Papua': { top: '60%', left: '97%', labelTop: '52%', labelLeft: '97%' },
+      'Papua Barat': { top: '48%', left: '95%', labelTop: '40%', labelLeft: '95%' },
+      'Papua Tengah': { top: '59%', left: '96%', labelTop: '67%', labelLeft: '96%' },
+      'Papua Pegunungan': { top: '61%', left: '98%', labelTop: '69%', labelLeft: '98%' },
+      'Papua Selatan': { top: '68%', left: '97.5%', labelTop: '76%', labelLeft: '97%' },
+      'Papua Barat Daya': { top: '46%', left: '93%', labelTop: '38%', labelLeft: '93%' }
     };
 
     let d2MasterData = [
@@ -1425,7 +1426,7 @@
         else if (data.nilai >= 500000000) badgeClass = 'badge-sedang';
 
         mapHtml += `
-          <div class="map-label-box" style="top: ${coords.labelTop}; left: ${coords.labelLeft};">
+          <div class="map-label-box" style="top: ${coords.top}; left: ${coords.left};">
             <span class="region-name">${provName}</span>
             <span class="region-val">Rp ${formatRupiah(data.nilai)}</span>
           </div>
