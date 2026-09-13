@@ -45,18 +45,6 @@
     .d1-kpi-value { font-size: 20px; font-weight: 900; color: #0f4c81; line-height: 1.1; }
     .d1-kpi-sub { font-size: 10px; font-weight: 700; color: #64748b; margin-top: 3px; text-transform: uppercase; }
 
-    /* ADMIN PANEL STYLING UNTUK DASHBOARD 1 */
-    .admin-panel { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-    .admin-panel-title { font-size: 12px; font-weight: 800; color: #38bdf8; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-    .admin-inputs-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 12px; }
-    .admin-input-group { display: flex; flex-direction: column; gap: 4px; }
-    .admin-input-group label { font-size: 10px; font-weight: 700; color: #cbd5e1; }
-    .admin-input-group input { background: #1e293b; border: 1px solid #475569; color: #ffffff; padding: 6px 8px; border-radius: 4px; font-size: 11px; text-align: right; }
-    .admin-input-group input:focus { outline: none; border-color: #38bdf8; }
-    .admin-btn-row { display: flex; justify-content: flex-end; gap: 10px; }
-    .admin-save-btn { background: #0b63ce; color: #ffffff; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 11px; display: flex; align-items: center; gap: 6px; transition: background 0.2s; }
-    .admin-save-btn:hover { background: #2563eb; }
-
     .d1-charts-grid { display: grid; grid-template-columns: 1.3fr 1.2fr; gap: 15px; margin-bottom: 20px; }
     .d1-chart-card { background: #ffffff; color: #1e293b; border-radius: 8px; padding: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); display: flex; flex-direction: column; }
     .d1-chart-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: #ffffff; background: #0f4c81; padding: 8px 12px; border-radius: 4px; margin-bottom: 14px; }
@@ -107,21 +95,19 @@
     /* D2 MIDDLE SECTION */
     .d2-middle-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 15px; margin-bottom: 15px; }
     
-    /* PROFESSIONAL MAP CARD STYLING WITH EXACT GREEN WATERCOLOR BACKGROUND */
     .d2-map-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; position: relative; height: 460px; overflow: hidden; }
     .d2-map-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
     .d2-map-title { font-size: 10.5px; font-weight: 800; color: #0b2246; text-transform: uppercase; }
     .d2-map-legend { display: flex; align-items: center; gap: 10px; font-size: 9.5px; color: #334155; font-weight: 700; }
     .d2-map-legend span { display: flex; align-items: center; gap: 3px; }
     
-    /* MAP VISUAL CONTAINER WITH EMBEDDED WATERCOLOR GREEN MAP BACKGROUND */
     .d2-map-canvas { 
       width: 100%; 
       height: 395px;
       background-color: #3b5247;
       border-radius: 6px;
       position: relative;
-      background-image: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/7QBAUGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAACQcAgAAAgAEHAJuABhhdGF1cjAwMDI5MzYyMjkvVmVjdGVlenn/4Q5uaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49J++7vycgaWQ9J1c1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCc/Pgo8eDp4bXBtZXRhIHhtbG5zOng9J2Fkb2JlOm5zOm1ldGEvJyB4OnhtcHRrPSdJbWFnZTo6RXhpZlRvb2wgMTIuNzYnPgo8cmRmOlJERiB4bWxuczpyZGY9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmL-N5bnRheC1ucyMnPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6Y3JlYXRvcj4KICAgPHJkZjpTZXE+CiAgICA8cmRmOmxpPmF0YXVyMDAwMjkzNjIyOTwvcmRmOmxpPgogICA8L3JkZjpTZXE+CiAgPC9kYzpjcmVhdG9yPgogIDxkYzpyaWdodHM+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5hdGF1cjAwMDI5MzYyMjkvVmVjdGVlenk8L3JkZjpsaT4KICAgPC9yZGY6QWx0PgogIDwvZGM6cmlnaHRzPgogPC9yZGY6RGVzY3JpcHRpb24+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpwbHVzPSdodHRwOi8vbnMudXNlcGx1cy5vcmcvbGRmL3htcC8xLjAvJz4KICA8cGx1czpMaWNlbnNvcj4KICAgPHJkZjpTZXE+CiAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9J1Jlc291cmNlJz4KICAgICA8cGx1czpMaWNlbnNvclVSTD5odHRwczovL3d3dy52ZWN0ZWV6eS5jb20vLS80OTMxNzI5NS1pbmRvbmVzaWEtd2F0ZXJjb2xvci1tYXAtb2YtZ3JlZW4tY29sb3Itd2l0aC1ib3JkZXItbGluZXMtb2YtZGlmZmVyZW50LXByb3ZpbmNlcy1vci1kaXZpc2lvbnMtb24tZGFyay1iYWNrZ3JvdW5kLXVzaW5nLXBhaW50LWJydXNoP3V0bV9zb3VyY2U9aXB0YyUyNnV0bV9tZWRpdW0lM0Rnb29nbGVpbWFnZXMlMjZ1dG1fY2FtcGFpZ24lM0RpbWFnZTwvcGx1czpMaWNlbnNvclVSTD5KICAgIDwvcmRmOmxpPgogICA8L3JkZjpTZXE+CiAgPC9wbHVzOkxpY2Vuc29yPgogPC9yZGY6RGVzY3JpcHRpb24+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczp4bXBSaWdodHM9J2h0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9yaWdodHMvJz4KICA8eG1wUmlnaHRzOldlYlN0YXRlbWVudD5odHRwczovL3d3dy52ZWN0ZWV6eS5jb20vbGljZW5zaW5nPC94bXBSaWdodHM6V2ViU3RhdGVtZW50PgogPC9yZGY6RGVzY3JpcHRpb24+CjwvcmRmOlJERj4KPC94OnhtcG1ldGE+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo8L3hwYWNrZXQgZW5kPScnPz7/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKC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");
+      background-image: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/7QBAUGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAACQcAgAAAgAEHAJuABhhdGF1cjAwMDI5MzYyMjkvVmVjdGVlenn/4Q5uaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49J++7vycgaWQ9J1c1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCc/Pgo8eDp4bXBtZXRhIHhtbG5zOng9J2Fkb2JlOm5zOm1ldGEvJyB4OnhtcHRrPSdJbWFnZTo6RXhpZlRvb2wgMTIuNzYnPgo8cmRmOlJERiB4bWxuczpyZGY9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmL-N5bnRheC1ucyMnPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6Y3JlYXRvcj4KICAgPHJkZjpTZXE+CiAgICA8cmRmOmxpPmF0YXVyMDAwMjkzNjIyOTwvcmRmOmxpPgogICA8L3JkZjpTZXE+CiAgPC9kYzpjcmVhdG9yPgogIDxkYzpyaWdodHM+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5hdGF1cjAwMDI5MzYyMjkvVmVjdGVlenk8L3JkZjpsaT4KICAgPC9yZGY6QWx0PgogIDwvZGM6cmlnaHRzPgogPC9yZGY6RGVzY3JpcHRpb24+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpwbHVzPSdodHRwOi8vbnMudXNlcGx1cy5vcmcvbGRmL3htcC8xLjAvJz4KICA8cGx1czpMaWNlbnNvcj4KICAgPHJkZjpTZXE+CiAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9J1Jlc291cmNlJz4KICAgICA8cGx1czpMaWNlbnNvclVSTD5odHRwczovL3d3dy52ZWN0ZWV6eS5jb20vLS80OTMxNzI5NS1pbmRvbmVzaWEtd2F0ZXJjb2xvci1tYXAtb2YtZ3JlZW4tY29sb3Itd2l0aC1ib3JkZXItbGluZXMtb2YtZGlmZmVyZW50LXByb3ZpbmNlcy1vci1kaXZpc2lvbnMtb24tZGFyay1iYWNrZ3JvdW5kLXVzaW5nLXBhaW50LWJydXNoP3V0bV9zb3VyY2U9aXB0YyUyNnV0bV9tZWRpdW0lM0Rnb29nbGVpbWFnZXMlMjZ1dG1fY2FtcGFpZ24lM0RpbWFnZTwvcGx1czpMaWNlbnNvclVSTD4KICAgIDwvcmRmOmxpPgogICA8L3JkZjpTZXE+CiAgPC9wbHVzOkxpY2Vuc29yPgogPC9yZGY6RGVzY3JpcHRpb24+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczp4bXBSaWdodHM9J2h0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9yaWdodHMvJz4KICA8eG1wUmlnaHRzOldlYlN0YXRlbWVudD5odHRwczovL3d3dy52ZWN0ZWV6eS5jb20vbGljZW5zaW5nPC94bXBSaWdodHM6V2ViU3RhdGVtZW50PgogPC9yZGY6RGVzY3JpcHRpb24+CjwvcmRmOlJERj4KPC94OnhtcG1ldGE+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo8L3hwYWNrZXQgZW5kPSd3Jz87/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoK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");
       background-repeat: no-repeat;
       background-size: contain;
       background-position: center center;
@@ -129,7 +115,6 @@
       border: 1px solid #cbd5e1;
     }
 
-    /* EXACT MAP PIN LABELS STYLING */
     .map-label-box { position: absolute; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 5px; padding: 4px 8px; box-shadow: 0 3px 8px rgba(0,0,0,0.12); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -50%); z-index: 5; text-align: center; white-space: nowrap; }
     .map-label-box .region-name { font-size: 9.5px; font-weight: 700; color: #0b2246; }
     .map-label-box .region-val { font-size: 10px; font-weight: 900; color: #0b63ce; }
@@ -141,12 +126,10 @@
     .badge-sedang { background: #1d4ed8; }
     .badge-tinggi { background: #0f172a; }
 
-    /* RINGKASAN SEBARAN BOX */
     .d2-summary-box { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 10px; position: absolute; bottom: 12px; left: 12px; width: 210px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; }
     .d2-summary-box-title { font-size: 10px; font-weight: 800; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; margin-bottom: 4px; color: #0b2246; text-transform: uppercase; }
     .d2-summary-row { display: flex; justify-content: space-between; margin-bottom: 3px; font-weight: 700; color: #334155; }
 
-    /* D2 CUSTOM TABLE */
     .d2-table-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; flex-direction: column; height: 460px; }
     .d2-table-container { overflow-y: auto; flex-grow: 1; margin-top: 6px; border: 1px solid #e2e8f0; border-radius: 4px; }
     .d2-table { width: 100%; border-collapse: collapse; font-size: 10.5px; text-align: left; }
@@ -155,7 +138,6 @@
     .d2-table tr:hover { background: #f1f5f9; }
     .d2-table-total { background: #0b2246 !important; color: white !important; font-weight: 800; }
 
-    /* D2 BOTTOM SECTION */
     .d2-bottom-grid { display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 15px; }
     .d2-bottom-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; flex-direction: column; }
     .d2-bottom-title { font-size: 10.5px; font-weight: 800; color: #0b2246; text-transform: uppercase; margin-bottom: 8px; }
@@ -199,27 +181,89 @@
     <!-- ========================================================= -->
     <div id="tab-nkb-1" class="tab-content active">
       
-      <!-- ADMIN INPUT PANEL UNTUK DASHBOARD 1 -->
-      <div class="admin-panel">
-        <div class="admin-panel-title">
-          <i class="fa-solid fa-user-gear"></i> Panel Admin Input / Edit Rencana Kontrak 2026 (Per Bulan - Dalam Rupiah)
+      <!-- ADMIN INPUT PANEL BERDASARKAN TABEL EXCEL 2026 -->
+      <div class="d1-table-card" style="margin-bottom: 20px; border-top: 4px solid #0b63ce; background: #f8fafc; color: #1e293b;">
+        <div class="d1-table-header" style="display: flex; justify-content: space-between; align-items: center; background: #0b2246;">
+          <span><i class="fa-solid fa-gear"></i> Panel Admin: Input & Edit Rencana Kontrak 2026 (Berdasarkan Tabel Master)</span>
+          <button onclick="toggleAdminPanel()" style="background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 2px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold;">Tutup/Buka Panel</button>
         </div>
-        <div class="admin-inputs-grid">
-          <div class="admin-input-group"><label>Januari</label><input type="number" id="inp-jan" value="1140000000"></div>
-          <div class="admin-input-group"><label>Februari</label><input type="number" id="inp-feb" value="2416000000"></div>
-          <div class="admin-input-group"><label>Maret</label><input type="number" id="inp-mar" value="0"></div>
-          <div class="admin-input-group"><label>April</label><input type="number" id="inp-apr" value="760000000"></div>
-          <div class="admin-input-group"><label>Mei</label><input type="number" id="inp-mei" value="3893000000"></div>
-          <div class="admin-input-group"><label>Juni</label><input type="number" id="inp-jun" value="0"></div>
-          <div class="admin-input-group"><label>Juli</label><input type="number" id="inp-jul" value="2304000000"></div>
-          <div class="admin-input-group"><label>Agustus</label><input type="number" id="inp-ags" value="2642200000"></div>
-          <div class="admin-input-group"><label>September</label><input type="number" id="inp-sep" value="0"></div>
-          <div class="admin-input-group"><label>Oktober</label><input type="number" id="inp-okt" value="0"></div>
-          <div class="admin-input-group"><label>November</label><input type="number" id="inp-nov" value="0"></div>
-          <div class="admin-input-group"><label>Desember</label><input type="number" id="inp-des" value="0"></div>
-        </div>
-        <div class="admin-btn-row">
-          <button class="admin-save-btn" onclick="updateDashboard1()"><i class="fa-solid fa-floppy-disk"></i> Perbarui & Simpan Otomatis</button>
+        <div id="adminFormBody" style="padding: 16px;">
+          <p style="font-size: 11.5px; color: #475569; margin-bottom: 12px; font-weight: 600;">
+            Tambahkan atau ubah data kontrak proyek pada form di bawah ini. Nilai per bulan, grafik bulanan, grafik donat alat, total KPI, dan tabel rincian akan diperbarui secara otomatis.
+          </p>
+          
+          <!-- FORM TAMBAH / EDIT KONTRAK -->
+          <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; margin-bottom: 15px;">
+            <div style="font-size: 11px; font-weight: 800; color: #0b2246; margin-bottom: 8px; text-transform: uppercase;">Form Tambah / Edit Kontrak Baru</div>
+            <div style="display: grid; grid-template-columns: 2fr 1.2fr repeat(6, 1fr); gap: 8px; align-items: flex-end; margin-bottom: 8px;">
+              <div>
+                <label style="display: block; font-size: 9.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">CUSTOMER / PROYEK</label>
+                <input type="text" id="inCust" placeholder="Nama Customer" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10.5px;">
+              </div>
+              <div>
+                <label style="display: block; font-size: 9.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">JENIS ALAT</label>
+                <select id="inAlat" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10.5px; background: white;">
+                  <option value="Truck Mixer">Truck Mixer</option>
+                  <option value="Truck Trailer">Truck Trailer</option>
+                  <option value="Stone Crusher">Stone Crusher</option>
+                  <option value="Batching Plant">Batching Plant</option>
+                  <option value="Silo">Silo</option>
+                </select>
+              </div>
+              <div>
+                <label style="display: block; font-size: 9.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">BULAN</label>
+                <select id="inBulan" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10.5px; background: white;">
+                  <option value="0">Januari</option>
+                  <option value="1">Februari</option>
+                  <option value="2">Maret</option>
+                  <option value="3">April</option>
+                  <option value="4">Mei</option>
+                  <option value="5">Juni</option>
+                  <option value="6">Juli</option>
+                  <option value="7">Agustus</option>
+                  <option value="8">September</option>
+                  <option value="9">Oktober</option>
+                  <option value="10">November</option>
+                  <option value="11">Desember</option>
+                </select>
+              </div>
+              <div style="grid-column: span 3;">
+                <label style="display: block; font-size: 9.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">NILAI KONTRAK (IDR)</label>
+                <input type="number" id="inNilai" placeholder="Contoh: 500000000" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10.5px;">
+              </div>
+              <div style="grid-column: span 2; display: flex; gap: 5px;">
+                <button onclick="saveContractItem()" style="background: #0b63ce; color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 10.5px; width: 100%;">
+                  <i class="fa-solid fa-plus"></i> Simpan
+                </button>
+                <button onclick="resetContractForm()" style="background: #64748b; color: white; border: none; padding: 7px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 10.5px;">
+                  Reset
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- TABEL DAFTAR KONTRAK AKTIF -->
+          <div style="font-size: 11px; font-weight: 800; color: #0b2246; margin-bottom: 6px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center;">
+            <span>Daftar Master Kontrak 2026 (<span id="totalContractCount">14</span> Kontrak)</span>
+            <span style="font-size: 10px; font-weight: normal; color: #64748b;">Anda dapat menghapus atau melihat rincian item di bawah</span>
+          </div>
+          <div style="max-height: 180px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
+            <table class="data-table" id="adminContractsTable">
+              <thead>
+                <tr>
+                  <th style="width: 40px;">No</th>
+                  <th>Customer</th>
+                  <th>Jenis Alat</th>
+                  <th>Bulan</th>
+                  <th class="text-right">Nilai Kontrak (Rp)</th>
+                  <th class="text-center" style="width: 70px;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="adminContractsBody">
+                <!-- Javascript will render rows here -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
@@ -231,7 +275,7 @@
             <div class="d1-kpi-title">TOTAL RENCANA KONTRAK 2026</div>
           </div>
           <div>
-            <div class="d1-kpi-value" id="kpi-total">13.155.200.000</div>
+            <div class="d1-kpi-value">13.155.200.000</div>
             <div class="d1-kpi-sub">Rupiah</div>
           </div>
         </div>
@@ -242,7 +286,7 @@
             <div class="d1-kpi-title">RATA-RATA PER BULAN</div>
           </div>
           <div>
-            <div class="d1-kpi-value" id="kpi-avg">1.096.266.667</div>
+            <div class="d1-kpi-value">1.096.266.667</div>
             <div class="d1-kpi-sub">Rupiah</div>
           </div>
         </div>
@@ -253,8 +297,8 @@
             <div class="d1-kpi-title">BULAN TERTINGGI</div>
           </div>
           <div>
-            <div class="d1-kpi-value" id="kpi-highest-month" style="font-size: 22px;">Mei</div>
-            <div class="d1-kpi-sub" id="kpi-highest-val">3.893.000.000 Rupiah</div>
+            <div class="d1-kpi-value" style="font-size: 22px;">Mei</div>
+            <div class="d1-kpi-sub">3.893.000.000 Rupiah</div>
           </div>
         </div>
 
@@ -309,23 +353,23 @@
             <thead>
               <tr><th>Bulan</th><th class="text-right">Nilai Kontrak Baru (Rupiah)</th></tr>
             </thead>
-            <tbody id="table-monthly-body">
-              <tr><td>Januari</td><td class="text-right" id="t-jan">1.140.000.000</td></tr>
-              <tr><td>Februari</td><td class="text-right" id="t-feb">2.416.000.000</td></tr>
-              <tr><td>Maret</td><td class="text-right" id="t-mar">-</td></tr>
-              <tr><td>April</td><td class="text-right" id="t-apr">760.000.000</td></tr>
-              <tr><td>Mei</td><td class="text-right" id="t-mei">3.893.000.000</td></tr>
-              <tr><td>Juni</td><td class="text-right" id="t-jun">-</td></tr>
-              <tr><td>Juli</td><td class="text-right" id="t-jul">2.304.000.000</td></tr>
-              <tr><td>Agustus</td><td class="text-right" id="t-ags">2.642.200.000</td></tr>
-              <tr><td>September</td><td class="text-right" id="t-sep">-</td></tr>
-              <tr><td>Oktober</td><td class="text-right" id="t-okt">-</td></tr>
-              <tr><td>November</td><td class="text-right" id="t-nov">-</td></tr>
-              <tr><td>Desember</td><td class="text-right" id="t-des">-</td></tr>
+            <tbody>
+              <tr><td>Januari</td><td class="text-right">1.140.000.000</td></tr>
+              <tr><td>Februari</td><td class="text-right">2.416.000.000</td></tr>
+              <tr><td>Maret</td><td class="text-right">-</td></tr>
+              <tr><td>April</td><td class="text-right">760.000.000</td></tr>
+              <tr><td>Mei</td><td class="text-right">3.893.000.000</td></tr>
+              <tr><td>Juni</td><td class="text-right">-</td></tr>
+              <tr><td>Juli</td><td class="text-right">2.304.000.000</td></tr>
+              <tr><td>Agustus</td><td class="text-right">2.642.200.000</td></tr>
+              <tr><td>September</td><td class="text-right">-</td></tr>
+              <tr><td>Oktober</td><td class="text-right">-</td></tr>
+              <tr><td>November</td><td class="text-right">-</td></tr>
+              <tr><td>Desember</td><td class="text-right">-</td></tr>
             </tbody>
             <tfoot>
               <tr class="table-total-row">
-                <td class="font-bold">Total</td><td class="text-right font-bold" id="t-total">13.155.200.000</td>
+                <td class="font-bold">Total</td><td class="text-right font-bold">13.155.200.000</td>
               </tr>
             </tfoot>
           </table>
@@ -654,138 +698,66 @@
       evt.currentTarget.classList.add('active');
     }
 
-    // --- GLOBAL CHART & DATA REFERENCES UNTUK DASHBOARD 1 ---
-    let chartMonthly;
-    let chartEquipment;
-
-    const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-
-    function formatNumber(num) {
-      return num.toLocaleString('id-ID');
-    }
-
-    // --- INISIALISASI & FUNGSI UPDATE OTOMATIS DASHBOARD 1 ---
-    function initDashboard1() {
-      const defaultData = [1140000000, 2416000000, 0, 760000000, 3893000000, 0, 2304000000, 2642200000, 0, 0, 0, 0];
-      
-      const ctxMonthly = document.getElementById('chartMonthly').getContext('2d');
-      chartMonthly = new Chart(ctxMonthly, {
-        type: 'bar',
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Juni', 'Juli', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'],
-          datasets: [{
-            data: defaultData,
-            backgroundColor: '#0b63ce',
-            borderRadius: 3,
-            barPercentage: 0.6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            datalabels: {
-              align: 'top', anchor: 'end', color: '#1e293b', font: { size: 9, weight: 'bold' },
-              formatter: function(value) {
-                if (value === 0) return '';
-                return (value / 1000000000).toFixed(3).replace('.', ',') + 'M';
-              }
+    // --- CHART 1: Rencana Bulanan ---
+    const ctxMonthly = document.getElementById('chartMonthly').getContext('2d');
+    window.chartMonthlyObj = new Chart(ctxMonthly, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Juni', 'Juli', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'],
+        datasets: [{
+          data: [1140000000, 2416000000, 0, 760000000, 3893000000, 0, 2304000000, 2642200000, 0, 0, 0, 0],
+          backgroundColor: '#0b63ce',
+          borderRadius: 3,
+          barPercentage: 0.6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          datalabels: {
+            align: 'top', anchor: 'end', color: '#1e293b', font: { size: 9, weight: 'bold' },
+            formatter: function(value) {
+              if (value === 0) return '';
+              return (value / 1000000000).toFixed(3).replace('.', ',') + 'M';
             }
-          },
-          scales: {
-            x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#475569' } },
-            y: { min: 0, max: 5000000000, ticks: { stepSize: 1000000000, font: { size: 9 }, color: '#475569', callback: val => (val/1000000000)+'M' }, grid: { color: '#f1f5f9' } }
           }
-        }
-      });
-
-      // Chart Donut Alat Tetap menggunakan proporsi proporsional original
-      const ctxEquipment = document.getElementById('chartEquipment').getContext('2d');
-      chartEquipment = new Chart(ctxEquipment, {
-        type: 'doughnut',
-        data: {
-          labels: ['Truck Mixer', 'Truck Trailer', 'Stone Crusher', 'Batching Plant', 'Silo'],
-          datasets: [{
-            data: [8165200000, 2766000000, 1140000000, 994000000, 90000000],
-            backgroundColor: ['#0b63ce', '#0b2265', '#e65c00', '#5c165c', '#d4a017'],
-            borderWidth: 2, borderColor: '#ffffff'
-          }]
         },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            datalabels: {
-              color: '#ffffff', font: { size: 9.5, weight: 'bold' },
-              formatter: function(value) {
-                const pct = (value / 13155200000) * 100;
-                if (pct < 2) return '';
-                return pct.toFixed(1).replace('.', ',') + '%';
-              }
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#475569' } },
+          y: { min: 0, max: 5000000000, ticks: { stepSize: 1000000000, font: { size: 9 }, color: '#475569', callback: val => (val/1000000000)+'M' }, grid: { color: '#f1f5f9' } }
+        }
+      }
+    });
+
+    // --- CHART 1: Donut Alat ---
+    const ctxEquipment = document.getElementById('chartEquipment').getContext('2d');
+    window.chartEquipmentObj = new Chart(ctxEquipment, {
+      type: 'doughnut',
+      data: {
+        labels: ['Truck Mixer', 'Truck Trailer', 'Stone Crusher', 'Batching Plant', 'Silo'],
+        datasets: [{
+          data: [8165200000, 2766000000, 1140000000, 994000000, 90000000],
+          backgroundColor: ['#0b63ce', '#0b2265', '#e65c00', '#5c165c', '#d4a017'],
+          borderWidth: 2, borderColor: '#ffffff'
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          datalabels: {
+            color: '#ffffff', font: { size: 9.5, weight: 'bold' },
+            formatter: function(value) {
+              const pct = (value / 13155200000) * 100;
+              if (pct < 2) return '';
+              return pct.toFixed(1).replace('.', ',') + '%';
             }
-          },
-          cutout: '55%'
-        }
-      });
-    }
-
-    // Fungsi trigger saat tombol "Perbarui & Simpan Otomatis" ditekan
-    function updateDashboard1() {
-      const jan = parseFloat(document.getElementById('inp-jan').value) || 0;
-      const feb = parseFloat(document.getElementById('inp-feb').value) || 0;
-      const mar = parseFloat(document.getElementById('inp-mar').value) || 0;
-      const apr = parseFloat(document.getElementById('inp-apr').value) || 0;
-      const mei = parseFloat(document.getElementById('inp-mei').value) || 0;
-      const jun = parseFloat(document.getElementById('inp-jun').value) || 0;
-      const jul = parseFloat(document.getElementById('inp-jul').value) || 0;
-      const ags = parseFloat(document.getElementById('inp-ags').value) || 0;
-      const sep = parseFloat(document.getElementById('inp-sep').value) || 0;
-      const okt = parseFloat(document.getElementById('inp-okt').value) || 0;
-      const nov = parseFloat(document.getElementById('inp-nov').value) || 0;
-      const des = parseFloat(document.getElementById('inp-des').value) || 0;
-
-      const newData = [jan, feb, mar, apr, mei, jun, jul, ags, sep, okt, nov, des];
-      const total = newData.reduce((a, b) => a + b, 0);
-      const avg = total / 12;
-
-      // Cari bulan tertinggi
-      let maxVal = -1;
-      let maxIdx = 0;
-      newData.forEach((val, idx) => {
-        if(val > maxVal) {
-          maxVal = val;
-          maxIdx = idx;
-        }
-      });
-
-      // Update KPI Cards
-      document.getElementById('kpi-total').innerText = formatNumber(total);
-      document.getElementById('kpi-avg').innerText = formatNumber(Math.round(avg));
-      document.getElementById('kpi-highest-month').innerText = monthNames[maxIdx];
-      document.getElementById('kpi-highest-val').innerText = formatNumber(maxVal) + ' Rupiah';
-
-      // Update Tabel Bulanan
-      const ids = ['t-jan', 't-feb', 't-mar', 't-apr', 't-mei', 't-jun', 't-jul', 't-ags', 't-sep', 't-okt', 't-nov', 't-des'];
-      newData.forEach((val, i) => {
-        document.getElementById(ids[i]).innerText = val === 0 ? '-' : formatNumber(val);
-      });
-      document.getElementById('t-total').innerText = formatNumber(total);
-
-      // Update Chart Bulanan
-      chartMonthly.data.datasets[0].data = newData;
-      // Menyesuaikan skala max chart secara dinamis jika total/nilai sangat besar
-      let maxScale = 5000000000;
-      if (maxVal > 4000000000) maxScale = Math.ceil(maxVal / 1000000000) * 1000000000 + 1000000000;
-      chartMonthly.options.scales.y.max = maxScale;
-      chartMonthly.update();
-
-      alert('Dashboard 1 berhasil diperbarui secara otomatis!');
-    }
-
-    // Jalankan inisialisasi saat halaman dimuat
-    window.addEventListener('DOMContentLoaded', () => {
-      initDashboard1();
+          }
+        },
+        cutout: '55%'
+      }
     });
 
     // --- CHART D2: Proporsi Tipe Alat ---
@@ -864,5 +836,194 @@
       }
     });
   </script>
+
+  <script>
+    // --- MASTER DATA & STATE MANAGEMENT FOR DASHBOARD 1 (EXCEL MATCH) ---
+    const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    
+    // Initial 14 contracts matching spreadsheet image exactly
+    let masterContracts = [
+      { customer: 'Bendungan Tiga Dihaji', alat: 'Truck Mixer', bulan: 3, nilai: 760000000 },
+      { customer: 'SR Sampang', alat: 'Truck Mixer', bulan: 4, nilai: 318000000 },
+      { customer: 'Revitalisasi Aceh', alat: 'Truck Mixer', bulan: 4, nilai: 1120000000 },
+      { customer: 'Tol KAPB', alat: 'Silo', bulan: 4, nilai: 90000000 },
+      { customer: 'Sewa Trailer - Area Jawa Timur', alat: 'Truck Trailer', bulan: 5, nilai: 1800000000 },
+      { customer: 'Sewa Trailer - Area Jabodetabek', alat: 'Truck Trailer', bulan: 4, nilai: 450000000 },
+      { customer: 'Sewa Truck Mixer', alat: 'Truck Mixer', bulan: 6, nilai: 1132200000 },
+      { customer: 'Ekspedisi Trailer Kendal', alat: 'Truck Trailer', bulan: 6, nilai: 516000000 },
+      { customer: 'Sewa Truck Mixer', alat: 'Truck Mixer', bulan: 4, nilai: 799000000 },
+      { customer: 'Sewa Stone Crusher', alat: 'Stone Crusher', bulan: 0, nilai: 1140000000 },
+      { customer: 'Sewa Truck Mixer', alat: 'Truck Mixer', bulan: 1, nilai: 2416000000 },
+      { customer: 'Sewa Truck Mixer', alat: 'Truck Mixer', bulan: 4, nilai: 1116000000 },
+      { customer: 'Sewa Batching Plant', alat: 'Batching Plant', bulan: 6, nilai: 994000000 },
+      { customer: 'Sewa Truck Mixer', alat: 'Truck Mixer', bulan: 5, nilai: 504000000 }
+    ];
+
+    function toggleAdminPanel() {
+      const body = document.getElementById('adminFormBody');
+      body.style.display = body.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function formatRupiah(num) {
+      if (!num && num !== 0) return '-';
+      return num.toLocaleString('id-ID');
+    }
+
+    function renderAdminTable() {
+      const tbody = document.getElementById('adminContractsBody');
+      document.getElementById('totalContractCount').innerText = masterContracts.length;
+      if (masterContracts.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center" style="color: #94a3b8; font-style: italic;">Belum ada data kontrak.</td></tr>';
+        return;
+      }
+      let html = '';
+      masterContracts.forEach((c, idx) => {
+        html += `<tr>
+          <td class="text-center">${idx + 1}</td>
+          <td class="font-bold">${c.customer}</td>
+          <td>${c.alat}</td>
+          <td>${monthNames[c.bulan]}</td>
+          <td class="text-right">${formatRupiah(c.nilai)}</td>
+          <td class="text-center">
+            <button onclick="deleteContract(${idx})" style="background: #ef4444; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`;
+      });
+      tbody.innerHTML = html;
+    }
+
+    function saveContractItem() {
+      const cust = document.getElementById('inCust').value.trim();
+      const alat = document.getElementById('inAlat').value;
+      const bulan = parseInt(document.getElementById('inBulan').value);
+      const nilai = parseFloat(document.getElementById('inNilai').value);
+
+      if (!cust || isNaN(nilai) || nilai <= 0) {
+        alert('Mohon masukkan nama customer dan nilai kontrak yang valid!');
+        return;
+      }
+
+      masterContracts.push({ customer: cust, alat: alat, bulan: bulan, nilai: nilai });
+      resetContractForm();
+      recalculateDashboard1();
+    }
+
+    function resetContractForm() {
+      document.getElementById('inCust').value = '';
+      document.getElementById('inNilai').value = '';
+    }
+
+    function deleteContract(idx) {
+      if(confirm('Apakah Anda yakin ingin menghapus kontrak ini?')) {
+        masterContracts.splice(idx, 1);
+        recalculateDashboard1();
+      }
+    }
+
+    function recalculateDashboard1() {
+      let monthlyTotals = new Array(12).fill(0);
+      let equipmentTotals = {
+        'Truck Mixer': 0,
+        'Truck Trailer': 0,
+        'Stone Crusher': 0,
+        'Batching Plant': 0,
+        'Silo': 0
+      };
+
+      let grandTotal = 0;
+
+      masterContracts.forEach(c => {
+        if (c.bulan >= 0 && c.bulan < 12) {
+          monthlyTotals[c.bulan] += c.nilai;
+        }
+        if (equipmentTotals[c.alat] !== undefined) {
+          equipmentTotals[c.alat] += c.nilai;
+        } else {
+          equipmentTotals[c.alat] = c.nilai;
+        }
+        grandTotal += c.nilai;
+      });
+
+      // 1. Update KPI Cards
+      document.querySelector('.d1-kpi-grid .d1-kpi-card:nth-child(1) .d1-kpi-value').innerText = formatRupiah(grandTotal);
+      const avgMonthly = grandTotal / 12;
+      document.querySelector('.d1-kpi-grid .d1-kpi-card:nth-child(2) .d1-kpi-value').innerText = formatRupiah(Math.round(avgMonthly));
+      
+      let maxM = 0;
+      let maxVal = -1;
+      monthlyTotals.forEach((val, idx) => {
+        if (val > maxVal) {
+          maxVal = val;
+          maxM = idx;
+        }
+      });
+      document.querySelector('.d1-kpi-grid .d1-kpi-card:nth-child(3) .d1-kpi-value').innerText = monthNames[maxM];
+      document.querySelector('.d1-kpi-grid .d1-kpi-card:nth-child(3) .d1-kpi-sub').innerText = formatRupiah(maxVal) + ' Rupiah';
+
+      // 2. Update Monthly Table
+      const monthlyTableBody = document.querySelector('.d1-tables-grid .d1-table-card:nth-child(1) tbody');
+      let mHtml = '';
+      monthlyTotals.forEach((val, idx) => {
+        mHtml += `<tr><td>${monthNames[idx]}</td><td class="text-right">${val === 0 ? '-' : formatRupiah(val)}</td></tr>`;
+      });
+      monthlyTableBody.innerHTML = mHtml;
+      document.querySelector('.d1-tables-grid .d1-table-card:nth-child(1) tfoot .text-right').innerText = formatRupiah(grandTotal);
+
+      // 3. Update Equipment Table
+      const eqTableBody = document.querySelector('.d1-tables-grid .d1-table-card:nth-child(2) tbody');
+      let eqHtml = '';
+      const eqKeys = Object.keys(equipmentTotals);
+      eqKeys.sort((a, b) => equipmentTotals[b] - equipmentTotals[a]);
+
+      const colors = ['#0b63ce', '#0b2265', '#e65c00', '#5c165c', '#d4a017'];
+      let legendHtml = '<div class="d1-legend-title">Jenis Alat</div>';
+
+      eqKeys.forEach((eq, idx) => {
+        const val = equipmentTotals[eq];
+        const pct = grandTotal > 0 ? (val / grandTotal) * 100 : 0;
+        const color = colors[idx % colors.length];
+        
+        eqHtml += `<tr>
+          <td class="font-bold">${eq}</td>
+          <td class="text-right">${formatRupiah(val)}</td>
+          <td><div class="progress-cell"><span class="font-bold" style="font-size: 10px;">${pct.toFixed(2)}%</span><div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${pct}%; background: ${color};"></div></div></div></td>
+        </tr>`;
+
+        legendHtml += `<div class="d1-legend-row"><div class="d1-legend-bullet" style="background: ${color};"></div><span class="d1-legend-label">${eq} (${pct.toFixed(2)}%)</span></div>`;
+      });
+      eqTableBody.innerHTML = eqHtml;
+      document.querySelector('.d1-tables-grid .d1-table-card:nth-child(2) tfoot td.text-right').innerText = formatRupiah(grandTotal);
+
+      const legendContainer = document.querySelector('.d1-custom-legend');
+      if (legendContainer) {
+        legendContainer.innerHTML = legendHtml;
+      }
+
+      // 4. Update Charts
+      if (window.chartMonthlyObj) {
+        window.chartMonthlyObj.data.datasets[0].data = monthlyTotals;
+        let maxScale = 5000000000;
+        if (maxVal > 4000000000) maxScale = Math.ceil(maxVal / 1000000000) * 1000000000 + 1000000000;
+        window.chartMonthlyObj.options.scales.y.max = maxScale;
+        window.chartMonthlyObj.update();
+      }
+
+      if (window.chartEquipmentObj) {
+        window.chartEquipmentObj.data.labels = eqKeys;
+        window.chartEquipmentObj.data.datasets[0].data = eqKeys.map(k => equipmentTotals[k]);
+        window.chartEquipmentObj.data.datasets[0].backgroundColor = eqKeys.map((_, i) => colors[i % colors.length]);
+        window.chartEquipmentObj.update();
+      }
+
+      renderAdminTable();
+    }
+
+    // Initialize admin table on load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderAdminTable();
+      recalculateDashboard1();
+    });
+  </script>
+
 </body>
 </html>
