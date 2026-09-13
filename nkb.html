@@ -101,16 +101,16 @@
     .d2-map-legend { display: flex; align-items: center; gap: 10px; font-size: 9.5px; color: #334155; font-weight: 700; }
     .d2-map-legend span { display: flex; align-items: center; gap: 3px; }
     
-    /* PETA INDONESIA MENYERUPAI GAMBAR REFERENSI */
+    /* PETA INDONESIA (SVG/PNG RESMI KHUSUS KEPULAUAN INDONESIA) */
     .d2-map-canvas { 
       width: 100%; 
       height: 395px;
       background-color: #3b5247;
       border-radius: 6px;
       position: relative;
-      background-image: url("https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1000&auto=format&fit=crop");
+      background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Indonesia_location_map.svg/1024px-Indonesia_location_map.svg.png");
       background-repeat: no-repeat;
-      background-size: 85% 85%;
+      background-size: 90% 90%;
       background-position: center center;
       border: 1px solid #cbd5e1;
     }
@@ -571,7 +571,7 @@
             </div>
           </div>
 
-          <!-- TARGET BOX PERSIS SEPERTI GAMBAR 2 -->
+          <!-- TARGET BOX -->
           <div class="d2-target-box">
             <div style="position: relative; width: 110px; height: 55px; display: flex; align-items: center; justify-content: center;">
               <canvas id="chartD2TargetGauge" style="position: absolute; top: 0; left: 0; width: 110px; height: 55px;"></canvas>
@@ -591,7 +591,7 @@
         <!-- D2 MIDDLE SECTION: PROFESSIONAL MAP & TABLE -->
         <div class="d2-middle-grid">
           
-          <!-- PROFESSIONAL MAP CARD DENGAN PETA INDONESIA & PIN DINAMIS -->
+          <!-- PETA INDONESIA (ASLI ARCHIPELAGO RESMI KEPULAUAN INDONESIA) -->
           <div class="d2-map-card">
             <div class="d2-map-header-row">
               <div class="d2-map-title">SEBARAN NILAI KONTRAK BARU BERDASARKAN PROVINSI</div>
@@ -603,7 +603,7 @@
               </div>
             </div>
 
-            <!-- MAP CANVAS WHERE PINS/LABELS ARE RENDERED DYNAMICALLY -->
+            <!-- MAP CANVAS DENGAN TITIK PIN PROVINSI AKURAT PADA PETA INDONESIA -->
             <div class="d2-map-canvas" id="d2MapCanvasContainer"></div>
 
             <!-- RINGKASAN SEBARAN BOX -->
@@ -1065,46 +1065,46 @@
       "Sulawesi Utara", "Sumatera Barat", "Sumatera Selatan", "Sumatera Utara"
     ];
 
-    // Koordinat geografis persis mengikuti layout peta Indonesia pada gambar referensi
+    // Koordinat geografis peta Indonesia yang proporsional dan akurat (Sumatera hingga Papua)
     const provinceMapCoords = {
-      'Aceh': { top: '35%', left: '16%', labelTop: '25%', labelLeft: '16%' },
-      'Sumatera Utara': { top: '42%', left: '20%', labelTop: '32%', labelLeft: '20%' },
-      'Sumatera Barat': { top: '50%', left: '23%', labelTop: '62%', labelLeft: '22%' },
-      'Riau': { top: '48%', left: '27%', labelTop: '40%', labelLeft: '27%' },
-      'Jambi': { top: '54%', left: '27%', labelTop: '58%', labelLeft: '27%' },
-      'Sumatera Selatan': { top: '58%', left: '30%', labelTop: '50%', labelLeft: '28%' },
-      'Bengkulu': { top: '61%', left: '25%', labelTop: '68%', labelLeft: '25%' },
-      'Lampung': { top: '63%', left: '32%', labelTop: '73%', labelLeft: '28%' },
-      'Kepulauan Bangka Belitung': { top: '54%', left: '33%', labelTop: '45%', labelLeft: '33%' },
-      'Kepulauan Riau': { top: '38%', left: '35%', labelTop: '28%', labelLeft: '35%' },
-      'DKI Jakarta': { top: '66%', left: '39%', labelTop: '58%', labelLeft: '40%' },
-      'Banten': { top: '64%', left: '35%', labelTop: '56%', labelLeft: '33%' },
-      'Jawa Barat': { top: '67%', left: '43%', labelTop: '73%', labelLeft: '43%' },
-      'DI Yogyakarta': { top: '70%', left: '50%', labelTop: '75%', labelLeft: '50%' },
-      'Jawa Tengah': { top: '68%', left: '47%', labelTop: '73%', labelLeft: '48%' },
-      'Jawa Timur': { top: '67%', left: '57%', labelTop: '58%', labelLeft: '57%' },
-      'Bali': { top: '72%', left: '63%', labelTop: '78%', labelLeft: '63%' },
-      'Nusa Tenggara Barat': { top: '73%', left: '68%', labelTop: '79%', labelLeft: '68%' },
-      'Nusa Tenggara Timur': { top: '76%', left: '77%', labelTop: '82%', labelLeft: '77%' },
-      'Kalimantan Barat': { top: '45%', left: '50%', labelTop: '36%', labelLeft: '50%' },
-      'Kalimantan Tengah': { top: '50%', left: '54%', labelTop: '42%', labelLeft: '54%' },
-      'Kalimantan Selatan': { top: '57%', left: '59%', labelTop: '49%', labelLeft: '59%' },
-      'Kalimantan Timur': { top: '44%', left: '61%', labelTop: '35%', labelLeft: '61%' },
-      'Kalimantan Utara': { top: '35%', left: '60%', labelTop: '26%', labelLeft: '60%' },
-      'Sulawesi Utara': { top: '35%', left: '71%', labelTop: '26%', labelLeft: '71%' },
-      'Gorontalo': { top: '40%', left: '68%', labelTop: '31%', labelLeft: '68%' },
-      'Sulawesi Tengah': { top: '47%', left: '68%', labelTop: '38%', labelLeft: '68%' },
-      'Sulawesi Barat': { top: '54%', left: '66%', labelTop: '45%', labelLeft: '66%' },
-      'Sulawesi Selatan': { top: '60%', left: '69%', labelTop: '67%', labelLeft: '69%' },
-      'Sulawesi Tenggara': { top: '56%', left: '74%', labelTop: '47%', labelLeft: '74%' },
-      'Maluku': { top: '55%', left: '83%', labelTop: '46%', labelLeft: '83%' },
-      'Maluku Utara': { top: '42%', left: '83%', labelTop: '33%', labelLeft: '83%' },
-      'Papua': { top: '58%', left: '92%', labelTop: '49%', labelLeft: '92%' },
-      'Papua Barat': { top: '47%', left: '88%', labelTop: '38%', labelLeft: '88%' },
-      'Papua Tengah': { top: '57%', left: '90%', labelTop: '65%', labelLeft: '90%' },
-      'Papua Pegunungan': { top: '60%', left: '94%', labelTop: '68%', labelLeft: '94%' },
-      'Papua Selatan': { top: '66%', left: '93%', labelTop: '74%', labelLeft: '93%' },
-      'Papua Barat Daya': { top: '45%', left: '86%', labelTop: '36%', labelLeft: '86%' }
+      'Aceh': { top: '38%', left: '13.5%', labelTop: '28%', labelLeft: '13%' },
+      'Sumatera Utara': { top: '44%', left: '17%', labelTop: '36%', labelLeft: '17%' },
+      'Sumatera Barat': { top: '51%', left: '20.5%', labelTop: '60%', labelLeft: '19%' },
+      'Riau': { top: '49%', left: '24%', labelTop: '42%', labelLeft: '24%' },
+      'Jambi': { top: '55%', left: '24.5%', labelTop: '61%', labelLeft: '24%' },
+      'Sumatera Selatan': { top: '59%', left: '27.5%', labelTop: '51%', labelLeft: '27%' },
+      'Bengkulu': { top: '62%', left: '23%', labelTop: '69%', labelLeft: '23%' },
+      'Lampung': { top: '64%', left: '30%', labelTop: '74%', labelLeft: '27%' },
+      'Kepulauan Bangka Belitung': { top: '55%', left: '31%', labelTop: '46%', labelLeft: '31%' },
+      'Kepulauan Riau': { top: '40%', left: '33.5%', labelTop: '30%', labelLeft: '33%' },
+      'DKI Jakarta': { top: '67%', left: '37.5%', labelTop: '58%', labelLeft: '38%' },
+      'Banten': { top: '65.5%', left: '33.5%', labelTop: '57%', labelLeft: '32%' },
+      'Jawa Barat': { top: '68%', left: '42%', labelTop: '74%', labelLeft: '42%' },
+      'DI Yogyakarta': { top: '71%', left: '49.5%', labelTop: '77%', labelLeft: '50%' },
+      'Jawa Tengah': { top: '69%', left: '46.5%', labelTop: '75%', labelLeft: '47%' },
+      'Jawa Timur': { top: '68%', left: '56.5%', labelTop: '59%', labelLeft: '56%' },
+      'Bali': { top: '73%', left: '63%', labelTop: '79%', labelLeft: '63%' },
+      'Nusa Tenggara Barat': { top: '74%', left: '68.5%', labelTop: '80%', labelLeft: '68%' },
+      'Nusa Tenggara Timur': { top: '77%', left: '78%', labelTop: '83%', labelLeft: '78%' },
+      'Kalimantan Barat': { top: '47%', left: '50.5%', labelTop: '38%', labelLeft: '50%' },
+      'Kalimantan Tengah': { top: '52%', left: '55%', labelTop: '43%', labelLeft: '55%' },
+      'Kalimantan Selatan': { top: '59%', left: '60%', labelTop: '50%', labelLeft: '60%' },
+      'Kalimantan Timur': { top: '45%', left: '62.5%', labelTop: '36%', labelLeft: '62%' },
+      'Kalimantan Utara': { top: '36%', left: '62%', labelTop: '27%', labelLeft: '62%' },
+      'Sulawesi Utara': { top: '37%', left: '74%', labelTop: '28%', labelLeft: '74%' },
+      'Gorontalo': { top: '42%', left: '71%', labelTop: '33%', labelLeft: '71%' },
+      'Sulawesi Tengah': { top: '49%', left: '71%', labelTop: '40%', labelLeft: '71%' },
+      'Sulawesi Barat': { top: '56%', left: '68.5%', labelTop: '47%', labelLeft: '68%' },
+      'Sulawesi Selatan': { top: '62%', left: '72%', labelTop: '70%', labelLeft: '72%' },
+      'Sulawesi Tenggara': { top: '58%', left: '77.5%', labelTop: '49%', labelLeft: '77%' },
+      'Maluku': { top: '57%', left: '84%', labelTop: '48%', labelLeft: '84%' },
+      'Maluku Utara': { top: '43%', left: '84%', labelTop: '34%', labelLeft: '84%' },
+      'Papua': { top: '60%', left: '92.5%', labelTop: '51%', labelLeft: '92%' },
+      'Papua Barat': { top: '48%', left: '88%', labelTop: '39%', labelLeft: '88%' },
+      'Papua Tengah': { top: '59%', left: '90.5%', labelTop: '67%', labelLeft: '90%' },
+      'Papua Pegunungan': { top: '62%', left: '94.5%', labelTop: '70%', labelLeft: '94%' },
+      'Papua Selatan': { top: '68%', left: '93.5%', labelTop: '76%', labelLeft: '93%' },
+      'Papua Barat Daya': { top: '46%', left: '86%', labelTop: '37%', labelLeft: '86%' }
     };
 
     let d2MasterData = [
@@ -1434,7 +1434,6 @@
     window.addEventListener('DOMContentLoaded', () => {
       initD2Charts();
       renderAdminTable();
-      recalculationDashboard1 = recalculateDashboard1;
       recalculateDashboard1();
       renderD2AdminTable();
       recalculateDashboard2();
