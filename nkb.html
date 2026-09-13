@@ -116,13 +116,16 @@
       border: 1px solid #cbd5e1;
     }
 
-    .map-label-box { position: absolute; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 5px; padding: 3px 6px; box-shadow: 0 3px 8px rgba(0,0,0,0.12); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); z-index: 5; text-align: center; white-space: nowrap; margin-top: -12px; pointer-events:none; }
-    .map-label-box .region-name { font-size: 9px; font-weight: 700; color: #0b2246; }
-    .map-label-box .region-val { font-size: 9.5px; font-weight: 900; color: #0b63ce; }
-    
-    .map-location-point { position:absolute; width:7px; height:7px; border-radius:50%; background:#ffffff; border:2px solid #0b2246; box-shadow:0 1px 4px rgba(0,0,0,.35); transform:translate(-50%,-50%); z-index:7; }
+    .map-label-box { position:absolute; background:#ffffff; border:1px solid #cbd5e1; border-radius:5px; padding:3px 6px; box-shadow:0 3px 8px rgba(0,0,0,.12); display:flex; flex-direction:column; align-items:center; transform:translate(-50%,-100%); z-index:12; text-align:center; white-space:nowrap; margin-top:-12px; pointer-events:none; line-height:1.12; min-width:max-content; }
+    .map-label-box .region-name { font-size:9px; font-weight:700; color:#0b2246; }
+    .map-label-box .region-val { font-size:9.5px; font-weight:900; color:#0b63ce; }
 
-    .map-badge-pin { position: absolute; width: 18px; height: 18px; border-radius: 50%; color: white; font-size: 9px; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 6; transform: translate(-50%, -50%); border: 1.5px solid white; }
+    /* Garis penghubung digambar sebagai SVG di bawah label tetapi di atas peta. */
+    .map-connector-layer { position:absolute; inset:0; width:100%; height:100%; z-index:8; pointer-events:none; overflow:visible; }
+    .map-connector-line { stroke:#ffffff; stroke-width:1.25; stroke-dasharray:2.5 2; opacity:.92; vector-effect:non-scaling-stroke; }
+    .map-location-point { position:absolute; width:7px; height:7px; border-radius:50%; background:#ffffff; border:2px solid #0b2246; box-shadow:0 1px 4px rgba(0,0,0,.35); transform:translate(-50%,-50%); z-index:11; }
+
+    .map-badge-pin { position:absolute; width:18px; height:18px; border-radius:50%; color:white; font-size:9px; font-weight:bold; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 5px rgba(0,0,0,.3); z-index:13; transform:translate(-50%,-50%); border:1.5px solid white; }
     .badge-rendah { background: #3b82f6; }
     .badge-sedang { background: #1d4ed8; }
     .badge-tinggi { background: #0f172a; }
@@ -1443,36 +1446,186 @@
     function renderDynamicMapPins(provMap) {
       const mapCanvas = document.getElementById('d2MapCanvasContainer');
       if (!mapCanvas) return;
-      let mapHtml = '';
 
       const entries = Object.keys(provMap).map(rawName => ({
         provName: normalizeProvinceName(rawName),
         data: provMap[rawName]
       })).filter(x => provinceMapCoords[x.provName]);
 
-      entries.forEach(({provName, data}) => {
+      if (!entries.length) {
+        mapCanvas.innerHTML = '<div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#e2e8f0; font-size:11px; font-weight:700;">Belum ada data provinsi</div>';
+        return;
+      }
+
+      // SVG khusus untuk connector. Marker tetap berada tepat pada koordinat provinsi.
+      let html = '<svg class="map-connector-layer" id="d2MapConnectorLayer" aria-hidden="true"></svg>';
+
+      entries.forEach(({provName, data}, index) => {
         const coords = provinceMapCoords[provName];
         let badgeClass = 'badge-rendah';
         if (data.nilai >= 1000000000) badgeClass = 'badge-tinggi';
         else if (data.nilai >= 500000000) badgeClass = 'badge-sedang';
 
-        // Titik selalu memakai koordinat geografis provinsi.
-        // Label boleh ditempatkan terpisah agar tidak menutup titik/peta.
-        mapHtml += `
-          <div class="map-label-box" style="top:${coords.labelTop}; left:${coords.labelLeft};">
+        html += `
+          <div class="map-label-box" data-prov="${provName}" data-base-top="${parseFloat(coords.labelTop)}" data-base-left="${parseFloat(coords.labelLeft)}">
             <span class="region-name">${provName}</span>
             <span class="region-val">Rp ${formatRupiah(data.nilai)}</span>
           </div>
-          <div class="map-location-point" style="top:${coords.top}; left:${coords.left};" aria-label="Lokasi ${provName}"></div>
-          <div class="map-badge-pin ${badgeClass}" style="top:${coords.top}; left:${coords.left};">${data.count}</div>
+          <div class="map-location-point" data-prov="${provName}" data-top="${parseFloat(coords.top)}" data-left="${parseFloat(coords.left)}" aria-label="Lokasi ${provName}"></div>
+          <div class="map-badge-pin ${badgeClass}" data-prov="${provName}" style="top:${coords.top}; left:${coords.left};">${data.count}</div>
         `;
       });
 
-      if (!entries.length) {
-        mapHtml = '<div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#e2e8f0; font-size:11px; font-weight:700;">Belum ada data provinsi</div>';
-      }
-      mapCanvas.innerHTML = mapHtml;
+      mapCanvas.innerHTML = html;
+      layoutMapLabels();
     }
+
+    // Menempatkan label berdasarkan posisi awal, lalu menghindari tabrakan secara otomatis.
+    // Algoritma bekerja pada ukuran pixel aktual sehingga tetap benar saat dashboard di-resize.
+    function layoutMapLabels() {
+      const mapCanvas = document.getElementById('d2MapCanvasContainer');
+      if (!mapCanvas) return;
+
+      const labels = Array.from(mapCanvas.querySelectorAll('.map-label-box'));
+      const points = Array.from(mapCanvas.querySelectorAll('.map-location-point'));
+      const svg = document.getElementById('d2MapConnectorLayer');
+      if (!labels.length) return;
+
+      const cw = mapCanvas.clientWidth;
+      const ch = mapCanvas.clientHeight;
+      const GAP = 7;
+      const EDGE = 5;
+
+      // Reset ke posisi awal yang ditentukan pada provinceMapCoords.
+      labels.forEach(label => {
+        label.dataset.dx = '0';
+        label.dataset.dy = '0';
+        label.style.left = label.dataset.baseLeft + '%';
+        label.style.top = label.dataset.baseTop + '%';
+        label.style.transform = 'translate(-50%, -100%)';
+      });
+
+      // Beri browser satu frame agar ukuran label sudah terukur sebelum collision detection.
+      requestAnimationFrame(() => {
+        const getRect = el => el.getBoundingClientRect();
+        const canvasRect = mapCanvas.getBoundingClientRect();
+
+        // Kandidat offset: posisi awal diprioritaskan, lalu atas/bawah/kiri/kanan.
+        const candidates = [
+          [0,0], [0,-32], [0,32], [-55,0], [55,0],
+          [-55,-30], [55,-30], [-55,30], [55,30],
+          [0,-62], [0,62], [-85,0], [85,0],
+          [-85,-45], [85,-45], [-85,45], [85,45]
+        ];
+
+        const placed = [];
+        labels.forEach(label => {
+          let best = null;
+          const baseX = parseFloat(label.dataset.baseLeft) / 100 * cw;
+          const baseY = parseFloat(label.dataset.baseTop) / 100 * ch;
+
+          candidates.forEach(([dx,dy]) => {
+            // Terapkan kandidat dan ukur.
+            label.style.left = baseX + dx + 'px';
+            label.style.top = baseY + dy + 'px';
+            const r = getRect(label);
+            const local = {
+              left: r.left - canvasRect.left,
+              right: r.right - canvasRect.left,
+              top: r.top - canvasRect.top,
+              bottom: r.bottom - canvasRect.top,
+              width: r.width,
+              height: r.height
+            };
+
+            // Jangan sampai label keluar dari area peta.
+            const inside = local.left >= EDGE && local.right <= cw - EDGE && local.top >= EDGE && local.bottom <= ch - EDGE;
+            if (!inside) return;
+
+            let overlap = 0;
+            placed.forEach(prev => {
+              const ox = Math.max(0, Math.min(local.right, prev.right) - Math.max(local.left, prev.left));
+              const oy = Math.max(0, Math.min(local.bottom, prev.bottom) - Math.max(local.top, prev.top));
+              overlap += ox * oy;
+            });
+
+            const distance = Math.hypot(dx, dy);
+            const score = overlap * 1000 + distance;
+            if (!best || score < best.score) best = { dx, dy, score, rect: local };
+          });
+
+          // Jika semua kandidat tidak ideal, dorong label ke bawah bertahap sampai bebas.
+          if (!best) {
+            let dx = 0, dy = 0;
+            for (let step = 1; step <= 12; step++) {
+              dy = step * 24;
+              label.style.left = baseX + 'px';
+              label.style.top = baseY + dy + 'px';
+              const r = getRect(label);
+              const local = { left:r.left-canvasRect.left, right:r.right-canvasRect.left, top:r.top-canvasRect.top, bottom:r.bottom-canvasRect.top };
+              const inside = local.left >= EDGE && local.right <= cw-EDGE && local.top >= EDGE && local.bottom <= ch-EDGE;
+              const collision = placed.some(prev => !(local.right + GAP < prev.left || local.left - GAP > prev.right || local.bottom + GAP < prev.top || local.top - GAP > prev.bottom));
+              if (inside && !collision) { best = {dx,dy,score:dy,rect:local}; break; }
+            }
+          }
+
+          if (!best) best = {dx:0,dy:0,score:999999,rect:null};
+          label.style.left = baseX + best.dx + 'px';
+          label.style.top = baseY + best.dy + 'px';
+
+          // Simpan offset untuk resize berikutnya/debugging.
+          label.dataset.dx = best.dx;
+          label.dataset.dy = best.dy;
+          const rr = getRect(label);
+          placed.push({
+            left:rr.left-canvasRect.left-GAP,
+            right:rr.right-canvasRect.left+GAP,
+            top:rr.top-canvasRect.top-GAP,
+            bottom:rr.bottom-canvasRect.top+GAP
+          });
+        });
+
+        // Buat connector dari titik provinsi ke tepi label terdekat.
+        if (svg) {
+          svg.setAttribute('viewBox', `0 0 ${cw} ${ch}`);
+          svg.setAttribute('preserveAspectRatio', 'none');
+          svg.innerHTML = '';
+          labels.forEach(label => {
+            const prov = label.dataset.prov;
+            const point = points.find(p => p.dataset.prov === prov);
+            if (!point) return;
+
+            const pr = point.getBoundingClientRect();
+            const lr = label.getBoundingClientRect();
+            const px = pr.left + pr.width/2 - canvasRect.left;
+            const py = pr.top + pr.height/2 - canvasRect.top;
+            const centerX = lr.left + lr.width/2 - canvasRect.left;
+            const centerY = lr.top + lr.height/2 - canvasRect.top;
+
+            // Titik potong garis dengan rectangle label.
+            const vx = centerX - px;
+            const vy = centerY - py;
+            const scaleX = vx === 0 ? Infinity : (lr.width/2) / Math.abs(vx);
+            const scaleY = vy === 0 ? Infinity : (lr.height/2) / Math.abs(vy);
+            const scale = Math.min(scaleX, scaleY);
+            const ex = centerX - vx * scale;
+            const ey = centerY - vy * scale;
+
+            const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+            line.setAttribute('x1', px); line.setAttribute('y1', py);
+            line.setAttribute('x2', ex); line.setAttribute('y2', ey);
+            line.setAttribute('class','map-connector-line');
+            svg.appendChild(line);
+          });
+        }
+      });
+    }
+
+    // Re-layout saat ukuran card berubah, termasuk saat user mengganti ukuran browser.
+    window.addEventListener('resize', () => {
+      clearTimeout(window.__mapLayoutTimer);
+      window.__mapLayoutTimer = setTimeout(layoutMapLabels, 80);
+    });
 
     window.addEventListener('DOMContentLoaded', () => {
       initD2Charts();
