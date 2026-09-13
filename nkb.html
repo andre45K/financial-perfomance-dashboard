@@ -107,7 +107,7 @@
       background-color: #3b5247;
       border-radius: 6px;
       position: relative;
-      background-image: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/7QBAUGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAACQcAgAAAgAEHAJuABhhdGF1cjAwMDI5MzYyMjkvVmVjdGVlenn/4Q5uaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49J++7vycgaWQ9J1c1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCc/Pgo8eDp4bXBtZXRh xmlns:x='adobe:ns:meta/' x:xmptk='Image::ExifTool 12.76'>\n <rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'>\n  <rdf:Description rdf:about=''\n   xmlns:dc='http://purl.org/dc/elements/1.1/'>\n   <dc:creator>\n    <rdf:Seq>\n     <rdf:li>ataur0002936229</rdf:li>\n    </rdf:Seq>\n   </dc:creator>\n   <dc:rights>\n    <rdf:Alt>\n     <rdf:li xml:lang='x-default'>ataur0002936229/Vecteezy</rdf:li>\n    </rdf:Alt>\n   </dc:rights>\n  </rdf:Description>\n  <rdf:Description rdf:about=''\n   xmlns:plus='http://ns.useplus.org/ldf/xmp/1.0/'>\n   <plus:Licensor>\n    <rdf:Seq>\n     <rdf:li rdf:parseType='Resource'>\n      <plus:LicensorURL>https://www.vecteezy.com/-/49317295-indonesia-watercolor-map-of-green-color-with-border-lines-of-different-provinces-or-divisions-on-dark-background-using-paint-brush?utm_source=iptc%26utm_medium=googleimages%26utm_campaign=image</plus:LicensorURL>\n     </rdf:li>\n    </rdf:Seq>\n   </plus:Licensor>\n  </rdf:Description>\n  <rdf:Description rdf:about=''\n   xmlns:xmpRights='http://ns.adobe.com/xap/1.0/rights/'>\n   <xmpRights:WebStatement>https://www.vecteezy.com/licensing</xmpRights:WebStatement>\n  </rdf:Description>\n </rdf:RDF>\n</xspan>");
+      background-image: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/7QBAUGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAACQcAgAAAgAEHAJuABhhdGF1cjAwMDI5MzYyMjkvVmVjdGVlenn/4Q5uaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVgi4n9");
       background-repeat: no-repeat;
       background-size: contain;
       background-position: center center;
@@ -172,7 +172,7 @@
         <i class="fa-solid fa-chart-column"></i> Dashboard Rencana Kontrak 2026
       </button>
       <button class="tab-btn" onclick="switchTab(event, 'tab-nkb-2')">
-        <i class="fa-solid fa-chart-line"></i> Dashboard Nilai Kontrak Baru (s.d Juli 2026)
+        <i class="fa-solid fa-chart-line"></i> Dashboard Nilai Kontrak Baru (s.d Agustus 2026)
       </button>
     </div>
 
@@ -416,20 +416,105 @@
 
 
     <!-- ========================================================= -->
-    <!-- TAB 2: DASHBOARD NILAI KONTRAK BARU (S.D JULI 2026)       -->
+    <!-- TAB 2: DASHBOARD NILAI KONTRAK BARU (S.D AGUSTUS 2026)    -->
     <!-- ========================================================= -->
     <div id="tab-nkb-2" class="tab-content">
       <div class="d2-container">
         
+        <!-- ADMIN INPUT PANEL UNTUK DASHBOARD 2 -->
+        <div class="d1-table-card" style="margin-bottom: 20px; border-top: 4px solid #0b63ce; background: #f8fafc; color: #1e293b;">
+          <div class="d1-table-header" style="display: flex; justify-content: space-between; align-items: center; background: #0b2246;">
+            <span><i class="fa-solid fa-gear"></i> Panel Admin: Input, Edit & Perbarui Data Dashboard 2 (s.d Agustus 2026)</span>
+            <button onclick="toggleAdminPanelD2()" style="background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 2px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold;">Tutup/Buka Panel</button>
+          </div>
+          <div id="adminFormBodyD2" style="padding: 16px;">
+            <p style="font-size: 11.5px; color: #475569; margin-bottom: 12px; font-weight: 600;">
+              Tambahkan, edit, atau hapus data kontrak pada tabel master di bawah ini sesuai data s.d Agustus 2026. Semua KPI, ringkasan, peta sebaran, tabel customer, dan grafik proporsi akan diperbarui secara otomatis.
+            </p>
+            
+            <!-- FORM TAMBAH / EDIT KONTRAK D2 -->
+            <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; margin-bottom: 15px;">
+              <div id="d2FormTitleMode" style="font-size: 11px; font-weight: 800; color: #0b2246; margin-bottom: 8px; text-transform: uppercase;">Form Tambah Data Kontrak Baru (Dashboard 2)</div>
+              <input type="hidden" id="d2EditIndex" value="-1">
+              <div style="display: grid; grid-template-columns: 2fr repeat(5, 1fr); gap: 8px; align-items: flex-end; margin-bottom: 8px;">
+                <div>
+                  <label style="display: block; font-size: 9.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">CUSTOMER / PROYEK</label>
+                  <input type="text" id="d2InCust" placeholder="Nama Customer" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10.5px;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 9.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">JUMLAH UNIT</label>
+                  <input type="number" id="d2InUnit" placeholder="Unit" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10.5px;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 9.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">JUMLAH KONTRAK</label>
+                  <input type="number" id="d2InKontrak" placeholder="Kontrak" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10.5px;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 9.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">TIPE ALAT</label>
+                  <select id="d2InAlat" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10.5px; background: white;">
+                    <option value="Truck Mixer">Truck Mixer</option>
+                    <option value="Truck Trailer">Truck Trailer</option>
+                    <option value="Stone Crusher">Stone Crusher</option>
+                    <option value="Mobile Crane">Mobile Crane</option>
+                    <option value="Dump Truck">Dump Truck</option>
+                    <option value="Silo">Silo</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display: block; font-size: 9.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">LOKASI</label>
+                  <input type="text" id="d2InLokasi" placeholder="Lokasi Proyek" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10.5px;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 9.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">TOTAL NILAI KONTRAK (IDR)</label>
+                  <input type="number" id="d2InNilai" placeholder="Nilai Rupiah" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10.5px;">
+                </div>
+              </div>
+              <div style="display: flex; gap: 5px; margin-top: 8px; width: 250px;">
+                <button id="d2SaveUpdateBtn" onclick="saveD2Item()" style="background: #0b63ce; color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 10.5px; width: 100%;">
+                  <i class="fa-solid fa-plus"></i> Simpan
+                </button>
+                <button onclick="resetD2Form()" style="background: #64748b; color: white; border: none; padding: 7px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 10.5px;">
+                  Reset
+                </button>
+              </div>
+            </div>
+
+            <!-- TABEL MASTER DATA D2 -->
+            <div style="font-size: 11px; font-weight: 800; color: #0b2246; margin-bottom: 6px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center;">
+              <span>Daftar Master Data Kontrak Baru s.d Agustus 2026 (<span id="totalD2Count">18</span> Item)</span>
+              <span style="font-size: 10px; font-weight: normal; color: #64748b;">Sesuai data master 18 baris</span>
+            </div>
+            <div style="max-height: 200px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
+              <table class="data-table" id="adminD2Table">
+                <thead>
+                  <tr>
+                    <th style="width: 35px;">No</th>
+                    <th>Customer</th>
+                    <th class="text-center">Unit</th>
+                    <th class="text-center">Kontrak</th>
+                    <th>Tipe Alat</th>
+                    <th>Lokasi</th>
+                    <th class="text-right">Nilai Kontrak (Rp)</th>
+                    <th class="text-center" style="width: 80px;">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="adminD2Body">
+                  <!-- Javascript will render rows here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
         <!-- D2 TOP BAR -->
         <div class="d2-top-bar">
           <div>
-            <h2>Dashboard Nilai Kontrak Baru</h2>
-            <p>s.d Juli 2026</p>
+            <h2>Nilai Kontrak Baru s.d Agustus 2026</h2>
+            <p>Sistem Informasi Manajemen Kontrak</p>
           </div>
           <div class="d2-date-box">
             <i class="fa-solid fa-calendar-days"></i>
-            <span>Data s.d Juli 2026</span>
+            <span id="d2DateLabel">Data s.d Agustus 2026</span>
           </div>
         </div>
 
@@ -439,7 +524,7 @@
             <div class="d2-m-icon" style="background: #0b63ce;"><i class="fa-solid fa-cubes"></i></div>
             <div>
               <div class="d2-m-label">TOTAL NILAI KONTRAK BARU</div>
-              <div class="d2-m-val">Rp 8.786.583.326</div>
+              <div class="d2-m-val" id="d2MetricTotalNilai">Rp 9.497.916.659</div>
             </div>
           </div>
 
@@ -447,7 +532,7 @@
             <div class="d2-m-icon" style="background: #008767;"><i class="fa-solid fa-file-pen"></i></div>
             <div>
               <div class="d2-m-label">JUMLAH KONTRAK BARU</div>
-              <div class="d2-m-val">45 <span style="font-size: 11px; font-weight: normal; color: #64748b;">Kontrak</span></div>
+              <div class="d2-m-val"><span id="d2MetricTotalKontrak">48</span> <span style="font-size: 11px; font-weight: normal; color: #64748b;">Kontrak</span></div>
             </div>
           </div>
 
@@ -455,7 +540,7 @@
             <div class="d2-m-icon" style="background: #d97706;"><i class="fa-solid fa-users"></i></div>
             <div>
               <div class="d2-m-label">TOTAL CUSTOMER</div>
-              <div class="d2-m-val">12 <span style="font-size: 11px; font-weight: normal; color: #64748b;">Customer</span></div>
+              <div class="d2-m-val"><span id="d2MetricTotalCust">12</span> <span style="font-size: 11px; font-weight: normal; color: #64748b;">Customer</span></div>
             </div>
           </div>
 
@@ -463,14 +548,14 @@
             <div>
               <div class="d2-m-label">PERBANDINGAN NILAI KONTRAK BARU DENGAN TARGET</div>
               <div style="font-size: 13px; font-weight: bold; color: #0b2246; margin-top: 2px;">
-                Pencapaian s.d Juli 2026: <span style="color: #008767; font-weight: 900;">66,84%</span>
+                Pencapaian s.d Agustus: <span id="d2MetricPencapaian" style="color: #008767; font-weight: 900;">72,20%</span>
               </div>
             </div>
             <div style="text-align: right;">
-              <div style="font-size: 9.5px; color: #64748b; font-weight: 700;">TOTAL TARGET</div>
+              <div style="font-size: 9.5px; color: #64748b; font-weight: 700;">TARGET NILAI KONTRAK</div>
               <div style="font-size: 13px; font-weight: 900; color: #0b2246;">Rp 13.155.200.000</div>
-              <div style="font-size: 9.5px; color: #64748b; font-weight: 700; margin-top: 2px;">TOTAL NILAI KONTRAK BARU</div>
-              <div style="font-size: 13px; font-weight: 900; color: #0b63ce;">Rp 8.786.583.326</div>
+              <div style="font-size: 9.5px; color: #64748b; font-weight: 700; margin-top: 2px;">TOTAL NILAI KONTRAK</div>
+              <div id="d2MetricSubTotal" style="font-size: 13px; font-weight: 900; color: #0b63ce;">Rp 9.497.916.659</div>
             </div>
           </div>
         </div>
@@ -520,52 +605,68 @@
               <!-- 4. Cilegon (Tinggi) -->
               <div class="map-label-box" style="top: 54%; left: 35%;">
                 <span class="region-name">Cilegon</span>
-                <span class="region-val">Rp 2.114.350.000</span>
+                <span class="region-val">Rp 2.366.350.000</span>
               </div>
               <div class="map-location-point" style="top: 60%; left: 31%;" aria-label="Lokasi Cilegon"></div>
-              <div class="map-badge-pin badge-tinggi" style="top: 60%; left: 31%;">2</div>
+              <div class="map-badge-pin badge-tinggi" style="top: 60%; left: 31%;">3</div>
 
               <!-- 5. Jakarta (Sedang) -->
               <div class="map-label-box" style="top: 55%; left: 40%;">
                 <span class="region-name">Jakarta</span>
-                <span class="region-val">Rp 875.000.000</span>
+                <span class="region-val">Rp 563.000.000</span>
               </div>
               <div class="map-location-point" style="top: 61.5%; left: 35.5%;" aria-label="Lokasi Jakarta"></div>
-              <div class="map-badge-pin badge-sedang" style="top: 61.5%; left: 35.5%;">2</div>
+              <div class="map-badge-pin badge-sedang" style="top: 61.5%; left: 35.5%;">3</div>
 
               <!-- 6. Bandung (Rendah) -->
               <div class="map-label-box" style="top: 70%; left: 43%;">
                 <span class="region-name">Bandung</span>
-                <span class="region-val">Rp 372.000.000</span>
+                <span class="region-val">Rp 1.341.999.994</span>
               </div>
               <div class="map-location-point" style="top: 63.5%; left: 38.5%;" aria-label="Lokasi Bandung"></div>
-              <div class="map-badge-pin badge-rendah" style="top: 63.5%; left: 38.5%;">2</div>
+              <div class="map-badge-pin badge-rendah" style="top: 63.5%; left: 38.5%;">3</div>
 
               <!-- 7. Tegal (Rendah) -->
               <div class="map-label-box" style="top: 70%; left: 48%;">
                 <span class="region-name">Tegal</span>
-                <span class="region-val">Rp 340.000.000</span>
+                <span class="region-val">Rp 233.166.666</span>
               </div>
               <div class="map-location-point" style="top: 63%; left: 43%;" aria-label="Lokasi Tegal"></div>
-              <div class="map-badge-pin badge-rendah" style="top: 63%; left: 43%;">2</div>
+              <div class="map-badge-pin badge-rendah" style="top: 63%; left: 43%;">1</div>
 
-              <!-- 8. Gresik (Sedang) -->
+              <!-- 8. Garut -->
+              <div class="map-label-box" style="top: 78%; left: 40%;">
+                <span class="region-name">Garut</span>
+                <span class="region-val">Rp 447.999.999</span>
+              </div>
+              <div class="map-location-point" style="top: 67%; left: 39%;" aria-label="Lokasi Garut"></div>
+              <div class="map-badge-pin badge-rendah" style="top: 67%; left: 39%;">2</div>
+
+              <!-- 9. Subang -->
+              <div class="map-label-box" style="top: 45%; left: 35%;">
+                <span class="region-name">Subang</span>
+                <span class="region-val">Rp 220.000.000</span>
+              </div>
+              <div class="map-location-point" style="top: 57%; left: 33%;" aria-label="Lokasi Subang"></div>
+              <div class="map-badge-pin badge-rendah" style="top: 57%; left: 33%;">1</div>
+
+              <!-- 10. Gresik (Sedang) -->
               <div class="map-label-box" style="top: 55%; left: 57%;">
                 <span class="region-name">Gresik</span>
-                <span class="region-val">Rp 899.833.326</span>
+                <span class="region-val">Rp 450.000.000</span>
               </div>
               <div class="map-location-point" style="top: 62%; left: 52%;" aria-label="Lokasi Gresik"></div>
               <div class="map-badge-pin badge-sedang" style="top: 62%; left: 52%;">1</div>
 
-              <!-- 9. Tuban (Rendah) -->
+              <!-- 11. Tuban (Rendah) -->
               <div class="map-label-box" style="top: 54%; left: 66%;">
                 <span class="region-name">Tuban</span>
-                <span class="region-val">Rp 459.000.000</span>
+                <span class="region-val">Rp 765.000.000</span>
               </div>
               <div class="map-location-point" style="top: 61.5%; left: 50%;" aria-label="Lokasi Tuban"></div>
               <div class="map-badge-pin badge-rendah" style="top: 61.5%; left: 50%;">1</div>
 
-              <!-- 10. Sampang (Rendah) -->
+              <!-- 12. Sampang (Rendah) -->
               <div class="map-label-box" style="top: 70%; left: 62%;">
                 <span class="region-name">Sampang</span>
                 <span class="region-val">Rp 340.000.000</span>
@@ -573,18 +674,18 @@
               <div class="map-location-point" style="top: 62.5%; left: 56.5%;" aria-label="Lokasi Sampang"></div>
               <div class="map-badge-pin badge-rendah" style="top: 62.5%; left: 56.5%;">1</div>
 
-              <!-- 11. Balikpapan (Rendah) -->
+              <!-- 13. Balikpapan (Rendah) -->
               <div class="map-label-box" style="top: 43%; left: 59%;">
                 <span class="region-name">Balikpapan</span>
-                <span class="region-val">Rp 124.000.000</span>
+                <span class="region-val">Rp 31.000.000</span>
               </div>
               <div class="map-location-point" style="top: 49.5%; left: 51.5%;" aria-label="Lokasi Balikpapan"></div>
               <div class="map-badge-pin badge-rendah" style="top: 49.5%; left: 51.5%;">1</div>
 
-              <!-- 12. Penajam Paser Utara (Rendah) -->
+              <!-- 14. Penajam Paser Utara (Rendah) -->
               <div class="map-label-box" style="top: 37%; left: 66%;">
                 <span class="region-name">Penajam Paser Utara</span>
-                <span class="region-val">Rp 124.000.000</span>
+                <span class="region-val">Rp 93.000.000</span>
               </div>
               <div class="map-location-point" style="top: 48.5%; left: 49.5%;" aria-label="Lokasi Penajam Paser Utara"></div>
               <div class="map-badge-pin badge-rendah" style="top: 48.5%; left: 49.5%;">1</div>
@@ -594,10 +695,10 @@
             <!-- RINGKASAN SEBARAN BOX -->
             <div class="d2-summary-box">
               <div class="d2-summary-box-title">Ringkasan Sebaran</div>
-              <div class="d2-summary-row"><span>Total Lokasi</span> <span>14</span></div>
-              <div class="d2-summary-row"><span>Total Customer</span> <span>12</span></div>
-              <div class="d2-summary-row"><span>Total Kontrak Baru</span> <span>45</span></div>
-              <div class="d2-summary-row"><span>Total Nilai Kontrak Baru</span> <span style="color: #0b63ce;">Rp 8.786.583.326</span></div>
+              <div class="d2-summary-row"><span>Total Unit</span> <span id="summaryTotalUnit">57</span></div>
+              <div class="d2-summary-row"><span>Total Kontrak</span> <span id="summaryTotalKontrak">48</span></div>
+              <div class="d2-summary-row"><span>Total Customer</span> <span id="summaryTotalCust">12</span></div>
+              <div class="d2-summary-row"><span>Total Nilai Kontrak</span> <span id="summaryTotalNilai" style="color: #0b63ce;">Rp 9.497.916.659</span></div>
             </div>
           </div>
 
@@ -605,7 +706,7 @@
           <div class="d2-table-card">
             <div class="d2-bottom-title">TOTAL NILAI KONTRAK BARU BERDASARKAN CUSTOMER</div>
             <div class="d2-table-container">
-              <table class="d2-table">
+              <table class="d2-table" id="d2CustomerSummaryTable">
                 <thead>
                   <tr>
                     <th style="width: 30px;">No</th>
@@ -615,24 +716,13 @@
                     <th class="text-center" style="width: 50px;">%</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr><td>1</td><td>PT Sumber Urip Sejati</td><td>Cilegon</td><td class="text-right">Rp 2.114.350.000</td><td class="text-center">24,05%</td></tr>
-                  <tr><td>2</td><td>PT Waskita Karya (Persero) Tbk</td><td>Aceh Tengah</td><td class="text-right">Rp 1.369.400.000</td><td class="text-center">15,58%</td></tr>
-                  <tr><td>3</td><td>PT Tirta Dan Mitra Pertiwi</td><td>Lampung Selatan</td><td class="text-right">Rp 1.140.000.000</td><td class="text-center">12,97%</td></tr>
-                  <tr><td>4</td><td>PT Sraya Artha Gemilang</td><td>Bandung, Tegal, Garut</td><td class="text-right">Rp 899.833.326</td><td class="text-center">10,24%</td></tr>
-                  <tr><td>5</td><td>PT Indosarana Jaya Perkasa</td><td>Gresik, Jakarta</td><td class="text-right">Rp 875.000.000</td><td class="text-center">9,95%</td></tr>
-                  <tr><td>6</td><td>PT Hamori Medical Center</td><td>Subang</td><td class="text-right">Rp 220.000.000</td><td class="text-center">2,50%</td></tr>
-                  <tr><td>7</td><td>PT Trans Ringo Group</td><td>Bandung</td><td class="text-right">Rp 372.000.000</td><td class="text-center">4,23%</td></tr>
-                  <tr><td>8</td><td>PT Trimitz Synergy Mandala</td><td>Garut</td><td class="text-right">Rp 348.000.000</td><td class="text-center">3,96%</td></tr>
-                  <tr><td>9</td><td>Waskita CAG KSO</td><td>Sampang</td><td class="text-right">Rp 340.000.000</td><td class="text-center">3,87%</td></tr>
-                  <tr><td>10</td><td>PT Baja Cosmo Energi</td><td>Penajam Paser Utara, Balikpapan</td><td class="text-right">Rp 124.000.000</td><td class="text-center">1,41%</td></tr>
-                  <tr><td>11</td><td>PT Liga Adhi Buana</td><td>Tuban</td><td class="text-right">Rp 459.000.000</td><td class="text-center">5,22%</td></tr>
-                  <tr><td>12</td><td>PT Waskita WKI KSO</td><td>Ogan Komering Ilir</td><td class="text-right">Rp 135.000.000</td><td class="text-center">1,54%</td></tr>
+                <tbody id="d2CustomerSummaryBody">
+                  <!-- Rendered via JS -->
                 </tbody>
                 <tfoot>
                   <tr class="d2-table-total">
                     <td colspan="3" class="font-bold">TOTAL</td>
-                    <td class="text-right font-bold">Rp 8.786.583.326</td>
+                    <td id="d2TableTotalNilai" class="text-right font-bold">Rp 9.497.916.659</td>
                     <td class="text-center font-bold">100%</td>
                   </tr>
                 </tfoot>
@@ -761,88 +851,80 @@
       }
     });
 
-    // --- CHART D2: Proporsi Tipe Alat ---
-    const ctxD2Eq = document.getElementById('chartD2Equipment').getContext('2d');
-    new Chart(ctxD2Eq, {
-      type: 'doughnut',
-      data: {
-        labels: ['Truck Mixer', 'Truck Trailer', 'Stone Crusher', 'Mobile Crane', 'Dump Truck'],
-        datasets: [{
-          data: [69.2, 10.0, 13.0, 2.5, 1.6],
-          backgroundColor: ['#0b63ce', '#0b2265', '#e65c00', '#7c3aed', '#008767'],
-          borderWidth: 1, borderColor: '#ffffff'
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { position: 'right', labels: { boxWidth: 10, font: { size: 9 } } },
-          datalabels: { display: false }
-        },
-        cutout: '50%'
-      }
-    });
+    // --- CHARTS D2 OBJECTS (GLOBAL SO DYNAMIC RECALCULATION WORKS) ---
+    let chartD2EqObj = null;
+    let chartD2LocObj = null;
+    let chartD2TrendObj = null;
 
-    // --- CHART D2: Proporsi Lokasi ---
-    const ctxD2Loc = document.getElementById('chartD2Location').getContext('2d');
-    new Chart(ctxD2Loc, {
-      type: 'doughnut',
-      data: {
-        labels: ['Cilegon', 'Aceh Tengah', 'Lampung Selatan', 'Bandung', 'Jakarta', 'Tuban', 'Garut', 'Sampang', 'Subang', 'Penajam Paser', 'Balikpapan', 'Ogan Komering'],
-        datasets: [{
-          data: [24.05, 15.58, 12.97, 10.24, 9.95, 5.22, 4.23, 3.96, 3.87, 2.50, 1.41, 1.54],
-          backgroundColor: ['#0b63ce', '#1d4ed8', '#3b82f6', '#60a5fa', '#e65c00', '#f97316', '#7c3aed', '#a855f7', '#008767', '#10b981', '#f43f5e', '#cbd5e1'],
-          borderWidth: 1, borderColor: '#ffffff'
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { position: 'right', labels: { boxWidth: 8, font: { size: 8 } } },
-          datalabels: { display: false }
-        },
-        cutout: '45%'
-      }
-    });
-
-    // --- CHART D2: Tren Kumulatif ---
-    const ctxD2Trend = document.getElementById('chartD2Trend').getContext('2d');
-    new Chart(ctxD2Trend, {
-      type: 'line',
-      data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
-        datasets: [
-          {
-            label: 'Nilai Kontrak Baru (Kumulatif)',
-            data: [0.05, 0.12, 0.45, 1.14, 2.15, 2.92, 8.78, null, null, null, null, null],
-            borderColor: '#0b63ce', backgroundColor: '#0b63ce', borderWidth: 2, pointRadius: 3, tension: 0.1
+    function initD2Charts() {
+      // 1. Tipe Alat
+      const ctxD2Eq = document.getElementById('chartD2Equipment').getContext('2d');
+      chartD2EqObj = new Chart(ctxD2Eq, {
+        type: 'doughnut',
+        data: { labels: [], datasets: [{ data: [], backgroundColor: ['#0b63ce', '#0b2265', '#e65c00', '#7c3aed', '#008767', '#d4a017'], borderWidth: 1, borderColor: '#ffffff' }] },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'right', labels: { boxWidth: 10, font: { size: 9 } } },
+            datalabels: { display: false }
           },
-          {
-            label: 'Target (Kumulatif)',
-            data: [1.0, 2.1, 3.2, 4.5, 5.8, 7.2, 8.78, 10.0, 11.2, 12.1, 12.8, 13.15],
-            borderColor: '#008767', backgroundColor: '#008767', borderDash: [4,4], borderWidth: 2, pointRadius: 2
-          }
-        ]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { position: 'top', labels: { boxWidth: 10, font: { size: 9 } } },
-          datalabels: { display: false }
-        },
-        scales: {
-          x: { ticks: { font: { size: 9 } }, grid: { display: false } },
-          y: { min: 0, max: 15, ticks: { font: { size: 9 }, callback: val => val + ' Miliar' }, grid: { color: '#f1f5f9' } }
+          cutout: '50%'
         }
-      }
-    });
+      });
+
+      // 2. Lokasi
+      const ctxD2Loc = document.getElementById('chartD2Location').getContext('2d');
+      chartD2LocObj = new Chart(ctxD2Loc, {
+        type: 'doughnut',
+        data: { labels: [], datasets: [{ data: [], backgroundColor: ['#0b63ce', '#1d4ed8', '#3b82f6', '#60a5fa', '#e65c00', '#f97316', '#7c3aed', '#a855f7', '#008767', '#10b981', '#f43f5e', '#cbd5e1', '#0b2246', '#f59e0b'], borderWidth: 1, borderColor: '#ffffff' }] },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'right', labels: { boxWidth: 8, font: { size: 8 } } },
+            datalabels: { display: false }
+          },
+          cutout: '45%'
+        }
+      });
+
+      // 3. Tren Kumulatif
+      const ctxD2Trend = document.getElementById('chartD2Trend').getContext('2d');
+      chartD2TrendObj = new Chart(ctxD2Trend, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+          datasets: [
+            {
+              label: 'Nilai Kontrak Baru (Kumulatif)',
+              data: [0.05, 0.12, 0.45, 1.14, 2.15, 2.92, 8.78, 9.50, null, null, null, null],
+              borderColor: '#0b63ce', backgroundColor: '#0b63ce', borderWidth: 2, pointRadius: 3, tension: 0.1
+            },
+            {
+              label: 'Target (Kumulatif)',
+              data: [1.0, 2.1, 3.2, 4.5, 5.8, 7.2, 8.78, 9.49, 10.5, 11.2, 12.1, 13.15],
+              borderColor: '#008767', backgroundColor: '#008767', borderDash: [4,4], borderWidth: 2, pointRadius: 2
+            }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top', labels: { boxWidth: 10, font: { size: 9 } } },
+            datalabels: { display: false }
+          },
+          scales: {
+            x: { ticks: { font: { size: 9 } }, grid: { display: false } },
+            y: { min: 0, max: 15, ticks: { font: { size: 9 }, callback: val => val + ' Miliar' }, grid: { color: '#f1f5f9' } }
+          }
+        }
+      });
+    }
   </script>
 
   <script>
     // --- MASTER DATA & STATE MANAGEMENT FOR DASHBOARD 1 (EXCEL MATCH) ---
     const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
     
-    // Initial 14 contracts matching spreadsheet image exactly
     let masterContracts = [
       { customer: 'Bendungan Tiga Dihaji', alat: 'Truck Mixer', bulan: 3, nilai: 760000000 },
       { customer: 'SR Sampang', alat: 'Truck Mixer', bulan: 4, nilai: 318000000 },
@@ -907,10 +989,8 @@
       }
 
       if (editIdx >= 0) {
-        // Update existing item
         masterContracts[editIdx] = { customer: cust, alat: alat, bulan: bulan, nilai: nilai };
       } else {
-        // Add new item
         masterContracts.push({ customer: cust, alat: alat, bulan: bulan, nilai: nilai });
       }
 
@@ -928,8 +1008,6 @@
       
       document.getElementById('formTitleMode').innerText = 'Form Edit Kontrak (Index: ' + (idx + 1) + ')';
       document.getElementById('saveUpdateBtn').innerHTML = '<i class="fa-solid fa-save"></i> Perbarui';
-      
-      // Open panel if closed
       document.getElementById('adminFormBody').style.display = 'block';
     }
 
@@ -951,45 +1029,24 @@
 
     function recalculateDashboard1() {
       let monthlyTotals = new Array(12).fill(0);
-      let equipmentTotals = {
-        'Truck Mixer': 0,
-        'Truck Trailer': 0,
-        'Stone Crusher': 0,
-        'Batching Plant': 0,
-        'Silo': 0
-      };
-
+      let equipmentTotals = { 'Truck Mixer': 0, 'Truck Trailer': 0, 'Stone Crusher': 0, 'Batching Plant': 0, 'Silo': 0 };
       let grandTotal = 0;
 
       masterContracts.forEach(c => {
-        if (c.bulan >= 0 && c.bulan < 12) {
-          monthlyTotals[c.bulan] += c.nilai;
-        }
-        if (equipmentTotals[c.alat] !== undefined) {
-          equipmentTotals[c.alat] += c.nilai;
-        } else {
-          equipmentTotals[c.alat] = c.nilai;
-        }
+        if (c.bulan >= 0 && c.bulan < 12) monthlyTotals[c.bulan] += c.nilai;
+        if (equipmentTotals[c.alat] !== undefined) equipmentTotals[c.alat] += c.nilai;
+        else equipmentTotals[c.alat] = c.nilai;
         grandTotal += c.nilai;
       });
 
-      // 1. Update KPI Cards
       document.querySelector('.d1-kpi-grid .d1-kpi-card:nth-child(1) .d1-kpi-value').innerText = formatRupiah(grandTotal);
-      const avgMonthly = grandTotal / 12;
-      document.querySelector('.d1-kpi-grid .d1-kpi-card:nth-child(2) .d1-kpi-value').innerText = formatRupiah(Math.round(avgMonthly));
+      document.querySelector('.d1-kpi-grid .d1-kpi-card:nth-child(2) .d1-kpi-value').innerText = formatRupiah(Math.round(grandTotal / 12));
       
-      let maxM = 0;
-      let maxVal = -1;
-      monthlyTotals.forEach((val, idx) => {
-        if (val > maxVal) {
-          maxVal = val;
-          maxM = idx;
-        }
-      });
+      let maxM = 0, maxVal = -1;
+      monthlyTotals.forEach((val, idx) => { if (val > maxVal) { maxVal = val; maxM = idx; } });
       document.querySelector('.d1-kpi-grid .d1-kpi-card:nth-child(3) .d1-kpi-value').innerText = monthNames[maxM];
       document.querySelector('.d1-kpi-grid .d1-kpi-card:nth-child(3) .d1-kpi-sub').innerText = formatRupiah(maxVal) + ' Rupiah';
 
-      // 2. Update Monthly Table
       const monthlyTableBody = document.querySelector('.d1-tables-grid .d1-table-card:nth-child(1) tbody');
       let mHtml = '';
       monthlyTotals.forEach((val, idx) => {
@@ -998,12 +1055,10 @@
       monthlyTableBody.innerHTML = mHtml;
       document.querySelector('.d1-tables-grid .d1-table-card:nth-child(1) tfoot .text-right').innerText = formatRupiah(grandTotal);
 
-      // 3. Update Equipment Table
       const eqTableBody = document.querySelector('.d1-tables-grid .d1-table-card:nth-child(2) tbody');
       let eqHtml = '';
       const eqKeys = Object.keys(equipmentTotals);
       eqKeys.sort((a, b) => equipmentTotals[b] - equipmentTotals[a]);
-
       const colors = ['#0b63ce', '#0b2265', '#e65c00', '#5c165c', '#d4a017'];
       let legendHtml = '<div class="d1-legend-title">Jenis Alat</div>';
 
@@ -1011,24 +1066,19 @@
         const val = equipmentTotals[eq];
         const pct = grandTotal > 0 ? (val / grandTotal) * 100 : 0;
         const color = colors[idx % colors.length];
-        
         eqHtml += `<tr>
           <td class="font-bold">${eq}</td>
           <td class="text-right">${formatRupiah(val)}</td>
           <td><div class="progress-cell"><span class="font-bold" style="font-size: 10px;">${pct.toFixed(2)}%</span><div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${pct}%; background: ${color};"></div></div></div></td>
         </tr>`;
-
         legendHtml += `<div class="d1-legend-row"><div class="d1-legend-bullet" style="background: ${color};"></div><span class="d1-legend-label">${eq} (${pct.toFixed(2)}%)</span></div>`;
       });
       eqTableBody.innerHTML = eqHtml;
       document.querySelector('.d1-tables-grid .d1-table-card:nth-child(2) tfoot td.text-right').innerText = formatRupiah(grandTotal);
 
       const legendContainer = document.querySelector('.d1-custom-legend');
-      if (legendContainer) {
-        legendContainer.innerHTML = legendHtml;
-      }
+      if (legendContainer) legendContainer.innerHTML = legendHtml;
 
-      // 4. Update Charts
       if (window.chartMonthlyObj) {
         window.chartMonthlyObj.data.datasets[0].data = monthlyTotals;
         let maxScale = 5000000000;
@@ -1046,11 +1096,218 @@
 
       renderAdminTable();
     }
+  </script>
 
-    // Initialize admin table on load
+  <script>
+    // --- MASTER DATA & STATE MANAGEMENT FOR DASHBOARD 2 (18 ROWS IMAGE) ---
+    let d2MasterData = [
+      { customer: 'PT Baja Cosmo Energi', unit: 3, kontrak: 1, alat: 'Truck Mixer', lokasi: 'Penajam Paser Utara', nilai: 93000000 },
+      { customer: 'PT Baja Cosmo Energi', unit: 1, kontrak: 1, alat: 'Truck Mixer', lokasi: 'Balikpapan', nilai: 31000000 },
+      { customer: 'PT Baja Cosmo Energi', unit: 3, kontrak: 1, alat: 'Truck Mixer', lokasi: 'Cilegon', nilai: 252000000 },
+      { customer: 'PT Hamori Medical Center', unit: 1, kontrak: 2, alat: 'Mobile Crane', lokasi: 'Subang', nilai: 220000000 },
+      { customer: 'PT Indosarana Jaya Perkasa', unit: 3, kontrak: 4, alat: 'Truck Trailer', lokasi: 'Gresik', nilai: 450000000 },
+      { customer: 'PT Indosarana Jaya Perkasa', unit: 3, kontrak: 6, alat: 'Truck Trailer', lokasi: 'Jakarta', nilai: 425000000 },
+      { customer: 'PT Indosarana Jaya Perkasa', unit: 1, kontrak: 1, alat: 'Dump Truck', lokasi: 'Jakarta', nilai: 138000000 },
+      { customer: 'PT Liga Adhi Buana', unit: 3, kontrak: 2, alat: 'Truck Mixer', lokasi: 'Tuban', nilai: 765000000 },
+      { customer: 'PT Sraya Artha Gemilang', unit: 1, kontrak: 7, alat: 'Truck Mixer', lokasi: 'Tegal', nilai: 233166666 },
+      { customer: 'PT Sraya Artha Gemilang', unit: 6, kontrak: 1, alat: 'Truck Mixer', lokasi: 'Bandung', nilai: 599999994 },
+      { customer: 'PT Sraya Artha Gemilang', unit: 1, kontrak: 1, alat: 'Truck Mixer', lokasi: 'Garut', nilai: 99999999 },
+      { customer: 'PT Sumber Urip Sejati', unit: 14, kontrak: 12, alat: 'Truck Mixer', lokasi: 'Cilegon', nilai: 2114350000 },
+      { customer: 'PT Tirta Dan Mitra Pertiwi', unit: 1, kontrak: 1, alat: 'Stone Crusher', lokasi: 'Lampung Selatan', nilai: 1140000000 },
+      { customer: 'PT Trans Ringo Group', unit: 4, kontrak: 2, alat: 'Truck Mixer', lokasi: 'Bandung', nilai: 744000000 },
+      { customer: 'PT Trimitz Synergy Mandala', unit: 4, kontrak: 1, alat: 'Truck Mixer', lokasi: 'Garut', nilai: 348000000 },
+      { customer: 'PT Waskita Karya (Persero) Tbk', unit: 3, kontrak: 2, alat: 'Truck Mixer', lokasi: 'Aceh Tengah', nilai: 1369400000 },
+      { customer: 'Waskita CAG KSO', unit: 4, kontrak: 2, alat: 'Truck Mixer', lokasi: 'Sampang', nilai: 340000000 },
+      { customer: 'PT Waskita WKI KSO', unit: 1, kontrak: 1, alat: 'Silo', lokasi: 'Ogan Komering Ilir', nilai: 135000000 }
+    ];
+
+    function toggleAdminPanelD2() {
+      const body = document.getElementById('adminFormBodyD2');
+      body.style.display = body.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function renderD2AdminTable() {
+      const tbody = document.getElementById('adminD2Body');
+      document.getElementById('totalD2Count').innerText = d2MasterData.length;
+      if (d2MasterData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center" style="color: #94a3b8; font-style: italic;">Belum ada data kontrak.</td></tr>';
+        return;
+      }
+      let html = '';
+      d2MasterData.forEach((item, idx) => {
+        html += `<tr>
+          <td class="text-center">${idx + 1}</td>
+          <td class="font-bold">${item.customer}</td>
+          <td class="text-center">${item.unit}</td>
+          <td class="text-center">${item.kontrak}</td>
+          <td>${item.alat}</td>
+          <td>${item.lokasi}</td>
+          <td class="text-right">${formatRupiah(item.nilai)}</td>
+          <td class="text-center">
+            <button onclick="editD2Item(${idx})" style="background: #f59e0b; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px; margin-right: 2px;" title="Edit"><i class="fa-solid fa-pen"></i></button>
+            <button onclick="deleteD2Item(${idx})" style="background: #ef4444; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`;
+      });
+      tbody.innerHTML = html;
+    }
+
+    function saveD2Item() {
+      const cust = document.getElementById('d2InCust').value.trim();
+      const unit = parseInt(document.getElementById('d2InUnit').value);
+      const kontrak = parseInt(document.getElementById('d2InKontrak').value);
+      const alat = document.getElementById('d2InAlat').value;
+      const lokasi = document.getElementById('d2InLokasi').value.trim();
+      const nilai = parseFloat(document.getElementById('d2InNilai').value);
+      const editIdx = parseInt(document.getElementById('d2EditIndex').value);
+
+      if (!cust || !lokasi || isNaN(nilai) || nilai <= 0 || isNaN(unit) || isNaN(kontrak)) {
+        alert('Mohon lengkapi semua form input dengan benar!');
+        return;
+      }
+
+      const newItem = { customer: cust, unit: unit, kontrak: kontrak, alat: alat, lokasi: lokasi, nilai: nilai };
+      if (editIdx >= 0) {
+        d2MasterData[editIdx] = newItem;
+      } else {
+        d2MasterData.push(newItem);
+      }
+
+      resetD2Form();
+      recalculateDashboard2();
+    }
+
+    function editD2Item(idx) {
+      const item = d2MasterData[idx];
+      document.getElementById('d2InCust').value = item.customer;
+      document.getElementById('d2InUnit').value = item.unit;
+      document.getElementById('d2InKontrak').value = item.kontrak;
+      document.getElementById('d2InAlat').value = item.alat;
+      document.getElementById('d2InLokasi').value = item.lokasi;
+      document.getElementById('d2InNilai').value = item.nilai;
+      document.getElementById('d2EditIndex').value = idx;
+
+      document.getElementById('d2FormTitleMode').innerText = 'Form Edit Data Kontrak (No: ' + (idx + 1) + ')';
+      document.getElementById('d2SaveUpdateBtn').innerHTML = '<i class="fa-solid fa-save"></i> Perbarui';
+      document.getElementById('adminFormBodyD2').style.display = 'block';
+    }
+
+    function resetD2Form() {
+      document.getElementById('d2InCust').value = '';
+      document.getElementById('d2InUnit').value = '';
+      document.getElementById('d2InKontrak').value = '';
+      document.getElementById('d2InLokasi').value = '';
+      document.getElementById('d2InNilai').value = '';
+      document.getElementById('d2EditIndex').value = '-1';
+      document.getElementById('d2FormTitleMode').innerText = 'Form Tambah Data Kontrak Baru (Dashboard 2)';
+      document.getElementById('d2SaveUpdateBtn').innerHTML = '<i class="fa-solid fa-plus"></i> Simpan';
+    }
+
+    function deleteD2Item(idx) {
+      if (confirm('Apakah Anda yakin ingin menghapus item ini dari Dashboard 2?')) {
+        d2MasterData.splice(idx, 1);
+        resetD2Form();
+        recalculateDashboard2();
+      }
+    }
+
+    function recalculateDashboard2() {
+      let totalNilai = 0;
+      let totalUnit = 0;
+      let totalKontrak = 0;
+      let custMap = {};
+      let alatMap = {};
+      let lokasiMap = {};
+
+      d2MasterData.forEach(item => {
+        totalNilai += item.nilai;
+        totalUnit += item.unit;
+        totalKontrak += item.kontrak;
+
+        // Customer Grouping
+        if (!custMap[item.customer]) {
+          custMap[item.customer] = { nilai: 0, lokasiSet: new Set() };
+        }
+        custMap[item.customer].nilai += item.nilai;
+        custMap[item.customer].lokasiSet.add(item.lokasi);
+
+        // Alat Grouping
+        if (!alatMap[item.alat]) alatMap[item.alat] = 0;
+        alatMap[item.alat] += item.nilai;
+
+        // Lokasi Grouping
+        if (!lokasiMap[item.lokasi]) lokasiMap[item.lokasi] = 0;
+        lokasiMap[item.lokasi] += item.nilai;
+      });
+
+      const uniqueCustomersCount = Object.keys(custMap).length;
+      const targetNilai = 13155200000;
+      const pencapaian = (totalNilai / targetNilai) * 100;
+
+      // Update KPI metrics
+      document.getElementById('d2MetricTotalNilai').innerText = 'Rp ' + formatRupiah(totalNilai);
+      document.getElementById('d2MetricTotalKontrak').innerText = totalKontrak;
+      document.getElementById('d2MetricTotalCust').innerText = uniqueCustomersCount;
+      document.getElementById('d2MetricPencapaian').innerText = pencapaian.toFixed(2).replace('.', ',') + '%';
+      document.getElementById('d2MetricSubTotal').innerText = 'Rp ' + formatRupiah(totalNilai);
+
+      // Summary Box D2
+      document.getElementById('summaryTotalUnit').innerText = totalUnit;
+      document.getElementById('summaryTotalKontrak').innerText = totalKontrak;
+      document.getElementById('summaryTotalCust').innerText = uniqueCustomersCount;
+      document.getElementById('summaryTotalNilai').innerText = 'Rp ' + formatRupiah(totalNilai);
+
+      // Customer Summary Table D2
+      let custSummaryArr = [];
+      for (let cName in custMap) {
+        custSummaryArr.push({
+          customer: cName,
+          lokasi: Array.from(custMap[cName].lokasiSet).join(', '),
+          nilai: custMap[cName].nilai
+        });
+      }
+      custSummaryArr.sort((a, b) => b.nilai - a.nilai);
+
+      const custBody = document.getElementById('d2CustomerSummaryBody');
+      let custHtml = '';
+      custSummaryArr.forEach((cs, i) => {
+        const pct = totalNilai > 0 ? (cs.nilai / totalNilai) * 100 : 0;
+        custHtml += `<tr>
+          <td>${i + 1}</td>
+          <td>${cs.customer}</td>
+          <td>${cs.lokasi}</td>
+          <td class="text-right">Rp ${formatRupiah(cs.nilai)}</td>
+          <td class="text-center">${pct.toFixed(2).replace('.', ',')}%</td>
+        </tr>`;
+      });
+      custBody.innerHTML = custHtml;
+      document.getElementById('d2TableTotalNilai').innerText = 'Rp ' + formatRupiah(totalNilai);
+
+      // Update Charts D2
+      if (chartD2EqObj) {
+        const eqKeys = Object.keys(alatMap);
+        chartD2EqObj.data.labels = eqKeys;
+        chartD2EqObj.data.datasets[0].data = eqKeys.map(k => alatMap[k]);
+        chartD2EqObj.update();
+      }
+
+      if (chartD2LocObj) {
+        const locKeys = Object.keys(lokasiMap);
+        chartD2LocObj.data.labels = locKeys;
+        chartD2LocObj.data.datasets[0].data = locKeys.map(k => lokasiMap[k]);
+        chartD2LocObj.update();
+      }
+
+      renderD2AdminTable();
+    }
+
+    // Initialize all tables and charts on load
     window.addEventListener('DOMContentLoaded', () => {
+      initD2Charts();
       renderAdminTable();
       recalculateDashboard1();
+      renderD2AdminTable();
+      recalculateDashboard2();
     });
   </script>
 
