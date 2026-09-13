@@ -90,7 +90,6 @@
     .d2-m-label { font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; }
     .d2-m-val { font-size: 15px; font-weight: 900; color: #0b2246; margin-top: 2px; }
     
-    /* D2 TARGET BOX PERSIS SEPERTI GAMBAR */
     .d2-target-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 10px; }
 
     /* D2 MIDDLE SECTION */
@@ -102,7 +101,7 @@
     .d2-map-legend { display: flex; align-items: center; gap: 10px; font-size: 9.5px; color: #334155; font-weight: 700; }
     .d2-map-legend span { display: flex; align-items: center; gap: 3px; }
     
-    /* PETA INDONESIA AKURAT PERSIS GAMBAR REFERENSI */
+    /* PETA INDONESIA PERSIS SESUAI GAMBAR LAMPRAN ANDA */
     .d2-map-canvas { 
       width: 100%; 
       height: 395px;
@@ -111,18 +110,18 @@
       position: relative;
       background-image: url('download.jpg');
       background-repeat: no-repeat;
-      background-size: 92% 92%;
-      background-position: center 52%;
+      background-size: 88% 88%;
+      background-position: center 55%;
       border: 1px solid #cbd5e1;
     }
 
-    .map-label-box { position: absolute; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 5px; padding: 3px 6px; box-shadow: 0 3px 8px rgba(0,0,0,0.12); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); z-index: 5; text-align: center; white-space: nowrap; margin-top: -12px; }
+    .map-label-box { position: absolute; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 5px; padding: 3px 7px; box-shadow: 0 3px 8px rgba(0,0,0,0.12); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -50%); z-index: 5; text-align: center; white-space: nowrap; }
     .map-label-box .region-name { font-size: 9px; font-weight: 700; color: #0b2246; }
     .map-label-box .region-val { font-size: 9.5px; font-weight: 900; color: #0b63ce; }
     
-    .map-location-point { position:absolute; width:7px; height:7px; border-radius:50%; background:#ffffff; border:2px solid #0b2246; box-shadow:0 1px 4px rgba(0,0,0,.35); transform:translate(-50%,-50%); z-index:7; }
+    .map-location-point { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #ffffff; border: 1.5px solid #0b2246; box-shadow: 0 1px 3px rgba(0,0,0,.35); transform: translate(-50%, -50%); z-index: 7; }
 
-    .map-badge-pin { position: absolute; width: 18px; height: 18px; border-radius: 50%; color: white; font-size: 9px; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 6; transform: translate(-50%, -50%); border: 1.5px solid white; }
+    .map-badge-pin { position: absolute; width: 16px; height: 16px; border-radius: 50%; color: white; font-size: 8px; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 6; transform: translate(-50%, -50%); border: 1.5px solid white; }
     .badge-rendah { background: #3b82f6; }
     .badge-sedang { background: #1d4ed8; }
     .badge-tinggi { background: #0f172a; }
@@ -261,9 +260,7 @@
                   <th class="text-center" style="width: 90px;">Aksi</th>
                 </tr>
               </thead>
-              <tbody id="adminContractsBody">
-                <!-- Javascript will render rows here -->
-              </tbody>
+              <tbody id="adminContractsBody"></tbody>
             </table>
           </div>
         </div>
@@ -318,7 +315,6 @@
 
       <!-- 2 CHARTS GRID -->
       <div class="d1-charts-grid">
-        <!-- Chart 1: Per Bulan -->
         <div class="d1-chart-card">
           <div class="d1-chart-title">RENCANA NILAI KONTRAK BARU PER BULAN</div>
           <div class="d1-chart-container">
@@ -326,7 +322,6 @@
           </div>
         </div>
 
-        <!-- Chart 2: Per Jenis Alat (Donut) -->
         <div class="d1-chart-card">
           <div class="d1-chart-title">RENCANA NILAI KONTRAK BARU PER JENIS ALAT</div>
           <div class="d1-chart-container">
@@ -419,7 +414,7 @@
     <!-- ========================================================= -->
     <!-- TAB 2: DASHBOARD NILAI KONTRAK BARU (S.D AGUSTUS 2026)    -->
     <!-- ========================================================= -->
-    <div id="tab-nkb-2" class="tab-content">
+    <div id="tab-nkb-2" class="tab-content active">
       <div class="d2-container">
         
         <!-- ADMIN INPUT PANEL UNTUK DASHBOARD 2 -->
@@ -530,9 +525,7 @@
                     <th class="text-center" style="width: 80px;">Aksi</th>
                   </tr>
                 </thead>
-                <tbody id="adminD2Body">
-                  <!-- Javascript will render rows here -->
-                </tbody>
+                <tbody id="adminD2Body"></tbody>
               </table>
             </div>
           </div>
@@ -576,7 +569,7 @@
             </div>
           </div>
 
-          <!-- TARGET BOX PERSIS SEPERTI GAMBAR 2 (DENGAN GAUGE/DONUT PENCAPAIAN) -->
+          <!-- TARGET BOX PERSIS SEPERTI GAMBAR LAMPIRAN ANDA -->
           <div class="d2-target-box">
             <div style="position: relative; width: 100px; height: 50px; display: flex; align-items: center; justify-content: center;">
               <canvas id="chartD2TargetGauge" style="position: absolute; top: 0; left: 0; width: 100px; height: 50px;"></canvas>
@@ -585,9 +578,9 @@
               </div>
             </div>
             <div style="text-align: right;">
-              <div style="font-size: 8.5px; font-weight: 700; color: #64748b;">TARGET NILAI KONTRAK</div>
-              <div style="font-size: 12px; font-weight: 900; color: #0b2246;">Rp 13.155.200.000</div>
-              <div style="font-size: 8.5px; font-weight: 700; color: #64748b; margin-top: 2px;">TOTAL NILAI KONTRAK</div>
+              <div style="font-size: 8.5px; font-weight: 700; color: #64748b;">TOTAL TARGET</div>
+              <div style="font-size: 12px; font-weight: 900; color: #008767;">Rp 13.155.200.000</div>
+              <div style="font-size: 8.5px; font-weight: 700; color: #64748b; margin-top: 1px;">TOTAL NILAI KONTRAK BARU</div>
               <div id="d2MetricSubTotal" style="font-size: 12px; font-weight: 900; color: #0b63ce;">Rp 8.416.583.326</div>
             </div>
           </div>
@@ -596,7 +589,7 @@
         <!-- D2 MIDDLE SECTION: PROFESSIONAL MAP & TABLE -->
         <div class="d2-middle-grid">
           
-          <!-- PROFESSIONAL MAP CARD DENGAN TITIK AKURAT PERSIS GAMBAR REFERENSI -->
+          <!-- PROFESSIONAL MAP CARD DENGAN TITIK LOKASI PERSIS GAMBAR LAMPIRAN -->
           <div class="d2-map-card">
             <div class="d2-map-header-row">
               <div class="d2-map-title">SEBARAN NILAI KONTRAK BARU BERDASARKAN PROVINSI</div>
@@ -608,10 +601,10 @@
               </div>
             </div>
 
-            <!-- MAP CANVAS DENGAN KOORDINAT TITIK YANG SANGAT PRESISI -->
+            <!-- MAP CANVAS -->
             <div class="d2-map-canvas" id="d2MapCanvasContainer"></div>
 
-            <!-- RINGKASAN SEBARAN BOX -->
+            <!-- RINGKASAN SEBARAN BOX PERSIS GAMBAR LAMPIRAN -->
             <div class="d2-summary-box">
               <div class="d2-summary-box-title">Ringkasan Sebaran</div>
               <div class="d2-summary-row"><span>Total Unit</span> <span id="summaryTotalUnit">38</span></div>
@@ -783,7 +776,6 @@
     const chartColorsPalette = ['#0b63ce', '#008767', '#d97706', '#5c165c', '#e65c00', '#7c3aed', '#10b981', '#f59e0b', '#3b82f6', '#1d4ed8', '#0b2246', '#64748b'];
 
     function initD2Charts() {
-      // Gauge chart untuk target pencapaian persis seperti gambar
       const ctxGauge = document.getElementById('chartD2TargetGauge').getContext('2d');
       chartD2TargetGaugeObj = new Chart(ctxGauge, {
         type: 'doughnut',
@@ -799,11 +791,7 @@
           maintainAspectRatio: false,
           circumference: 180,
           rotation: 270,
-          plugins: {
-            legend: { display: false },
-            tooltip: { enabled: false },
-            datalabels: { display: false }
-          },
+          plugins: { legend: { display: false }, tooltip: { enabled: false }, datalabels: { display: false } },
           cutout: '75%'
         }
       });
@@ -885,180 +873,6 @@
   </script>
 
   <script>
-    let masterContracts = [
-      { customer: 'Bendungan Tiga Dihaji', alat: 'Truck Mixer', bulan: 3, nilai: 760000000 },
-      { customer: 'SR Sampang', alat: 'Truck Mixer', bulan: 4, nilai: 318000000 },
-      { customer: 'Revitalisasi Aceh', alat: 'Truck Mixer', bulan: 4, nilai: 1120000000 },
-      { customer: 'Tol KAPB', alat: 'Silo', bulan: 4, nilai: 90000000 },
-      { customer: 'Sewa Trailer - Area Jawa Timur', alat: 'Truck Trailer', bulan: 5, nilai: 1800000000 },
-      { customer: 'Sewa Trailer - Area Jabodetabek', alat: 'Truck Trailer', bulan: 4, nilai: 450000000 },
-      { customer: 'Sewa Truck Mixer', alat: 'Truck Mixer', bulan: 6, nilai: 1132200000 },
-      { customer: 'Ekspedisi Trailer Kendal', alat: 'Truck Trailer', bulan: 6, nilai: 516000000 },
-      { customer: 'Sewa Truck Mixer', alat: 'Truck Mixer', bulan: 4, nilai: 799000000 },
-      { customer: 'Sewa Stone Crusher', alat: 'Stone Crusher', bulan: 0, nilai: 1140000000 },
-      { customer: 'Sewa Truck Mixer', alat: 'Truck Mixer', bulan: 1, nilai: 2416000000 },
-      { customer: 'Sewa Truck Mixer', alat: 'Truck Mixer', bulan: 4, nilai: 1116000000 },
-      { customer: 'Sewa Batching Plant', alat: 'Batching Plant', bulan: 6, nilai: 994000000 },
-      { customer: 'Sewa Truck Mixer', alat: 'Truck Mixer', bulan: 5, nilai: 504000000 }
-    ];
-
-    function toggleAdminPanel() {
-      const body = document.getElementById('adminFormBody');
-      body.style.display = body.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function formatRupiah(num) {
-      if (!num && num !== 0) return '-';
-      return num.toLocaleString('id-ID');
-    }
-
-    function renderAdminTable() {
-      const tbody = document.getElementById('adminContractsBody');
-      document.getElementById('totalContractCount').innerText = masterContracts.length;
-      if (masterContracts.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center" style="color: #94a3b8; font-style: italic;">Belum ada data kontrak.</td></tr>';
-        return;
-      }
-      let html = '';
-      masterContracts.forEach((c, idx) => {
-        html += `<tr>
-          <td class="text-center">${idx + 1}</td>
-          <td class="font-bold">${c.customer}</td>
-          <td>${c.alat}</td>
-          <td>${monthNames[c.bulan]}</td>
-          <td class="text-right">${formatRupiah(c.nilai)}</td>
-          <td class="text-center">
-            <button onclick="editContract(${idx})" style="background: #f59e0b; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px; margin-right: 2px;" title="Edit"><i class="fa-solid fa-pen"></i></button>
-            <button onclick="deleteContract(${idx})" style="background: #ef4444; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-          </td>
-        </tr>`;
-      });
-      tbody.innerHTML = html;
-    }
-
-    function saveContractItem() {
-      const cust = document.getElementById('inCust').value.trim();
-      const alat = document.getElementById('inAlat').value;
-      const bulan = parseInt(document.getElementById('inBulan').value);
-      const nilai = parseFloat(document.getElementById('inNilai').value);
-      const editIdx = parseInt(document.getElementById('editIndex').value);
-
-      if (!cust || isNaN(nilai) || nilai <= 0) {
-        alert('Mohon masukkan nama customer dan nilai kontrak yang valid!');
-        return;
-      }
-
-      if (editIdx >= 0) {
-        masterContracts[editIdx] = { customer: cust, alat: alat, bulan: bulan, nilai: nilai };
-      } else {
-        masterContracts.push({ customer: cust, alat: alat, bulan: bulan, nilai: nilai });
-      }
-
-      resetContractForm();
-      recalculateDashboard1();
-    }
-
-    function editContract(idx) {
-      const c = masterContracts[idx];
-      document.getElementById('inCust').value = c.customer;
-      document.getElementById('inAlat').value = c.alat;
-      document.getElementById('inBulan').value = c.bulan;
-      document.getElementById('inNilai').value = c.nilai;
-      document.getElementById('editIndex').value = idx;
-      
-      document.getElementById('formTitleMode').innerText = 'Form Edit Kontrak (Index: ' + (idx + 1) + ')';
-      document.getElementById('saveUpdateBtn').innerHTML = '<i class="fa-solid fa-save"></i> Perbarui';
-      document.getElementById('adminFormBody').style.display = 'block';
-    }
-
-    function resetContractForm() {
-      document.getElementById('inCust').value = '';
-      document.getElementById('inNilai').value = '';
-      document.getElementById('editIndex').value = '-1';
-      document.getElementById('formTitleMode').innerText = 'Form Tambah Kontrak Baru';
-      document.getElementById('saveUpdateBtn').innerHTML = '<i class="fa-solid fa-plus"></i> Simpan';
-    }
-
-    function deleteContract(idx) {
-      if(confirm('Apakah Anda yakin ingin menghapus kontrak ini?')) {
-        masterContracts.splice(idx, 1);
-        resetContractForm();
-        recalculateDashboard1();
-      }
-    }
-
-    function recalculateDashboard1() {
-      let monthlyTotals = new Array(12).fill(0);
-      let equipmentTotals = { 'Truck Mixer': 0, 'Truck Trailer': 0, 'Stone Crusher': 0, 'Batching Plant': 0, 'Silo': 0 };
-      let grandTotal = 0;
-
-      masterContracts.forEach(c => {
-        if (c.bulan >= 0 && c.bulan < 12) monthlyTotals[c.bulan] += c.nilai;
-        if (equipmentTotals[c.alat] !== undefined) equipmentTotals[c.alat] += c.nilai;
-        else equipmentTotals[c.alat] = c.nilai;
-        grandTotal += c.nilai;
-      });
-
-      document.querySelector('.d1-kpi-grid .d1-kpi-card:nth-child(1) .d1-kpi-value').innerText = formatRupiah(grandTotal);
-      document.querySelector('.d1-kpi-grid .d1-kpi-card:nth-child(2) .d1-kpi-value').innerText = formatRupiah(Math.round(grandTotal / 12));
-      
-      let maxM = 0, maxVal = -1;
-      monthlyTotals.forEach((val, idx) => { if (val > maxVal) { maxVal = val; maxM = idx; } });
-      document.querySelector('.d1-kpi-grid .d1-kpi-card:nth-child(3) .d1-kpi-value').innerText = monthNames[maxM];
-      document.querySelector('.d1-kpi-grid .d1-kpi-card:nth-child(3) .d1-kpi-sub').innerText = formatRupiah(maxVal) + ' Rupiah';
-
-      const monthlyTableBody = document.querySelector('.d1-tables-grid .d1-table-card:nth-child(1) tbody');
-      let mHtml = '';
-      monthlyTotals.forEach((val, idx) => {
-        mHtml += `<tr><td>${monthNames[idx]}</td><td class="text-right">${val === 0 ? '-' : formatRupiah(val)}</td></tr>`;
-      });
-      monthlyTableBody.innerHTML = mHtml;
-      document.querySelector('.d1-tables-grid .d1-table-card:nth-child(1) tfoot .text-right').innerText = formatRupiah(grandTotal);
-
-      const eqTableBody = document.querySelector('.d1-tables-grid .d1-table-card:nth-child(2) tbody');
-      let eqHtml = '';
-      const eqKeys = Object.keys(equipmentTotals);
-      eqKeys.sort((a, b) => equipmentTotals[b] - equipmentTotals[a]);
-      const colors = ['#0b63ce', '#0b2265', '#e65c00', '#5c165c', '#d4a017'];
-      let legendHtml = '<div class="d1-legend-title">Jenis Alat</div>';
-
-      eqKeys.forEach((eq, idx) => {
-        const val = equipmentTotals[eq];
-        const pct = grandTotal > 0 ? (val / grandTotal) * 100 : 0;
-        const color = colors[idx % colors.length];
-        eqHtml += `<tr>
-          <td class="font-bold">${eq}</td>
-          <td class="text-right">${formatRupiah(val)}</td>
-          <td><div class="progress-cell"><span class="font-bold" style="font-size: 10px;">${pct.toFixed(2)}%</span><div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${pct}%; background: ${color};"></div></div></div></td>
-        </tr>`;
-        legendHtml += `<div class="d1-legend-row"><div class="d1-legend-bullet" style="background: ${color};"></div><span class="d1-legend-label">${eq} (${pct.toFixed(2)}%)</span></div>`;
-      });
-      eqTableBody.innerHTML = eqHtml;
-      document.querySelector('.d1-tables-grid .d1-table-card:nth-child(2) tfoot td.text-right').innerText = formatRupiah(grandTotal);
-
-      const legendContainer = document.querySelector('.d1-custom-legend');
-      if (legendContainer) legendContainer.innerHTML = legendHtml;
-
-      if (window.chartMonthlyObj) {
-        window.chartMonthlyObj.data.datasets[0].data = monthlyTotals;
-        let maxScale = 5000000000;
-        if (maxVal > 4000000000) maxScale = Math.ceil(maxVal / 1000000000) * 1000000000 + 1000000000;
-        window.chartMonthlyObj.options.scales.y.max = maxScale;
-        window.chartMonthlyObj.update();
-      }
-
-      if (window.chartEquipmentObj) {
-        window.chartEquipmentObj.data.labels = eqKeys;
-        window.chartEquipmentObj.data.datasets[0].data = eqKeys.map(k => equipmentTotals[k]);
-        window.chartEquipmentObj.data.datasets[0].backgroundColor = eqKeys.map((_, i) => colors[i % colors.length]);
-        window.chartEquipmentObj.update();
-      }
-
-      renderAdminTable();
-    }
-  </script>
-
-  <script>
     const allIndonesianProvinces = [
       "Aceh", "Bali", "Banten", "Bengkulu", "DI Yogyakarta", "DKI Jakarta", 
       "Gorontalo", "Jambi", "Jawa Barat", "Jawa Tengah", "Jawa Timur", 
@@ -1071,46 +885,17 @@
       "Sulawesi Utara", "Sumatera Barat", "Sumatera Selatan", "Sumatera Utara"
     ];
 
-    // KOORDINAT TITIK PETA DIKERJAKAN PRESISI PERSIS SEPERTI GAMBAR REFERENSI C7DA70.PNG
+    // Koordinat persis menyesuaikan gambar referensi Anda
     const provinceMapCoords = {
-      'Aceh': { top: '35%', left: '16.5%', labelTop: '27%', labelLeft: '16%' },
-      'Sumatera Utara': { top: '41%', left: '21.5%', labelTop: '33%', labelLeft: '21%' },
-      'Sumatera Barat': { top: '48%', left: '25%', labelTop: '40%', labelLeft: '24%' },
-      'Riau': { top: '47%', left: '30%', labelTop: '39%', labelLeft: '29%' },
-      'Jambi': { top: '53%', left: '31%', labelTop: '45%', labelLeft: '30%' },
-      'Sumatera Selatan': { top: '57%', left: '32.5%', labelTop: '49%', labelLeft: '28%' },
-      'Bengkulu': { top: '60%', left: '28.5%', labelTop: '52%', labelLeft: '28%' },
-      'Lampung': { top: '62%', left: '34.5%', labelTop: '70%', labelLeft: '24%' },
-      'Kepulauan Bangka Belitung': { top: '54%', left: '37.5%', labelTop: '46%', labelLeft: '37%' },
-      'Kepulauan Riau': { top: '40%', left: '39%', labelTop: '32%', labelLeft: '39%' },
-      'DKI Jakarta': { top: '65.5%', left: '42.5%', labelTop: '57%', labelLeft: '43%' },
-      'Banten': { top: '64.5%', left: '38.5%', labelTop: '56%', labelLeft: '39%' },
-      'Jawa Barat': { top: '67.5%', left: '46.5%', labelTop: '75%', labelLeft: '42%' },
-      'DI Yogyakarta': { top: '69%', left: '55%', labelTop: '76%', labelLeft: '55%' },
-      'Jawa Tengah': { top: '67%', left: '51%', labelTop: '74%', labelLeft: '50%' },
-      'Jawa Timur': { top: '66%', left: '60.5%', labelTop: '58%', labelLeft: '61%' },
-      'Bali': { top: '70.5%', left: '69.5%', labelTop: '78%', labelLeft: '70%' },
-      'Nusa Tenggara Barat': { top: '71.5%', left: '75%', labelTop: '79%', labelLeft: '75%' },
-      'Nusa Tenggara Timur': { top: '74.5%', left: '84%', labelTop: '82%', labelLeft: '84%' },
-      'Kalimantan Barat': { top: '48%', left: '55%', labelTop: '40%', labelLeft: '55%' },
-      'Kalimantan Tengah': { top: '51%', left: '61%', labelTop: '43%', labelLeft: '61%' },
-      'Kalimantan Selatan': { top: '57%', left: '65.5%', labelTop: '50%', labelLeft: '65%' },
-      'Kalimantan Timur': { top: '44%', left: '67%', labelTop: '37%', labelLeft: '64%' },
-      'Kalimantan Utara': { top: '35%', left: '67%', labelTop: '27%', labelLeft: '67%' },
-      'Sulawesi Utara': { top: '36%', left: '78%', labelTop: '28%', labelLeft: '78%' },
-      'Gorontalo': { top: '41%', left: '75%', labelTop: '33%', labelLeft: '75%' },
-      'Sulawesi Tengah': { top: '48%', left: '74%', labelTop: '40%', labelLeft: '74%' },
-      'Sulawesi Barat': { top: '55%', left: '71.5%', labelTop: '47%', labelLeft: '71%' },
-      'Sulawesi Selatan': { top: '61%', left: '73.5%', labelTop: '69%', labelLeft: '73%' },
-      'Sulawesi Tenggara': { top: '58%', left: '79.5%', labelTop: '50%', labelLeft: '79%' },
-      'Maluku': { top: '56%', left: '89%', labelTop: '48%', labelLeft: '89%' },
-      'Maluku Utara': { top: '43%', left: '90.5%', labelTop: '35%', labelLeft: '90%' },
-      'Papua': { top: '60%', left: '97%', labelTop: '52%', labelLeft: '97%' },
-      'Papua Barat': { top: '48%', left: '95%', labelTop: '40%', labelLeft: '95%' },
-      'Papua Tengah': { top: '59%', left: '96%', labelTop: '67%', labelLeft: '96%' },
-      'Papua Pegunungan': { top: '61%', left: '98%', labelTop: '69%', labelLeft: '98%' },
-      'Papua Selatan': { top: '68%', left: '97.5%', labelTop: '76%', labelLeft: '97%' },
-      'Papua Barat Daya': { top: '46%', left: '93%', labelTop: '38%', labelLeft: '93%' }
+      'Aceh': { top: '35%', left: '18%', labelTop: '25%', labelLeft: '18%' },
+      'Sumatera Selatan': { top: '56%', left: '30%', labelTop: '46%', labelLeft: '22%' },
+      'Lampung': { top: '62%', left: '33%', labelTop: '65%', labelLeft: '22%' },
+      'Banten': { top: '63%', left: '37%', labelTop: '58%', labelLeft: '38%' },
+      'DKI Jakarta': { top: '62.5%', left: '39.5%', labelTop: '55%', labelLeft: '42%' },
+      'Jawa Barat': { top: '64.5%', left: '42%', labelTop: '65%', labelLeft: '39%' },
+      'Jawa Tengah': { top: '63.5%', left: '47.5%', labelTop: '66%', labelLeft: '48%' },
+      'Jawa Timur': { top: '62%', left: '55%', labelTop: '58%', labelLeft: '56%' },
+      'Kalimantan Timur': { top: '48%', left: '60%', labelTop: '39%', labelLeft: '58%' }
     };
 
     let d2MasterData = [
@@ -1328,7 +1113,6 @@
       document.getElementById('summaryTotalCust').innerText = uniqueCustomersCount;
       document.getElementById('summaryTotalNilai').innerText = 'Rp ' + formatRupiah(totalNilai);
 
-      // Update Gauge Chart
       if (chartD2TargetGaugeObj) {
         let pClamped = Math.min(Math.max(pencapaian, 0), 100);
         chartD2TargetGaugeObj.data.datasets[0].data = [pClamped, 100 - pClamped];
@@ -1426,7 +1210,7 @@
         else if (data.nilai >= 500000000) badgeClass = 'badge-sedang';
 
         mapHtml += `
-          <div class="map-label-box" style="top: ${coords.top}; left: ${coords.left};">
+          <div class="map-label-box" style="top: ${coords.labelTop}; left: ${coords.labelLeft};">
             <span class="region-name">${provName}</span>
             <span class="region-val">Rp ${formatRupiah(data.nilai)}</span>
           </div>
