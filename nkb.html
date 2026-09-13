@@ -90,33 +90,8 @@
     .d2-m-label { font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; }
     .d2-m-val { font-size: 15px; font-weight: 900; color: #0b2246; margin-top: 2px; }
     
-    /* GAUGE TARGET BOX STYLING */
-    .d2-target-box { 
-      background: #f8fafc; 
-      border: 1px solid #e2e8f0; 
-      border-radius: 6px; 
-      padding: 10px 14px; 
-      display: flex; 
-      flex-direction: column; 
-      justify-content: space-between;
-    }
-    .d2-target-title { font-size: 10px; font-weight: 800; color: #0b2246; text-align: center; text-transform: uppercase; margin-bottom: 4px; }
-    .d2-target-content { display: grid; grid-template-columns: 140px 1fr; gap: 10px; align-items: center; }
-    .gauge-wrapper { position: relative; width: 130px; height: 75px; margin: 0 auto; }
-    .gauge-center-text { 
-      position: absolute; 
-      bottom: 2px; 
-      left: 50%; 
-      transform: translateX(-50%); 
-      text-align: center; 
-    }
-    .gauge-percentage { font-size: 16px; font-weight: 900; color: #0b2246; line-height: 1; }
-    .gauge-label { font-size: 8px; font-weight: 800; color: #475569; text-transform: uppercase; margin-top: 2px; white-space: nowrap; }
-
-    .d2-target-right { display: flex; flex-direction: column; gap: 6px; border-left: 1px solid #e2e8f0; padding-left: 10px; }
-    .d2-target-row-item { display: flex; flex-direction: column; }
-    .d2-t-label { font-size: 8.5px; font-weight: 800; color: #64748b; text-transform: uppercase; }
-    .d2-t-val { font-size: 11.5px; font-weight: 900; }
+    /* D2 TARGET BOX PERSIS SEPERTI GAMBAR */
+    .d2-target-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; display: grid; grid-template-columns: 140px 1fr; align-items: center; gap: 10px; }
 
     /* D2 MIDDLE SECTION */
     .d2-middle-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 15px; margin-bottom: 15px; }
@@ -286,7 +261,9 @@
                   <th class="text-center" style="width: 90px;">Aksi</th>
                 </tr>
               </thead>
-              <tbody id="adminContractsBody"></tbody>
+              <tbody id="adminContractsBody">
+                <!-- Javascript will render rows here -->
+              </tbody>
             </table>
           </div>
         </div>
@@ -341,6 +318,7 @@
 
       <!-- 2 CHARTS GRID -->
       <div class="d1-charts-grid">
+        <!-- Chart 1: Per Bulan -->
         <div class="d1-chart-card">
           <div class="d1-chart-title">RENCANA NILAI KONTRAK BARU PER BULAN</div>
           <div class="d1-chart-container">
@@ -348,6 +326,7 @@
           </div>
         </div>
 
+        <!-- Chart 2: Per Jenis Alat (Donut) -->
         <div class="d1-chart-card">
           <div class="d1-chart-title">RENCANA NILAI KONTRAK BARU PER JENIS ALAT</div>
           <div class="d1-chart-container">
@@ -551,7 +530,9 @@
                     <th class="text-center" style="width: 80px;">Aksi</th>
                   </tr>
                 </thead>
-                <tbody id="adminD2Body"></tbody>
+                <tbody id="adminD2Body">
+                  <!-- Javascript will render rows here -->
+                </tbody>
               </table>
             </div>
           </div>
@@ -569,13 +550,13 @@
           </div>
         </div>
 
-        <!-- D2 METRICS ROW (DENGAN GAUGE TARGET BOX SEPERTI GAMBAR 2) -->
+        <!-- D2 METRICS ROW -->
         <div class="d2-metrics-grid">
           <div class="d2-metric-box">
             <div class="d2-m-icon" style="background: #0b63ce;"><i class="fa-solid fa-cubes"></i></div>
             <div>
               <div class="d2-m-label">TOTAL NILAI KONTRAK BARU</div>
-              <div class="d2-m-val" id="d2MetricTotalNilai">Rp 8.786.583.326</div>
+              <div class="d2-m-val" id="d2MetricTotalNilai">Rp 9.497.916.659</div>
             </div>
           </div>
 
@@ -595,30 +576,21 @@
             </div>
           </div>
 
-          <!-- KOTAK GAUGE PERBANDINGAN TARGET SEPERTI GAMBAR 2 -->
+          <!-- TARGET BOX PERSIS SEPERTI GAMBAR 2 (DENGAN GAUGE/DONUT PENCAPAIAN) -->
           <div class="d2-target-box">
-            <div class="d2-target-title">PERBANDINGAN NILAI KONTRAK BARU DENGAN TARGET</div>
-            <div class="d2-target-content">
-              <div class="gauge-wrapper">
-                <canvas id="gaugePencapaian"></canvas>
-                <div class="gauge-center-text">
-                  <div class="gauge-percentage" id="d2MetricPencapaian">66,84%</div>
-                  <div class="gauge-label">Pencapaian Terhadap Target</div>
-                </div>
-              </div>
-              <div class="d2-target-right">
-                <div class="d2-target-row-item">
-                  <span class="d2-t-label">Total Target</span>
-                  <span class="d2-t-val" style="color: #008767;">Rp 13.155.200.000</span>
-                </div>
-                <div class="d2-target-row-item" style="border-top: 1px solid #e2e8f0; padding-top: 3px;">
-                  <span class="d2-t-label">Total Nilai Kontrak Baru</span>
-                  <span class="d2-t-val" style="color: #0b63ce;" id="d2MetricSubTotal">Rp 8.786.583.326</span>
-                </div>
+            <div style="position: relative; width: 110px; height: 55px; display: flex; align-items: center; justify-content: center;">
+              <canvas id="chartD2TargetGauge" style="position: absolute; top: 0; left: 0; width: 110px; height: 55px;"></canvas>
+              <div style="position: absolute; bottom: 2px; text-align: center; width: 100%;">
+                <span id="d2MetricPencapaian" style="font-size: 12px; font-weight: 900; color: #0b2246;">63,98%</span>
               </div>
             </div>
+            <div style="text-align: right;">
+              <div style="font-size: 9px; font-weight: 700; color: #64748b;">TOTAL TARGET</div>
+              <div style="font-size: 12.5px; font-weight: 900; color: #008767;">Rp 13.155.200.000</div>
+              <div style="font-size: 9px; font-weight: 700; color: #64748b; margin-top: 2px;">TOTAL NILAI KONTRAK BARU</div>
+              <div id="d2MetricSubTotal" style="font-size: 12.5px; font-weight: 900; color: #0b63ce;">Rp 8.416.583.326</div>
+            </div>
           </div>
-
         </div>
 
         <!-- D2 MIDDLE SECTION: PROFESSIONAL MAP & TABLE -->
@@ -645,7 +617,7 @@
               <div class="d2-summary-row"><span>Total Unit</span> <span id="summaryTotalUnit">57</span></div>
               <div class="d2-summary-row"><span>Total Kontrak</span> <span id="summaryTotalKontrak">48</span></div>
               <div class="d2-summary-row"><span>Total Customer</span> <span id="summaryTotalCust">12</span></div>
-              <div class="d2-summary-row"><span>Total Nilai Kontrak</span> <span id="summaryTotalNilai" style="color: #0b63ce;">Rp 8.786.583.326</span></div>
+              <div class="d2-summary-row"><span>Total Nilai Kontrak</span> <span id="summaryTotalNilai" style="color: #0b63ce;">Rp 8.416.583.326</span></div>
             </div>
           </div>
 
@@ -667,7 +639,7 @@
                 <tfoot>
                   <tr class="d2-table-total">
                     <td colspan="3" class="font-bold">TOTAL</td>
-                    <td id="d2TableTotalNilai" class="text-right font-bold">Rp 8.786.583.326</td>
+                    <td id="d2TableTotalNilai" class="text-right font-bold">Rp 8.416.583.326</td>
                     <td class="text-center font-bold">100%</td>
                   </tr>
                 </tfoot>
@@ -806,20 +778,19 @@
     let chartD2EqObj = null;
     let chartD2LocObj = null;
     let chartD2TrendObj = null;
-    let gaugeChartObj = null;
+    let chartD2TargetGaugeObj = null;
 
     const chartColorsPalette = ['#0b63ce', '#008767', '#d97706', '#5c165c', '#e65c00', '#7c3aed', '#10b981', '#f59e0b', '#3b82f6', '#1d4ed8', '#0b2246', '#64748b'];
 
     function initD2Charts() {
-      // Gauge Semi-Circle Chart for Target Comparison
-      const ctxGauge = document.getElementById('gaugePencapaian').getContext('2d');
-      gaugeChartObj = new Chart(ctxGauge, {
+      // Gauge chart untuk target persis seperti gambar 2
+      const ctxGauge = document.getElementById('chartD2TargetGauge').getContext('2d');
+      chartD2TargetGaugeObj = new Chart(ctxGauge, {
         type: 'doughnut',
         data: {
-          labels: ['Pencapaian', Sisa],
           datasets: [{
-            data: [66.84, 33.16],
-            backgroundColor: ['#70cb35', '#0b2246'],
+            data: [63.98, 36.02],
+            backgroundColor: ['#008767', '#0b2246'],
             borderWidth: 0
           }]
         },
@@ -827,7 +798,7 @@
           responsive: true,
           maintainAspectRatio: false,
           circumference: 180,
-          rotation: -90,
+          rotation: 270,
           plugins: {
             legend: { display: false },
             tooltip: { enabled: false },
@@ -859,7 +830,7 @@
           datasets: [
             {
               label: 'Nilai Kontrak Baru (Kumulatif)',
-              data: [0.05, 0.92, 1.56, 2.29, 2.92, 4.09, 8.79, 9.75, null, null, null, null],
+              data: [0.05, 0.92, 1.56, 2.29, 2.92, 4.09, 8.79, 8.42, null, null, null, null],
               borderColor: '#0b63ce',
               backgroundColor: '#0b63ce',
               borderWidth: 2,
@@ -1344,8 +1315,6 @@
       const uniqueCustomersCount = Object.keys(custMap).length;
       const targetNilai = 13155200000;
       const pencapaian = (totalNilai / targetNilai) * 100;
-      const cappedPencapaian = Math.min(pencapaian, 100);
-      const sisaPencapaian = Math.max(100 - cappedPencapaian, 0);
 
       document.getElementById('d2MetricTotalNilai').innerText = 'Rp ' + formatRupiah(totalNilai);
       document.getElementById('d2MetricTotalKontrak').innerText = totalKontrak;
@@ -1353,16 +1322,17 @@
       document.getElementById('d2MetricPencapaian').innerText = pencapaian.toFixed(2).replace('.', ',') + '%';
       document.getElementById('d2MetricSubTotal').innerText = 'Rp ' + formatRupiah(totalNilai);
 
-      // Update Gauge Chart Data
-      if (gaugeChartObj) {
-        gaugeChartObj.data.datasets[0].data = [cappedPencapaian, sisaPencapaian];
-        gaugeChartObj.update();
-      }
-
       document.getElementById('summaryTotalUnit').innerText = totalUnit;
       document.getElementById('summaryTotalKontrak').innerText = totalKontrak;
       document.getElementById('summaryTotalCust').innerText = uniqueCustomersCount;
       document.getElementById('summaryTotalNilai').innerText = 'Rp ' + formatRupiah(totalNilai);
+
+      // Update Gauge Chart
+      if (chartD2TargetGaugeObj) {
+        let pClamped = Math.min(Math.max(pencapaian, 0), 100);
+        chartD2TargetGaugeObj.data.datasets[0].data = [pClamped, 100 - pClamped];
+        chartD2TargetGaugeObj.update();
+      }
 
       let custSummaryArr = [];
       for (let cName in custMap) {
