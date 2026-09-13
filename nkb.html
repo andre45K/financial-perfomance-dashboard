@@ -114,6 +114,7 @@
       background-repeat: no-repeat;
       background-size: contain;
       background-position: center center;
+      background-color: #3b5247;
       border: 1px solid #cbd5e1;
     }
 
@@ -122,6 +123,8 @@
     .map-label-box .region-name { font-size: 9.5px; font-weight: 700; color: #0b2246; }
     .map-label-box .region-val { font-size: 10px; font-weight: 900; color: #0b63ce; }
     
+    .map-location-point { position:absolute; width:7px; height:7px; border-radius:50%; background:#ffffff; border:2px solid #0b2246; box-shadow:0 1px 4px rgba(0,0,0,.35); transform:translate(-50%,-50%); z-index:7; }
+
     .map-badge-pin { position: absolute; width: 18px; height: 18px; border-radius: 50%; color: white; font-size: 9px; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 6; transform: translate(-50%, -50%); border: 1.5px solid white; }
     .badge-rendah { background: #3b82f6; }
     .badge-sedang { background: #1d4ed8; }
@@ -411,88 +414,100 @@
             <div class="d2-map-canvas">
               
               <!-- 1. Aceh Tengah (Tinggi) -->
-              <div class="map-label-box" style="top: 22%; left: 15%;">
+              <div class="map-label-box" style="top: 23%; left: 14%;">
                 <span class="region-name">Aceh Tengah</span>
                 <span class="region-val">Rp 1.369.400.000</span>
               </div>
-              <div class="map-badge-pin badge-tinggi" style="top: 22%; left: 24%;">1</div>
+              <div class="map-location-point" style="top: 31%; left: 14.5%;" aria-label="Lokasi Aceh Tengah"></div>
+              <div class="map-badge-pin badge-tinggi" style="top: 31%; left: 14.5%;">1</div>
 
               <!-- 2. Ogan Komering Ilir (Rendah) -->
-              <div class="map-label-box" style="top: 48%; left: 28%;">
+              <div class="map-label-box" style="top: 49%; left: 22%;">
                 <span class="region-name">Ogan Komering Ilir</span>
                 <span class="region-val">Rp 135.000.000</span>
               </div>
-              <div class="map-badge-pin badge-rendah" style="top: 48%; left: 37%;">1</div>
+              <div class="map-location-point" style="top: 52.5%; left: 27.5%;" aria-label="Lokasi Ogan Komering Ilir"></div>
+              <div class="map-badge-pin badge-rendah" style="top: 52.5%; left: 27.5%;">1</div>
 
               <!-- 3. Lampung Selatan (Tinggi) -->
-              <div class="map-label-box" style="top: 62%; left: 21%;">
+              <div class="map-label-box" style="top: 62%; left: 20%;">
                 <span class="region-name">Lampung Selatan</span>
                 <span class="region-val">Rp 1.140.000.000</span>
               </div>
-              <div class="map-badge-pin badge-tinggi" style="top: 62%; left: 30%;">1</div>
+              <div class="map-location-point" style="top: 58%; left: 29.5%;" aria-label="Lokasi Lampung Selatan"></div>
+              <div class="map-badge-pin badge-tinggi" style="top: 58%; left: 29.5%;">1</div>
 
               <!-- 4. Cilegon (Tinggi) -->
-              <div class="map-label-box" style="top: 54%; left: 45%;">
+              <div class="map-label-box" style="top: 54%; left: 35%;">
                 <span class="region-name">Cilegon</span>
                 <span class="region-val">Rp 2.114.350.000</span>
               </div>
-              <div class="map-badge-pin badge-tinggi" style="top: 54%; left: 52%;">2</div>
+              <div class="map-location-point" style="top: 60%; left: 31%;" aria-label="Lokasi Cilegon"></div>
+              <div class="map-badge-pin badge-tinggi" style="top: 60%; left: 31%;">2</div>
 
               <!-- 5. Jakarta (Sedang) -->
-              <div class="map-label-box" style="top: 62%; left: 53%;">
+              <div class="map-label-box" style="top: 55%; left: 40%;">
                 <span class="region-name">Jakarta</span>
                 <span class="region-val">Rp 875.000.000</span>
               </div>
-              <div class="map-badge-pin badge-sedang" style="top: 62%; left: 60%;">2</div>
+              <div class="map-location-point" style="top: 61.5%; left: 35.5%;" aria-label="Lokasi Jakarta"></div>
+              <div class="map-badge-pin badge-sedang" style="top: 61.5%; left: 35.5%;">2</div>
 
               <!-- 6. Bandung (Rendah) -->
-              <div class="map-label-box" style="top: 78%; left: 44%;">
+              <div class="map-label-box" style="top: 70%; left: 43%;">
                 <span class="region-name">Bandung</span>
                 <span class="region-val">Rp 372.000.000</span>
               </div>
-              <div class="map-badge-pin badge-rendah" style="top: 70%; left: 49%;">2</div>
+              <div class="map-location-point" style="top: 63.5%; left: 38.5%;" aria-label="Lokasi Bandung"></div>
+              <div class="map-badge-pin badge-rendah" style="top: 63.5%; left: 38.5%;">2</div>
 
               <!-- 7. Tegal (Rendah) -->
-              <div class="map-label-box" style="top: 78%; left: 61%;">
+              <div class="map-label-box" style="top: 70%; left: 48%;">
                 <span class="region-name">Tegal</span>
                 <span class="region-val">Rp 340.000.000</span>
               </div>
-              <div class="map-badge-pin badge-rendah" style="top: 70%; left: 57%;">2</div>
+              <div class="map-location-point" style="top: 63%; left: 43%;" aria-label="Lokasi Tegal"></div>
+              <div class="map-badge-pin badge-rendah" style="top: 63%; left: 43%;">2</div>
 
               <!-- 8. Gresik (Sedang) -->
-              <div class="map-label-box" style="top: 62%; left: 71%;">
+              <div class="map-label-box" style="top: 55%; left: 57%;">
                 <span class="region-name">Gresik</span>
                 <span class="region-val">Rp 899.833.326</span>
               </div>
-              <div class="map-badge-pin badge-sedang" style="top: 62%; left: 65%;">1</div>
+              <div class="map-location-point" style="top: 62%; left: 52%;" aria-label="Lokasi Gresik"></div>
+              <div class="map-badge-pin badge-sedang" style="top: 62%; left: 52%;">1</div>
 
               <!-- 9. Tuban (Rendah) -->
-              <div class="map-label-box" style="top: 62%; left: 85%;">
+              <div class="map-label-box" style="top: 54%; left: 66%;">
                 <span class="region-name">Tuban</span>
                 <span class="region-val">Rp 459.000.000</span>
               </div>
-              <div class="map-badge-pin badge-rendah" style="top: 68%; left: 73%;">1</div>
+              <div class="map-location-point" style="top: 61.5%; left: 50%;" aria-label="Lokasi Tuban"></div>
+              <div class="map-badge-pin badge-rendah" style="top: 61.5%; left: 50%;">1</div>
 
               <!-- 10. Sampang (Rendah) -->
-              <div class="map-label-box" style="top: 78%; left: 88%;">
+              <div class="map-label-box" style="top: 70%; left: 62%;">
                 <span class="region-name">Sampang</span>
                 <span class="region-val">Rp 340.000.000</span>
               </div>
-              <div class="map-badge-pin badge-rendah" style="top: 74%; left: 79%;">1</div>
+              <div class="map-location-point" style="top: 62.5%; left: 56.5%;" aria-label="Lokasi Sampang"></div>
+              <div class="map-badge-pin badge-rendah" style="top: 62.5%; left: 56.5%;">1</div>
 
               <!-- 11. Balikpapan (Rendah) -->
-              <div class="map-label-box" style="top: 36%; left: 57%;">
+              <div class="map-label-box" style="top: 43%; left: 59%;">
                 <span class="region-name">Balikpapan</span>
                 <span class="region-val">Rp 124.000.000</span>
               </div>
-              <div class="map-badge-pin badge-rendah" style="top: 36%; left: 63%;">1</div>
+              <div class="map-location-point" style="top: 49.5%; left: 51.5%;" aria-label="Lokasi Balikpapan"></div>
+              <div class="map-badge-pin badge-rendah" style="top: 49.5%; left: 51.5%;">1</div>
 
               <!-- 12. Penajam Paser Utara (Rendah) -->
-              <div class="map-label-box" style="top: 26%; left: 78%;">
+              <div class="map-label-box" style="top: 37%; left: 66%;">
                 <span class="region-name">Penajam Paser Utara</span>
                 <span class="region-val">Rp 124.000.000</span>
               </div>
-              <div class="map-badge-pin badge-rendah" style="top: 30%; left: 69%;">1</div>
+              <div class="map-location-point" style="top: 48.5%; left: 49.5%;" aria-label="Lokasi Penajam Paser Utara"></div>
+              <div class="map-badge-pin badge-rendah" style="top: 48.5%; left: 49.5%;">1</div>
 
             </div>
 
