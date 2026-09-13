@@ -649,7 +649,7 @@
             </div>
           </div>
 
-          <!-- Chart Tren Kumulatif -->
+          <!-- Chart Tren Kumulatif (Rapi, Terfilter & Titik Tepat s.d Agustus) -->
           <div class="d2-bottom-card">
             <div class="d2-bottom-title">TREN NILAI KONTRAK BARU (KUMULATIF)</div>
             <div class="d2-bottom-chart-container">
@@ -785,7 +785,7 @@
         }
       });
 
-      // 3. Tren Kumulatif
+      // 3. Tren Kumulatif (Rapi: Aktual s.d Agustus saja, Target s.d Desember)
       const ctxD2Trend = document.getElementById('chartD2Trend').getContext('2d');
       chartD2TrendObj = new Chart(ctxD2Trend, {
         type: 'line',
@@ -794,25 +794,46 @@
           datasets: [
             {
               label: 'Nilai Kontrak Baru (Kumulatif)',
-              data: [0.05, 0.12, 0.45, 1.14, 2.15, 2.92, 8.78, 9.50, null, null, null, null],
-              borderColor: '#0b63ce', backgroundColor: '#0b63ce', borderWidth: 2, pointRadius: 3, tension: 0.1
+              data: [1.14, 3.556, 3.556, 4.316, 8.209, 8.209, 10.513, 9.497, null, null, null, null],
+              borderColor: '#0b63ce',
+              backgroundColor: '#0b63ce',
+              borderWidth: 2.5,
+              pointRadius: 4,
+              pointBackgroundColor: '#0b63ce',
+              tension: 0.1,
+              spanGaps: false
             },
             {
               label: 'Target (Kumulatif)',
-              data: [1.0, 2.1, 3.2, 4.5, 5.8, 7.2, 8.78, 9.49, 10.5, 11.2, 12.1, 13.15],
-              borderColor: '#008767', backgroundColor: '#008767', borderDash: [4,4], borderWidth: 2, pointRadius: 2
+              data: [1.096, 2.193, 3.289, 4.385, 5.481, 6.578, 7.674, 8.770, 9.866, 10.963, 12.059, 13.155],
+              borderColor: '#008767',
+              backgroundColor: '#008767',
+              borderDash: [4, 4],
+              borderWidth: 2,
+              pointRadius: 2.5,
+              pointBackgroundColor: '#008767',
+              tension: 0.1
             }
           ]
         },
         options: {
           responsive: true, maintainAspectRatio: false,
           plugins: {
-            legend: { position: 'top', labels: { boxWidth: 10, font: { size: 9 } } },
+            legend: { position: 'top', labels: { boxWidth: 10, font: { size: 9, weight: 'bold' } } },
             datalabels: { display: false }
           },
           scales: {
-            x: { ticks: { font: { size: 9 } }, grid: { display: false } },
-            y: { min: 0, max: 15, ticks: { font: { size: 9 }, callback: val => val + ' Miliar' }, grid: { color: '#f1f5f9' } }
+            x: { ticks: { font: { size: 9, weight: 'bold' } }, grid: { display: false } },
+            y: { 
+              min: 0, 
+              max: 15, 
+              ticks: { 
+                stepSize: 3, 
+                font: { size: 9 }, 
+                callback: val => val + ' M' 
+              }, 
+              grid: { color: '#f1f5f9' } 
+            }
           }
         }
       });
@@ -1071,7 +1092,7 @@
       body.style.display = body.style.display === 'none' ? 'block' : 'none';
     }
 
-    // --- SEARCHABLE PROVINCE DROPDOWN LOGIC ---
+    // --- SEARCHABLE PROVINSI DROPDOWN LOGIC ---
     function populateProvinceDropdown(filterText = '') {
       const listContainer = document.getElementById('provinceDropdownList');
       const filtered = allIndonesianProvinces.filter(p => p.toLowerCase().includes(filterText.toLowerCase()));
@@ -1211,7 +1232,7 @@
       let totalKontrak = 0;
       let custMap = {};
       let alatMap = {};
-      let provMap = {}; // Untuk Peta & Grafik berdasarkan Provinsi
+      let provMap = {};
 
       d2MasterData.forEach(item => {
         totalNilai += item.nilai;
@@ -1221,18 +1242,15 @@
         const prov = item.provinsi || 'Aceh';
         const lok = item.lokasi || prov;
 
-        // Customer Grouping (Menampilkan Lokasi Detail pada Tabel Customer)
         if (!custMap[item.customer]) {
           custMap[item.customer] = { nilai: 0, lokasiSet: new Set() };
         }
         custMap[item.customer].nilai += item.nilai;
         custMap[item.customer].lokasiSet.add(lok);
 
-        // Alat Grouping
         if (!alatMap[item.alat]) alatMap[item.alat] = 0;
         alatMap[item.alat] += item.nilai;
 
-        // Provinsi Grouping untuk Peta & Grafik
         if (!provMap[prov]) {
           provMap[prov] = { nilai: 0, count: 0 };
         }
@@ -1244,20 +1262,17 @@
       const targetNilai = 13155200000;
       const pencapaian = (totalNilai / targetNilai) * 100;
 
-      // Update KPI metrics
       document.getElementById('d2MetricTotalNilai').innerText = 'Rp ' + formatRupiah(totalNilai);
       document.getElementById('d2MetricTotalKontrak').innerText = totalKontrak;
       document.getElementById('d2MetricTotalCust').innerText = uniqueCustomersCount;
       document.getElementById('d2MetricPencapaian').innerText = pencapaian.toFixed(2).replace('.', ',') + '%';
       document.getElementById('d2MetricSubTotal').innerText = 'Rp ' + formatRupiah(totalNilai);
 
-      // Summary Box D2
       document.getElementById('summaryTotalUnit').innerText = totalUnit;
       document.getElementById('summaryTotalKontrak').innerText = totalKontrak;
       document.getElementById('summaryTotalCust').innerText = uniqueCustomersCount;
       document.getElementById('summaryTotalNilai').innerText = 'Rp ' + formatRupiah(totalNilai);
 
-      // Customer Summary Table D2 (Menampilkan Lokasi Detail sesuai permintaan)
       let custSummaryArr = [];
       for (let cName in custMap) {
         custSummaryArr.push({
@@ -1283,10 +1298,8 @@
       custBody.innerHTML = custHtml;
       document.getElementById('d2TableTotalNilai').innerText = 'Rp ' + formatRupiah(totalNilai);
 
-      // RENDER PETA INDONESIA SECARA DINAMIS BERDASARKAN PROVINSI
       renderDynamicMapPins(provMap);
 
-      // Update Charts D2
       if (chartD2EqObj) {
         const eqKeys = Object.keys(alatMap);
         chartD2EqObj.data.labels = eqKeys;
@@ -1304,7 +1317,6 @@
       renderD2AdminTable();
     }
 
-    // Fungsi Render Pin & Label pada Peta Indonesia secara Dinamis berdasarkan Provinsi
     function renderDynamicMapPins(provMap) {
       const mapCanvas = document.getElementById('d2MapCanvasContainer');
       let mapHtml = '';
@@ -1330,7 +1342,6 @@
       mapCanvas.innerHTML = mapHtml;
     }
 
-    // Initialize all tables and charts on load
     window.addEventListener('DOMContentLoaded', () => {
       initD2Charts();
       renderAdminTable();
