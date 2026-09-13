@@ -455,7 +455,7 @@
                     <option value="Truck Mixer">Truck Mixer</option>
                     <option value="Truck Trailer">Truck Trailer</option>
                     <option value="Stone Crusher">Stone Crusher</option>
-                    <option value="Mobile Crane">Mobile Crane</option>
+                    <option value="Mobile Crane + Bucket Cor">Mobile Crane + Bucket Cor</option>
                     <option value="Dump Truck">Dump Truck</option>
                     <option value="Silo">Silo</option>
                   </select>
@@ -633,19 +633,29 @@
         <!-- D2 BOTTOM SECTION: 3 CHARTS -->
         <div class="d2-bottom-grid" style="margin-top: 15px;">
           
-          <!-- Chart Alat -->
+          <!-- Chart Alat (Dengan Keterangan Persentase di Samping seperti Gambar Referensi) -->
           <div class="d2-bottom-card">
-            <div class="d2-bottom-title">PROPORSIL NILAI KONTRAK BARU BERDASARKAN TIPE ALAT</div>
-            <div class="d2-bottom-chart-container">
-              <canvas id="chartD2Equipment"></canvas>
+            <div class="d2-bottom-title">PROPORSI NILAI KONTRAK BARU BERDASARKAN TIPE ALAT</div>
+            <div style="display: grid; grid-template-columns: 1fr 130px; gap: 5px; align-items: center; width: 100%; height: 210px;">
+              <div style="position: relative; height: 100%; width: 100%;">
+                <canvas id="chartD2Equipment"></canvas>
+              </div>
+              <div id="d2EqLegendCustom" style="display: flex; flex-direction: column; gap: 4px; font-size: 9px; overflow-y: auto; max-height: 200px; padding-right: 2px;">
+                <!-- Rendered via JS -->
+              </div>
             </div>
           </div>
 
-          <!-- Chart Lokasi / Provinsi -->
+          <!-- Chart Lokasi / Detail Lokasi (Dengan Keterangan Persentase Lokasi Detail di Samping) -->
           <div class="d2-bottom-card">
-            <div class="d2-bottom-title">PROPORSIL NILAI KONTRAK BARU BERDASARKAN PROVINSI</div>
-            <div class="d2-bottom-chart-container">
-              <canvas id="chartD2Location"></canvas>
+            <div class="d2-bottom-title">PROPORSI NILAI KONTRAK BARU BERDASARKAN LOKASI</div>
+            <div style="display: grid; grid-template-columns: 1fr 130px; gap: 5px; align-items: center; width: 100%; height: 210px;">
+              <div style="position: relative; height: 100%; width: 100%;">
+                <canvas id="chartD2Location"></canvas>
+              </div>
+              <div id="d2LocLegendCustom" style="display: flex; flex-direction: column; gap: 3px; font-size: 8.5px; overflow-y: auto; max-height: 200px; padding-right: 2px;">
+                <!-- Rendered via JS -->
+              </div>
             </div>
           </div>
 
@@ -754,38 +764,40 @@
     let chartD2LocObj = null;
     let chartD2TrendObj = null;
 
+    const chartColorsPalette = ['#0b63ce', '#008767', '#d97706', '#5c165c', '#e65c00', '#7c3aed', '#10b981', '#f59e0b', '#3b82f6', '#1d4ed8', '#0b2246', '#64748b'];
+
     function initD2Charts() {
       // 1. Tipe Alat
       const ctxD2Eq = document.getElementById('chartD2Equipment').getContext('2d');
       chartD2EqObj = new Chart(ctxD2Eq, {
         type: 'doughnut',
-        data: { labels: [], datasets: [{ data: [], backgroundColor: ['#0b63ce', '#0b2265', '#e65c00', '#7c3aed', '#008767', '#d4a017'], borderWidth: 1, borderColor: '#ffffff' }] },
+        data: { labels: [], datasets: [{ data: [], backgroundColor: chartColorsPalette, borderWidth: 1, borderColor: '#ffffff' }] },
         options: {
           responsive: true, maintainAspectRatio: false,
           plugins: {
-            legend: { position: 'right', labels: { boxWidth: 10, font: { size: 9 } } },
+            legend: { display: false },
             datalabels: { display: false }
           },
           cutout: '50%'
         }
       });
 
-      // 2. Provinsi / Lokasi
+      // 2. Lokasi Detail (Bukan Provinsi)
       const ctxD2Loc = document.getElementById('chartD2Location').getContext('2d');
       chartD2LocObj = new Chart(ctxD2Loc, {
         type: 'doughnut',
-        data: { labels: [], datasets: [{ data: [], backgroundColor: ['#0b63ce', '#1d4ed8', '#3b82f6', '#60a5fa', '#e65c00', '#f97316', '#7c3aed', '#a855f7', '#008767', '#10b981', '#f43f5e', '#cbd5e1', '#0b2246', '#f59e0b', '#10b981'], borderWidth: 1, borderColor: '#ffffff' }] },
+        data: { labels: [], datasets: [{ data: [], backgroundColor: chartColorsPalette, borderWidth: 1, borderColor: '#ffffff' }] },
         options: {
           responsive: true, maintainAspectRatio: false,
           plugins: {
-            legend: { position: 'right', labels: { boxWidth: 8, font: { size: 8 } } },
+            legend: { display: false },
             datalabels: { display: false }
           },
           cutout: '45%'
         }
       });
 
-      // 3. Tren Kumulatif (Persis seperti Gambar 2 dengan label nominal persis di atas titik)
+      // 3. Tren Kumulatif (Persis seperti Gambar 2 dengan Label Nilai Per Bulan)
       const ctxD2Trend = document.getElementById('chartD2Trend').getContext('2d');
       chartD2TrendObj = new Chart(ctxD2Trend, {
         type: 'line',
@@ -830,11 +842,9 @@
               color: '#0b2246',
               font: { size: 8.5, weight: 'bold' },
               formatter: function(value, context) {
-                // Tampilkan label hanya untuk garis aktual (datasetIndex === 0) dan jika nilainya ada
                 if (context.datasetIndex === 0 && value !== null) {
                   return 'Rp ' + value.toFixed(2).replace('.', ',') + ' M';
                 }
-                // Khusus titik terakhir target di bulan Desember untuk menampilkan Rp 13,16 M sesuai gambar
                 if (context.datasetIndex === 1 && context.dataIndex === 11) {
                   return 'Rp 13,16 M';
                 }
@@ -1093,11 +1103,15 @@
     };
 
     let d2MasterData = [
-      { customer: 'PT Baja Cosmo Energi', unit: 3, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Kalimantan Timur', lokasi: 'Penajam Paser Utara, Balikpapan', nilai: 124000000 },
-      { customer: 'PT Hamori Medical Center', unit: 1, kontrak: 2, alat: 'Mobile Crane', provinsi: 'Jawa Barat', lokasi: 'Subang', nilai: 220000000 },
-      { customer: 'PT Indosarana Jaya Perkasa', unit: 7, kontrak: 11, alat: 'Truck Trailer', provinsi: 'Jawa Timur', lokasi: 'Gresik, Jakarta', nilai: 875000000 },
+      { customer: 'PT Baja Cosmo Energi', unit: 3, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Kalimantan Timur', lokasi: 'Penajam Paser Utara', nilai: 62000000 },
+      { customer: 'PT Baja Cosmo Energi 2', unit: 3, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Kalimantan Timur', lokasi: 'Balikpapan', nilai: 62000000 },
+      { customer: 'PT Hamori Medical Center', unit: 1, kontrak: 2, alat: 'Mobile Crane + Bucket Cor', provinsi: 'Jawa Barat', lokasi: 'Subang', nilai: 220000000 },
+      { customer: 'PT Indosarana Jaya Perkasa (Gresik)', unit: 4, kontrak: 6, alat: 'Truck Trailer', provinsi: 'Jawa Timur', lokasi: 'Gresik', nilai: 500000000 },
+      { customer: 'PT Indosarana Jaya Perkasa (Jakarta)', unit: 3, kontrak: 5, alat: 'Truck Trailer', provinsi: 'DKI Jakarta', lokasi: 'Jakarta', nilai: 375000000 },
       { customer: 'PT Liga Adhi Buana', unit: 3, kontrak: 2, alat: 'Truck Mixer', provinsi: 'Jawa Timur', lokasi: 'Tuban', nilai: 459000000 },
-      { customer: 'PT Sraya Artha Gemilang', unit: 8, kontrak: 9, alat: 'Truck Mixer', provinsi: 'Jawa Barat', lokasi: 'Bandung, Tegal, Garut', nilai: 899833326 },
+      { customer: 'PT Sraya Artha Gemilang (Bandung)', unit: 4, kontrak: 4, alat: 'Truck Mixer', provinsi: 'Jawa Barat', lokasi: 'Bandung', nilai: 400000000 },
+      { customer: 'PT Sraya Artha Gemilang (Garut)', unit: 2, kontrak: 3, alat: 'Truck Mixer', provinsi: 'Jawa Barat', lokasi: 'Garut', nilai: 300000000 },
+      { customer: 'PT Sraya Artha Gemilang (Tegal)', unit: 2, kontrak: 2, alat: 'Truck Mixer', provinsi: 'Jawa Tengah', lokasi: 'Tegal', nilai: 199833326 },
       { customer: 'PT Sumber Urip Sejati', unit: 14, kontrak: 12, alat: 'Truck Mixer', provinsi: 'Banten', lokasi: 'Cilegon', nilai: 2114350000 },
       { customer: 'PT Tirta Dan Mitra Pertiwi', unit: 1, kontrak: 1, alat: 'Stone Crusher', provinsi: 'Lampung', lokasi: 'Lampung Selatan', nilai: 1140000000 },
       { customer: 'PT Trans Ringo Group', unit: 4, kontrak: 2, alat: 'Truck Mixer', provinsi: 'Jawa Barat', lokasi: 'Bandung', nilai: 372000000 },
@@ -1147,7 +1161,6 @@
       document.getElementById('provinceDropdownList').style.display = 'none';
     }
 
-    // Hide dropdown when clicking outside
     window.addEventListener('click', function(e) {
       if (!e.target.closest('#d2InProvinsiSearch') && !e.target.closest('#provinceDropdownList')) {
         const listContainer = document.getElementById('provinceDropdownList');
@@ -1253,6 +1266,7 @@
       let custMap = {};
       let alatMap = {};
       let provMap = {};
+      let lokasiDetailMap = {};
 
       d2MasterData.forEach(item => {
         totalNilai += item.nilai;
@@ -1276,6 +1290,9 @@
         }
         provMap[prov].nilai += item.nilai;
         provMap[prov].count += 1;
+
+        if (!lokasiDetailMap[lok]) lokasiDetailMap[lok] = 0;
+        lokasiDetailMap[lok] += item.nilai;
       });
 
       const uniqueCustomersCount = Object.keys(custMap).length;
@@ -1320,18 +1337,54 @@
 
       renderDynamicMapPins(provMap);
 
+      // Update Chart Alat dengan Legend kustom persis seperti gambar referensi
       if (chartD2EqObj) {
-        const eqKeys = Object.keys(alatMap);
-        chartD2EqObj.data.labels = eqKeys;
-        chartD2EqObj.data.datasets[0].data = eqKeys.map(k => alatMap[k]);
+        const sortedAlat = Object.keys(alatMap).sort((a, b) => alatMap[b] - alatMap[a]);
+        chartD2EqObj.data.labels = sortedAlat;
+        chartD2EqObj.data.datasets[0].data = sortedAlat.map(k => alatMap[k]);
         chartD2EqObj.update();
+
+        let eqLegendHtml = '';
+        sortedAlat.forEach((alatName, i) => {
+          const val = alatMap[alatName];
+          const pct = totalNilai > 0 ? (val / totalNilai) * 100 : 0;
+          const color = chartColorsPalette[i % chartColorsPalette.length];
+          eqLegendHtml += `
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
+              <div style="display: flex; align-items: center; gap: 4px; overflow: hidden;">
+                <div style="width: 7px; height: 7px; border-radius: 50%; background: ${color}; flex-shrink: 0;"></div>
+                <span style="color: #334155; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${alatName}">${alatName}</span>
+              </div>
+              <span style="color: #0b2246; font-weight: 800; flex-shrink: 0;">${pct.toFixed(1).replace('.', ',')}%</span>
+            </div>
+          `;
+        });
+        document.getElementById('d2EqLegendCustom').innerHTML = eqLegendHtml;
       }
 
+      // Update Chart Lokasi Detail dengan Legend kustom persis seperti gambar referensi
       if (chartD2LocObj) {
-        const provKeys = Object.keys(provMap);
-        chartD2LocObj.data.labels = provKeys;
-        chartD2LocObj.data.datasets[0].data = provKeys.map(k => provMap[k].nilai);
+        const sortedLokasi = Object.keys(lokasiDetailMap).sort((a, b) => lokasiDetailMap[b] - lokasiDetailMap[a]);
+        chartD2LocObj.data.labels = sortedLokasi;
+        chartD2LocObj.data.datasets[0].data = sortedLokasi.map(k => lokasiDetailMap[k]);
         chartD2LocObj.update();
+
+        let locLegendHtml = '';
+        sortedLokasi.forEach((lokName, i) => {
+          const val = lokasiDetailMap[lokName];
+          const pct = totalNilai > 0 ? (val / totalNilai) * 100 : 0;
+          const color = chartColorsPalette[i % chartColorsPalette.length];
+          locLegendHtml += `
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
+              <div style="display: flex; align-items: center; gap: 4px; overflow: hidden;">
+                <div style="width: 7px; height: 7px; border-radius: 50%; background: ${color}; flex-shrink: 0;"></div>
+                <span style="color: #334155; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${lokName}">${lokName}</span>
+              </div>
+              <span style="color: #0b2246; font-weight: 800; flex-shrink: 0;">${pct.toFixed(1).replace('.', ',')}%</span>
+            </div>
+          `;
+        });
+        document.getElementById('d2LocLegendCustom').innerHTML = locLegendHtml;
       }
 
       renderD2AdminTable();
