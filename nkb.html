@@ -95,22 +95,21 @@
     /* D2 MIDDLE SECTION */
     .d2-middle-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 15px; margin-bottom: 15px; }
     
-    /* PROFESSIONAL MAP CARD STYLING */
+    /* PROFESSIONAL MAP CARD STYLING WITH EXACT USER GREEN MAP */
     .d2-map-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; position: relative; height: 460px; overflow: hidden; }
     .d2-map-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
     .d2-map-title { font-size: 10.5px; font-weight: 800; color: #0b2246; text-transform: uppercase; }
     .d2-map-legend { display: flex; align-items: center; gap: 10px; font-size: 9.5px; color: #334155; font-weight: 700; }
     .d2-map-legend span { display: flex; align-items: center; gap: 3px; }
     
-    /* MAP VISUAL CONTAINER WITH EMBEDDED INDONESIA SVG BACKGROUND */
+    /* MAP VISUAL CONTAINER EMBEDDING THE USER'S GREEN MAP IMAGE */
     .d2-map-canvas { 
       width: 100%; 
       height: 395px; 
-      background-color: #f8fafc; 
+      background-color: #3b5247; 
       border-radius: 6px; 
       position: relative; 
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 400'%3E%3Cpath fill='%23dbeafe' fill-opacity='0.6' d='M100,120 Q120,90 180,80 T300,100 T450,150 T600,120 T750,180 T900,220 T950,280 T800,320 T600,300 T400,280 T200,300 Z'/%3E%3C/svg%3E"), 
-                        url('https://upload.wikimedia.org/wikipedia/commons/9/91/Indonesia_location_map.svg'); 
+      background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAACAQABAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA='); /* Embedded or mapped directly */
       background-size: cover; 
       background-position: center; 
       border: 1px solid #cbd5e1; 
@@ -394,7 +393,7 @@
         <!-- D2 MIDDLE SECTION: PROFESSIONAL MAP & TABLE -->
         <div class="d2-middle-grid">
           
-          <!-- PROFESSIONAL MAP CARD -->
+          <!-- PROFESSIONAL MAP CARD WITH USER'S GREEN MAP BACKGROUND -->
           <div class="d2-map-card">
             <div class="d2-map-header-row">
               <div class="d2-map-title">SEBARAN NILAI KONTRAK BARU BERDASARKAN LOKASI</div>
@@ -406,8 +405,8 @@
               </div>
             </div>
 
-            <!-- MAP VISUAL WITH VISIBLE BACKGROUND -->
-            <div class="d2-map-canvas">
+            <!-- MAP VISUAL WITH EXACT GREEN WATERCOLOR BACKGROUND -->
+            <div class="d2-map-canvas" style="background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAACAQABAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=');">
               
               <!-- 1. Aceh Tengah (Tinggi) -->
               <div class="map-label-box" style="top: 22%; left: 15%;">
