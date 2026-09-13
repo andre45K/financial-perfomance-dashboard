@@ -649,7 +649,7 @@
             </div>
           </div>
 
-          <!-- Chart Tren Kumulatif (100% Identik dengan Gambar 2: Label nilai di atas titik aktual) -->
+          <!-- Chart Tren Kumulatif (Persis seperti Gambar 2 dengan Label Nilai Per Bulan) -->
           <div class="d2-bottom-card">
             <div class="d2-bottom-title">TREN NILAI KONTRAK BARU (KUMULATIF)</div>
             <div class="d2-bottom-chart-container">
@@ -785,7 +785,7 @@
         }
       });
 
-      // 3. Tren Kumulatif (100% Identik dengan Gambar 2: Menampilkan label nilai tepat di atas titik aktual dari Jan s.d Agu)
+      // 3. Tren Kumulatif (Persis seperti Gambar 2 dengan label nominal persis di atas titik)
       const ctxD2Trend = document.getElementById('chartD2Trend').getContext('2d');
       chartD2TrendObj = new Chart(ctxD2Trend, {
         type: 'line',
@@ -794,7 +794,7 @@
           datasets: [
             {
               label: 'Nilai Kontrak Baru (Kumulatif)',
-              data: [0.05, 0.92, 1.56, 2.29, 2.92, 4.09, 6.20, 8.79, null, null, null, null],
+              data: [0.05, 0.92, 1.56, 2.29, 2.92, 4.09, 8.79, 9.75, null, null, null, null],
               borderColor: '#0b63ce',
               backgroundColor: '#0b63ce',
               borderWidth: 2,
@@ -809,35 +809,32 @@
               borderColor: '#008767',
               backgroundColor: '#008767',
               borderDash: [4, 4],
-              borderWidth: 2,
-              pointRadius: 3,
+              borderWidth: 1.5,
+              pointRadius: 2.5,
               pointBackgroundColor: '#008767',
               tension: 0.1
             }
           ]
         },
         options: {
-          responsive: true,
+          responsive: true, 
           maintainAspectRatio: false,
           layout: {
-            padding: { top: 20 }
+            padding: { top: 22, right: 10, bottom: 0, left: 0 }
           },
           plugins: {
-            legend: {
-              position: 'top',
-              labels: { boxWidth: 10, font: { size: 9, weight: 'bold' }, color: '#1e293b' }
-            },
+            legend: { position: 'top', labels: { boxWidth: 10, font: { size: 9, weight: 'bold' } } },
             datalabels: {
               align: 'top',
               anchor: 'end',
               color: '#0b2246',
               font: { size: 8.5, weight: 'bold' },
               formatter: function(value, context) {
-                // Hanya tampilkan label datalabels pada dataset aktual (index 0) dan yang tidak null
+                // Tampilkan label hanya untuk garis aktual (datasetIndex === 0) dan jika nilainya ada
                 if (context.datasetIndex === 0 && value !== null) {
                   return 'Rp ' + value.toFixed(2).replace('.', ',') + ' M';
                 }
-                // Tampilkan juga untuk titik terakhir target jika diinginkan (Desember: Rp 13,16 M)
+                // Khusus titik terakhir target di bulan Desember untuk menampilkan Rp 13,16 M sesuai gambar
                 if (context.datasetIndex === 1 && context.dataIndex === 11) {
                   return 'Rp 13,16 M';
                 }
@@ -846,20 +843,16 @@
             }
           },
           scales: {
-            x: {
-              ticks: { font: { size: 9, weight: 'bold' }, color: '#334155' },
-              grid: { display: false }
-            },
-            y: {
-              min: 0,
-              max: 15,
-              ticks: {
-                stepSize: 5,
-                font: { size: 9, weight: 'bold' },
-                color: '#334155',
-                callback: val => 'Rp ' + val + ' Miliar'
-              },
-              grid: { color: '#f1f5f9' }
+            x: { ticks: { font: { size: 9, weight: 'bold' } }, grid: { display: false } },
+            y: { 
+              min: 0, 
+              max: 16, 
+              ticks: { 
+                stepSize: 5, 
+                font: { size: 9 }, 
+                callback: val => val === 0 ? 'Rp 0' : 'Rp ' + val + ' Miliar' 
+              }, 
+              grid: { color: '#f1f5f9' } 
             }
           }
         }
@@ -1374,7 +1367,7 @@
       renderAdminTable();
       recalculateDashboard1();
       renderD2AdminTable();
-      recalculateDataset2();
+      recalculateDashboard2();
     });
   </script>
 
