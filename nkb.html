@@ -75,7 +75,7 @@
     .progress-bar-fill { height: 100%; border-radius: 3px; }
 
     /* ========================================================= */
-    /* STYLING UNTUK DASHBOARD 2 (NILAI KONTRAK BARU S.D JULI 2026) */
+    /* STYLING UNTUK DASHBOARD 2 (NILAI KONTRAK BARU S.D AGUSTUS 2026) */
     /* ========================================================= */
     .d2-container { background: #ffffff; color: #1e293b; border-radius: 8px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
     .d2-top-bar { display: flex; justify-content: space-between; align-items: flex-start; background: #0b2246; color: #ffffff; padding: 14px 20px; border-radius: 6px; margin-bottom: 15px; }
@@ -107,7 +107,7 @@
       background-color: #3b5247;
       border-radius: 6px;
       position: relative;
-      background-image: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/7QBAUGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAACQcAgAAAgAEHAJuABhhdGF1cjAwMDI5MzYyMjkvVmVjdGVlenn/4Q5uaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVgi4n9");
+      background-image: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/7QBAUGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAACQcAgAAAgAEHAJuABhhdGF1cjAwMDI5MzYyMjkvVmVjdGVlenn/4Q5uaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLwA8P3hwYWNrZXQgYmVnaW49J++7vycgaWQ9J1c1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCc/Pgo8eDp4bXBtZXRh xmlns:x='adobe:ns:meta/' x:xmptk='Image::ExifTool 12.76'>\n <rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'>\n  <rdf:Description rdf:about=''\n   xmlns:dc='http://purl.org/dc/elements/1.1/'>\n   <dc:creator>\n    <rdf:Seq>\n     <rdf:li>ataur0002936229</rdf:li>\n    </rdf:Seq>\n   </dc:creator>\n   <dc:rights>\n    <rdf:Alt>\n     <rdf:li xml:lang='x-default'>ataur0002936229/Vecteezy</rdf:li>\n    </rdf:Alt>\n   </dc:rights>\n  </rdf:Description>\n  <rdf:Description rdf:about=''\n   xmlns:plus='http://ns.useplus.org/ldf/xmp/1.0/'>\n   <plus:Licensor>\n    <rdf:Seq>\n     <rdf:li rdf:parseType='Resource'>\n      <plus:LicensorURL>https://www.vecteezy.com/-/49317295-indonesia-watercolor-map-of-green-color-with-border-lines-of-different-provinces-or-divisions-on-dark-background-using-paint-brush?utm_source=iptc%26utm_medium=googleimages%26utm_campaign=image</plus:LicensorURL>\n     </rdf:li>\n    </rdf:Seq>\n   </plus:Licensor>\n  </rdf:Description>\n  <rdf:Description rdf:about=''\n   xmlns:xmpRights='http://ns.adobe.com/xap/1.0/rights/'>\n   <xmpRights:WebStatement>https://www.vecteezy.com/licensing</xmpRights:WebStatement>\n  </rdf:Description>\n </rdf:RDF>\n</xspan>");
       background-repeat: no-repeat;
       background-size: contain;
       background-position: center center;
@@ -429,29 +429,29 @@
           </div>
           <div id="adminFormBodyD2" style="padding: 16px;">
             <p style="font-size: 11.5px; color: #475569; margin-bottom: 12px; font-weight: 600;">
-              Tambahkan, edit, atau hapus data kontrak pada tabel master di bawah ini sesuai data s.d Agustus 2026. Semua KPI, ringkasan, peta sebaran, tabel customer, dan grafik proporsi akan diperbarui secara otomatis.
+              Tambahkan, edit, atau hapus data kontrak pada tabel master di bawah ini. Input Provinsi/Wilayah akan secara otomatis memperbarui titik pin, label, dan nilai pada Peta Indonesia di Dashboard 2.
             </p>
             
             <!-- FORM TAMBAH / EDIT KONTRAK D2 -->
             <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; margin-bottom: 15px;">
               <div id="d2FormTitleMode" style="font-size: 11px; font-weight: 800; color: #0b2246; margin-bottom: 8px; text-transform: uppercase;">Form Tambah Data Kontrak Baru (Dashboard 2)</div>
               <input type="hidden" id="d2EditIndex" value="-1">
-              <div style="display: grid; grid-template-columns: 2fr repeat(5, 1fr); gap: 8px; align-items: flex-end; margin-bottom: 8px;">
+              <div style="display: grid; grid-template-columns: 1.8fr 0.8fr 0.8fr 1.2fr 1.2fr 1.2fr 1.5fr; gap: 6px; align-items: flex-end; margin-bottom: 8px;">
                 <div>
-                  <label style="display: block; font-size: 9.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">CUSTOMER / PROYEK</label>
-                  <input type="text" id="d2InCust" placeholder="Nama Customer" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10.5px;">
+                  <label style="display: block; font-size: 9px; font-weight: 800; color: #334155; margin-bottom: 2px;">CUSTOMER / PROYEK</label>
+                  <input type="text" id="d2InCust" placeholder="Nama Customer" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px;">
                 </div>
                 <div>
-                  <label style="display: block; font-size: 9.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">JUMLAH UNIT</label>
-                  <input type="number" id="d2InUnit" placeholder="Unit" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10.5px;">
+                  <label style="display: block; font-size: 9px; font-weight: 800; color: #334155; margin-bottom: 2px;">UNIT</label>
+                  <input type="number" id="d2InUnit" placeholder="Unit" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px;">
                 </div>
                 <div>
-                  <label style="display: block; font-size: 9.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">JUMLAH KONTRAK</label>
-                  <input type="number" id="d2InKontrak" placeholder="Kontrak" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10.5px;">
+                  <label style="display: block; font-size: 9px; font-weight: 800; color: #334155; margin-bottom: 2px;">KONTRAK</label>
+                  <input type="number" id="d2InKontrak" placeholder="Kontrak" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px;">
                 </div>
                 <div>
-                  <label style="display: block; font-size: 9.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">TIPE ALAT</label>
-                  <select id="d2InAlat" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10.5px; background: white;">
+                  <label style="display: block; font-size: 9px; font-weight: 800; color: #334155; margin-bottom: 2px;">TIPE ALAT</label>
+                  <select id="d2InAlat" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px; background: white;">
                     <option value="Truck Mixer">Truck Mixer</option>
                     <option value="Truck Trailer">Truck Trailer</option>
                     <option value="Stone Crusher">Stone Crusher</option>
@@ -461,19 +461,38 @@
                   </select>
                 </div>
                 <div>
-                  <label style="display: block; font-size: 9.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">LOKASI</label>
-                  <input type="text" id="d2InLokasi" placeholder="Lokasi Proyek" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10.5px;">
+                  <label style="display: block; font-size: 9px; font-weight: 800; color: #334155; margin-bottom: 2px;">PROVINSI (PETA)</label>
+                  <select id="d2InProvinsi" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px; background: white;">
+                    <option value="Aceh Tengah">Aceh Tengah</option>
+                    <option value="Ogan Komering Ilir">Ogan Komering Ilir</option>
+                    <option value="Lampung Selatan">Lampung Selatan</option>
+                    <option value="Cilegon">Cilegon (Banten)</option>
+                    <option value="Jakarta">Jakarta</option>
+                    <option value="Bandung">Bandung (Jabar)</option>
+                    <option value="Tegal">Tegal (Jateng)</option>
+                    <option value="Garut">Garut (Jabar)</option>
+                    <option value="Subang">Subang (Jabar)</option>
+                    <option value="Gresik">Gresik (Jatim)</option>
+                    <option value="Tuban">Tuban (Jatim)</option>
+                    <option value="Sampang">Sampang (Jatim)</option>
+                    <option value="Balikpapan">Balikpapan (Kaltim)</option>
+                    <option value="Penajam Paser Utara">Penajam Paser Utara</option>
+                  </select>
                 </div>
                 <div>
-                  <label style="display: block; font-size: 9.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">TOTAL NILAI KONTRAK (IDR)</label>
-                  <input type="number" id="d2InNilai" placeholder="Nilai Rupiah" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10.5px;">
+                  <label style="display: block; font-size: 9px; font-weight: 800; color: #334155; margin-bottom: 2px;">LOKASI / DETAIL</label>
+                  <input type="text" id="d2InLokasi" placeholder="Detail Lokasi" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 9px; font-weight: 800; color: #334155; margin-bottom: 2px;">NILAI KONTRAK (IDR)</label>
+                  <input type="number" id="d2InNilai" placeholder="Nilai Rupiah" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px;">
                 </div>
               </div>
-              <div style="display: flex; gap: 5px; margin-top: 8px; width: 250px;">
-                <button id="d2SaveUpdateBtn" onclick="saveD2Item()" style="background: #0b63ce; color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 10.5px; width: 100%;">
+              <div style="display: flex; gap: 5px; margin-top: 8px; width: 220px;">
+                <button id="d2SaveUpdateBtn" onclick="saveD2Item()" style="background: #0b63ce; color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 10px; width: 100%;">
                   <i class="fa-solid fa-plus"></i> Simpan
                 </button>
-                <button onclick="resetD2Form()" style="background: #64748b; color: white; border: none; padding: 7px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 10.5px;">
+                <button onclick="resetD2Form()" style="background: #64748b; color: white; border: none; padding: 7px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 10px;">
                   Reset
                 </button>
               </div>
@@ -482,7 +501,7 @@
             <!-- TABEL MASTER DATA D2 -->
             <div style="font-size: 11px; font-weight: 800; color: #0b2246; margin-bottom: 6px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center;">
               <span>Daftar Master Data Kontrak Baru s.d Agustus 2026 (<span id="totalD2Count">18</span> Item)</span>
-              <span style="font-size: 10px; font-weight: normal; color: #64748b;">Sesuai data master 18 baris</span>
+              <span style="font-size: 10px; font-weight: normal; color: #64748b;">Update otomatis ke Peta Indonesia berdasarkan Provinsi</span>
             </div>
             <div style="max-height: 200px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
               <table class="data-table" id="adminD2Table">
@@ -493,7 +512,8 @@
                     <th class="text-center">Unit</th>
                     <th class="text-center">Kontrak</th>
                     <th>Tipe Alat</th>
-                    <th>Lokasi</th>
+                    <th>Provinsi (Peta)</th>
+                    <th>Lokasi Detail</th>
                     <th class="text-right">Nilai Kontrak (Rp)</th>
                     <th class="text-center" style="width: 80px;">Aksi</th>
                   </tr>
@@ -563,10 +583,10 @@
         <!-- D2 MIDDLE SECTION: PROFESSIONAL MAP & TABLE -->
         <div class="d2-middle-grid">
           
-          <!-- PROFESSIONAL MAP CARD WITH GREEN WATERCOLOR BACKGROUND -->
+          <!-- PROFESSIONAL MAP CARD WITH DYNAMIC PROVINCE PINS -->
           <div class="d2-map-card">
             <div class="d2-map-header-row">
-              <div class="d2-map-title">SEBARAN NILAI KONTRAK BARU BERDASARKAN LOKASI</div>
+              <div class="d2-map-title">SEBARAN NILAI KONTRAK BARU BERDASARKAN PROVINSI / LOKASI</div>
               <div class="d2-map-legend">
                 <span>Nilai Kontrak (Rp)</span>
                 <span><i class="fa-solid fa-circle" style="color: #3b82f6; font-size: 8px;"></i> Rendah</span>
@@ -575,121 +595,9 @@
               </div>
             </div>
 
-            <!-- MAP VISUAL WITH GREEN WATERCOLOR SVG BACKGROUND -->
-            <div class="d2-map-canvas">
-              
-              <!-- 1. Aceh Tengah (Tinggi) -->
-              <div class="map-label-box" style="top: 23%; left: 14%;">
-                <span class="region-name">Aceh Tengah</span>
-                <span class="region-val">Rp 1.369.400.000</span>
-              </div>
-              <div class="map-location-point" style="top: 31%; left: 14.5%;" aria-label="Lokasi Aceh Tengah"></div>
-              <div class="map-badge-pin badge-tinggi" style="top: 31%; left: 14.5%;">1</div>
-
-              <!-- 2. Ogan Komering Ilir (Rendah) -->
-              <div class="map-label-box" style="top: 49%; left: 22%;">
-                <span class="region-name">Ogan Komering Ilir</span>
-                <span class="region-val">Rp 135.000.000</span>
-              </div>
-              <div class="map-location-point" style="top: 52.5%; left: 27.5%;" aria-label="Lokasi Ogan Komering Ilir"></div>
-              <div class="map-badge-pin badge-rendah" style="top: 52.5%; left: 27.5%;">1</div>
-
-              <!-- 3. Lampung Selatan (Tinggi) -->
-              <div class="map-label-box" style="top: 62%; left: 20%;">
-                <span class="region-name">Lampung Selatan</span>
-                <span class="region-val">Rp 1.140.000.000</span>
-              </div>
-              <div class="map-location-point" style="top: 58%; left: 29.5%;" aria-label="Lokasi Lampung Selatan"></div>
-              <div class="map-badge-pin badge-tinggi" style="top: 58%; left: 29.5%;">1</div>
-
-              <!-- 4. Cilegon (Tinggi) -->
-              <div class="map-label-box" style="top: 54%; left: 35%;">
-                <span class="region-name">Cilegon</span>
-                <span class="region-val">Rp 2.366.350.000</span>
-              </div>
-              <div class="map-location-point" style="top: 60%; left: 31%;" aria-label="Lokasi Cilegon"></div>
-              <div class="map-badge-pin badge-tinggi" style="top: 60%; left: 31%;">3</div>
-
-              <!-- 5. Jakarta (Sedang) -->
-              <div class="map-label-box" style="top: 55%; left: 40%;">
-                <span class="region-name">Jakarta</span>
-                <span class="region-val">Rp 563.000.000</span>
-              </div>
-              <div class="map-location-point" style="top: 61.5%; left: 35.5%;" aria-label="Lokasi Jakarta"></div>
-              <div class="map-badge-pin badge-sedang" style="top: 61.5%; left: 35.5%;">3</div>
-
-              <!-- 6. Bandung (Rendah) -->
-              <div class="map-label-box" style="top: 70%; left: 43%;">
-                <span class="region-name">Bandung</span>
-                <span class="region-val">Rp 1.341.999.994</span>
-              </div>
-              <div class="map-location-point" style="top: 63.5%; left: 38.5%;" aria-label="Lokasi Bandung"></div>
-              <div class="map-badge-pin badge-rendah" style="top: 63.5%; left: 38.5%;">3</div>
-
-              <!-- 7. Tegal (Rendah) -->
-              <div class="map-label-box" style="top: 70%; left: 48%;">
-                <span class="region-name">Tegal</span>
-                <span class="region-val">Rp 233.166.666</span>
-              </div>
-              <div class="map-location-point" style="top: 63%; left: 43%;" aria-label="Lokasi Tegal"></div>
-              <div class="map-badge-pin badge-rendah" style="top: 63%; left: 43%;">1</div>
-
-              <!-- 8. Garut -->
-              <div class="map-label-box" style="top: 78%; left: 40%;">
-                <span class="region-name">Garut</span>
-                <span class="region-val">Rp 447.999.999</span>
-              </div>
-              <div class="map-location-point" style="top: 67%; left: 39%;" aria-label="Lokasi Garut"></div>
-              <div class="map-badge-pin badge-rendah" style="top: 67%; left: 39%;">2</div>
-
-              <!-- 9. Subang -->
-              <div class="map-label-box" style="top: 45%; left: 35%;">
-                <span class="region-name">Subang</span>
-                <span class="region-val">Rp 220.000.000</span>
-              </div>
-              <div class="map-location-point" style="top: 57%; left: 33%;" aria-label="Lokasi Subang"></div>
-              <div class="map-badge-pin badge-rendah" style="top: 57%; left: 33%;">1</div>
-
-              <!-- 10. Gresik (Sedang) -->
-              <div class="map-label-box" style="top: 55%; left: 57%;">
-                <span class="region-name">Gresik</span>
-                <span class="region-val">Rp 450.000.000</span>
-              </div>
-              <div class="map-location-point" style="top: 62%; left: 52%;" aria-label="Lokasi Gresik"></div>
-              <div class="map-badge-pin badge-sedang" style="top: 62%; left: 52%;">1</div>
-
-              <!-- 11. Tuban (Rendah) -->
-              <div class="map-label-box" style="top: 54%; left: 66%;">
-                <span class="region-name">Tuban</span>
-                <span class="region-val">Rp 765.000.000</span>
-              </div>
-              <div class="map-location-point" style="top: 61.5%; left: 50%;" aria-label="Lokasi Tuban"></div>
-              <div class="map-badge-pin badge-rendah" style="top: 61.5%; left: 50%;">1</div>
-
-              <!-- 12. Sampang (Rendah) -->
-              <div class="map-label-box" style="top: 70%; left: 62%;">
-                <span class="region-name">Sampang</span>
-                <span class="region-val">Rp 340.000.000</span>
-              </div>
-              <div class="map-location-point" style="top: 62.5%; left: 56.5%;" aria-label="Lokasi Sampang"></div>
-              <div class="map-badge-pin badge-rendah" style="top: 62.5%; left: 56.5%;">1</div>
-
-              <!-- 13. Balikpapan (Rendah) -->
-              <div class="map-label-box" style="top: 43%; left: 59%;">
-                <span class="region-name">Balikpapan</span>
-                <span class="region-val">Rp 31.000.000</span>
-              </div>
-              <div class="map-location-point" style="top: 49.5%; left: 51.5%;" aria-label="Lokasi Balikpapan"></div>
-              <div class="map-badge-pin badge-rendah" style="top: 49.5%; left: 51.5%;">1</div>
-
-              <!-- 14. Penajam Paser Utara (Rendah) -->
-              <div class="map-label-box" style="top: 37%; left: 66%;">
-                <span class="region-name">Penajam Paser Utara</span>
-                <span class="region-val">Rp 93.000.000</span>
-              </div>
-              <div class="map-location-point" style="top: 48.5%; left: 49.5%;" aria-label="Lokasi Penajam Paser Utara"></div>
-              <div class="map-badge-pin badge-rendah" style="top: 48.5%; left: 49.5%;">1</div>
-
+            <!-- MAP CANVAS WHERE PINS/LABELS ARE RENDERED DYNAMICALLY -->
+            <div class="d2-map-canvas" id="d2MapCanvasContainer">
+              <!-- Dynamically generated province labels & pins based on master data input -->
             </div>
 
             <!-- RINGKASAN SEBARAN BOX -->
@@ -711,7 +619,7 @@
                   <tr>
                     <th style="width: 30px;">No</th>
                     <th>Customer</th>
-                    <th>Lokasi</th>
+                    <th>Lokasi / Provinsi</th>
                     <th class="text-right">Total Nilai Kontrak Baru (Rp)</th>
                     <th class="text-center" style="width: 50px;">%</th>
                   </tr>
@@ -743,9 +651,9 @@
             </div>
           </div>
 
-          <!-- Chart Lokasi -->
+          <!-- Chart Lokasi / Provinsi -->
           <div class="d2-bottom-card">
-            <div class="d2-bottom-title">PROPORSIL NILAI KONTRAK BARU BERDASARKAN LOKASI</div>
+            <div class="d2-bottom-title">PROPORSIL NILAI KONTRAK BARU BERDASARKAN PROVINSI</div>
             <div class="d2-bottom-chart-container">
               <canvas id="chartD2Location"></canvas>
             </div>
@@ -851,7 +759,7 @@
       }
     });
 
-    // --- CHARTS D2 OBJECTS (GLOBAL SO DYNAMIC RECALCULATION WORKS) ---
+    // --- CHARTS D2 OBJECTS ---
     let chartD2EqObj = null;
     let chartD2LocObj = null;
     let chartD2TrendObj = null;
@@ -872,7 +780,7 @@
         }
       });
 
-      // 2. Lokasi
+      // 2. Provinsi / Lokasi
       const ctxD2Loc = document.getElementById('chartD2Location').getContext('2d');
       chartD2LocObj = new Chart(ctxD2Loc, {
         type: 'doughnut',
@@ -1099,26 +1007,44 @@
   </script>
 
   <script>
-    // --- MASTER DATA & STATE MANAGEMENT FOR DASHBOARD 2 (18 ROWS IMAGE) ---
+    // --- MASTER DATA & STATE MANAGEMENT FOR DASHBOARD 2 (WITH PROVINCE MAPPING) ---
+    // Koordinat Peta & Styling Posisi untuk setiap Provinsi pada Canvas Map
+    const provinceMapCoords = {
+      'Aceh Tengah': { top: '31%', left: '14.5%', labelTop: '23%', labelLeft: '14%' },
+      'Ogan Komering Ilir': { top: '52.5%', left: '27.5%', labelTop: '49%', labelLeft: '22%' },
+      'Lampung Selatan': { top: '58%', left: '29.5%', labelTop: '62%', labelLeft: '20%' },
+      'Cilegon': { top: '60%', left: '31%', labelTop: '54%', labelLeft: '35%' },
+      'Jakarta': { top: '61.5%', left: '35.5%', labelTop: '55%', labelLeft: '40%' },
+      'Bandung': { top: '63.5%', left: '38.5%', labelTop: '70%', labelLeft: '43%' },
+      'Tegal': { top: '63%', left: '43%', labelTop: '70%', labelLeft: '48%' },
+      'Garut': { top: '67%', left: '39%', labelTop: '78%', labelLeft: '40%' },
+      'Subang': { top: '57%', left: '33%', labelTop: '45%', labelLeft: '35%' },
+      'Gresik': { top: '62%', left: '52%', labelTop: '55%', labelLeft: '57%' },
+      'Tuban': { top: '61.5%', left: '50%', labelTop: '54%', labelLeft: '66%' },
+      'Sampang': { top: '62.5%', left: '56.5%', labelTop: '70%', labelLeft: '62%' },
+      'Balikpapan': { top: '49.5%', left: '51.5%', labelTop: '43%', labelLeft: '59%' },
+      'Penajam Paser Utara': { top: '48.5%', left: '49.5%', labelTop: '37%', labelLeft: '66%' }
+    };
+
     let d2MasterData = [
-      { customer: 'PT Baja Cosmo Energi', unit: 3, kontrak: 1, alat: 'Truck Mixer', lokasi: 'Penajam Paser Utara', nilai: 93000000 },
-      { customer: 'PT Baja Cosmo Energi', unit: 1, kontrak: 1, alat: 'Truck Mixer', lokasi: 'Balikpapan', nilai: 31000000 },
-      { customer: 'PT Baja Cosmo Energi', unit: 3, kontrak: 1, alat: 'Truck Mixer', lokasi: 'Cilegon', nilai: 252000000 },
-      { customer: 'PT Hamori Medical Center', unit: 1, kontrak: 2, alat: 'Mobile Crane', lokasi: 'Subang', nilai: 220000000 },
-      { customer: 'PT Indosarana Jaya Perkasa', unit: 3, kontrak: 4, alat: 'Truck Trailer', lokasi: 'Gresik', nilai: 450000000 },
-      { customer: 'PT Indosarana Jaya Perkasa', unit: 3, kontrak: 6, alat: 'Truck Trailer', lokasi: 'Jakarta', nilai: 425000000 },
-      { customer: 'PT Indosarana Jaya Perkasa', unit: 1, kontrak: 1, alat: 'Dump Truck', lokasi: 'Jakarta', nilai: 138000000 },
-      { customer: 'PT Liga Adhi Buana', unit: 3, kontrak: 2, alat: 'Truck Mixer', lokasi: 'Tuban', nilai: 765000000 },
-      { customer: 'PT Sraya Artha Gemilang', unit: 1, kontrak: 7, alat: 'Truck Mixer', lokasi: 'Tegal', nilai: 233166666 },
-      { customer: 'PT Sraya Artha Gemilang', unit: 6, kontrak: 1, alat: 'Truck Mixer', lokasi: 'Bandung', nilai: 599999994 },
-      { customer: 'PT Sraya Artha Gemilang', unit: 1, kontrak: 1, alat: 'Truck Mixer', lokasi: 'Garut', nilai: 99999999 },
-      { customer: 'PT Sumber Urip Sejati', unit: 14, kontrak: 12, alat: 'Truck Mixer', lokasi: 'Cilegon', nilai: 2114350000 },
-      { customer: 'PT Tirta Dan Mitra Pertiwi', unit: 1, kontrak: 1, alat: 'Stone Crusher', lokasi: 'Lampung Selatan', nilai: 1140000000 },
-      { customer: 'PT Trans Ringo Group', unit: 4, kontrak: 2, alat: 'Truck Mixer', lokasi: 'Bandung', nilai: 744000000 },
-      { customer: 'PT Trimitz Synergy Mandala', unit: 4, kontrak: 1, alat: 'Truck Mixer', lokasi: 'Garut', nilai: 348000000 },
-      { customer: 'PT Waskita Karya (Persero) Tbk', unit: 3, kontrak: 2, alat: 'Truck Mixer', lokasi: 'Aceh Tengah', nilai: 1369400000 },
-      { customer: 'Waskita CAG KSO', unit: 4, kontrak: 2, alat: 'Truck Mixer', lokasi: 'Sampang', nilai: 340000000 },
-      { customer: 'PT Waskita WKI KSO', unit: 1, kontrak: 1, alat: 'Silo', lokasi: 'Ogan Komering Ilir', nilai: 135000000 }
+      { customer: 'PT Baja Cosmo Energi', unit: 3, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Penajam Paser Utara', lokasi: 'Penajam Paser Utara', nilai: 93000000 },
+      { customer: 'PT Baja Cosmo Energi', unit: 1, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Balikpapan', lokasi: 'Balikpapan', nilai: 31000000 },
+      { customer: 'PT Baja Cosmo Energi', unit: 3, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Cilegon', lokasi: 'Cilegon', nilai: 252000000 },
+      { customer: 'PT Hamori Medical Center', unit: 1, kontrak: 2, alat: 'Mobile Crane', provinsi: 'Subang', lokasi: 'Subang', nilai: 220000000 },
+      { customer: 'PT Indosarana Jaya Perkasa', unit: 3, kontrak: 4, alat: 'Truck Trailer', provinsi: 'Gresik', lokasi: 'Gresik', nilai: 450000000 },
+      { customer: 'PT Indosarana Jaya Perkasa', unit: 3, kontrak: 6, alat: 'Truck Trailer', provinsi: 'Jakarta', lokasi: 'Jakarta', nilai: 425000000 },
+      { customer: 'PT Indosarana Jaya Perkasa', unit: 1, kontrak: 1, alat: 'Dump Truck', provinsi: 'Jakarta', lokasi: 'Jakarta', nilai: 138000000 },
+      { customer: 'PT Liga Adhi Buana', unit: 3, kontrak: 2, alat: 'Truck Mixer', provinsi: 'Tuban', lokasi: 'Tuban', nilai: 765000000 },
+      { customer: 'PT Sraya Artha Gemilang', unit: 1, kontrak: 7, alat: 'Truck Mixer', provinsi: 'Tegal', lokasi: 'Tegal', nilai: 233166666 },
+      { customer: 'PT Sraya Artha Gemilang', unit: 6, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Bandung', lokasi: 'Bandung', nilai: 599999994 },
+      { customer: 'PT Sraya Artha Gemilang', unit: 1, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Garut', lokasi: 'Garut', nilai: 99999999 },
+      { customer: 'PT Sumber Urip Sejati', unit: 14, kontrak: 12, alat: 'Truck Mixer', provinsi: 'Cilegon', lokasi: 'Cilegon', nilai: 2114350000 },
+      { customer: 'PT Tirta Dan Mitra Pertiwi', unit: 1, kontrak: 1, alat: 'Stone Crusher', provinsi: 'Lampung Selatan', lokasi: 'Lampung Selatan', nilai: 1140000000 },
+      { customer: 'PT Trans Ringo Group', unit: 4, kontrak: 2, alat: 'Truck Mixer', provinsi: 'Bandung', lokasi: 'Bandung', nilai: 744000000 },
+      { customer: 'PT Trimitz Synergy Mandala', unit: 4, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Garut', lokasi: 'Garut', nilai: 348000000 },
+      { customer: 'PT Waskita Karya (Persero) Tbk', unit: 3, kontrak: 2, alat: 'Truck Mixer', provinsi: 'Aceh Tengah', lokasi: 'Aceh Tengah', nilai: 1369400000 },
+      { customer: 'Waskita CAG KSO', unit: 4, kontrak: 2, alat: 'Truck Mixer', provinsi: 'Sampang', lokasi: 'Sampang', nilai: 340000000 },
+      { customer: 'PT Waskita WKI KSO', unit: 1, kontrak: 1, alat: 'Silo', provinsi: 'Ogan Komering Ilir', lokasi: 'Ogan Komering Ilir', nilai: 135000000 }
     ];
 
     function toggleAdminPanelD2() {
@@ -1130,7 +1056,7 @@
       const tbody = document.getElementById('adminD2Body');
       document.getElementById('totalD2Count').innerText = d2MasterData.length;
       if (d2MasterData.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="text-center" style="color: #94a3b8; font-style: italic;">Belum ada data kontrak.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center" style="color: #94a3b8; font-style: italic;">Belum ada data kontrak.</td></tr>';
         return;
       }
       let html = '';
@@ -1141,6 +1067,7 @@
           <td class="text-center">${item.unit}</td>
           <td class="text-center">${item.kontrak}</td>
           <td>${item.alat}</td>
+          <td><span style="background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #0b2246;">${item.provinsi || item.lokasi}</span></td>
           <td>${item.lokasi}</td>
           <td class="text-right">${formatRupiah(item.nilai)}</td>
           <td class="text-center">
@@ -1157,16 +1084,17 @@
       const unit = parseInt(document.getElementById('d2InUnit').value);
       const kontrak = parseInt(document.getElementById('d2InKontrak').value);
       const alat = document.getElementById('d2InAlat').value;
-      const lokasi = document.getElementById('d2InLokasi').value.trim();
+      const provinsi = document.getElementById('d2InProvinsi').value;
+      const lokasi = document.getElementById('d2InLokasi').value.trim() || provinsi;
       const nilai = parseFloat(document.getElementById('d2InNilai').value);
       const editIdx = parseInt(document.getElementById('d2EditIndex').value);
 
-      if (!cust || !lokasi || isNaN(nilai) || nilai <= 0 || isNaN(unit) || isNaN(kontrak)) {
+      if (!cust || isNaN(nilai) || nilai <= 0 || isNaN(unit) || isNaN(kontrak)) {
         alert('Mohon lengkapi semua form input dengan benar!');
         return;
       }
 
-      const newItem = { customer: cust, unit: unit, kontrak: kontrak, alat: alat, lokasi: lokasi, nilai: nilai };
+      const newItem = { customer: cust, unit: unit, kontrak: kontrak, alat: alat, provinsi: provinsi, lokasi: lokasi, nilai: nilai };
       if (editIdx >= 0) {
         d2MasterData[editIdx] = newItem;
       } else {
@@ -1183,6 +1111,7 @@
       document.getElementById('d2InUnit').value = item.unit;
       document.getElementById('d2InKontrak').value = item.kontrak;
       document.getElementById('d2InAlat').value = item.alat;
+      document.getElementById('d2InProvinsi').value = item.provinsi || item.lokasi || 'Jakarta';
       document.getElementById('d2InLokasi').value = item.lokasi;
       document.getElementById('d2InNilai').value = item.nilai;
       document.getElementById('d2EditIndex').value = idx;
@@ -1217,27 +1146,32 @@
       let totalKontrak = 0;
       let custMap = {};
       let alatMap = {};
-      let lokasiMap = {};
+      let provMap = {}; // Mengelompokkan berdasarkan Provinsi untuk Peta & Grafik
 
       d2MasterData.forEach(item => {
         totalNilai += item.nilai;
         totalUnit += item.unit;
         totalKontrak += item.kontrak;
 
+        const prov = item.provinsi || item.lokasi || 'Lainnya';
+
         // Customer Grouping
         if (!custMap[item.customer]) {
           custMap[item.customer] = { nilai: 0, lokasiSet: new Set() };
         }
         custMap[item.customer].nilai += item.nilai;
-        custMap[item.customer].lokasiSet.add(item.lokasi);
+        custMap[item.customer].lokasiSet.add(prov);
 
         // Alat Grouping
         if (!alatMap[item.alat]) alatMap[item.alat] = 0;
         alatMap[item.alat] += item.nilai;
 
-        // Lokasi Grouping
-        if (!lokasiMap[item.lokasi]) lokasiMap[item.lokasi] = 0;
-        lokasiMap[item.lokasi] += item.nilai;
+        // Provinsi Grouping
+        if (!provMap[prov]) {
+          provMap[prov] = { nilai: 0, count: 0 };
+        }
+        provMap[prov].nilai += item.nilai;
+        provMap[prov].count += 1;
       });
 
       const uniqueCustomersCount = Object.keys(custMap).length;
@@ -1283,6 +1217,9 @@
       custBody.innerHTML = custHtml;
       document.getElementById('d2TableTotalNilai').innerText = 'Rp ' + formatRupiah(totalNilai);
 
+      // RENDER PETA INDONESIA SECARA DINAMIS BERDASARKAN PROVINSI
+      renderDynamicMapPins(provMap);
+
       // Update Charts D2
       if (chartD2EqObj) {
         const eqKeys = Object.keys(alatMap);
@@ -1292,13 +1229,40 @@
       }
 
       if (chartD2LocObj) {
-        const locKeys = Object.keys(lokasiMap);
-        chartD2LocObj.data.labels = locKeys;
-        chartD2LocObj.data.datasets[0].data = locKeys.map(k => lokasiMap[k]);
+        const provKeys = Object.keys(provMap);
+        chartD2LocObj.data.labels = provKeys;
+        chartD2LocObj.data.datasets[0].data = provKeys.map(k => provMap[k].nilai);
         chartD2LocObj.update();
       }
 
       renderD2AdminTable();
+    }
+
+    // Fungsi Render Pin & Label pada Peta Indonesia secara Dinamis
+    function renderDynamicMapPins(provMap) {
+      const mapCanvas = document.getElementById('d2MapCanvasContainer');
+      let mapHtml = '';
+
+      for (let provName in provMap) {
+        const data = provMap[provName];
+        const coords = provinceMapCoords[provName] || { top: '50%', left: '50%', labelTop: '45%', labelLeft: '50%' };
+        
+        // Tentukan kategori pin (Rendah < 500Juta, Sedang < 1Miliar, Tinggi >= 1Miliar)
+        let badgeClass = 'badge-rendah';
+        if (data.nilai >= 1000000000) badgeClass = 'badge-tinggi';
+        else if (data.nilai >= 500000000) badgeClass = 'badge-sedang';
+
+        mapHtml += `
+          <div class="map-label-box" style="top: ${coords.labelTop}; left: ${coords.labelLeft};">
+            <span class="region-name">${provName}</span>
+            <span class="region-val">Rp ${formatRupiah(data.nilai)}</span>
+          </div>
+          <div class="map-location-point" style="top: ${coords.top}; left: ${coords.left};" aria-label="Lokasi ${provName}"></div>
+          <div class="map-badge-pin ${badgeClass}" style="top: ${coords.top}; left: ${coords.left};">${data.count}</div>
+        `;
+      }
+
+      mapCanvas.innerHTML = mapHtml;
     }
 
     // Initialize all tables and charts on load
