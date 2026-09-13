@@ -429,29 +429,50 @@
           </div>
           <div id="adminFormBodyD2" style="padding: 16px;">
             <p style="font-size: 11.5px; color: #475569; margin-bottom: 12px; font-weight: 600;">
-              Tambahkan, edit, atau hapus data kontrak pada tabel master di bawah ini. Kolom Provinsi searchable memperbarui Peta Indonesia, sementara Lokasi Detail tampil pada tabel Customer.
+              Tambahkan, edit, atau hapus data kontrak pada tabel master di bawah ini dengan menyertakan Nomor SPSA dan Bulan Kontrak.
             </p>
             
             <!-- FORM TAMBAH / EDIT KONTRAK D2 -->
             <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; margin-bottom: 15px;">
               <div id="d2FormTitleMode" style="font-size: 11px; font-weight: 800; color: #0b2246; margin-bottom: 8px; text-transform: uppercase;">Form Tambah Data Kontrak Baru (Dashboard 2)</div>
               <input type="hidden" id="d2EditIndex" value="-1">
-              <div style="display: grid; grid-template-columns: 1.8fr 0.7fr 0.7fr 1.2fr 1.5fr 1.2fr 1.5fr; gap: 6px; align-items: flex-end; margin-bottom: 8px;">
+              <div style="display: grid; grid-template-columns: 1.5fr 1.5fr 0.6fr 0.6fr 1fr 1fr 1.2fr 1fr 1.2fr; gap: 5px; align-items: flex-end; margin-bottom: 8px;">
                 <div>
-                  <label style="display: block; font-size: 9px; font-weight: 800; color: #334155; margin-bottom: 2px;">CUSTOMER / PROYEK</label>
-                  <input type="text" id="d2InCust" placeholder="Nama Customer" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px;">
+                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">NO. SPSA</label>
+                  <input type="text" id="d2InNoSpsa" placeholder="Cth: 00001/HAMORI/SPK/01/2026" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px;">
                 </div>
                 <div>
-                  <label style="display: block; font-size: 9px; font-weight: 800; color: #334155; margin-bottom: 2px;">UNIT</label>
-                  <input type="number" id="d2InUnit" placeholder="Unit" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px;">
+                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">CUSTOMER / PROYEK</label>
+                  <input type="text" id="d2InCust" placeholder="Nama Customer" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px;">
                 </div>
                 <div>
-                  <label style="display: block; font-size: 9px; font-weight: 800; color: #334155; margin-bottom: 2px;">KONTRAK</label>
-                  <input type="number" id="d2InKontrak" placeholder="Kontrak" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px;">
+                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">BULAN</label>
+                  <select id="d2InBulan" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px; background: white;">
+                    <option value="0">Januari</option>
+                    <option value="1">Februari</option>
+                    <option value="2">Maret</option>
+                    <option value="3">April</option>
+                    <option value="4">Mei</option>
+                    <option value="5">Juni</option>
+                    <option value="6">Juli</option>
+                    <option value="7" selected>Agustus</option>
+                    <option value="8">September</option>
+                    <option value="9">Oktober</option>
+                    <option value="10">November</option>
+                    <option value="11">Desember</option>
+                  </select>
                 </div>
                 <div>
-                  <label style="display: block; font-size: 9px; font-weight: 800; color: #334155; margin-bottom: 2px;">TIPE ALAT</label>
-                  <select id="d2InAlat" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px; background: white;">
+                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">UNIT</label>
+                  <input type="number" id="d2InUnit" placeholder="Unit" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">KONTRAK</label>
+                  <input type="number" id="d2InKontrak" placeholder="Kontrak" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px;">
+                </div>
+                <div>
+                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">TIPE ALAT</label>
+                  <select id="d2InAlat" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px; background: white;">
                     <option value="Truck Mixer">Truck Mixer</option>
                     <option value="Truck Trailer">Truck Trailer</option>
                     <option value="Stone Crusher">Stone Crusher</option>
@@ -462,20 +483,18 @@
                 </div>
                 <!-- SEARCHABLE PROVINSI DROPDOWN -->
                 <div style="position: relative;">
-                  <label style="display: block; font-size: 9px; font-weight: 800; color: #334155; margin-bottom: 2px;">PROVINSI (PETA)</label>
-                  <input type="text" id="d2InProvinsiSearch" placeholder="Ketik cari provinsi..." autocomplete="off" oninput="filterProvinceDropdown()" onfocus="showProvinceDropdown()" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px; background: white;">
+                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">PROVINSI (PETA)</label>
+                  <input type="text" id="d2InProvinsiSearch" placeholder="Cari provinsi..." autocomplete="off" oninput="filterProvinceDropdown()" onfocus="showProvinceDropdown()" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px; background: white;">
                   <input type="hidden" id="d2InProvinsi" value="Aceh">
-                  <div id="provinceDropdownList" style="display: none; position: absolute; top: 100%; left: 0; width: 100%; max-height: 160px; overflow-y: auto; background: white; border: 1px solid #cbd5e1; border-radius: 4px; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
-                    <!-- List rendered via JS -->
-                  </div>
+                  <div id="provinceDropdownList" style="display: none; position: absolute; top: 100%; left: 0; width: 100%; max-height: 160px; overflow-y: auto; background: white; border: 1px solid #cbd5e1; border-radius: 4px; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.15);"></div>
                 </div>
                 <div>
-                  <label style="display: block; font-size: 9px; font-weight: 800; color: #334155; margin-bottom: 2px;">LOKASI / DETAIL</label>
-                  <input type="text" id="d2InLokasi" placeholder="Detail Lokasi" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px;">
+                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">LOKASI</label>
+                  <input type="text" id="d2InLokasi" placeholder="Lokasi" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px;">
                 </div>
                 <div>
-                  <label style="display: block; font-size: 9px; font-weight: 800; color: #334155; margin-bottom: 2px;">NILAI KONTRAK (IDR)</label>
-                  <input type="number" id="d2InNilai" placeholder="Nilai Rupiah" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 10px;">
+                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">NILAI (IDR)</label>
+                  <input type="number" id="d2InNilai" placeholder="Rupiah" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px;">
                 </div>
               </div>
               <div style="display: flex; gap: 5px; margin-top: 8px; width: 220px;">
@@ -490,20 +509,22 @@
 
             <!-- TABEL MASTER DATA D2 -->
             <div style="font-size: 11px; font-weight: 800; color: #0b2246; margin-bottom: 6px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center;">
-              <span>Daftar Master Data Kontrak Baru s.d Agustus 2026 (<span id="totalD2Count">18</span> Item)</span>
-              <span style="font-size: 10px; font-weight: normal; color: #64748b;">Update otomatis ke Peta Indonesia berdasarkan Provinsi</span>
+              <span>Daftar Master Data Kontrak Baru s.d Agustus 2026 (<span id="totalD2Count">16</span> Item)</span>
+              <span style="font-size: 10px; font-weight: normal; color: #64748b;">Termasuk kolom No. SPSA & Bulan</span>
             </div>
             <div style="max-height: 200px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
               <table class="data-table" id="adminD2Table">
                 <thead>
                   <tr>
                     <th style="width: 35px;">No</th>
+                    <th>No. SPSA</th>
                     <th>Customer</th>
+                    <th>Bulan</th>
                     <th class="text-center">Unit</th>
                     <th class="text-center">Kontrak</th>
                     <th>Tipe Alat</th>
-                    <th>Provinsi (Peta)</th>
-                    <th>Lokasi Detail</th>
+                    <th>Provinsi</th>
+                    <th>Lokasi</th>
                     <th class="text-right">Nilai Kontrak (Rp)</th>
                     <th class="text-center" style="width: 80px;">Aksi</th>
                   </tr>
@@ -586,9 +607,7 @@
             </div>
 
             <!-- MAP CANVAS WHERE PINS/LABELS ARE RENDERED DYNAMICALLY -->
-            <div class="d2-map-canvas" id="d2MapCanvasContainer">
-              <!-- Dynamically generated province labels & pins based on master data input -->
-            </div>
+            <div class="d2-map-canvas" id="d2MapCanvasContainer"></div>
 
             <!-- RINGKASAN SEBARAN BOX -->
             <div class="d2-summary-box">
@@ -614,9 +633,7 @@
                     <th class="text-center" style="width: 50px;">%</th>
                   </tr>
                 </thead>
-                <tbody id="d2CustomerSummaryBody">
-                  <!-- Rendered via JS -->
-                </tbody>
+                <tbody id="d2CustomerSummaryBody"></tbody>
                 <tfoot>
                   <tr class="d2-table-total">
                     <td colspan="3" class="font-bold">TOTAL</td>
@@ -633,33 +650,29 @@
         <!-- D2 BOTTOM SECTION: 3 CHARTS -->
         <div class="d2-bottom-grid" style="margin-top: 15px;">
           
-          <!-- Chart Alat (Dengan Keterangan Persentase di Samping seperti Gambar Referensi) -->
+          <!-- Chart Alat -->
           <div class="d2-bottom-card">
             <div class="d2-bottom-title">PROPORSI NILAI KONTRAK BARU BERDASARKAN TIPE ALAT</div>
             <div style="display: grid; grid-template-columns: 1fr 130px; gap: 5px; align-items: center; width: 100%; height: 210px;">
               <div style="position: relative; height: 100%; width: 100%;">
                 <canvas id="chartD2Equipment"></canvas>
               </div>
-              <div id="d2EqLegendCustom" style="display: flex; flex-direction: column; gap: 4px; font-size: 9px; overflow-y: auto; max-height: 200px; padding-right: 2px;">
-                <!-- Rendered via JS -->
-              </div>
+              <div id="d2EqLegendCustom" style="display: flex; flex-direction: column; gap: 4px; font-size: 9px; overflow-y: auto; max-height: 200px; padding-right: 2px;"></div>
             </div>
           </div>
 
-          <!-- Chart Lokasi / Detail Lokasi (Dengan Keterangan Persentase Lokasi Detail di Samping) -->
+          <!-- Chart Lokasi Detail -->
           <div class="d2-bottom-card">
             <div class="d2-bottom-title">PROPORSI NILAI KONTRAK BARU BERDASARKAN LOKASI</div>
             <div style="display: grid; grid-template-columns: 1fr 130px; gap: 5px; align-items: center; width: 100%; height: 210px;">
               <div style="position: relative; height: 100%; width: 100%;">
                 <canvas id="chartD2Location"></canvas>
               </div>
-              <div id="d2LocLegendCustom" style="display: flex; flex-direction: column; gap: 3px; font-size: 8.5px; overflow-y: auto; max-height: 200px; padding-right: 2px;">
-                <!-- Rendered via JS -->
-              </div>
+              <div id="d2LocLegendCustom" style="display: flex; flex-direction: column; gap: 3px; font-size: 8.5px; overflow-y: auto; max-height: 200px; padding-right: 2px;"></div>
             </div>
           </div>
 
-          <!-- Chart Tren Kumulatif (Persis seperti Gambar 2 dengan Label Nilai Per Bulan) -->
+          <!-- Chart Tren Kumulatif -->
           <div class="d2-bottom-card">
             <div class="d2-bottom-title">TREN NILAI KONTRAK BARU (KUMULATIF)</div>
             <div class="d2-bottom-chart-container">
@@ -685,7 +698,8 @@
       Chart.register(ChartDataLabels);
     }
 
-    // TAB SWITCHING FUNCTION
+    const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
     function switchTab(evt, tabId) {
       const contents = document.querySelectorAll('.tab-content');
       contents.forEach(c => c.classList.remove('active'));
@@ -759,7 +773,6 @@
       }
     });
 
-    // --- CHARTS D2 OBJECTS ---
     let chartD2EqObj = null;
     let chartD2LocObj = null;
     let chartD2TrendObj = null;
@@ -767,37 +780,20 @@
     const chartColorsPalette = ['#0b63ce', '#008767', '#d97706', '#5c165c', '#e65c00', '#7c3aed', '#10b981', '#f59e0b', '#3b82f6', '#1d4ed8', '#0b2246', '#64748b'];
 
     function initD2Charts() {
-      // 1. Tipe Alat
       const ctxD2Eq = document.getElementById('chartD2Equipment').getContext('2d');
       chartD2EqObj = new Chart(ctxD2Eq, {
         type: 'doughnut',
         data: { labels: [], datasets: [{ data: [], backgroundColor: chartColorsPalette, borderWidth: 1, borderColor: '#ffffff' }] },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            datalabels: { display: false }
-          },
-          cutout: '50%'
-        }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: false } }, cutout: '50%' }
       });
 
-      // 2. Lokasi Detail (Bukan Provinsi)
       const ctxD2Loc = document.getElementById('chartD2Location').getContext('2d');
       chartD2LocObj = new Chart(ctxD2Loc, {
         type: 'doughnut',
         data: { labels: [], datasets: [{ data: [], backgroundColor: chartColorsPalette, borderWidth: 1, borderColor: '#ffffff' }] },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            datalabels: { display: false }
-          },
-          cutout: '45%'
-        }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: false } }, cutout: '45%' }
       });
 
-      // 3. Tren Kumulatif (Persis seperti Gambar 2 dengan Label Nilai Per Bulan)
       const ctxD2Trend = document.getElementById('chartD2Trend').getContext('2d');
       chartD2TrendObj = new Chart(ctxD2Trend, {
         type: 'line',
@@ -831,16 +827,11 @@
         options: {
           responsive: true, 
           maintainAspectRatio: false,
-          layout: {
-            padding: { top: 22, right: 10, bottom: 0, left: 0 }
-          },
+          layout: { padding: { top: 22, right: 10, bottom: 0, left: 0 } },
           plugins: {
             legend: { position: 'top', labels: { boxWidth: 10, font: { size: 9, weight: 'bold' } } },
             datalabels: {
-              align: 'top',
-              anchor: 'end',
-              color: '#0b2246',
-              font: { size: 8.5, weight: 'bold' },
+              align: 'top', anchor: 'end', color: '#0b2246', font: { size: 8.5, weight: 'bold' },
               formatter: function(value, context) {
                 if (context.datasetIndex === 0 && value !== null) {
                   return 'Rp ' + value.toFixed(2).replace('.', ',') + ' M';
@@ -855,13 +846,8 @@
           scales: {
             x: { ticks: { font: { size: 9, weight: 'bold' } }, grid: { display: false } },
             y: { 
-              min: 0, 
-              max: 16, 
-              ticks: { 
-                stepSize: 5, 
-                font: { size: 9 }, 
-                callback: val => val === 0 ? 'Rp 0' : 'Rp ' + val + ' Miliar' 
-              }, 
+              min: 0, max: 16, 
+              ticks: { stepSize: 5, font: { size: 9 }, callback: val => val === 0 ? 'Rp 0' : 'Rp ' + val + ' Miliar' }, 
               grid: { color: '#f1f5f9' } 
             }
           }
@@ -871,9 +857,6 @@
   </script>
 
   <script>
-    // --- MASTER DATA & STATE MANAGEMENT FOR DASHBOARD 1 (EXCEL MATCH) ---
-    const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-    
     let masterContracts = [
       { customer: 'Bendungan Tiga Dihaji', alat: 'Truck Mixer', bulan: 3, nilai: 760000000 },
       { customer: 'SR Sampang', alat: 'Truck Mixer', bulan: 4, nilai: 318000000 },
@@ -1048,7 +1031,6 @@
   </script>
 
   <script>
-    // --- DAFTAR SELURUH PROVINSI DI INDONESIA & KOORDINAT PETA ---
     const allIndonesianProvinces = [
       "Aceh", "Bali", "Banten", "Bengkulu", "DI Yogyakarta", "DKI Jakarta", 
       "Gorontalo", "Jambi", "Jawa Barat", "Jawa Tengah", "Jawa Timur", 
@@ -1102,23 +1084,24 @@
       'Papua Barat Daya': { top: '43%', left: '83%', labelTop: '37%', labelLeft: '83%' }
     };
 
+    // Master Data Dashboard 2 dengan tambahan properti 'spsa' dan 'bulan' (0 = Januari, dst.)
     let d2MasterData = [
-      { customer: 'PT Baja Cosmo Energi', unit: 3, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Kalimantan Timur', lokasi: 'Penajam Paser Utara', nilai: 62000000 },
-      { customer: 'PT Baja Cosmo Energi 2', unit: 3, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Kalimantan Timur', lokasi: 'Balikpapan', nilai: 62000000 },
-      { customer: 'PT Hamori Medical Center', unit: 1, kontrak: 2, alat: 'Mobile Crane + Bucket Cor', provinsi: 'Jawa Barat', lokasi: 'Subang', nilai: 220000000 },
-      { customer: 'PT Indosarana Jaya Perkasa (Gresik)', unit: 4, kontrak: 6, alat: 'Truck Trailer', provinsi: 'Jawa Timur', lokasi: 'Gresik', nilai: 500000000 },
-      { customer: 'PT Indosarana Jaya Perkasa (Jakarta)', unit: 3, kontrak: 5, alat: 'Truck Trailer', provinsi: 'DKI Jakarta', lokasi: 'Jakarta', nilai: 375000000 },
-      { customer: 'PT Liga Adhi Buana', unit: 3, kontrak: 2, alat: 'Truck Mixer', provinsi: 'Jawa Timur', lokasi: 'Tuban', nilai: 459000000 },
-      { customer: 'PT Sraya Artha Gemilang (Bandung)', unit: 4, kontrak: 4, alat: 'Truck Mixer', provinsi: 'Jawa Barat', lokasi: 'Bandung', nilai: 400000000 },
-      { customer: 'PT Sraya Artha Gemilang (Garut)', unit: 2, kontrak: 3, alat: 'Truck Mixer', provinsi: 'Jawa Barat', lokasi: 'Garut', nilai: 300000000 },
-      { customer: 'PT Sraya Artha Gemilang (Tegal)', unit: 2, kontrak: 2, alat: 'Truck Mixer', provinsi: 'Jawa Tengah', lokasi: 'Tegal', nilai: 199833326 },
-      { customer: 'PT Sumber Urip Sejati', unit: 14, kontrak: 12, alat: 'Truck Mixer', provinsi: 'Banten', lokasi: 'Cilegon', nilai: 2114350000 },
-      { customer: 'PT Tirta Dan Mitra Pertiwi', unit: 1, kontrak: 1, alat: 'Stone Crusher', provinsi: 'Lampung', lokasi: 'Lampung Selatan', nilai: 1140000000 },
-      { customer: 'PT Trans Ringo Group', unit: 4, kontrak: 2, alat: 'Truck Mixer', provinsi: 'Jawa Barat', lokasi: 'Bandung', nilai: 372000000 },
-      { customer: 'PT Trimitz Synergy Mandala', unit: 4, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Jawa Barat', lokasi: 'Garut', nilai: 348000000 },
-      { customer: 'PT Waskita Karya (Persero) Tbk', unit: 3, kontrak: 2, alat: 'Truck Mixer', provinsi: 'Aceh', lokasi: 'Aceh Tengah', nilai: 1369400000 },
-      { customer: 'Waskita CAG KSO', unit: 4, kontrak: 2, alat: 'Truck Mixer', provinsi: 'Jawa Timur', lokasi: 'Sampang', nilai: 340000000 },
-      { customer: 'PT Waskita WKI KSO', unit: 1, kontrak: 1, alat: 'Silo', provinsi: 'Sumatera Selatan', lokasi: 'Ogan Komering Ilir', nilai: 135000000 }
+      { spsa: '00001/HAMORI/SPK/01/2026', customer: 'PT Hamori Medical Center', bulan: 0, unit: 1, kontrak: 2, alat: 'Mobile Crane + Bucket Cor', provinsi: 'Jawa Barat', lokasi: 'Subang', nilai: 220000000 },
+      { spsa: '001/SPSA/WSBP/2026', customer: 'PT Tirta Dan Mitra Pertiwi', bulan: 0, unit: 1, kontrak: 1, alat: 'Stone Crusher', provinsi: 'Lampung', lokasi: 'Lampung Selatan', nilai: 1140000000 },
+      { spsa: '013/ADD-II/SPSA/WBP/2026', customer: 'PT Sraya Artha Gemilang', bulan: 0, unit: 1, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Jawa Tengah', lokasi: 'Tegal', nilai: 199833326 },
+      { spsa: '00003/HAMORI/SPK/01/2026', customer: 'PT Hamori Medical Center', bulan: 0, unit: 1, kontrak: 2, alat: 'Mobile Crane + Bucket Cor', provinsi: 'Jawa Barat', lokasi: 'Subang', nilai: 220000000 },
+      { spsa: '025/ADD-II/SPSA/WBP/2026', customer: 'PT Sumber Urip Sejati', bulan: 1, unit: 4, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Banten', lokasi: 'Cilegon', nilai: 2114350000 },
+      { spsa: '013/ADD-III/SPSA/WBP/2026', customer: 'PT Sraya Artha Gemilang', bulan: 1, unit: 1, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Jawa Tengah', lokasi: 'Tegal', nilai: 200000000 },
+      { spsa: '026/ADD-II/SPSA/WBP/2026', customer: 'PT Sumber Urip Sejati', bulan: 1, unit: 5, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Banten', lokasi: 'Cilegon', nilai: 300000000 },
+      { spsa: '002/SPSA/WSBP/2026', customer: 'PT Indosarana Jaya Perkasa', bulan: 1, unit: 2, kontrak: 1, alat: 'Truck Trailer', provinsi: 'DKI Jakarta', lokasi: 'Jakarta', nilai: 375000000 },
+      { spsa: '004/ADD-III/SPSA/WBP/2026', customer: 'PT Indosarana Jaya Perkasa', bulan: 1, unit: 1, kontrak: 1, alat: 'Truck Trailer', provinsi: 'Jawa Timur', lokasi: 'Gresik', nilai: 500000000 },
+      { spsa: '005/SPSA/WSBP/2026', customer: 'PT Baja Cosmo Energi', bulan: 2, unit: 3, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Kalimantan Timur', lokasi: 'Penajam Paser Utara', nilai: 124000000 },
+      { spsa: '055.A/SPSA/WSKT-WKI.KSO/1425010/2026', customer: 'Waskita WKI KSO', bulan: 3, unit: 1, kontrak: 1, alat: 'Silo', provinsi: 'Sumatera Selatan', lokasi: 'Ogan Komering Ilir', nilai: 135000000 },
+      { spsa: '015/SPSA/WK/DIV-INF/1326006/2026', customer: 'PT Waskita Karya (Persero) Tbk', bulan: 4, unit: 2, kontrak: 2, alat: 'Truck Mixer', provinsi: 'Aceh', lokasi: 'Aceh Tengah', nilai: 1369400000 },
+      { spsa: '157/SPSA/WK-CAG/KSO/1125036/2026', customer: 'Waskita CAG KSO', bulan: 4, unit: 4, kontrak: 2, alat: 'Truck Mixer', provinsi: 'Jawa Timur', lokasi: 'Sampang', nilai: 340000000 },
+      { spsa: '004/SPSA/WBP/2026', customer: 'PT Trans Ringo Group', bulan: 4, unit: 4, kontrak: 2, alat: 'Truck Mixer', provinsi: 'Jawa Barat', lokasi: 'Bandung', nilai: 372000000 },
+      { spsa: '006/SPSA/WBP/2026', customer: 'PT Liga Adhi Buana', bulan: 4, unit: 3, kontrak: 3, alat: 'Truck Mixer', provinsi: 'Jawa Timur', lokasi: 'Tuban', nilai: 459000000 },
+      { spsa: '011/SPSA/WBP/2026', customer: 'PT Trimitz Synergy Mandala', bulan: 6, unit: 4, kontrak: 1, alat: 'Truck Mixer', provinsi: 'Jawa Barat', lokasi: 'Garut', nilai: 348000000 }
     ];
 
     function toggleAdminPanelD2() {
@@ -1126,7 +1109,6 @@
       body.style.display = body.style.display === 'none' ? 'block' : 'none';
     }
 
-    // --- SEARCHABLE PROVINSI DROPDOWN LOGIC ---
     function populateProvinceDropdown(filterText = '') {
       const listContainer = document.getElementById('provinceDropdownList');
       const filtered = allIndonesianProvinces.filter(p => p.toLowerCase().includes(filterText.toLowerCase()));
@@ -1172,14 +1154,16 @@
       const tbody = document.getElementById('adminD2Body');
       document.getElementById('totalD2Count').innerText = d2MasterData.length;
       if (d2MasterData.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" class="text-center" style="color: #94a3b8; font-style: italic;">Belum ada data kontrak.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="11" class="text-center" style="color: #94a3b8; font-style: italic;">Belum ada data kontrak.</td></tr>';
         return;
       }
       let html = '';
       d2MasterData.forEach((item, idx) => {
         html += `<tr>
           <td class="text-center">${idx + 1}</td>
+          <td style="font-family: monospace; font-size: 9.5px; font-weight: bold; color: #0b63ce;">${item.spsa || '-'}</td>
           <td class="font-bold">${item.customer}</td>
+          <td>${monthNames[item.bulan !== undefined ? item.bulan : 7]}</td>
           <td class="text-center">${item.unit}</td>
           <td class="text-center">${item.kontrak}</td>
           <td>${item.alat}</td>
@@ -1196,7 +1180,9 @@
     }
 
     function saveD2Item() {
+      const spsa = document.getElementById('d2InNoSpsa').value.trim();
       const cust = document.getElementById('d2InCust').value.trim();
+      const bulan = parseInt(document.getElementById('d2InBulan').value);
       const unit = parseInt(document.getElementById('d2InUnit').value);
       const kontrak = parseInt(document.getElementById('d2InKontrak').value);
       const alat = document.getElementById('d2InAlat').value;
@@ -1206,11 +1192,11 @@
       const editIdx = parseInt(document.getElementById('d2EditIndex').value);
 
       if (!cust || !provinsi || isNaN(nilai) || nilai <= 0 || isNaN(unit) || isNaN(kontrak)) {
-        alert('Mohon lengkapi semua form input dan pilih provinsi dengan benar!');
+        alert('Mohon lengkapi data customer, provinsi, unit, kontrak, dan nilai kontrak yang valid!');
         return;
       }
 
-      const newItem = { customer: cust, unit: unit, kontrak: kontrak, alat: alat, provinsi: provinsi, lokasi: lokasi, nilai: nilai };
+      const newItem = { spsa: spsa, customer: cust, bulan: bulan, unit: unit, kontrak: kontrak, alat: alat, provinsi: provinsi, lokasi: lokasi, nilai: nilai };
       if (editIdx >= 0) {
         d2MasterData[editIdx] = newItem;
       } else {
@@ -1223,7 +1209,9 @@
 
     function editD2Item(idx) {
       const item = d2MasterData[idx];
+      document.getElementById('d2InNoSpsa').value = item.spsa || '';
       document.getElementById('d2InCust').value = item.customer;
+      document.getElementById('d2InBulan').value = item.bulan !== undefined ? item.bulan : 7;
       document.getElementById('d2InUnit').value = item.unit;
       document.getElementById('d2InKontrak').value = item.kontrak;
       document.getElementById('d2InAlat').value = item.alat;
@@ -1239,7 +1227,9 @@
     }
 
     function resetD2Form() {
+      document.getElementById('d2InNoSpsa').value = '';
       document.getElementById('d2InCust').value = '';
+      document.getElementById('d2InBulan').value = '7';
       document.getElementById('d2InUnit').value = '';
       document.getElementById('d2InKontrak').value = '';
       document.getElementById('d2InProvinsiSearch').value = '';
@@ -1337,7 +1327,6 @@
 
       renderDynamicMapPins(provMap);
 
-      // Update Chart Alat dengan Legend kustom persis seperti gambar referensi
       if (chartD2EqObj) {
         const sortedAlat = Object.keys(alatMap).sort((a, b) => alatMap[b] - alatMap[a]);
         chartD2EqObj.data.labels = sortedAlat;
@@ -1362,7 +1351,6 @@
         document.getElementById('d2EqLegendCustom').innerHTML = eqLegendHtml;
       }
 
-      // Update Chart Lokasi Detail dengan Legend kustom persis seperti gambar referensi
       if (chartD2LocObj) {
         const sortedLokasi = Object.keys(lokasiDetailMap).sort((a, b) => lokasiDetailMap[b] - lokasiDetailMap[a]);
         chartD2LocObj.data.labels = sortedLokasi;
