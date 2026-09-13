@@ -93,20 +93,36 @@
     .d2-target-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; }
 
     /* D2 MIDDLE SECTION */
-    .d2-middle-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 15px; margin-bottom: 15px; }
-    .d2-map-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; position: relative; height: 420px; overflow: hidden; }
-    .d2-map-title { font-size: 10.5px; font-weight: 800; color: #0b2246; text-transform: uppercase; margin-bottom: 8px; }
+    .d2-middle-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 15px; margin-bottom: 15px; }
     
-    /* MOCK INDONESIA MAP BACKGROUND & PINS */
-    .d2-map-bg { width: 100%; height: 320px; background: url('https://upload.wikimedia.org/wikipedia/commons/9/91/Indonesia_location_map.svg') no-repeat center center; background-size: contain; opacity: 0.25; position: relative; margin-top: 10px; }
-    .map-pin { position: absolute; background: #0b63ce; color: white; padding: 3px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -50%); cursor: pointer; }
-    .map-pin span { font-size: 8px; font-weight: normal; color: #e2e8f0; }
+    /* PROFESSIONAL MAP CARD STYLING */
+    .d2-map-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; position: relative; height: 460px; overflow: hidden; }
+    .d2-map-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .d2-map-title { font-size: 10.5px; font-weight: 800; color: #0b2246; text-transform: uppercase; }
+    .d2-map-legend { display: flex; align-items: center; gap: 10px; font-size: 9.5px; color: #334155; font-weight: 700; }
+    .d2-map-legend span { display: flex; align-items: center; gap: 3px; }
+    
+    /* MAP VISUAL CONTAINER */
+    .d2-map-canvas { width: 100%; height: 395px; background: radial-gradient(circle, #f1f5f9 0%, #e2e8f0 100%); border-radius: 6px; position: relative; background-image: url('https://upload.wikimedia.org/wikipedia/commons/9/91/Indonesia_location_map.svg'); background-size: cover; background-position: center; opacity-09; border: 1px solid #cbd5e1; }
+    .d2-map-canvas::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.75); border-radius: 6px; }
 
-    .d2-summary-box { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 4px; padding: 8px 12px; font-size: 10px; position: absolute; bottom: 12px; left: 12px; width: 200px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-    .d2-summary-box div { display: flex; justify-content: space-between; margin-bottom: 3px; font-weight: 700; color: #334155; }
+    /* EXACT MAP PIN LABELS STYLING */
+    .map-label-box { position: absolute; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 5px; padding: 4px 8px; box-shadow: 0 3px 8px rgba(0,0,0,0.12); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -50%); z-index: 5; text-align: center; white-space: nowrap; }
+    .map-label-box .region-name { font-size: 9.5px; font-weight: 700; color: #0b2246; }
+    .map-label-box .region-val { font-size: 10px; font-weight: 900; color: #0b63ce; }
+    
+    .map-badge-pin { position: absolute; width: 18px; height: 18px; border-radius: 50%; color: white; font-size: 9px; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 6; transform: translate(-50%, -50%); border: 1.5px solid white; }
+    .badge-rendah { background: #3b82f6; }
+    .badge-sedang { background: #1d4ed8; }
+    .badge-tinggi { background: #0f172a; }
+
+    /* RINGKASAN SEBARAN BOX */
+    .d2-summary-box { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 10px; position: absolute; bottom: 12px; left: 12px; width: 210px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; }
+    .d2-summary-box-title { font-size: 10px; font-weight: 800; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; margin-bottom: 4px; color: #0b2246; text-transform: uppercase; }
+    .d2-summary-row { display: flex; justify-content: space-between; margin-bottom: 3px; font-weight: 700; color: #334155; }
 
     /* D2 CUSTOM TABLE */
-    .d2-table-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; flex-direction: column; height: 420px; }
+    .d2-table-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; flex-direction: column; height: 460px; }
     .d2-table-container { overflow-y: auto; flex-grow: 1; margin-top: 6px; border: 1px solid #e2e8f0; border-radius: 4px; }
     .d2-table { width: 100%; border-collapse: collapse; font-size: 10.5px; text-align: left; }
     .d2-table th { background: #0b2246; color: white; padding: 6px 8px; font-weight: 700; position: sticky; top: 0; z-index: 2; font-size: 10px; }
@@ -145,10 +161,10 @@
 
     <!-- NAVIGATION TABS -->
     <div class="nav-tabs">
-      <button class="tab-btn active" onclick="switchTab(event, 'tab-nkb-1')">
+      <button class="tab-btn" onclick="switchTab(event, 'tab-nkb-1')">
         <i class="fa-solid fa-chart-column"></i> Dashboard Rencana Kontrak 2026
       </button>
-      <button class="tab-btn" onclick="switchTab(event, 'tab-nkb-2')">
+      <button class="tab-btn active" onclick="switchTab(event, 'tab-nkb-2')">
         <i class="fa-solid fa-chart-line"></i> Dashboard Nilai Kontrak Baru (s.d Juli 2026)
       </button>
     </div>
@@ -156,7 +172,7 @@
     <!-- ========================================================= -->
     <!-- TAB 1: DASHBOARD RENCANA KONTRAK 2026                     -->
     <!-- ========================================================= -->
-    <div id="tab-nkb-1" class="tab-content active">
+    <div id="tab-nkb-1" class="tab-content">
       
       <!-- 4 KPI CARDS -->
       <div class="d1-kpi-grid">
@@ -308,7 +324,7 @@
     <!-- ========================================================= -->
     <!-- TAB 2: DASHBOARD NILAI KONTRAK BARU (S.D JULI 2026)       -->
     <!-- ========================================================= -->
-    <div id="tab-nkb-2" class="tab-content">
+    <div id="tab-nkb-2" class="tab-content active">
       <div class="d2-container">
         
         <!-- D2 TOP BAR -->
@@ -365,37 +381,117 @@
           </div>
         </div>
 
-        <!-- D2 MIDDLE SECTION: MAP & TABLE -->
+        <!-- D2 MIDDLE SECTION: PROFESSIONAL MAP & TABLE -->
         <div class="d2-middle-grid">
           
-          <!-- MAP CONTAINER -->
+          <!-- PROFESSIONAL MAP CARD -->
           <div class="d2-map-card">
-            <div class="d2-map-title">SEBARAN NILAI KONTRAK BARU BERDASARKAN LOKASI</div>
-            <div style="font-size: 10px; color: #64748b; margin-bottom: 10px;">Nilai Kontrak (Rp) : <span style="color: #d97706; font-weight: bold;">●</span> Rendah <span style="color: #0b63ce; font-weight: bold;">●</span> Sedang <span style="color: #008767; font-weight: bold;">●</span> Tinggi</div>
-            
-            <div class="d2-map-bg">
-              <!-- Mock Map Pins positioned like reference -->
-              <div class="map-pin" style="top: 35%; left: 22%;">Aceh Tengah<span>Rp 1.369.400.000</span></div>
-              <div class="map-pin" style="top: 55%; left: 32%;">Ogan Komering Ilir<span>Rp 135.000.000</span></div>
-              <div class="map-pin" style="top: 65%; left: 38%;">Lampung Selatan<span>Rp 1.140.000.000</span></div>
-              <div class="map-pin" style="top: 58%; left: 47%;">Cilegon<span>Rp 2.114.350.000</span></div>
-              <div class="map-pin" style="top: 63%; left: 51%;">Jakarta<span>Rp 875.000.000</span></div>
-              <div class="map-pin" style="top: 68%; left: 54%;">Bandung<span>Rp 372.000.000</span></div>
-              <div class="map-pin" style="top: 72%; left: 57%;">Tegal<span>Rp 340.000.000</span></div>
-              <div class="map-pin" style="top: 63%; left: 62%;">Gresik<span>Rp 899.833.326</span></div>
-              <div class="map-pin" style="top: 66%; left: 65%;">Tuban<span>Rp 459.000.000</span></div>
-              <div class="map-pin" style="top: 73%; left: 74%;">Sampang<span>Rp 340.000.000</span></div>
-              <div class="map-pin" style="top: 45%; left: 78%;">Penajam Paser Utara<span>Rp 124.000.000</span></div>
-              <div class="map-pin" style="top: 48%; left: 68%;">Balikpapan<span>Rp 124.000.000</span></div>
+            <div class="d2-map-header-row">
+              <div class="d2-map-title">SEBARAN NILAI KONTRAK BARU BERDASARKAN LOKASI</div>
+              <div class="d2-map-legend">
+                <span>Nilai Kontrak (Rp)</span>
+                <span><i class="fa-solid fa-circle" style="color: #3b82f6; font-size: 8px;"></i> Rendah</span>
+                <span><i class="fa-solid fa-circle" style="color: #1d4ed8; font-size: 8px;"></i> Sedang</span>
+                <span><i class="fa-solid fa-circle" style="color: #0f172a; font-size: 8px;"></i> Tinggi</span>
+              </div>
+            </div>
+
+            <!-- MAP VISUAL -->
+            <div class="d2-map-canvas">
+              
+              <!-- 1. Aceh Tengah (Tinggi) -->
+              <div class="map-label-box" style="top: 22%; left: 15%;">
+                <span class="region-name">Aceh Tengah</span>
+                <span class="region-val">Rp 1.369.400.000</span>
+              </div>
+              <div class="map-badge-pin badge-tinggi" style="top: 22%; left: 24%;">1</div>
+
+              <!-- 2. Ogan Komering Ilir (Rendah) -->
+              <div class="map-label-box" style="top: 48%; left: 28%;">
+                <span class="region-name">Ogan Komering Ilir</span>
+                <span class="region-val">Rp 135.000.000</span>
+              </div>
+              <div class="map-badge-pin badge-rendah" style="top: 48%; left: 37%;">1</div>
+
+              <!-- 3. Lampung Selatan (Tinggi) -->
+              <div class="map-label-box" style="top: 62%; left: 21%;">
+                <span class="region-name">Lampung Selatan</span>
+                <span class="region-val">Rp 1.140.000.000</span>
+              </div>
+              <div class="map-badge-pin badge-tinggi" style="top: 62%; left: 30%;">1</div>
+
+              <!-- 4. Cilegon (Tinggi) -->
+              <div class="map-label-box" style="top: 54%; left: 45%;">
+                <span class="region-name">Cilegon</span>
+                <span class="region-val">Rp 2.114.350.000</span>
+              </div>
+              <div class="map-badge-pin badge-tinggi" style="top: 54%; left: 52%;">2</div>
+
+              <!-- 5. Jakarta (Sedang) -->
+              <div class="map-label-box" style="top: 62%; left: 53%;">
+                <span class="region-name">Jakarta</span>
+                <span class="region-val">Rp 875.000.000</span>
+              </div>
+              <div class="map-badge-pin badge-sedang" style="top: 62%; left: 60%;">2</div>
+
+              <!-- 6. Bandung (Rendah) -->
+              <div class="map-label-box" style="top: 78%; left: 44%;">
+                <span class="region-name">Bandung</span>
+                <span class="region-val">Rp 372.000.000</span>
+              </div>
+              <div class="map-badge-pin badge-rendah" style="top: 70%; left: 49%;">2</div>
+
+              <!-- 7. Tegal (Rendah) -->
+              <div class="map-label-box" style="top: 78%; left: 61%;">
+                <span class="region-name">Tegal</span>
+                <span class="region-val">Rp 340.000.000</span>
+              </div>
+              <div class="map-badge-pin badge-rendah" style="top: 70%; left: 57%;">2</div>
+
+              <!-- 8. Gresik (Sedang) -->
+              <div class="map-label-box" style="top: 62%; left: 71%;">
+                <span class="region-name">Gresik</span>
+                <span class="region-val">Rp 899.833.326</span>
+              </div>
+              <div class="map-badge-pin badge-sedang" style="top: 62%; left: 65%;">1</div>
+
+              <!-- 9. Tuban (Rendah) -->
+              <div class="map-label-box" style="top: 62%; left: 85%;">
+                <span class="region-name">Tuban</span>
+                <span class="region-val">Rp 459.000.000</span>
+              </div>
+              <div class="map-badge-pin badge-rendah" style="top: 68%; left: 73%;">1</div>
+
+              <!-- 10. Sampang (Rendah) -->
+              <div class="map-label-box" style="top: 78%; left: 88%;">
+                <span class="region-name">Sampang</span>
+                <span class="region-val">Rp 340.000.000</span>
+              </div>
+              <div class="map-badge-pin badge-rendah" style="top: 74%; left: 79%;">1</div>
+
+              <!-- 11. Balikpapan (Rendah) -->
+              <div class="map-label-box" style="top: 36%; left: 57%;">
+                <span class="region-name">Balikpapan</span>
+                <span class="region-val">Rp 124.000.000</span>
+              </div>
+              <div class="map-badge-pin badge-rendah" style="top: 36%; left: 63%;">1</div>
+
+              <!-- 12. Penajam Paser Utara (Rendah) -->
+              <div class="map-label-box" style="top: 26%; left: 78%;">
+                <span class="region-name">Penajam Paser Utara</span>
+                <span class="region-val">Rp 124.000.000</span>
+              </div>
+              <div class="map-badge-pin badge-rendah" style="top: 30%; left: 69%;">1</div>
+
             </div>
 
             <!-- RINGKASAN SEBARAN BOX -->
             <div class="d2-summary-box">
-              <div style="font-size: 10px; font-weight: 800; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; margin-bottom: 4px; color: #0b2246;">RINGKASAN SEBARAN</div>
-              <div><span>Total Lokasi</span> <span>14</span></div>
-              <div><span>Total Customer</span> <span>12</span></div>
-              <div><span>Total Kontrak Baru</span> <span>45</span></div>
-              <div><span>Total Nilai Kontrak Baru</span> <span style="color: #0b63ce;">Rp 8.786.583.326</span></div>
+              <div class="d2-summary-box-title">Ringkasan Sebaran</div>
+              <div class="d2-summary-row"><span>Total Lokasi</span> <span>14</span></div>
+              <div class="d2-summary-row"><span>Total Customer</span> <span>12</span></div>
+              <div class="d2-summary-row"><span>Total Kontrak Baru</span> <span>45</span></div>
+              <div class="d2-summary-row"><span>Total Nilai Kontrak Baru</span> <span style="color: #0b63ce;">Rp 8.786.583.326</span></div>
             </div>
           </div>
 
