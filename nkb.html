@@ -116,16 +116,18 @@
       border: 1px solid #cbd5e1;
     }
 
-     .map-label-box { position:absolute; width:max-content; max-width:128px; min-width:86px; background:#fff; border:1px solid #dbe3ec; border-top:3px solid #0b63ce; border-radius:7px; padding:5px 8px 5px; box-shadow:0 4px 12px rgba(15,34,70,.16); display:flex; flex-direction:column; align-items:center; text-align:center; white-space:nowrap; z-index:20; pointer-events:none; line-height:1.15; }
-    .map-label-box .region-name { font-size:9px; font-weight:800; color:#0b2246; }
-    .map-label-box .region-val { margin-top:2px; font-size:9px; font-weight:900; color:#0b63ce; }
-    .map-location-point { position:absolute; width:8px; height:8px; border-radius:50%; background:#fff; border:2px solid #0b2246; box-shadow:0 1px 4px rgba(0,0,0,.35); transform:translate(-50%,-50%); z-index:22; }
-    .map-badge-pin { position:absolute; width:18px; height:18px; border-radius:50%; color:#fff; font-size:9px; font-weight:800; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,.25); z-index:23; transform:translate(-50%,-50%); border:1.5px solid #fff; }
-    .badge-rendah { background:#3b82f6; }
-    .badge-sedang { background:#1d4ed8; }
-    .badge-tinggi { background:#0f172a; }
+    .map-label-box { position: absolute; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 5px; padding: 3px 6px; box-shadow: 0 3px 8px rgba(0,0,0,0.12); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); z-index: 5; text-align: center; white-space: nowrap; margin-top: -12px; pointer-events:none; }
+    .map-label-box .region-name { font-size: 9px; font-weight: 700; color: #0b2246; }
+    .map-label-box .region-val { font-size: 9.5px; font-weight: 900; color: #0b63ce; }
+    
+    .map-location-point { position:absolute; width:7px; height:7px; border-radius:50%; background:#ffffff; border:2px solid #0b2246; box-shadow:0 1px 4px rgba(0,0,0,.35); transform:translate(-50%,-50%); z-index:7; }
 
-.d2-summary-box { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 10px; position: absolute; bottom: 12px; left: 12px; width: 210px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; }
+    .map-badge-pin { position: absolute; width: 18px; height: 18px; border-radius: 50%; color: white; font-size: 9px; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 6; transform: translate(-50%, -50%); border: 1.5px solid white; }
+    .badge-rendah { background: #3b82f6; }
+    .badge-sedang { background: #1d4ed8; }
+    .badge-tinggi { background: #0f172a; }
+
+    .d2-summary-box { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 10px; position: absolute; bottom: 12px; left: 12px; width: 210px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; }
     .d2-summary-box-title { font-size: 10px; font-weight: 800; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; margin-bottom: 4px; color: #0b2246; text-transform: uppercase; }
     .d2-summary-row { display: flex; justify-content: space-between; margin-bottom: 3px; font-weight: 700; color: #334155; }
 
@@ -497,7 +499,7 @@
                 </div>
               </div>
               <div style="display: flex; gap: 5px; margin-top: 8px; width: 220px;">
-                <button id="d2SaveUpdateBtn" onclick="saveD2Item()" style="background: #0b63ce; color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 10px; width: 100%;">
+                <button type="button" id="d2SaveUpdateBtn" onclick="saveD2Item(event)" style="background: #0b63ce; color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 10px; width: 100%;">
                   <i class="fa-solid fa-plus"></i> Simpan
                 </button>
                 <button onclick="resetD2Form()" style="background: #64748b; color: white; border: none; padding: 7px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 10px;">
@@ -1071,20 +1073,44 @@
 
     // KOORDINAT TITIK PETA DIKERJAKAN PRESISI PERSIS SEPERTI GAMBAR REFERENSI C7DA70.PNG
     const provinceMapCoords = {
-      'Aceh': {lat: 4.70, lon: 96.90}, 'Sumatera Utara': {lat: 2.35, lon: 99.20}, 'Sumatera Barat': {lat: -0.65, lon: 100.45},
-      'Riau': {lat: 0.50, lon: 101.45}, 'Jambi': {lat: -1.60, lon: 102.70}, 'Sumatera Selatan': {lat: -3.20, lon: 104.00},
-      'Bengkulu': {lat: -3.80, lon: 102.25}, 'Lampung': {lat: -4.90, lon: 105.00},
-      'Kepulauan Bangka Belitung': {lat: -2.20, lon: 106.10}, 'Kepulauan Riau': {lat: 1.00, lon: 104.00},
-      'Banten': {lat: -6.45, lon: 106.05}, 'DKI Jakarta': {lat: -6.20, lon: 106.82}, 'Jawa Barat': {lat: -6.90, lon: 107.65},
-      'Jawa Tengah': {lat: -7.25, lon: 110.00}, 'DI Yogyakarta': {lat: -7.80, lon: 110.40}, 'Jawa Timur': {lat: -7.75, lon: 112.75},
-      'Bali': {lat: -8.35, lon: 115.20}, 'Nusa Tenggara Barat': {lat: -8.65, lon: 117.35}, 'Nusa Tenggara Timur': {lat: -9.70, lon: 123.60},
-      'Kalimantan Barat': {lat: 0.10, lon: 111.50}, 'Kalimantan Tengah': {lat: -1.60, lon: 113.50}, 'Kalimantan Selatan': {lat: -3.10, lon: 115.40},
-      'Kalimantan Timur': {lat: 0.55, lon: 116.80}, 'Kalimantan Utara': {lat: 3.10, lon: 116.40},
-      'Sulawesi Utara': {lat: 0.75, lon: 124.80}, 'Gorontalo': {lat: 0.55, lon: 122.50}, 'Sulawesi Tengah': {lat: -1.40, lon: 121.50},
-      'Sulawesi Barat': {lat: -2.60, lon: 119.35}, 'Sulawesi Selatan': {lat: -4.70, lon: 119.90}, 'Sulawesi Tenggara': {lat: -4.00, lon: 122.20},
-      'Maluku': {lat: -3.20, lon: 129.30}, 'Maluku Utara': {lat: 1.50, lon: 127.80},
-      'Papua Barat Daya': {lat: -1.30, lon: 130.20}, 'Papua Barat': {lat: -1.80, lon: 133.20}, 'Papua Tengah': {lat: -3.80, lon: 136.00},
-      'Papua Pegunungan': {lat: -4.20, lon: 138.00}, 'Papua': {lat: -4.50, lon: 138.80}, 'Papua Selatan': {lat: -7.50, lon: 139.80}
+      'Aceh': { top: '35%', left: '16.5%', labelTop: '27%', labelLeft: '16%' },
+      'Sumatera Utara': { top: '41%', left: '21.5%', labelTop: '33%', labelLeft: '21%' },
+      'Sumatera Barat': { top: '48%', left: '25%', labelTop: '40%', labelLeft: '24%' },
+      'Riau': { top: '47%', left: '30%', labelTop: '39%', labelLeft: '29%' },
+      'Jambi': { top: '53%', left: '31%', labelTop: '45%', labelLeft: '30%' },
+      'Sumatera Selatan': { top: '57%', left: '32.5%', labelTop: '49%', labelLeft: '28%' },
+      'Bengkulu': { top: '60%', left: '28.5%', labelTop: '52%', labelLeft: '28%' },
+      'Lampung': { top: '62%', left: '34.5%', labelTop: '70%', labelLeft: '24%' },
+      'Kepulauan Bangka Belitung': { top: '54%', left: '37.5%', labelTop: '46%', labelLeft: '37%' },
+      'Kepulauan Riau': { top: '40%', left: '39%', labelTop: '32%', labelLeft: '39%' },
+      'DKI Jakarta': { top: '65.5%', left: '42.5%', labelTop: '57%', labelLeft: '43%' },
+      'Banten': { top: '64.5%', left: '38.5%', labelTop: '56%', labelLeft: '39%' },
+      'Jawa Barat': { top: '67.5%', left: '46.5%', labelTop: '75%', labelLeft: '42%' },
+      'DI Yogyakarta': { top: '69%', left: '55%', labelTop: '76%', labelLeft: '55%' },
+      'Jawa Tengah': { top: '67%', left: '51%', labelTop: '74%', labelLeft: '50%' },
+      'Jawa Timur': { top: '66%', left: '60.5%', labelTop: '58%', labelLeft: '61%' },
+      'Bali': { top: '70.5%', left: '69.5%', labelTop: '78%', labelLeft: '70%' },
+      'Nusa Tenggara Barat': { top: '71.5%', left: '75%', labelTop: '79%', labelLeft: '75%' },
+      'Nusa Tenggara Timur': { top: '74.5%', left: '84%', labelTop: '82%', labelLeft: '84%' },
+      'Kalimantan Barat': { top: '48%', left: '55%', labelTop: '40%', labelLeft: '55%' },
+      'Kalimantan Tengah': { top: '51%', left: '61%', labelTop: '43%', labelLeft: '61%' },
+      'Kalimantan Selatan': { top: '57%', left: '65.5%', labelTop: '50%', labelLeft: '65%' },
+      'Kalimantan Timur': { top: '44%', left: '67%', labelTop: '37%', labelLeft: '64%' },
+      'Kalimantan Utara': { top: '35%', left: '67%', labelTop: '27%', labelLeft: '67%' },
+      'Sulawesi Utara': { top: '36%', left: '78%', labelTop: '28%', labelLeft: '78%' },
+      'Gorontalo': { top: '41%', left: '75%', labelTop: '33%', labelLeft: '75%' },
+      'Sulawesi Tengah': { top: '48%', left: '74%', labelTop: '40%', labelLeft: '74%' },
+      'Sulawesi Barat': { top: '55%', left: '71.5%', labelTop: '47%', labelLeft: '71%' },
+      'Sulawesi Selatan': { top: '61%', left: '73.5%', labelTop: '69%', labelLeft: '73%' },
+      'Sulawesi Tenggara': { top: '58%', left: '79.5%', labelTop: '50%', labelLeft: '79%' },
+      'Maluku': { top: '56%', left: '89%', labelTop: '48%', labelLeft: '89%' },
+      'Maluku Utara': { top: '43%', left: '90.5%', labelTop: '35%', labelLeft: '90%' },
+      'Papua': { top: '60%', left: '97%', labelTop: '52%', labelLeft: '97%' },
+      'Papua Barat': { top: '48%', left: '95%', labelTop: '40%', labelLeft: '95%' },
+      'Papua Tengah': { top: '59%', left: '96%', labelTop: '67%', labelLeft: '96%' },
+      'Papua Pegunungan': { top: '61%', left: '98%', labelTop: '69%', labelLeft: '98%' },
+      'Papua Selatan': { top: '68%', left: '97.5%', labelTop: '76%', labelLeft: '97%' },
+      'Papua Barat Daya': { top: '46%', left: '93%', labelTop: '38%', labelLeft: '93%' }
     };
 
     let d2MasterData = [
@@ -1132,7 +1158,7 @@
       const hidden = document.getElementById('d2InProvinsi');
       if (!input || !hidden) return;
       const typed = input.value.trim();
-      const exact = provinceList.find(p => p.toLowerCase() === typed.toLowerCase());
+      const exact = allIndonesianProvinces.find(p => p.toLowerCase() === typed.toLowerCase());
       if (exact) hidden.value = exact;
     }
 
@@ -1190,33 +1216,46 @@
       tbody.innerHTML = html;
     }
 
-    function saveD2Item() {
-      const spsa = document.getElementById('d2InNoSpsa').value.trim();
-      const cust = document.getElementById('d2InCust').value.trim();
-      const bulan = parseInt(document.getElementById('d2InBulan').value);
-      const unit = parseInt(document.getElementById('d2InUnit').value);
-      const kontrak = parseInt(document.getElementById('d2InKontrak').value);
-      const alat = document.getElementById('d2InAlat').value;
-      syncProvinceInput();
-      const provinsi = normalizeProvinceName(document.getElementById('d2InProvinsi').value || document.getElementById('d2InProvinsiSearch').value);
-      const lokasi = document.getElementById('d2InLokasi').value.trim() || provinsi;
-      const nilai = parseFloat(document.getElementById('d2InNilai').value);
-      const editIdx = parseInt(document.getElementById('d2EditIndex').value);
+    function saveD2Item(event) {
+      if (event) event.preventDefault();
+      try {
+        const get = id => document.getElementById(id);
+        const spsa = get('d2InNoSpsa')?.value.trim() || '';
+        const cust = get('d2InCust')?.value.trim() || '';
+        const bulan = parseInt(get('d2InBulan')?.value, 10);
+        const unit = parseInt(get('d2InUnit')?.value, 10);
+        const kontrak = parseInt(get('d2InKontrak')?.value, 10);
+        const alat = get('d2InAlat')?.value || '';
+        const searchValue = get('d2InProvinsiSearch')?.value.trim() || '';
+        const hiddenValue = get('d2InProvinsi')?.value || '';
+        const provinsi = normalizeProvinceName(searchValue || hiddenValue);
+        const lokasi = get('d2InLokasi')?.value.trim() || provinsi;
+        const nilai = parseFloat(get('d2InNilai')?.value);
+        const editIdx = parseInt(get('d2EditIndex')?.value || '-1', 10);
 
-      if (!cust || !provinsi || isNaN(nilai) || nilai <= 0 || isNaN(unit) || isNaN(kontrak)) {
-        alert('Mohon lengkapi data customer, provinsi, unit, kontrak, dan nilai kontrak yang valid!');
-        return;
+        if (!cust || !provinsi || isNaN(nilai) || nilai <= 0 || isNaN(unit) || unit < 0 || isNaN(kontrak) || kontrak < 0) {
+          alert('Mohon lengkapi Customer, Provinsi, Unit, Kontrak, dan Nilai Kontrak dengan benar.');
+          return false;
+        }
+        if (isNaN(bulan)) {
+          alert('Bulan belum dipilih.');
+          return false;
+        }
+        if (editIdx >= 0 && editIdx < d2MasterData.length) {
+          d2MasterData[editIdx] = { spsa, customer: cust, bulan, unit, kontrak, alat, provinsi, lokasi, nilai };
+        } else {
+          d2MasterData.push({ spsa, customer: cust, bulan, unit, kontrak, alat, provinsi, lokasi, nilai });
+        }
+
+        recalculateDashboard2();
+        resetD2Form();
+        if (typeof renderD2AdminTable === 'function') renderD2AdminTable();
+        return false;
+      } catch (err) {
+        console.error('Gagal menyimpan data Dashboard 2:', err);
+        alert('Data belum tersimpan karena terjadi kesalahan: ' + (err?.message || err));
+        return false;
       }
-
-      const newItem = { spsa: spsa, customer: cust, bulan: bulan, unit: unit, kontrak: kontrak, alat: alat, provinsi: provinsi, lokasi: lokasi, nilai: nilai };
-      if (editIdx >= 0) {
-        d2MasterData[editIdx] = newItem;
-      } else {
-        d2MasterData.push(newItem);
-      }
-
-      resetD2Form();
-      recalculateDashboard2();
     }
 
     function editD2Item(idx) {
@@ -1417,95 +1456,36 @@
     function renderDynamicMapPins(provMap) {
       const mapCanvas = document.getElementById('d2MapCanvasContainer');
       if (!mapCanvas) return;
-      mapCanvas.innerHTML = '';
-      mapCanvas.style.overflow = 'hidden';
+      let mapHtml = '';
 
       const entries = Object.keys(provMap).map(rawName => ({
-        provName: normalizeProvinceName(rawName), data: provMap[rawName]
+        provName: normalizeProvinceName(rawName),
+        data: provMap[rawName]
       })).filter(x => provinceMapCoords[x.provName]);
 
-      if (!entries.length) {
-        mapCanvas.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#e2e8f0;font-size:11px;font-weight:700;">Belum ada data provinsi</div>';
-        return;
-      }
+      entries.forEach(({provName, data}) => {
+        const coords = provinceMapCoords[provName];
+        let badgeClass = 'badge-rendah';
+        if (data.nilai >= 1000000000) badgeClass = 'badge-tinggi';
+        else if (data.nilai >= 500000000) badgeClass = 'badge-sedang';
 
-      // Proyeksi diselaraskan dengan gambar peta yang dipakai sebagai background.
-      // Batas siluet pada file peta: x=31..704, y=123..367 dari gambar 735x490.
-      const IMG_W = 735, IMG_H = 490, MAP_LON_MIN = 95, MAP_LON_MAX = 141, MAP_LAT_MAX = 6, MAP_LAT_MIN = -11;
-      function project(lat, lon) {
-        const scale = mapCanvas.clientWidth / IMG_W;
-        const imageH = IMG_H * scale;
-        const offsetY = (mapCanvas.clientHeight - imageH) * 0.48;
-        const ix = 31 + ((lon - MAP_LON_MIN) / (MAP_LON_MAX - MAP_LON_MIN)) * (704 - 31);
-        const iy = 123 + ((MAP_LAT_MAX - lat) / (MAP_LAT_MAX - MAP_LAT_MIN)) * (367 - 123);
-        return { x: ix * scale, y: iy * scale + offsetY };
-      }
-
-      const used = [];
-      const summary = document.querySelector('.d2-summary-box');
-      const summaryRect = summary ? { left: 8, top: mapCanvas.clientHeight - summary.offsetHeight - 10, right: 8 + summary.offsetWidth, bottom: mapCanvas.clientHeight - 10 } : null;
-      const gap = 7;
-
-      function overlap(a,b) { return !(a.right + gap <= b.left || a.left - gap >= b.right || a.bottom + gap <= b.top || a.top - gap >= b.bottom); }
-      function inside(r) { return r.left >= 4 && r.top >= 4 && r.right <= mapCanvas.clientWidth - 4 && r.bottom <= mapCanvas.clientHeight - 4; }
-
-      entries.sort((a,b) => b.data.nilai - a.data.nilai);
-      entries.forEach(({provName,data}) => {
-        const p = project(provinceMapCoords[provName].lat, provinceMapCoords[provName].lon);
-        let badgeClass = data.nilai >= 1000000000 ? 'badge-tinggi' : (data.nilai >= 500000000 ? 'badge-sedang' : 'badge-rendah');
-
-        const point = document.createElement('div');
-        point.className = 'map-location-point'; point.style.left = p.x + 'px'; point.style.top = p.y + 'px';
-        point.title = provName;
-        mapCanvas.appendChild(point);
-
-        const badge = document.createElement('div');
-        badge.className = 'map-badge-pin ' + badgeClass; badge.style.left = (p.x + 10) + 'px'; badge.style.top = (p.y - 10) + 'px'; badge.textContent = data.count;
-        mapCanvas.appendChild(badge);
-
-        const label = document.createElement('div');
-        label.className = 'map-label-box';
-        label.innerHTML = '<span class="region-name">' + provName + '</span><span class="region-val">Rp ' + formatRupiah(data.nilai) + '</span>';
-        mapCanvas.appendChild(label);
-
-        // Ukuran nyata label dipakai untuk collision detection.
-        const w = label.offsetWidth, h = label.offsetHeight;
-        const candidates = [
-          [0, -h/2-14], [w/2+16, -h/2], [-w/2-16, -h/2], [0, h/2+14],
-          [w/2+12, -h-8], [-w/2-12, -h-8], [w/2+12, 8], [-w/2-12, 8],
-          [0, -h-18], [0, 18]
-        ];
-        let chosen = null;
-        for (const [dx,dy] of candidates) {
-          const cx = p.x + dx, cy = p.y + dy;
-          const r = {left:cx-w/2, top:cy-h/2, right:cx+w/2, bottom:cy+h/2};
-          if (!inside(r)) continue;
-          if (summaryRect && overlap(r, summaryRect)) continue;
-          if (used.some(u => overlap(r,u))) continue;
-          chosen = r; break;
-        }
-        if (!chosen) {
-          // Fallback: cari posisi terdekat secara radial agar label tetap tampil.
-          outer: for (let radius=24; radius<=150; radius+=10) {
-            for (let angle=0; angle<360; angle+=30) {
-              const rad=angle*Math.PI/180, cx=p.x+Math.cos(rad)*radius, cy=p.y+Math.sin(rad)*radius;
-              const r={left:cx-w/2,top:cy-h/2,right:cx+w/2,bottom:cy+h/2};
-              if (inside(r) && !(summaryRect&&overlap(r,summaryRect)) && !used.some(u=>overlap(r,u))) { chosen=r; break outer; }
-            }
-          }
-        }
-        if (!chosen) chosen = {left:Math.max(4,Math.min(mapCanvas.clientWidth-w-4,p.x-w/2)), top:Math.max(4,Math.min(mapCanvas.clientHeight-h-4,p.y-h/2)) , right:0,bottom:0};
-        chosen.right=chosen.left+w; chosen.bottom=chosen.top+h;
-        used.push(chosen);
-        label.style.left = chosen.left + 'px'; label.style.top = chosen.top + 'px';
+        // Titik selalu memakai koordinat geografis provinsi.
+        // Label boleh ditempatkan terpisah agar tidak menutup titik/peta.
+        mapHtml += `
+          <div class="map-label-box" style="top:${coords.labelTop}; left:${coords.labelLeft};">
+            <span class="region-name">${provName}</span>
+            <span class="region-val">Rp ${formatRupiah(data.nilai)}</span>
+          </div>
+          <div class="map-location-point" style="top:${coords.top}; left:${coords.left};" aria-label="Lokasi ${provName}"></div>
+          <div class="map-badge-pin ${badgeClass}" style="top:${coords.top}; left:${coords.left};">${data.count}</div>
+        `;
       });
-    }
 
-    window.addEventListener('resize', () => {
-      const provMap = {};
-      d2MasterData.forEach(item => { const p = normalizeProvinceName(item.provinsi); if(!provMap[p]) provMap[p]={nilai:0,count:0}; provMap[p].nilai += Number(item.nilai)||0; provMap[p].count += 1; });
-      renderDynamicMapPins(provMap);
-    });
+      if (!entries.length) {
+        mapHtml = '<div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#e2e8f0; font-size:11px; font-weight:700;">Belum ada data provinsi</div>';
+      }
+      mapCanvas.innerHTML = mapHtml;
+    }
 
     window.addEventListener('DOMContentLoaded', () => {
       initD2Charts();
