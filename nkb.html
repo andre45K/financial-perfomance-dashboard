@@ -116,24 +116,16 @@
       border: 1px solid #cbd5e1;
     }
 
-    /* Label profesional: ringkas, bersih, dan tidak menutupi titik. */
-    .map-label-box { position:absolute; background:rgba(255,255,255,.985); border:1px solid #d4dce7; border-radius:7px; padding:5px 9px 5px; box-shadow:0 3px 10px rgba(8,30,55,.22); display:flex; flex-direction:column; align-items:center; transform:translate(-50%,-50%); z-index:12; text-align:center; white-space:nowrap; pointer-events:none; line-height:1.18; min-width:86px; }
-    .map-label-box::before { content:''; position:absolute; left:8px; right:8px; top:-1px; height:2px; border-radius:2px 2px 0 0; background:#0b63ce; }
-    .map-label-box .region-name { font-size:9.5px; font-weight:800; color:#0b2246; letter-spacing:.05px; }
-    .map-label-box .region-val { font-size:9.5px; font-weight:900; color:#0b63ce; margin-top:1px; }
+     .map-label-box { position:absolute; width:max-content; max-width:128px; min-width:86px; background:#fff; border:1px solid #dbe3ec; border-top:3px solid #0b63ce; border-radius:7px; padding:5px 8px 5px; box-shadow:0 4px 12px rgba(15,34,70,.16); display:flex; flex-direction:column; align-items:center; text-align:center; white-space:nowrap; z-index:20; pointer-events:none; line-height:1.15; }
+    .map-label-box .region-name { font-size:9px; font-weight:800; color:#0b2246; }
+    .map-label-box .region-val { margin-top:2px; font-size:9px; font-weight:900; color:#0b63ce; }
+    .map-location-point { position:absolute; width:8px; height:8px; border-radius:50%; background:#fff; border:2px solid #0b2246; box-shadow:0 1px 4px rgba(0,0,0,.35); transform:translate(-50%,-50%); z-index:22; }
+    .map-badge-pin { position:absolute; width:18px; height:18px; border-radius:50%; color:#fff; font-size:9px; font-weight:800; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,.25); z-index:23; transform:translate(-50%,-50%); border:1.5px solid #fff; }
+    .badge-rendah { background:#3b82f6; }
+    .badge-sedang { background:#1d4ed8; }
+    .badge-tinggi { background:#0f172a; }
 
-    /* Connector hanya ditampilkan jika label benar-benar bergeser. */
-    .map-connector-layer { position:absolute; inset:0; width:100%; height:100%; z-index:8; pointer-events:none; overflow:visible; }
-    .map-connector-line { stroke:rgba(255,255,255,.72); stroke-width:1; stroke-dasharray:2.5 3; opacity:.82; vector-effect:non-scaling-stroke; }
-    .map-location-point { position:absolute; width:7px; height:7px; border-radius:50%; background:#fff; border:2px solid #0b2246; box-shadow:0 0 0 2px rgba(255,255,255,.72), 0 2px 5px rgba(0,0,0,.35); transform:translate(-50%,-50%); z-index:11; }
-
-    .map-badge-pin { position:absolute; width:18px; height:18px; border-radius:50%; color:white; font-size:9px; font-weight:800; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,.35); z-index:13; transform:translate(-50%,-50%); border:1.5px solid white; }
-    .map-badge-pin::after { content:''; position:absolute; width:4px; height:4px; border-radius:50%; background:#fff; opacity:.9; }
-    .badge-rendah { background: #3b82f6; }
-    .badge-sedang { background: #1d4ed8; }
-    .badge-tinggi { background: #0f172a; }
-
-    .d2-summary-box { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 10px; position: absolute; bottom: 12px; left: 12px; width: 210px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; }
+.d2-summary-box { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 10px; position: absolute; bottom: 12px; left: 12px; width: 210px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; }
     .d2-summary-box-title { font-size: 10px; font-weight: 800; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; margin-bottom: 4px; color: #0b2246; text-transform: uppercase; }
     .d2-summary-row { display: flex; justify-content: space-between; margin-bottom: 3px; font-weight: 700; color: #334155; }
 
@@ -1078,49 +1070,22 @@
     ];
 
     // KOORDINAT TITIK PETA DIKERJAKAN PRESISI PERSIS SEPERTI GAMBAR REFERENSI C7DA70.PNG
-    // Koordinat anchor provinsi diproyeksikan dari posisi geografis pada siluet peta.
-    // Peta memakai background-size:100% auto dan background-position:center 48%,
-    // sehingga koordinat di bawah mengikuti pixel peta, bukan posisi label.
     const provinceMapCoords = {
-      'Aceh': { top: '22.6%', left: '4.9%', labelTop: '16%', labelLeft: '10%' },
-      'Sumatera Utara': { top: '29.2%', left: '11.5%', labelTop: '23%', labelLeft: '13%' },
-      'Sumatera Barat': { top: '44.4%', left: '14.9%', labelTop: '37%', labelLeft: '15%' },
-      'Riau': { top: '40.4%', left: '17.1%', labelTop: '33%', labelLeft: '20%' },
-      'Jambi': { top: '46.4%', left: '21.4%', labelTop: '40%', labelLeft: '22%' },
-      'Sumatera Selatan': { top: '50.7%', left: '23.6%', labelTop: '44%', labelLeft: '25%' },
-      'Bengkulu': { top: '53.0%', left: '18.7%', labelTop: '57%', labelLeft: '16%' },
-      'Lampung': { top: '58.6%', left: '24.7%', labelTop: '68%', labelLeft: '22%' },
-      'Kepulauan Bangka Belitung': { top: '47%', left: '31%', labelTop: '39%', labelLeft: '31%' },
-      'Kepulauan Riau': { top: '31%', left: '27%', labelTop: '24%', labelLeft: '28%' },
-      'DKI Jakarta': { top: '61.2%', left: '27.8%', labelTop: '51%', labelLeft: '29%' },
-      'Banten': { top: '60.9%', left: '26.4%', labelTop: '70%', labelLeft: '28%' },
-      'Jawa Barat': { top: '63.5%', left: '29.3%', labelTop: '73%', labelLeft: '31%' },
-      'DI Yogyakarta': { top: '63.8%', left: '34.8%', labelTop: '74%', labelLeft: '35%' },
-      'Jawa Tengah': { top: '63.8%', left: '34.9%', labelTop: '53%', labelLeft: '38%' },
-      'Jawa Timur': { top: '64.7%', left: '39.5%', labelTop: '54%', labelLeft: '43%' },
-      'Bali': { top: '66.2%', left: '44.5%', labelTop: '74%', labelLeft: '45%' },
-      'Nusa Tenggara Barat': { top: '66.0%', left: '46.2%', labelTop: '55%', labelLeft: '48%' },
-      'Nusa Tenggara Timur': { top: '70.5%', left: '61.2%', labelTop: '78%', labelLeft: '61%' },
-      'Kalimantan Barat': { top: '41.9%', left: '32.8%', labelTop: '33%', labelLeft: '34%' },
-      'Kalimantan Tengah': { top: '48.1%', left: '41.9%', labelTop: '39%', labelLeft: '42%' },
-      'Kalimantan Selatan': { top: '51.2%', left: '43.2%', labelTop: '59%', labelLeft: '43%' },
-      'Kalimantan Timur': { top: '42.4%', left: '46.9%', labelTop: '32%', labelLeft: '50%' },
-      'Kalimantan Utara': { top: '33.8%', left: '48.7%', labelTop: '25%', labelLeft: '51%' },
-      'Sulawesi Utara': { top: '37.6%', left: '63.6%', labelTop: '29%', labelLeft: '65%' },
-      'Gorontalo': { top: '40.3%', left: '60.1%', labelTop: '32%', labelLeft: '60%' },
-      'Sulawesi Tengah': { top: '44.4%', left: '53.7%', labelTop: '36%', labelLeft: '55%' },
-      'Sulawesi Barat': { top: '49.4%', left: '52.5%', labelTop: '56%', labelLeft: '52%' },
-      'Sulawesi Selatan': { top: '56.3%', left: '52.8%', labelTop: '65%', labelLeft: '53%' },
-      'Sulawesi Tenggara': { top: '53.1%', left: '59.0%', labelTop: '61%', labelLeft: '60%' },
-      'Maluku': { top: '52.3%', left: '70.3%', labelTop: '60%', labelLeft: '70%' },
-      'Maluku Utara': { top: '39.6%', left: '68.7%', labelTop: '32%', labelLeft: '70%' },
-      'Papua Barat Daya': { top: '44.1%', left: '76.9%', labelTop: '36%', labelLeft: '78%' },
-      'Papua Barat': { top: '45.5%', left: '82.0%', labelTop: '37%', labelLeft: '82%' },
-      'Papua Tengah': { top: '51.7%', left: '87.8%', labelTop: '61%', labelLeft: '86%' },
-      'Papua Pegunungan': { top: '53.4%', left: '89.8%', labelTop: '63%', labelLeft: '90%' },
-      'Papua Selatan': { top: '58.8%', left: '93.8%', labelTop: '68%', labelLeft: '93%' },
-      'Papua': { top: '54.0%', left: '95.2%', labelTop: '46%', labelLeft: '92%' }
-    };;
+      'Aceh': {lat: 4.70, lon: 96.90}, 'Sumatera Utara': {lat: 2.35, lon: 99.20}, 'Sumatera Barat': {lat: -0.65, lon: 100.45},
+      'Riau': {lat: 0.50, lon: 101.45}, 'Jambi': {lat: -1.60, lon: 102.70}, 'Sumatera Selatan': {lat: -3.20, lon: 104.00},
+      'Bengkulu': {lat: -3.80, lon: 102.25}, 'Lampung': {lat: -4.90, lon: 105.00},
+      'Kepulauan Bangka Belitung': {lat: -2.20, lon: 106.10}, 'Kepulauan Riau': {lat: 1.00, lon: 104.00},
+      'Banten': {lat: -6.45, lon: 106.05}, 'DKI Jakarta': {lat: -6.20, lon: 106.82}, 'Jawa Barat': {lat: -6.90, lon: 107.65},
+      'Jawa Tengah': {lat: -7.25, lon: 110.00}, 'DI Yogyakarta': {lat: -7.80, lon: 110.40}, 'Jawa Timur': {lat: -7.75, lon: 112.75},
+      'Bali': {lat: -8.35, lon: 115.20}, 'Nusa Tenggara Barat': {lat: -8.65, lon: 117.35}, 'Nusa Tenggara Timur': {lat: -9.70, lon: 123.60},
+      'Kalimantan Barat': {lat: 0.10, lon: 111.50}, 'Kalimantan Tengah': {lat: -1.60, lon: 113.50}, 'Kalimantan Selatan': {lat: -3.10, lon: 115.40},
+      'Kalimantan Timur': {lat: 0.55, lon: 116.80}, 'Kalimantan Utara': {lat: 3.10, lon: 116.40},
+      'Sulawesi Utara': {lat: 0.75, lon: 124.80}, 'Gorontalo': {lat: 0.55, lon: 122.50}, 'Sulawesi Tengah': {lat: -1.40, lon: 121.50},
+      'Sulawesi Barat': {lat: -2.60, lon: 119.35}, 'Sulawesi Selatan': {lat: -4.70, lon: 119.90}, 'Sulawesi Tenggara': {lat: -4.00, lon: 122.20},
+      'Maluku': {lat: -3.20, lon: 129.30}, 'Maluku Utara': {lat: 1.50, lon: 127.80},
+      'Papua Barat Daya': {lat: -1.30, lon: 130.20}, 'Papua Barat': {lat: -1.80, lon: 133.20}, 'Papua Tengah': {lat: -3.80, lon: 136.00},
+      'Papua Pegunungan': {lat: -4.20, lon: 138.00}, 'Papua': {lat: -4.50, lon: 138.80}, 'Papua Selatan': {lat: -7.50, lon: 139.80}
+    };
 
     let d2MasterData = [
       { spsa: '00001/HAMORI/SPK/01/2026', customer: 'PT Hamori Medical Center', bulan: 0, unit: 1, kontrak: 2, alat: 'Mobile Crane + Bucket Cor', provinsi: 'Jawa Barat', lokasi: 'Subang', nilai: 220000000 },
@@ -1452,189 +1417,94 @@
     function renderDynamicMapPins(provMap) {
       const mapCanvas = document.getElementById('d2MapCanvasContainer');
       if (!mapCanvas) return;
+      mapCanvas.innerHTML = '';
+      mapCanvas.style.overflow = 'hidden';
 
       const entries = Object.keys(provMap).map(rawName => ({
-        provName: normalizeProvinceName(rawName),
-        data: provMap[rawName]
+        provName: normalizeProvinceName(rawName), data: provMap[rawName]
       })).filter(x => provinceMapCoords[x.provName]);
 
       if (!entries.length) {
-        mapCanvas.innerHTML = '<div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#e2e8f0; font-size:11px; font-weight:700;">Belum ada data provinsi</div>';
+        mapCanvas.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#e2e8f0;font-size:11px;font-weight:700;">Belum ada data provinsi</div>';
         return;
       }
 
-      // SVG khusus untuk connector. Marker tetap berada tepat pada koordinat provinsi.
-      let html = '<svg class="map-connector-layer" id="d2MapConnectorLayer" aria-hidden="true"></svg>';
+      // Proyeksi diselaraskan dengan gambar peta yang dipakai sebagai background.
+      // Batas siluet pada file peta: x=31..704, y=123..367 dari gambar 735x490.
+      const IMG_W = 735, IMG_H = 490, MAP_LON_MIN = 95, MAP_LON_MAX = 141, MAP_LAT_MAX = 6, MAP_LAT_MIN = -11;
+      function project(lat, lon) {
+        const scale = mapCanvas.clientWidth / IMG_W;
+        const imageH = IMG_H * scale;
+        const offsetY = (mapCanvas.clientHeight - imageH) * 0.48;
+        const ix = 31 + ((lon - MAP_LON_MIN) / (MAP_LON_MAX - MAP_LON_MIN)) * (704 - 31);
+        const iy = 123 + ((MAP_LAT_MAX - lat) / (MAP_LAT_MAX - MAP_LAT_MIN)) * (367 - 123);
+        return { x: ix * scale, y: iy * scale + offsetY };
+      }
 
-      entries.forEach(({provName, data}, index) => {
-        const coords = provinceMapCoords[provName];
-        let badgeClass = 'badge-rendah';
-        if (data.nilai >= 1000000000) badgeClass = 'badge-tinggi';
-        else if (data.nilai >= 500000000) badgeClass = 'badge-sedang';
-
-        html += `
-          <div class="map-label-box" data-prov="${provName}" data-base-top="${parseFloat(coords.labelTop)}" data-base-left="${parseFloat(coords.labelLeft)}">
-            <span class="region-name">${provName}</span>
-            <span class="region-val">Rp ${formatRupiah(data.nilai)}</span>
-          </div>
-          <div class="map-location-point" data-prov="${provName}" data-top="${parseFloat(coords.top)}" data-left="${parseFloat(coords.left)}" aria-label="Lokasi ${provName}"></div>
-          <div class="map-badge-pin ${badgeClass}" data-prov="${provName}" style="top:${coords.top}; left:${coords.left};">${data.count}</div>
-        `;
-      });
-
-      mapCanvas.innerHTML = html;
-      layoutMapLabels();
-    }
-
-    // Menempatkan label berdasarkan posisi awal, lalu menghindari tabrakan secara otomatis.
-    // Algoritma bekerja pada ukuran pixel aktual sehingga tetap benar saat dashboard di-resize.
-    function layoutMapLabels() {
-      const mapCanvas = document.getElementById('d2MapCanvasContainer');
-      if (!mapCanvas) return;
-
-      const labels = Array.from(mapCanvas.querySelectorAll('.map-label-box'));
-      const points = Array.from(mapCanvas.querySelectorAll('.map-location-point'));
-      const svg = document.getElementById('d2MapConnectorLayer');
-      if (!labels.length) return;
-
-      const cw = mapCanvas.clientWidth;
-      const ch = mapCanvas.clientHeight;
-      const EDGE = 6;
-      const GAP = 7;
+      const used = [];
       const summary = document.querySelector('.d2-summary-box');
-      const cr = summary ? summary.getBoundingClientRect() : null;
-      const mr = mapCanvas.getBoundingClientRect();
-      const obstacle = cr ? {
-        left: cr.left - mr.left - 5,
-        top: cr.top - mr.top - 5,
-        right: cr.right - mr.left + 5,
-        bottom: cr.bottom - mr.top + 5
-      } : null;
+      const summaryRect = summary ? { left: 8, top: mapCanvas.clientHeight - summary.offsetHeight - 10, right: 8 + summary.offsetWidth, bottom: mapCanvas.clientHeight - 10 } : null;
+      const gap = 7;
 
-      const rectLocal = el => {
-        const r = el.getBoundingClientRect();
-        return {left:r.left-mr.left, top:r.top-mr.top, right:r.right-mr.left,
-                bottom:r.bottom-mr.top, width:r.width, height:r.height};
-      };
-      const overlap = (a,b) => !(a.right + GAP < b.left || a.left - GAP > b.right ||
-                                  a.bottom + GAP < b.top || a.top - GAP > b.bottom);
-      const blocked = r => obstacle && !(r.right < obstacle.left || r.left > obstacle.right ||
-                                          r.bottom < obstacle.top || r.top > obstacle.bottom);
+      function overlap(a,b) { return !(a.right + gap <= b.left || a.left - gap >= b.right || a.bottom + gap <= b.top || a.top - gap >= b.bottom); }
+      function inside(r) { return r.left >= 4 && r.top >= 4 && r.right <= mapCanvas.clientWidth - 4 && r.bottom <= mapCanvas.clientHeight - 4; }
 
-      // Reset ke anchor label masing-masing. Titik provinsi tidak pernah dipindahkan.
-      labels.forEach(l => {
-        l.style.left = l.dataset.baseLeft + '%';
-        l.style.top = l.dataset.baseTop + '%';
-        l.dataset.dx = '0';
-        l.dataset.dy = '0';
-      });
+      entries.sort((a,b) => b.data.nilai - a.data.nilai);
+      entries.forEach(({provName,data}) => {
+        const p = project(provinceMapCoords[provName].lat, provinceMapCoords[provName].lon);
+        let badgeClass = data.nilai >= 1000000000 ? 'badge-tinggi' : (data.nilai >= 500000000 ? 'badge-sedang' : 'badge-rendah');
 
-      requestAnimationFrame(() => {
-        const placed = [];
+        const point = document.createElement('div');
+        point.className = 'map-location-point'; point.style.left = p.x + 'px'; point.style.top = p.y + 'px';
+        point.title = provName;
+        mapCanvas.appendChild(point);
+
+        const badge = document.createElement('div');
+        badge.className = 'map-badge-pin ' + badgeClass; badge.style.left = (p.x + 10) + 'px'; badge.style.top = (p.y - 10) + 'px'; badge.textContent = data.count;
+        mapCanvas.appendChild(badge);
+
+        const label = document.createElement('div');
+        label.className = 'map-label-box';
+        label.innerHTML = '<span class="region-name">' + provName + '</span><span class="region-val">Rp ' + formatRupiah(data.nilai) + '</span>';
+        mapCanvas.appendChild(label);
+
+        // Ukuran nyata label dipakai untuk collision detection.
+        const w = label.offsetWidth, h = label.offsetHeight;
         const candidates = [
-          [0,0], [0,-24], [0,24], [-34,0], [34,0],
-          [-34,-24], [34,-24], [-34,24], [34,24],
-          [0,-48], [0,48], [-65,0], [65,0],
-          [-65,-42], [65,-42], [-65,42], [65,42],
-          [-92,-58], [92,-58], [-92,58], [92,58]
+          [0, -h/2-14], [w/2+16, -h/2], [-w/2-16, -h/2], [0, h/2+14],
+          [w/2+12, -h-8], [-w/2-12, -h-8], [w/2+12, 8], [-w/2-12, 8],
+          [0, -h-18], [0, 18]
         ];
-
-        // Urutkan berdasarkan posisi vertikal agar label atas tidak didorong oleh label bawah.
-        labels.sort((a,b) => parseFloat(a.dataset.baseTop) - parseFloat(b.dataset.baseTop));
-
-        labels.forEach(label => {
-          const baseX = parseFloat(label.dataset.baseLeft) / 100 * cw;
-          const baseY = parseFloat(label.dataset.baseTop) / 100 * ch;
-          let best = null;
-
-          for (const [dx,dy] of candidates) {
-            label.style.left = `${baseX + dx}px`;
-            label.style.top = `${baseY + dy}px`;
-            const r = rectLocal(label);
-            const inside = r.left >= EDGE && r.top >= EDGE && r.right <= cw-EDGE && r.bottom <= ch-EDGE;
-            if (!inside || blocked(r) || placed.some(p => overlap(r,p))) continue;
-            best = {dx,dy,r};
-            break;
-          }
-
-          if (!best) {
-            // Pencarian spiral yang lebih rapat untuk kasus banyak provinsi berdekatan.
-            for (let radius=18; radius<=130 && !best; radius+=10) {
-              for (let deg=0; deg<360; deg+=30) {
-                const rad = deg * Math.PI / 180;
-                const dx = Math.cos(rad) * radius;
-                const dy = Math.sin(rad) * radius;
-                label.style.left = `${baseX + dx}px`;
-                label.style.top = `${baseY + dy}px`;
-                const r = rectLocal(label);
-                const inside = r.left >= EDGE && r.top >= EDGE && r.right <= cw-EDGE && r.bottom <= ch-EDGE;
-                if (inside && !blocked(r) && !placed.some(p => overlap(r,p))) {
-                  best = {dx,dy,r}; break;
-                }
-              }
+        let chosen = null;
+        for (const [dx,dy] of candidates) {
+          const cx = p.x + dx, cy = p.y + dy;
+          const r = {left:cx-w/2, top:cy-h/2, right:cx+w/2, bottom:cy+h/2};
+          if (!inside(r)) continue;
+          if (summaryRect && overlap(r, summaryRect)) continue;
+          if (used.some(u => overlap(r,u))) continue;
+          chosen = r; break;
+        }
+        if (!chosen) {
+          // Fallback: cari posisi terdekat secara radial agar label tetap tampil.
+          outer: for (let radius=24; radius<=150; radius+=10) {
+            for (let angle=0; angle<360; angle+=30) {
+              const rad=angle*Math.PI/180, cx=p.x+Math.cos(rad)*radius, cy=p.y+Math.sin(rad)*radius;
+              const r={left:cx-w/2,top:cy-h/2,right:cx+w/2,bottom:cy+h/2};
+              if (inside(r) && !(summaryRect&&overlap(r,summaryRect)) && !used.some(u=>overlap(r,u))) { chosen=r; break outer; }
             }
           }
-
-          if (!best) {
-            const w = label.offsetWidth, h = label.offsetHeight;
-            const x = Math.max(w/2 + EDGE, Math.min(cw-w/2-EDGE, baseX));
-            const y = Math.max(h/2 + EDGE, Math.min(ch-h/2-EDGE, baseY));
-            label.style.left = `${x}px`;
-            label.style.top = `${y}px`;
-            best = {dx:x-baseX, dy:y-baseY, r:rectLocal(label)};
-          }
-
-          label.style.left = `${baseX + best.dx}px`;
-          label.style.top = `${baseY + best.dy}px`;
-          label.dataset.dx = best.dx.toFixed(1);
-          label.dataset.dy = best.dy.toFixed(1);
-          placed.push(best.r);
-        });
-
-        // Connector dibuat dalam koordinat lokal canvas. Tidak ada garis yang boleh dimulai dari (0,0).
-        if (svg) {
-          svg.setAttribute('viewBox', `0 0 ${cw} ${ch}`);
-          svg.setAttribute('width', cw);
-          svg.setAttribute('height', ch);
-          svg.innerHTML = '';
-
-          labels.forEach(label => {
-            const dx = parseFloat(label.dataset.dx || '0');
-            const dy = parseFloat(label.dataset.dy || '0');
-            if (Math.hypot(dx,dy) < 12) return;
-
-            const point = points.find(p => p.dataset.prov === label.dataset.prov);
-            if (!point) return;
-
-            const px = parseFloat(point.dataset.left) / 100 * cw;
-            const py = parseFloat(point.dataset.top) / 100 * ch;
-            const r = rectLocal(label);
-            const cx = (r.left + r.right) / 2;
-            const cy = (r.top + r.bottom) / 2;
-            const vx = cx - px, vy = cy - py;
-            const len = Math.hypot(vx,vy) || 1;
-            const ux = vx / len, uy = vy / len;
-            const halfW = r.width/2, halfH = r.height/2;
-            const scale = Math.min(halfW / Math.max(Math.abs(ux),0.001), halfH / Math.max(Math.abs(uy),0.001));
-            const ex = cx - ux * scale;
-            const ey = cy - uy * scale;
-
-            const line = document.createElementNS('http://www.w3.org/2000/svg','line');
-            line.setAttribute('x1', px.toFixed(1));
-            line.setAttribute('y1', py.toFixed(1));
-            line.setAttribute('x2', ex.toFixed(1));
-            line.setAttribute('y2', ey.toFixed(1));
-            line.setAttribute('class','map-connector-line');
-            svg.appendChild(line);
-          });
         }
+        if (!chosen) chosen = {left:Math.max(4,Math.min(mapCanvas.clientWidth-w-4,p.x-w/2)), top:Math.max(4,Math.min(mapCanvas.clientHeight-h-4,p.y-h/2)) , right:0,bottom:0};
+        chosen.right=chosen.left+w; chosen.bottom=chosen.top+h;
+        used.push(chosen);
+        label.style.left = chosen.left + 'px'; label.style.top = chosen.top + 'px';
       });
     }
 
-    // Re-layout saat ukuran card berubah, termasuk saat user mengganti ukuran browser.
     window.addEventListener('resize', () => {
-      clearTimeout(window.__mapLayoutTimer);
-      window.__mapLayoutTimer = setTimeout(layoutMapLabels, 80);
+      const provMap = {};
+      d2MasterData.forEach(item => { const p = normalizeProvinceName(item.provinsi); if(!provMap[p]) provMap[p]={nilai:0,count:0}; provMap[p].nilai += Number(item.nilai)||0; provMap[p].count += 1; });
+      renderDynamicMapPins(provMap);
     });
 
     window.addEventListener('DOMContentLoaded', () => {
