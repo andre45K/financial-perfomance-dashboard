@@ -2167,10 +2167,10 @@
 
   </script>
 
-  <!-- SCRIPT OTOMATIS FORMAT INPUT RIBUAN (MENGUBAH 1000 JADI 1.000) -->
+  <!-- SCRIPT OTOMATIS FORMAT INPUT RIBUAN UNTUK SEMUA KOLOM ADMIN -->
   <script>
     function formatRupiahAdmin(angka) {
-        let number_string = angka.replace(/[^,\d]/g, '').toString(),
+        let number_string = angka.toString().replace(/[^,\d]/g, ''),
             split   = number_string.split(','),
             sisa    = split[0].length % 3,
             rupiah  = split[0].substr(0, sisa),
@@ -2185,29 +2185,36 @@
         return rupiah;
     }
 
-    // Ubah otomatis input angka pada halaman admin saat diketik
+    // Ubah tipe input angka menjadi teks dan terapkan format otomatis secara real-time
+    document.addEventListener("DOMContentLoaded", function () {
+        const inputs = document.querySelectorAll("input");
+        inputs.forEach(input => {
+            if (input.type === "number" || input.closest("table") || input.id.includes("plan") || input.id.includes("act") || input.name) {
+                input.type = "text";
+                if (input.value && !isNaN(input.value.replace(/\./g, ''))) {
+                    input.value = formatRupiahAdmin(input.value);
+                }
+            }
+        });
+    });
+
     document.addEventListener('input', function (e) {
         if (e.target && e.target.tagName === 'INPUT') {
-            let type = e.target.getAttribute('type');
-            // Jika input bertipe number, ubah ke text agar titik bisa muncul
-            if (type === 'number') {
-                e.target.setAttribute('type', 'text');
+            if (e.target.type === 'number') {
+                e.target.type = 'text';
             }
-            if (type === 'text' || type === 'number' || e.target.classList.contains('input-ribuan')) {
-                let val = e.target.value;
-                // Pastikan yang diketik adalah angka
-                if (/^\d/.test(val.replace(/\./g, '')) || val === '') {
-                    let cursorPosition = e.target.selectionStart;
-                    let originalLength = e.target.value.length;
-                    
-                    e.target.value = formatRupiahAdmin(e.target.value);
-                    
-                    let newLength = e.target.value.length;
-                    cursorPosition = cursorPosition + (newLength - originalLength);
-                    try {
-                        e.target.setSelectionRange(cursorPosition, cursorPosition);
-                    } catch(err) {}
-                }
+            let val = e.target.value;
+            if (/^\d/.test(val.replace(/\./g, '')) || val === '') {
+                let cursorPosition = e.target.selectionStart;
+                let originalLength = e.target.value.length;
+                
+                e.target.value = formatRupiahAdmin(e.target.value);
+                
+                let newLength = e.target.value.length;
+                cursorPosition = cursorPosition + (newLength - originalLength);
+                try {
+                    e.target.setSelectionRange(cursorPosition, cursorPosition);
+                } catch(err) {}
             }
         }
     });
