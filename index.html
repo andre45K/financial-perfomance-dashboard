@@ -1498,11 +1498,22 @@
           monthsList.forEach(month => {
             if (data.months[month]) {
               const source = data.months[month];
+              let revPlan = toNumber(source.revenuePlan, result.months[month].revenuePlan);
+              let revAct = toNumber(source.revenueActual, result.months[month].revenueActual);
+              let bppPlan = toNumber(source.bppPlan, result.months[month].bppPlan);
+              let bppAct = toNumber(source.bppActual, result.months[month].bppActual);
+
+              // Konversi otomatis ke juta Rupiah jika angka inputan berupa angka lengkap (>= 10000)
+              if (revPlan > 10000) revPlan /= 1000000;
+              if (revAct > 10000) revAct /= 1000000;
+              if (bppPlan > 10000) bppPlan /= 1000000;
+              if (bppAct > 10000) bppAct /= 1000000;
+
               result.months[month] = {
-                revenuePlan: toNumber(source.revenuePlan, result.months[month].revenuePlan),
-                revenueActual: toNumber(source.revenueActual, result.months[month].revenueActual),
-                bppPlan: toNumber(source.bppPlan, result.months[month].bppPlan),
-                bppActual: toNumber(source.bppActual, result.months[month].bppActual),
+                revenuePlan: revPlan,
+                revenueActual: revAct,
+                bppPlan: bppPlan,
+                bppActual: bppAct,
                 status: source.status === "REALISASI" ? "REALISASI" : "PROGNOSA"
               };
             }
@@ -1513,13 +1524,11 @@
     }
 
 
-    // DIPERBAIKI: Fungsi toNumber agar mendukung angka desimal (titik/koma)
     function toNumber(value, fallback = 0) {
       if (value === null || value === undefined || value === "") return fallback;
       if (typeof value === 'number') return Number.isFinite(value) ? value : fallback;
       let str = String(value).trim();
       
-      // Jika menggunakan format Indonesia (titik sebagai ribuan, koma sebagai desimal) atau standar
       if (str.includes(',') && str.includes('.')) {
         str = str.replace(/\./g, '').replace(',', '.');
       } else if (str.includes(',')) {
