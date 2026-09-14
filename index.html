@@ -1503,7 +1503,7 @@
               let bppPlan = toNumber(source.bppPlan, result.months[month].bppPlan);
               let bppAct = toNumber(source.bppActual, result.months[month].bppActual);
 
-              // Konversi otomatis ke juta Rupiah jika angka inputan berupa angka lengkap (>= 10000)
+              // Jika angka inputan merupakan nilai lengkap (> 10.000), otomatis dikonversi ke satuan juta
               if (revPlan > 10000) revPlan /= 1000000;
               if (revAct > 10000) revAct /= 1000000;
               if (bppPlan > 10000) bppPlan /= 1000000;
@@ -1529,6 +1529,7 @@
       if (typeof value === 'number') return Number.isFinite(value) ? value : fallback;
       let str = String(value).trim();
       
+      // Membersihkan format pemisah ribuan titik dan koma desimal agar bisa dibaca JS Number
       if (str.includes(',') && str.includes('.')) {
         str = str.replace(/\./g, '').replace(',', '.');
       } else if (str.includes(',')) {
@@ -2138,7 +2139,35 @@
       renderMainTable();
       renderLightSectionDirect();
       renderDashboard3();
+      // Update form inputs if login/admin page is active
+      if (typeof updateAdminInputFormatting === 'function') {
+        updateAdminInputFormatting();
+      }
     }
+
+
+    // Tambahan helper untuk memformat input secara real-time pada halaman admin input
+    function formatInputNumberLocally(input) {
+      let val = input.value;
+      // Simpan posisi kursor/fokus jika diperlukan atau format ulang nilai numerik
+      let cleanVal = val.replace(/[^0-9,\.]/g, '');
+      if (cleanVal) {
+        // Biarkan pengguna mengetik pemisah desimal koma / titik secara natural
+        let parts = cleanVal.split(/[,]/);
+        let intPart = parts[0].replace(/\./g, '');
+        if (!isNaN(intPart) && intPart !== '') {
+          intPart = Number(intPart).toLocaleString('id-ID');
+          input.value = parts.length > 1 ? intPart + ',' + parts[1] : intPart;
+        }
+      }
+    }
+
+    // Menambahkan event listener dinamis untuk input angka pada halaman Admin
+    document.addEventListener('input', function(e) {
+      if (e.target && e.target.classList.contains('number-formatted-input')) {
+        formatInputNumberLocally(e.target);
+      }
+    });
 
 
     window.addEventListener("storage", function(event) {
