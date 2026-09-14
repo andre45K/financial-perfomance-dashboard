@@ -1603,8 +1603,9 @@
     function sum(array) { return array.reduce((total, value) => total + (Number(value) || 0), 0); }
     function average(array) { if (!array.length) return 0; return sum(array) / array.length; }
     
+    // DIPERBAIKI: maximumFractionDigits: 0 agar angka jutaan dibulatkan tanpa desimal
     function formatNumber(value) { 
-      return Number(value || 0).toLocaleString("id-ID", { maximumFractionDigits: 2 }); 
+      return Number(value || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); 
     }
 
     function formatPercent(value) { return Number(value || 0).toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%"; }
@@ -1660,7 +1661,7 @@
               datalabels: {
                 align: "top", anchor: "end", offset: 2, color: "#ffffff",
                 font: { size: 8, weight: "bold" },
-                formatter: val => isPercentage ? Number(val).toFixed(2).replace(".", ",") + "%" : Number(val).toLocaleString("id-ID", { maximumFractionDigits: 2 })
+                formatter: val => isPercentage ? Number(val).toFixed(2).replace(".", ",") + "%" : Number(val).toLocaleString("id-ID", { maximumFractionDigits: 0 })
               }
             },
             { type: "bar", data, backgroundColor: barColors, borderRadius: 2, barPercentage: 0.6, datalabels: { display: false } }
@@ -1868,12 +1869,12 @@
             {
               label: "Pendapatan Usaha (Rencana)", data: data.revenuePlan, backgroundColor: "#0b63ce",
               borderRadius: 4, barPercentage: 0.65, categoryPercentage: 0.6,
-              datalabels: { align: "top", anchor: "end", color: "#0b63ce", font: { size: 8.5, weight: "bold" }, offset: 2, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 2 }) }
+              datalabels: { align: "top", anchor: "end", color: "#0b63ce", font: { size: 8.5, weight: "bold" }, offset: 2, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) }
             },
             {
               label: "Beban Pokok Pendapatan (Rencana)", data: data.bppPlan, backgroundColor: "#008767",
               borderRadius: 4, barPercentage: 0.65, categoryPercentage: 0.6,
-              datalabels: { align: "top", anchor: "end", color: "#008767", font: { size: 8.5, weight: "bold" }, offset: 2, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 2 }) }
+              datalabels: { align: "top", anchor: "end", color: "#008767", font: { size: 8.5, weight: "bold" }, offset: 2, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) }
             }
           ]
         },
@@ -1905,7 +1906,7 @@
             {
               type: "bar", label: "Gross Profit (Rp)", data: data.gpPlan, backgroundColor: "#7c3aed",
               borderRadius: 4, barPercentage: 0.45, yAxisID: "y",
-              datalabels: { align: "start", anchor: "end", color: "#ffffff", font: { size: 8.5, weight: "bold" }, offset: 4, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 2 }) }
+              datalabels: { align: "start", anchor: "end", color: "#ffffff", font: { size: 8.5, weight: "bold" }, offset: 4, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) }
             }
           ]
         },
@@ -2005,8 +2006,8 @@
         data: {
           labels: shortMonths,
           datasets: [
-            { type: "bar", label: "Rencana", data: planRev, backgroundColor: "#cbd5e1", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#475569", font: { size: 8, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 2 }) } },
-            { type: "bar", label: "Realisasi", data: actRev, backgroundColor: "#0b63ce", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#0b63ce", font: { size: 8.5, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 2 }) } }
+            { type: "bar", label: "Rencana", data: planRev, backgroundColor: "#cbd5e1", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#475569", font: { size: 8, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } },
+            { type: "bar", label: "Realisasi", data: actRev, backgroundColor: "#0b63ce", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#0b63ce", font: { size: 8.5, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } }
           ]
         },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } } }
@@ -2018,8 +2019,8 @@
         data: {
           labels: shortMonths,
           datasets: [
-            { type: "bar", label: "Rencana", data: planBpp, backgroundColor: "#cbd5e1", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#475569", font: { size: 8, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 2 }) } },
-            { type: "bar", label: "Realisasi", data: actBpp, backgroundColor: "#008767", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#008767", font: { size: 8.5, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 2 }) } }
+            { type: "bar", label: "Rencana", data: planBpp, backgroundColor: "#cbd5e1", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#475569", font: { size: 8, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } },
+            { type: "bar", label: "Realisasi", data: actBpp, backgroundColor: "#008767", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#008767", font: { size: 8.5, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } }
           ]
         },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } } }
@@ -2031,8 +2032,8 @@
         data: {
           labels: shortMonths,
           datasets: [
-            { type: "bar", label: "Rencana", data: planGp, backgroundColor: "#cbd5e1", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#475569", font: { size: 8, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 2 }) } },
-            { type: "bar", label: "Realisasi", data: actGp, backgroundColor: "#7c3aed", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#7c3aed", font: { size: 8.5, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 2 }) } }
+            { type: "bar", label: "Rencana", data: planGp, backgroundColor: "#cbd5e1", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#475569", font: { size: 8, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } },
+            { type: "bar", label: "Realisasi", data: actGp, backgroundColor: "#7c3aed", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#7c3aed", font: { size: 8.5, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } }
           ]
         },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } } }
@@ -2167,7 +2168,7 @@
 
   </script>
 
-  <!-- SCRIPT OTOMATIS FORMAT INPUT RIBUAN UNTUK SEMUA KOLOM ADMIN -->
+  <!-- SCRIPT OTOMATIS FORMAT INPUT RIBUAN -->
   <script>
     function formatRupiahAdmin(angka) {
         let number_string = angka.toString().replace(/[^,\d]/g, ''),
@@ -2185,7 +2186,6 @@
         return rupiah;
     }
 
-    // Ubah tipe input angka menjadi teks dan terapkan format otomatis secara real-time
     document.addEventListener("DOMContentLoaded", function () {
         const inputs = document.querySelectorAll("input");
         inputs.forEach(input => {
