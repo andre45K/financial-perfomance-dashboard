@@ -1603,7 +1603,6 @@
     function sum(array) { return array.reduce((total, value) => total + (Number(value) || 0), 0); }
     function average(array) { if (!array.length) return 0; return sum(array) / array.length; }
     
-    /* Format angka menggunakan pemisah titik (.) untuk ribuan dan koma (,) untuk desimal */
     function formatNumber(value) { 
       return Number(value || 0).toLocaleString("id-ID", { maximumFractionDigits: 2 }); 
     }
@@ -2166,6 +2165,45 @@
 
     renderAll();
 
+  </script>
+
+  <!-- Script Khusus untuk Format Input Ribuan Secara Otomatis -->
+  <script>
+    function formatRupiah(angka, prefix = '') {
+        let number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split   = number_string.split(','),
+            sisa    = split[0].length % 3,
+            rupiah  = split[0].substr(0, sisa),
+            ribuan  = split[0].substr(sisa).match(/\d{3}/gi);
+
+        if (ribuan) {
+            let separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix === undefined ? rupiah : (rupiah ? rupiah : '');
+    }
+
+    document.addEventListener('input', function (e) {
+        if (e.target && (e.target.tagName === 'INPUT' && e.target.getAttribute('type') === 'text' && (e.target.value.length > 0 || e.target.classList.contains('input-ribuan')))) {
+            // Cek jika elemen input memang target angka admin
+            let val = e.target.value;
+            // Hindari mengubah field teks biasa yang bukan angka
+            if (/^\d/.test(val.replace(/\./g, '')) || val === '') {
+                let cursorPosition = e.target.selectionStart;
+                let originalLength = e.target.value.length;
+                
+                e.target.value = formatRupiah(e.target.value);
+                
+                let newLength = e.target.value.length;
+                cursorPosition = cursorPosition + (newLength - originalLength);
+                try {
+                    e.target.setSelectionRange(cursorPosition, cursorPosition);
+                } catch(err) {}
+            }
+        }
+    });
   </script>
 
 </body>
