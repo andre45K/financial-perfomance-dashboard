@@ -1425,7 +1425,7 @@
 
 
       <div style="font-size: 9px; color: #64748b; font-style: italic; margin-top: -15px;">
-        *Angka dalam miliar Rupiah (kecuali margin dalam %)
+        *Angka dalam Juta Rupiah (kecuali margin dalam %)
       </div>
 
     </div>
@@ -1513,13 +1513,11 @@
     }
 
 
-    // DIPERBAIKI: Fungsi toNumber agar mendukung angka desimal (titik/koma)
     function toNumber(value, fallback = 0) {
       if (value === null || value === undefined || value === "") return fallback;
       if (typeof value === 'number') return Number.isFinite(value) ? value : fallback;
       let str = String(value).trim();
       
-      // Jika menggunakan format Indonesia (titik sebagai ribuan, koma sebagai desimal) atau standar
       if (str.includes(',') && str.includes('.')) {
         str = str.replace(/\./g, '').replace(',', '.');
       } else if (str.includes(',')) {
@@ -1594,10 +1592,24 @@
 
     function sum(array) { return array.reduce((total, value) => total + (Number(value) || 0), 0); }
     function average(array) { if (!array.length) return 0; return sum(array) / array.length; }
-    function formatNumber(value) { return Number(value || 0).toLocaleString("id-ID", { maximumFractionDigits: 2 }); }
+    
+    function formatNumber(value) { 
+      const num = Number(value || 0);
+      return num.toLocaleString("id-ID", { 
+        minimumFractionDigits: Number.isInteger(num) ? 0 : 2, 
+        maximumFractionDigits: 2 
+      }); 
+    }
+
     function formatPercent(value) { return Number(value || 0).toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%"; }
     function formatPercentOne(value) { return Number(value || 0).toLocaleString("id-ID", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%"; }
     function getAchievement(actual, plan) { if (!plan) return 0; return actual / plan * 100; }
+    
+    // Helper untuk mengubah nilai full rupiah ke skala Juta Rp khusus untuk grafik
+    function scaleForChart(val) {
+      const num = Number(val) || 0;
+      return num > 10000 ? num / 1000000 : num;
+    }
     
     function getLatestActualIndex() {
       let latest = -1;
@@ -1625,9 +1637,9 @@
       const realGpBg = status.map(s => s === "REALISASI" ? "#16a34a" : "#d97706");
       const realGpmBg = status.map(s => s === "REALISASI" ? "#9333ea" : "#d97706");
 
-      createComboChart("chartRevenue", revenueActual, realBg, "#ffffff", false);
-      createComboChart("chartBPP", bppActual, realBppBg, "#ffffff", false);
-      createComboChart("chartGP", gpActual, realGpBg, "#ffffff", false);
+      createComboChart("chartRevenue", revenueActual.map(scaleForChart), realBg, "#ffffff", false);
+      createComboChart("chartBPP", bppActual.map(scaleForChart), realBppBg, "#ffffff", false);
+      createComboChart("chartGP", gpActual.map(scaleForChart), realGpBg, "#ffffff", false);
       createComboChart("chartGPM", gpmActual, realGpmBg, "#ffffff", true);
     }
 
@@ -1846,7 +1858,10 @@
       const gpmBar = document.getElementById("side-bar-gpm-col");
       if (gpmBar) gpmBar.style.height = Math.max(5, Math.min(100, totalGpmPlan)) + "%";
 
-      // Chart Section 1
+      // Chart Section 1 (Scaled for Chart)
+      const revPlanScaled = data.revenuePlan.map(scaleForChart);
+      const bppPlanScaled = data.bppPlan.map(scaleForChart);
+
       destroyChart("chartSec1");
       chartInstances["chartSec1"] = new Chart(document.getElementById("chartSec1").getContext("2d"), {
         type: "bar",
@@ -1854,12 +1869,12 @@
           labels: monthsList,
           datasets: [
             {
-              label: "Pendapatan Usaha (Rencana)", data: data.revenuePlan, backgroundColor: "#0b63ce",
+              label: "Pendapatan Usaha (Rencana)", data: revPlanScaled, backgroundColor: "#0b63ce",
               borderRadius: 4, barPercentage: 0.65, categoryPercentage: 0.6,
               datalabels: { align: "top", anchor: "end", color: "#0b63ce", font: { size: 8.5, weight: "bold" }, offset: 2, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 2 }) }
             },
             {
-              label: "Beban Pokok Pendapatan (Rencana)", data: data.bppPlan, backgroundColor: "#008767",
+              label: "Beban Pokok Pendapatan (Rencana)", data: bppPlanScaled, backgroundColor: "#008767",
               borderRadius: 4, barPercentage: 0.65, categoryPercentage: 0.6,
               datalabels: { align: "top", anchor: "end", color: "#008767", font: { size: 8.5, weight: "bold" }, offset: 2, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 2 }) }
             }
@@ -1875,7 +1890,9 @@
         }
       });
 
-      // Chart Section 2
+      // Chart Section 2 (Scaled for Chart)
+      const gpPlanScaled = data.gpPlan.map(scaleForChart);
+
       destroyChart("chartSec2");
       chartInstances["chartSec2"] = new Chart(document.getElementById("chartSec2").getContext("2d"), {
         data: {
@@ -1891,7 +1908,7 @@
               }
             },
             {
-              type: "bar", label: "Gross Profit (Rp)", data: data.gpPlan, backgroundColor: "#7c3aed",
+              type: "bar", label: "Gross Profit (Rp)", data: gpPlanScaled, backgroundColor: "#7c3aed",
               borderRadius: 4, barPercentage: 0.45, yAxisID: "y",
               datalabels: { align: "start", anchor: "end", color: "#ffffff", font: { size: 8.5, weight: "bold" }, offset: 4, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 2 }) }
             }
@@ -1978,12 +1995,12 @@
       const endIndex = latestIndex >= 0 ? latestIndex : 0;
       const shortMonths = monthsList.slice(0, endIndex + 1);
 
-      const planRev = data.revenuePlan.slice(0, endIndex + 1);
-      const actRev = data.revenueActual.slice(0, endIndex + 1);
-      const planBpp = data.bppPlan.slice(0, endIndex + 1);
-      const actBpp = data.bppActual.slice(0, endIndex + 1);
-      const planGp = data.gpPlan.slice(0, endIndex + 1);
-      const actGp = data.gpActual.slice(0, endIndex + 1);
+      const planRev = data.revenuePlan.slice(0, endIndex + 1).map(scaleForChart);
+      const actRev = data.revenueActual.slice(0, endIndex + 1).map(scaleForChart);
+      const planBpp = data.bppPlan.slice(0, endIndex + 1).map(scaleForChart);
+      const actBpp = data.bppActual.slice(0, endIndex + 1).map(scaleForChart);
+      const planGp = data.gpPlan.slice(0, endIndex + 1).map(scaleForChart);
+      const actGp = data.gpActual.slice(0, endIndex + 1).map(scaleForChart);
       const planGpm = data.gpmPlan.slice(0, endIndex + 1);
       const actGpm = data.gpmActual.slice(0, endIndex + 1);
 
