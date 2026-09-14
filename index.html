@@ -2167,9 +2167,9 @@
 
   </script>
 
-  <!-- Script Khusus untuk Format Input Ribuan Secara Otomatis -->
+  <!-- SCRIPT OTOMATIS FORMAT INPUT RIBUAN (MENGUBAH 1000 JADI 1.000) -->
   <script>
-    function formatRupiah(angka, prefix = '') {
+    function formatRupiahAdmin(angka) {
         let number_string = angka.replace(/[^,\d]/g, '').toString(),
             split   = number_string.split(','),
             sisa    = split[0].length % 3,
@@ -2182,25 +2182,32 @@
         }
 
         rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
-        return prefix === undefined ? rupiah : (rupiah ? rupiah : '');
+        return rupiah;
     }
 
+    // Ubah otomatis input angka pada halaman admin saat diketik
     document.addEventListener('input', function (e) {
-        if (e.target && (e.target.tagName === 'INPUT' && e.target.getAttribute('type') === 'text' && (e.target.value.length > 0 || e.target.classList.contains('input-ribuan')))) {
-            // Cek jika elemen input memang target angka admin
-            let val = e.target.value;
-            // Hindari mengubah field teks biasa yang bukan angka
-            if (/^\d/.test(val.replace(/\./g, '')) || val === '') {
-                let cursorPosition = e.target.selectionStart;
-                let originalLength = e.target.value.length;
-                
-                e.target.value = formatRupiah(e.target.value);
-                
-                let newLength = e.target.value.length;
-                cursorPosition = cursorPosition + (newLength - originalLength);
-                try {
-                    e.target.setSelectionRange(cursorPosition, cursorPosition);
-                } catch(err) {}
+        if (e.target && e.target.tagName === 'INPUT') {
+            let type = e.target.getAttribute('type');
+            // Jika input bertipe number, ubah ke text agar titik bisa muncul
+            if (type === 'number') {
+                e.target.setAttribute('type', 'text');
+            }
+            if (type === 'text' || type === 'number' || e.target.classList.contains('input-ribuan')) {
+                let val = e.target.value;
+                // Pastikan yang diketik adalah angka
+                if (/^\d/.test(val.replace(/\./g, '')) || val === '') {
+                    let cursorPosition = e.target.selectionStart;
+                    let originalLength = e.target.value.length;
+                    
+                    e.target.value = formatRupiahAdmin(e.target.value);
+                    
+                    let newLength = e.target.value.length;
+                    cursorPosition = cursorPosition + (newLength - originalLength);
+                    try {
+                        e.target.setSelectionRange(cursorPosition, cursorPosition);
+                    } catch(err) {}
+                }
             }
         }
     });
