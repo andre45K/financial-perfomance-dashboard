@@ -9,28 +9,6 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
-  <!-- FIREBASE SDK (Modular v10) -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    // PENTING: Pastikan konfigurasi ini sama persis dengan yang ada di login.html
-    const firebaseConfig = {
-      apiKey: "MASUKKAN_API_KEY_ANDA",
-      authDomain: "MASUKKAN_AUTH_DOMAIN_ANDA",
-      projectId: "MASUKKAN_PROJECT_ID_ANDA",
-      storageBucket: "MASUKKAN_STORAGE_BUCKET_ANDA",
-      messagingSenderId: "MASUKKAN_MESSAGING_SENDER_ID_ANDA",
-      appId: "MASUKKAN_APP_ID_ANDA"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    window.firebaseDB = db;
-    window.firebaseFns = { doc, getDoc, setDoc, onSnapshot };
-  </script>
-
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
     body { background-color: #060d1a; color: #ffffff; padding: 15px; font-size: 13px; }
@@ -628,7 +606,7 @@
 
 
   <!-- ========================================================= -->
-  <!-- SCRIPT UTAMA (TERINTEGRASI FIRESTORE & REALTIME LISTENER) -->
+  <!-- SCRIPT UTAMA                                              -->
   <!-- ========================================================= -->
   <script type="module">
     if (typeof ChartDataLabels !== 'undefined') {
@@ -657,28 +635,16 @@
       }
     };
 
-    let financialData = structuredClone(defaultFinancialData);
+    let financialData = loadFinancialData();
 
-    // Inisialisasi Realtime Listener Firestore (onSnapshot) agar Laptop A & B tersinkronisasi otomatis
-    function initFirebaseListener() {
-      const checkInterval = setInterval(() => {
-        if (window.firebaseDB && window.firebaseFns) {
-          clearInterval(checkInterval);
-          const { doc, onSnapshot, setDoc } = window.firebaseFns;
-          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
-
-          onSnapshot(docRef, (docSnap) => {
-            if (docSnap.exists()) {
-              financialData = normalizeFinancialData(docSnap.data());
-              renderAll();
-            } else {
-              setDoc(docRef, defaultFinancialData);
-            }
-          }, (error) => {
-            console.error("Gagal menyinkronkan data Firestore secara realtime:", error);
-          });
-        }
-      }, 100);
+    function loadFinancialData() {
+      try {
+        const savedData = localStorage.getItem("financialData2026");
+        if (!savedData) return structuredClone(defaultFinancialData);
+        return normalizeFinancialData(JSON.parse(savedData));
+      } catch (error) {
+        return structuredClone(defaultFinancialData);
+      }
     }
 
     function normalizeFinancialData(data) {
@@ -739,24 +705,16 @@
 
     window.FinancialDashboard = {
       getData: function() { return structuredClone(financialData); },
-      saveData: async function(newData) {
+      saveData: function(newData) {
         financialData = normalizeFinancialData(mergeFinancialData(financialData, newData));
-        if (window.firebaseDB && window.firebaseFns) {
-          const { doc, setDoc } = window.firebaseFns;
-          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
-          await setDoc(docRef, financialData);
-        }
+        localStorage.setItem("financialData2026", JSON.stringify(financialData));
         renderAll();
         window.dispatchEvent(new CustomEvent("financialDashboardUpdated"));
         return true;
       },
-      resetData: async function() {
+      resetData: function() {
         financialData = structuredClone(defaultFinancialData);
-        if (window.firebaseDB && window.firebaseFns) {
-          const { doc, setDoc } = window.firebaseFns;
-          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
-          await setDoc(docRef, financialData);
-        }
+        localStorage.setItem("financialData2026", JSON.stringify(financialData));
         renderAll();
         return true;
       }
@@ -856,6 +814,7 @@
       createComboChart("chartGP", gpActual, realGpBg, "#ffffff", false);
       createComboChart("chartGPM", gpmActual, realGpmBg, "#ffffff", true);
 
+      // Alt Dashboard Charts (Urutan baru: NCP, Biaya Tidak Langsung / BTL, Net Profit, NPM)
       createComboChart("altChartNCP", ncpActual, realNcpBg, "#ffffff", false);
       createComboChart("altChartBTL", ncpActual, realBtlBg, "#ffffff", false);
       createComboChart("altChartNP", npActual, realNpBg, "#ffffff", false);
@@ -1035,6 +994,7 @@
         tableBody.innerHTML = htmlRows;
       }
 
+      // Render Alt/Dashboard 2 Table (Urutan baru: NCP, Biaya Tidak Langsung, Net Profit, Net Profit Margin)
       const altRealTh = document.getElementById("alt-th-realisasi-hdr");
       const altProgTh = document.getElementById("alt-th-prognosa-hdr");
       if (altRealTh) {
@@ -1064,6 +1024,7 @@
         const totalActualNcp = sum(data.ncpActual);
         const pctNcp = getAchievement(totalActualNcp, totalPlanNcp);
 
+        // Biaya Tidak Langsung menggunakan data ncp sebagai contoh atau placeholder
         const realBtl = realNcp;
         const progBtl = progNcp;
         const totalPlanBtl = totalPlanNcp;
@@ -1085,6 +1046,7 @@
         const pctNpm = getAchievement(totalActualNpm, totalPlanNpm);
 
         let altHtmlRows = "";
+        // 1. Non-Contributing Plant (Juta Rp)
         altHtmlRows += `<tr><td class="row-label">NON-CONTRIBUTING PLANT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realNcp)}</td>`;
@@ -1093,6 +1055,7 @@
         altHtmlRows += `<td>${formatNumber(totalPlanNcp)}</td><td class="metric-actual">${formatNumber(totalActualNcp)}</td>`;
         altHtmlRows += `<td class="${pctNcp <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctNcp)}</td></tr>`;
 
+        // 2. Biaya Tidak Langsung (Juta Rp)
         altHtmlRows += `<tr><td class="row-label">BIAYA TIDAK LANGSUNG (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realBtl)}</td>`;
@@ -1101,6 +1064,7 @@
         altHtmlRows += `<td>${formatNumber(totalPlanBtl)}</td><td class="metric-actual">${formatNumber(totalActualBtl)}</td>`;
         altHtmlRows += `<td class="${pctBtl <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctBtl)}</td></tr>`;
 
+        // 3. Net Profit (Juta Rp)
         altHtmlRows += `<tr><td class="row-label">NET PROFIT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.npActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realNp)}</td>`;
@@ -1109,6 +1073,7 @@
         altHtmlRows += `<td>${formatNumber(totalPlanNp)}</td><td class="metric-actual">${formatNumber(totalActualNp)}</td>`;
         altHtmlRows += `<td class="${pctNp >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctNp)}</td></tr>`;
 
+        // 4. Net Profit Margin (%)
         altHtmlRows += `<tr><td class="row-label">NET PROFIT MARGIN (%)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatPercent(data.npmActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatPercent(realNpm)}</td>`;
@@ -1155,6 +1120,7 @@
       const gpmBar = document.getElementById("side-bar-gpm-col");
       if (gpmBar) gpmBar.style.height = Math.max(5, Math.min(100, totalGpmPlan)) + "%";
 
+      // Chart Section 1
       destroyChart("chartSec1");
       chartInstances["chartSec1"] = new Chart(document.getElementById("chartSec1").getContext("2d"), {
         type: "bar",
@@ -1183,6 +1149,7 @@
         }
       });
 
+      // Chart Section 2
       destroyChart("chartSec2");
       chartInstances["chartSec2"] = new Chart(document.getElementById("chartSec2").getContext("2d"), {
         data: {
@@ -1292,6 +1259,7 @@
       const planGpm = data.gpmPlan.slice(0, endIndex + 1);
       const actGpm = data.gpmActual.slice(0, endIndex + 1);
 
+      // 1. Pendapatan Usaha
       destroyChart("d3ChartRev");
       chartInstances["d3ChartRev"] = new Chart(document.getElementById("d3ChartRev").getContext("2d"), {
         data: {
@@ -1304,6 +1272,7 @@
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } } }
       });
 
+      // 2. Beban Pokok
       destroyChart("d3ChartBpp");
       chartInstances["d3ChartBpp"] = new Chart(document.getElementById("d3ChartBpp").getContext("2d"), {
         data: {
@@ -1316,6 +1285,7 @@
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } } }
       });
 
+      // 3. Gross Profit
       destroyChart("d3ChartGp");
       chartInstances["d3ChartGp"] = new Chart(document.getElementById("d3ChartGp").getContext("2d"), {
         data: {
@@ -1328,6 +1298,7 @@
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } } }
       });
 
+      // 4. Gross Profit Margin
       const targetLine = shortMonths.map(() => financialData.targetGPM);
       destroyChart("d3ChartGpm");
       chartInstances["d3ChartGpm"] = new Chart(document.getElementById("d3ChartGpm").getContext("2d"), {
@@ -1413,7 +1384,7 @@
     }
 
     function getMonthFullName(month) {
-      const map = { Jan: "Januari", Feb: "Februari", Mar: "Maret", Apr: "April", May: "Mei", Jun: "Juni", Juli: "Juli", Aug: "Agustus", Sep: "September", Oct: "Oktober", Nov: "November", Dec: "Desember" };
+      const map = { Jan: "Januari", Feb: "Februari", Mar: "Maret", Apr: "April", May: "Mei", Jun: "Juni", Jul: "Juli", Aug: "Agustus", Sep: "September", Oct: "Oktober", Nov: "November", Dec: "Desember" };
       return map[month] || month;
     }
 
@@ -1426,10 +1397,24 @@
       renderDashboard3();
     }
 
-    // Jalankan listener Firestore saat halaman dimuat
-    window.addEventListener("DOMContentLoaded", () => {
-      initFirebaseListener();
+    window.addEventListener("storage", function(event) {
+      if (event.key === "financialData2026") {
+        financialData = loadFinancialData();
+        renderAll();
+      }
     });
+
+    let lastStorageData = localStorage.getItem("financialData2026");
+    setInterval(function() {
+      const currentStorageData = localStorage.getItem("financialData2026");
+      if (currentStorageData !== lastStorageData) {
+        lastStorageData = currentStorageData;
+        financialData = loadFinancialData();
+        renderAll();
+      }
+    }, 1000);
+
+    renderAll();
   </script>
 
   <!-- SCRIPT OTOMATIS FORMAT INPUT RIBUAN -->
