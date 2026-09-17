@@ -756,7 +756,7 @@
         const rPlan = Number(item.revenuePlan) || 0;
         const rAct = Number(item.revenueActual) || 0;
         const bPlan = Number(item.bppPlan) || 0;
-        const bAct = Number(item.bppAct) || 0;
+        const bAct = Number(item.bppActual) || 0;
         const nAct = Number(item.ncpActual) || 0;
         const btlVal = Number(item.btlActual) || 0;
 
@@ -1061,21 +1061,21 @@
 
         let altHtmlRows = "";
         
-        // Baris 1: Non-Contributing Plant (Kolom Rencana dan % vs Rencana dikosongkan)
+        // Baris 1: Non-Contributing Plant (Kolom Rencana & % vs Rencana dihilangkan border & isinya)
         altHtmlRows += `<tr><td class="row-label">NON-CONTRIBUTING PLANT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realNcp)}</td>`;
         prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(progNcp)}</td>`;
-        altHtmlRows += `<td></td><td class="metric-actual">${formatNumber(totalActualNcp)}</td><td></td></tr>`;
+        altHtmlRows += `<td style="border:none; background:#0b1420;"></td><td class="metric-actual">${formatNumber(totalActualNcp)}</td><td style="border:none; background:#0b1420;"></td></tr>`;
 
-        // Baris 2: Biaya Tidak Langsung (Kolom Rencana dan % vs Rencana dikosongkan)
+        // Baris 2: Biaya Tidak Langsung (Kolom Rencana & % vs Rencana dihilangkan border & isinya)
         altHtmlRows += `<tr><td class="row-label">BIAYA TIDAK LANGSUNG (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.btlActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realBtl)}</td>`;
         prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.btlActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(progBtl)}</td>`;
-        altHtmlRows += `<td></td><td class="metric-actual">${formatNumber(totalActualBtl)}</td><td></td></tr>`;
+        altHtmlRows += `<td style="border:none; background:#0b1420;"></td><td class="metric-actual">${formatNumber(totalActualBtl)}</td><td style="border:none; background:#0b1420;"></td></tr>`;
 
         // Baris 3: Net Profit
         altHtmlRows += `<tr><td class="row-label">NET PROFIT (Juta Rp)</td>`;
