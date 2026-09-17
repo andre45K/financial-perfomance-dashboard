@@ -1603,7 +1603,6 @@
     function sum(array) { return array.reduce((total, value) => total + (Number(value) || 0), 0); }
     function average(array) { if (!array.length) return 0; return sum(array) / array.length; }
     
-    // DIPERBAIKI: maximumFractionDigits: 0 agar angka jutaan dibulatkan tanpa desimal
     function formatNumber(value) { 
       return Number(value || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); 
     }
@@ -1711,7 +1710,19 @@
       const element = document.getElementById(id);
       if (!element) return;
       element.classList.remove("badge-up", "badge-down");
-      const isGood = id === "kpi-rev-badge" ? percentage >= 100 : percentage <= 100;
+      
+      // Untuk Revenue: >= 100% itu bagus (up/hijau), < 100% itu turun (down/merah)
+      // Untuk BPP: <= 100% itu bagus (up/hijau), > 100% itu naik/beban bengkak (down/merah)
+      // Untuk Gross Profit & GPM: >= 100% dari rencana itu bagus, jika < 100% (seperti 52,60% & 51,06%) harus turun & merah
+      let isGood = true;
+      if (id === "kpi-rev-badge") {
+        isGood = percentage >= 100;
+      } else if (id === "kpi-bpp-badge") {
+        isGood = percentage <= 100;
+      } else if (id === "kpi-gp-badge" || id === "kpi-gpm-badge") {
+        isGood = percentage >= 100;
+      }
+
       if (isGood) {
         element.classList.add("badge-up");
         element.textContent = "▲ " + formatPercent(percentage);
