@@ -9,6 +9,28 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
+  <!-- FIREBASE SDK (Modular v10) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // PENTING: Ganti konfigurasi di bawah ini dengan konfigurasi Firebase project Anda yang sebenarnya
+    const firebaseConfig = {
+      apiKey: "MASUKKAN_API_KEY_ANDA",
+      authDomain: "MASUKKAN_AUTH_DOMAIN_ANDA",
+      projectId: "MASUKKAN_PROJECT_ID_ANDA",
+      storageBucket: "MASUKKAN_STORAGE_BUCKET_ANDA",
+      messagingSenderId: "MASUKKAN_MESSAGING_SENDER_ID_ANDA",
+      appId: "MASUKKAN_APP_ID_ANDA"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.firebaseDB = db;
+    window.firebaseFns = { doc, getDoc, setDoc, onSnapshot };
+  </script>
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
     body { background-color: #060d1a; color: #ffffff; padding: 15px; font-size: 13px; }
@@ -76,9 +98,7 @@
 
     /* DASHBOARD 3 (LIGHT THEME) */
     .section-divider-title { color: #94a3b8; font-size: 12px; font-weight: bold; margin-bottom: 15px; letter-spacing: 1px; text-transform: uppercase; border-left: 4px solid #0052cc; padding-left: 8px; }
-
     .panel-card-light { background: #ffffff; color: #333333; border-radius: 14px; margin-bottom: 30px; padding: 24px 26px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-    
     .panel-light-head { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
     .num-badge-light { font-size: 15px; font-weight: 800; padding: 4px 10px; border-radius: 6px; color: #ffffff; }
     .num-blue { background: #0f4c81; }
@@ -87,20 +107,16 @@
     .title-purple { color: #4a154b; }
 
     .panel-light-grid { display: grid; grid-template-columns: 240px 1fr 170px; gap: 20px; align-items: stretch; }
-
     .ringkasan-box-light { background: #f0f5fc; border-radius: 12px; padding: 0 0 16px 0; display: flex; flex-direction: column; justify-content: flex-start; border: 1px solid #d0dbe9; overflow: hidden; }
     .ringkasan-header-banner { background: #0b63ce; color: white; padding: 12px; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
     .ringkasan-header-purple { background: #7c3aed; }
-    
     .ringkasan-content { padding: 20px 14px; display: flex; flex-direction: column; gap: 20px; justify-content: center; flex-grow: 1; }
     .item-light { display: flex; gap: 12px; align-items: center; }
-    
     .icon-circle-custom { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; color: white; }
     .bg-circle-blue { background: #0b63ce; }
     .bg-circle-teal { background: #008767; }
     .bg-circle-purple { background: #7c3aed; }
     .bg-circle-orange { background: #e67e22; }
-    
     .badge-rp-sub { position: absolute; bottom: 2px; right: -2px; background: white; color: #0b63ce; font-size: 7.5px; font-weight: 900; border-radius: 8px; padding: 1px 4px; border: 1.5px solid #0b63ce; line-height: 1; }
     .badge-rp-teal { color: #008767; border-color: #008767; }
 
@@ -111,27 +127,22 @@
     .val-teal { color: #008767; }
     .val-purple { color: #7c3aed; }
     .val-orange { color: #e67e22; }
-    
     .item-light-sub-title { font-size: 8px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-top: 6px; }
     .item-light-sub-val { font-size: 15px; font-weight: 800; color: #0b63ce; margin-top: 2px; }
     .sub-teal { color: #008767; }
 
     .chart-box-light { position: relative; height: 420px; width: 100%; min-height: 420px; }
-
     .total-box-light { border-left: 2px dashed #cbd5e1; padding-left: 18px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
     .total-icons-top { display: flex; gap: 6px; margin-bottom: 6px; }
     .icon-small-circle { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: bold; }
-
     .tot-light-title { font-size: 9px; font-weight: 800; color: #475569; text-transform: uppercase; text-align: center; }
     .tot-light-num { font-size: 22px; font-weight: 900; color: #0b63ce; text-align: center; margin-top: 3px; margin-bottom: 15px; }
-    
     .tot-bars-container { display: flex; width: 100%; height: 280px; align-items: flex-end; justify-content: center; gap: 14px; }
     .tot-bar-col { width: 46px; border-radius: 5px 5px 0 0; position: relative; }
     .bg-blue-bar { background: #0b63ce; }
     .bg-teal-bar { background: #008767; }
     .bg-purple-bar { background: #7c3aed; }
     .bg-orange-bar { background: #e67e22; }
-    
     .bar-val-top { position: absolute; top: -20px; width: 100%; text-align: center; font-size: 10px; font-weight: 800; }
     .val-blue-text { color: #0b63ce; }
     .val-teal-text { color: #008767; }
@@ -155,7 +166,6 @@
 
     .d3-section-title { font-size: 16px; font-weight: 900; color: #0f4c81; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
     .d3-section-sub { font-size: 10px; color: #64748b; font-weight: 600; margin-bottom: 15px; }
-    
     .d3-charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
     .d3-chart-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 15px; position: relative; height: 380px; display: flex; flex-direction: column; justify-content: space-between; }
     .d3-chart-title { font-weight: 800; font-size: 13px; color: #1e293b; margin-bottom: 2px; }
@@ -280,7 +290,7 @@
   </div>
 
 
-  <!-- DASHBOARD 2: URUTAN BARU (NON-CONTRIBUTING PLANT, BIAYA TIDAK LANGSUNG, NET PROFIT, NET PROFIT MARGIN) -->
+  <!-- DASHBOARD 2: URUTAN BARU -->
   <hr class="dashboard-divider">
   <div class="charts-grid" style="margin-top: 15px;">
     <div class="chart-card"><div class="chart-title">NON-CONTRIBUTING PLANT (Juta Rp)</div><div class="chart-container"><canvas id="altChartNCP"></canvas></div></div>
@@ -290,7 +300,7 @@
   </div>
 
 
-  <!-- TABEL KEDUA UNTUK DASHBOARD BARU (URUTAN DISESUAIKAN) -->
+  <!-- TABEL KEDUA -->
   <div class="table-container">
     <table id="alt-table">
       <thead>
@@ -606,7 +616,7 @@
 
 
   <!-- ========================================================= -->
-  <!-- SCRIPT UTAMA                                              -->
+  <!-- SCRIPT UTAMA (TERINTEGRASI FIRESTORE & ON_SNAPSHOT)       -->
   <!-- ========================================================= -->
   <script type="module">
     if (typeof ChartDataLabels !== 'undefined') {
@@ -635,25 +645,36 @@
       }
     };
 
-    let financialData = loadFinancialData();
+    let financialData = structuredClone(defaultFinancialData);
 
-    function loadFinancialData() {
-      try {
-        const savedData = localStorage.getItem("financialData2026");
-        if (!savedData) return structuredClone(defaultFinancialData);
-        return normalizeFinancialData(JSON.parse(savedData));
-      } catch (error) {
-        return structuredClone(defaultFinancialData);
-      }
+    // Inisialisasi Realtime Listener Firestore (onSnapshot)
+    function initFirebaseListener() {
+      const checkInterval = setInterval(() => {
+        if (window.firebaseDB && window.firebaseFns) {
+          clearInterval(checkInterval);
+          const { doc, onSnapshot } = window.firebaseFns;
+          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+
+          onSnapshot(docRef, (docSnap) => {
+            if (docSnap.exists()) {
+              financialData = normalizeFinancialData(docSnap.data());
+              renderAll();
+            } else {
+              // Jika dokumen kosong di cloud, inisialisasi dengan data default
+              window.firebaseFns.setDoc(docRef, defaultFinancialData);
+            }
+          }, (error) => {
+            console.error("Gagal mendengarkan update realtime Firestore:", error);
+          });
+        }
+      }, 100);
     }
 
     function normalizeFinancialData(data) {
       const result = structuredClone(defaultFinancialData);
       if (data && typeof data === "object") {
         if (data.year) result.year = Number(data.year);
-        if (data.targetGPM !== undefined && data.targetGPM !== null && data.targetGPM !== "") {
-          result.targetGPM = Number(data.targetGPM);
-        }
+        if (data.targetGPM !== undefined && data.targetGPM !== null) result.targetGPM = Number(data.targetGPM);
         if (data.months && typeof data.months === "object") {
           monthsList.forEach(month => {
             if (data.months[month]) {
@@ -662,11 +683,6 @@
               let revAct = toNumber(source.revenueActual, result.months[month].revenueActual);
               let bppPlan = toNumber(source.bppPlan, result.months[month].bppPlan);
               let bppAct = toNumber(source.bppActual, result.months[month].bppActual);
-
-              if (revPlan > 10000) revPlan /= 1000000;
-              if (revAct > 10000) revAct /= 1000000;
-              if (bppPlan > 10000) bppPlan /= 1000000;
-              if (bppAct > 10000) bppAct /= 1000000;
 
               result.months[month] = {
                 revenuePlan: revPlan,
@@ -689,63 +705,37 @@
     function toNumber(value, fallback = 0) {
       if (value === null || value === undefined || value === "") return fallback;
       if (typeof value === 'number') return Number.isFinite(value) ? value : fallback;
-      let str = String(value).trim();
-      
-      if (str.includes(',') && str.includes('.')) {
-        str = str.replace(/\./g, '').replace(',', '.');
-      } else if (str.includes(',')) {
-        str = str.replace(',', '.');
-      } else if ((str.match(/\./g) || []).length > 1) {
-        str = str.replace(/\./g, '');
-      }
-      
+      let str = String(value).trim().replace(/\./g, '').replace(',', '.');
       const number = Number(str);
       return Number.isFinite(number) ? number : fallback;
     }
 
     window.FinancialDashboard = {
       getData: function() { return structuredClone(financialData); },
-      saveData: function(newData) {
-        financialData = normalizeFinancialData(mergeFinancialData(financialData, newData));
-        localStorage.setItem("financialData2026", JSON.stringify(financialData));
+      saveData: async function(newData) {
+        financialData = normalizeFinancialData(newData);
+        if (window.firebaseDB && window.firebaseFns) {
+          const { doc, setDoc } = window.firebaseFns;
+          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+          await setDoc(docRef, financialData);
+        }
         renderAll();
-        window.dispatchEvent(new CustomEvent("financialDashboardUpdated"));
         return true;
       },
-      resetData: function() {
+      resetData: async function() {
         financialData = structuredClone(defaultFinancialData);
-        localStorage.setItem("financialData2026", JSON.stringify(financialData));
+        if (window.firebaseDB && window.firebaseFns) {
+          const { doc, setDoc } = window.firebaseFns;
+          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+          await setDoc(docRef, financialData);
+        }
         renderAll();
         return true;
       }
     };
 
-    function mergeFinancialData(oldData, newData) {
-      const merged = structuredClone(oldData);
-      if (!newData) return merged;
-      if (newData.year !== undefined) merged.year = Number(newData.year);
-      if (newData.targetGPM !== undefined) merged.targetGPM = Number(newData.targetGPM);
-      if (newData.months && typeof newData.months === "object") {
-        Object.keys(newData.months).forEach(month => {
-          if (merged.months[month] && newData.months[month]) {
-            merged.months[month] = { ...merged.months[month], ...newData.months[month] };
-          }
-        });
-      }
-      return merged;
-    }
-
     function getFinancialArrays() {
-      const revenuePlan = [];
-      const revenueActual = [];
-      const bppPlan = [];
-      const bppActual = [];
-      const gpPlan = [];
-      const gpActual = [];
-      const ncpPlan = [];
-      const ncpActual = [];
-      const status = [];
-
+      const revenuePlan = [], revenueActual = [], bppPlan = [], bppActual = [], gpPlan = [], gpActual = [], ncpPlan = [], ncpActual = [], status = [];
       monthsList.forEach(month => {
         const item = financialData.months[month];
         revenuePlan.push(Number(item.revenuePlan) || 0);
@@ -759,43 +749,32 @@
         status.push(item.status || "PROGNOSA");
       });
 
-      const gpmPlan = revenuePlan.map((value, index) => value > 0 ? gpPlan[index] / value * 100 : 0);
-      const gpmActual = revenueActual.map((value, index) => value > 0 ? gpActual[index] / value * 100 : 0);
-
-      const npPlan = gpPlan.map((value, index) => value - ncpPlan[index]);
-      const npActual = gpActual.map((value, index) => value - ncpActual[index]);
-      const npmPlan = revenuePlan.map((value, index) => value > 0 ? npPlan[index] / value * 100 : 0);
-      const npmActual = revenueActual.map((value, index) => value > 0 ? npActual[index] / value * 100 : 0);
+      const gpmPlan = revenuePlan.map((v, i) => v > 0 ? gpPlan[i] / v * 100 : 0);
+      const gpmActual = revenueActual.map((v, i) => v > 0 ? gpActual[i] / v * 100 : 0);
+      const npPlan = gpPlan.map((v, i) => v - ncpPlan[i]);
+      const npActual = gpActual.map((v, i) => v - ncpActual[i]);
+      const npmPlan = revenuePlan.map((v, i) => v > 0 ? npPlan[i] / v * 100 : 0);
+      const npmActual = revenueActual.map((v, i) => v > 0 ? npActual[i] / v * 100 : 0);
 
       return { revenuePlan, revenueActual, bppPlan, bppActual, gpPlan, gpActual, gpmPlan, gpmActual, ncpPlan, ncpActual, npPlan, npActual, npmPlan, npmActual, status };
     }
 
-    function sum(array) { return array.reduce((total, value) => total + (Number(value) || 0), 0); }
-    function average(array) { if (!array.length) return 0; return sum(array) / array.length; }
-    
-    function formatNumber(value) { 
-      return Number(value || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); 
-    }
-
-    function formatPercent(value) { return Number(value || 0).toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%"; }
-    function formatPercentOne(value) { return Number(value || 0).toLocaleString("id-ID", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%"; }
-    function getAchievement(actual, plan) { if (!plan) return 0; return actual / plan * 100; }
+    function sum(array) { return array.reduce((t, v) => t + (Number(v) || 0), 0); }
+    function average(array) { return array.length ? sum(array) / array.length : 0; }
+    function formatNumber(v) { return Number(v || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); }
+    function formatPercent(v) { return Number(v || 0).toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%"; }
+    function formatPercentOne(v) { return Number(v || 0).toLocaleString("id-ID", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%"; }
+    function getAchievement(act, plan) { return plan ? act / plan * 100 : 0; }
     
     function getLatestActualIndex() {
       let latest = -1;
-      monthsList.forEach((month, index) => {
-        const item = financialData.months[month];
-        if (item && item.status === "REALISASI") latest = index;
-      });
+      monthsList.forEach((m, i) => { if (financialData.months[m]?.status === "REALISASI") latest = i; });
       return latest;
     }
 
     let chartInstances = {};
     function destroyChart(id) {
-      if (chartInstances[id]) {
-        chartInstances[id].destroy();
-        chartInstances[id] = null;
-      }
+      if (chartInstances[id]) { chartInstances[id].destroy(); chartInstances[id] = null; }
     }
 
     function renderDarkCharts() {
@@ -814,7 +793,6 @@
       createComboChart("chartGP", gpActual, realGpBg, "#ffffff", false);
       createComboChart("chartGPM", gpmActual, realGpmBg, "#ffffff", true);
 
-      // Alt Dashboard Charts (Urutan baru: NCP, Biaya Tidak Langsung / BTL, Net Profit, NPM)
       createComboChart("altChartNCP", ncpActual, realNcpBg, "#ffffff", false);
       createComboChart("altChartBTL", ncpActual, realBtlBg, "#ffffff", false);
       createComboChart("altChartNP", npActual, realNpBg, "#ffffff", false);
@@ -835,8 +813,7 @@
               type: "line", data, borderColor: lineColor, borderWidth: 1.5,
               pointBackgroundColor: "#ffffff", pointBorderColor: lineColor, pointRadius: 3.5, tension: 0.1,
               datalabels: {
-                align: "top", anchor: "end", offset: 2, color: "#ffffff",
-                font: { size: 8, weight: "bold" },
+                align: "top", anchor: "end", offset: 2, color: "#ffffff", font: { size: 8, weight: "bold" },
                 formatter: val => isPercentage ? Number(val).toFixed(2).replace(".", ",") + "%" : Number(val).toLocaleString("id-ID", { maximumFractionDigits: 0 })
               }
             },
@@ -844,8 +821,7 @@
           ]
         },
         options: {
-          responsive: true, maintainAspectRatio: false,
-          layout: { padding: { top: 20 } },
+          responsive: true, maintainAspectRatio: false, layout: { padding: { top: 20 } },
           plugins: { legend: { display: false }, tooltip: { enabled: true } },
           scales: {
             x: { ticks: { color: "#94a3b8", font: { size: 8 } }, grid: { display: false } },
@@ -857,329 +833,176 @@
 
     function renderDashboard1KPI() {
       const data = getFinancialArrays();
-      const totalPlanRev = sum(data.revenuePlan);
-      const totalActualRev = sum(data.revenueActual);
-      const totalPlanBpp = sum(data.bppPlan);
-      const totalActualBpp = sum(data.bppActual);
-      const totalPlanGp = sum(data.gpPlan);
-      const totalActualGp = sum(data.gpActual);
-      const totalPlanGpm = totalPlanRev > 0 ? totalPlanGp / totalPlanRev * 100 : 0;
-      const totalActualGpm = totalActualRev > 0 ? totalActualGp / totalActualRev * 100 : 0;
+      const tpRev = sum(data.revenuePlan), taRev = sum(data.revenueActual);
+      const tpBpp = sum(data.bppPlan), taBpp = sum(data.bppActual);
+      const tpGp = sum(data.gpPlan), taGp = sum(data.gpActual);
+      const tpGpm = tpRev > 0 ? tpGp / tpRev * 100 : 0;
+      const taGpm = taRev > 0 ? taGp / taRev * 100 : 0;
 
-      setText("kpi-rev-plan", formatNumber(totalPlanRev));
-      setText("kpi-rev-act", formatNumber(totalActualRev));
-      setText("kpi-bpp-plan", formatNumber(totalPlanBpp));
-      setText("kpi-bpp-act", formatNumber(totalActualBpp));
-      setText("kpi-gp-plan", formatNumber(totalPlanGp));
-      setText("kpi-gp-act", formatNumber(totalActualGp));
-      setText("kpi-gpm-plan", formatPercent(totalPlanGpm));
-      setText("kpi-gpm-act", formatPercent(totalActualGpm));
+      setText("kpi-rev-plan", formatNumber(tpRev)); setText("kpi-rev-act", formatNumber(taRev));
+      setText("kpi-bpp-plan", formatNumber(tpBpp)); setText("kpi-bpp-act", formatNumber(taBpp));
+      setText("kpi-gp-plan", formatNumber(tpGp)); setText("kpi-gp-act", formatNumber(taGp));
+      setText("kpi-gpm-plan", formatPercent(tpGpm)); setText("kpi-gpm-act", formatPercent(taGpm));
 
-      updateKpiBadge("kpi-rev-badge", getAchievement(totalActualRev, totalPlanRev), true);
-      updateKpiBadge("kpi-bpp-badge", getAchievement(totalActualBpp, totalPlanBpp), false);
-      updateKpiBadge("kpi-gp-badge", getAchievement(totalActualGp, totalPlanGp), true);
-      updateKpiBadge("kpi-gpm-badge", getAchievement(totalActualGpm, totalPlanGpm), true);
+      updateKpiBadge("kpi-rev-badge", getAchievement(taRev, tpRev), true);
+      updateKpiBadge("kpi-bpp-badge", getAchievement(taBpp, tpBpp), false);
+      updateKpiBadge("kpi-gp-badge", getAchievement(taGp, tpGp), true);
+      updateKpiBadge("kpi-gpm-badge", getAchievement(taGpm, tpGpm), true);
     }
 
     function updateKpiBadge(id, percentage, higherIsGood = true) {
-      const element = document.getElementById(id);
-      if (!element) return;
-      element.classList.remove("badge-up", "badge-down");
-      
-      let isGood = higherIsGood ? percentage >= 100 : percentage <= 100;
-      if (id === "kpi-bpp-badge") {
-        isGood = percentage <= 100;
-      }
-
-      if (isGood) {
-        element.classList.add("badge-up");
-        element.textContent = "▲ " + formatPercent(percentage);
-      } else {
-        element.classList.add("badge-down");
-        element.textContent = "▼ " + formatPercent(percentage);
-      }
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove("badge-up", "badge-down");
+      let isGood = id === "kpi-bpp-badge" ? percentage <= 100 : (higherIsGood ? percentage >= 100 : percentage <= 100);
+      el.classList.add(isGood ? "badge-up" : "badge-down");
+      el.textContent = (isGood ? "▲ " : "▼ ") + formatPercent(percentage);
     }
 
     function renderMainTable() {
       const data = getFinancialArrays();
-      const realIndices = data.status.map((status, index) => status === "REALISASI" ? index : -1).filter(index => index >= 0);
-      const prognosaIndices = data.status.map((status, index) => status === "PROGNOSA" ? index : -1).filter(index => index >= 0);
-
-      const realCount = realIndices.length;
-      const progCount = prognosaIndices.length;
-      const lastRealMonth = monthsList[realIndices[realIndices.length - 1]] || "Aug";
-      const firstProgMonth = monthsList[prognosaIndices[0]] || "Sep";
-      const lastProgMonth = monthsList[prognosaIndices[prognosaIndices.length - 1]] || "Dec";
-
-      const realTh = document.getElementById("th-realisasi-hdr");
-      const progTh = document.getElementById("th-prognosa-hdr");
-      if (realTh) {
-        realTh.setAttribute("colspan", realCount + 1);
-        realTh.textContent = `JAN - ${getMonthShortName(lastRealMonth).toUpperCase()} 2026 (REALISASI)`;
-      }
-      if (progTh) {
-        progTh.setAttribute("colspan", progCount + 1);
-        progTh.textContent = `${getMonthShortName(firstProgMonth).toUpperCase()} - ${getMonthShortName(lastProgMonth).toUpperCase()} 2026 (PROGNOSA)`;
-      }
-
-      const subheadersTr = document.getElementById("main-table-subheaders");
-      if (subheadersTr) {
-        let subHtml = "";
-        realIndices.forEach(i => { subHtml += `<th>${monthLabels[i]}</th>`; });
-        subHtml += `<th class="th-realisasi">TOTAL</th>`;
-        prognosaIndices.forEach(i => { subHtml += `<th>${monthLabels[i]}</th>`; });
-        subHtml += `<th class="th-prognosa">TOTAL</th><th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>`;
-        subheadersTr.innerHTML = subHtml;
-      }
+      const realIndices = data.status.map((s, i) => s === "REALISASI" ? i : -1).filter(i => i >= 0);
+      const prognosaIndices = data.status.map((s, i) => s === "PROGNOSA" ? i : -1).filter(i => i >= 0);
 
       const tableBody = document.querySelector("#main-table tbody");
       if (tableBody) {
-        const realRev = realIndices.reduce((t, i) => t + data.revenueActual[i], 0);
-        const progRev = prognosaIndices.reduce((t, i) => t + data.revenueActual[i], 0);
-        const totalPlanRev = sum(data.revenuePlan);
-        const totalActualRev = sum(data.revenueActual);
-        const pctRev = getAchievement(totalActualRev, totalPlanRev);
-
-        const realBpp = realIndices.reduce((t, i) => t + data.bppActual[i], 0);
-        const progBpp = prognosaIndices.reduce((t, i) => t + data.bppActual[i], 0);
-        const totalPlanBpp = sum(data.bppPlan);
-        const totalActualBpp = sum(data.bppActual);
-        const pctBpp = getAchievement(totalActualBpp, totalPlanBpp);
-
-        const realGp = realIndices.reduce((t, i) => t + data.gpActual[i], 0);
-        const progGp = prognosaIndices.reduce((t, i) => t + data.gpActual[i], 0);
-        const totalPlanGp = sum(data.gpPlan);
-        const totalActualGp = sum(data.gpActual);
-        const pctGp = getAchievement(totalActualGp, totalPlanGp);
-
-        const realGpm = realRev > 0 ? (realGp / realRev * 100) : 0;
-        const progGpm = progRev > 0 ? (progGp / progRev * 100) : 0;
-        const totalPlanGpm = totalPlanRev > 0 ? (totalPlanGp / totalPlanRev * 100) : 0;
-        const totalActualGpm = totalActualRev > 0 ? (totalActualGp / totalActualRev * 100) : 0;
-        const pctGpm = getAchievement(totalActualGpm, totalPlanGpm);
+        const totalPlanRev = sum(data.revenuePlan), totalActRev = sum(data.revenueActual);
+        const totalPlanBpp = sum(data.bppPlan), totalActBpp = sum(data.bppActual);
+        const totalPlanGp = sum(data.gpPlan), totalActGp = sum(data.gpActual);
+        const totalPlanGpm = totalPlanRev > 0 ? totalPlanGp / totalPlanRev * 100 : 0;
+        const totalActGpm = totalActRev > 0 ? totalActGp / totalActRev * 100 : 0;
 
         let htmlRows = "";
+        // Baris Pendapatan
         htmlRows += `<tr><td class="row-label">PENDAPATAN USAHA (Juta Rp)</td>`;
-        realIndices.forEach(i => { htmlRows += `<td>${formatNumber(data.revenueActual[i])}</td>`; });
-        htmlRows += `<td class="txt-green">${formatNumber(realRev)}</td>`;
-        prognosaIndices.forEach(i => { htmlRows += `<td>${formatNumber(data.revenueActual[i])}</td>`; });
-        htmlRows += `<td class="txt-green">${formatNumber(progRev)}</td>`;
-        htmlRows += `<td>${formatNumber(totalPlanRev)}</td><td class="metric-actual">${formatNumber(totalActualRev)}</td>`;
-        htmlRows += `<td class="${pctRev >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctRev)}</td></tr>`;
+        realIndices.forEach(i => htmlRows += `<td>${formatNumber(data.revenueActual[i])}</td>`);
+        htmlRows += `<td class="txt-green">${formatNumber(sum(realIndices.map(i => data.revenueActual[i])))}</td>`;
+        prognosaIndices.forEach(i => htmlRows += `<td>${formatNumber(data.revenueActual[i])}</td>`);
+        htmlRows += `<td class="txt-green">${formatNumber(sum(prognosaIndices.map(i => data.revenueActual[i])))}</td>`;
+        htmlRows += `<td>${formatNumber(totalPlanRev)}</td><td class="metric-actual">${formatNumber(totalActRev)}</td>`;
+        htmlRows += `<td class="${getAchievement(totalActRev, totalPlanRev) >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(getAchievement(totalActRev, totalPlanRev))}</td></tr>`;
 
+        // Baris BPP
         htmlRows += `<tr><td class="row-label">BEBAN POKOK PENDAPATAN (Juta Rp)</td>`;
-        realIndices.forEach(i => { htmlRows += `<td>${formatNumber(data.bppActual[i])}</td>`; });
-        htmlRows += `<td class="txt-green">${formatNumber(realBpp)}</td>`;
-        prognosaIndices.forEach(i => { htmlRows += `<td>${formatNumber(data.bppActual[i])}</td>`; });
-        htmlRows += `<td class="txt-green">${formatNumber(progBpp)}</td>`;
-        htmlRows += `<td>${formatNumber(totalPlanBpp)}</td><td class="metric-actual">${formatNumber(totalActualBpp)}</td>`;
-        htmlRows += `<td class="${pctBpp <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctBpp)}</td></tr>`;
+        realIndices.forEach(i => htmlRows += `<td>${formatNumber(data.bppActual[i])}</td>`);
+        htmlRows += `<td class="txt-green">${formatNumber(sum(realIndices.map(i => data.bppActual[i])))}</td>`;
+        prognosaIndices.forEach(i => htmlRows += `<td>${formatNumber(data.bppActual[i])}</td>`);
+        htmlRows += `<td class="txt-green">${formatNumber(sum(prognosaIndices.map(i => data.bppActual[i])))}</td>`;
+        htmlRows += `<td>${formatNumber(totalPlanBpp)}</td><td class="metric-actual">${formatNumber(totalActBpp)}</td>`;
+        htmlRows += `<td class="${getAchievement(totalActBpp, totalPlanBpp) <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(getAchievement(totalActBpp, totalPlanBpp))}</td></tr>`;
 
+        // Baris GP
         htmlRows += `<tr><td class="row-label">GROSS PROFIT (Juta Rp)</td>`;
-        realIndices.forEach(i => { htmlRows += `<td>${formatNumber(data.gpActual[i])}</td>`; });
-        htmlRows += `<td class="txt-green">${formatNumber(realGp)}</td>`;
-        prognosaIndices.forEach(i => { htmlRows += `<td>${formatNumber(data.gpActual[i])}</td>`; });
-        htmlRows += `<td class="txt-green">${formatNumber(progGp)}</td>`;
-        htmlRows += `<td>${formatNumber(totalPlanGp)}</td><td class="metric-actual">${formatNumber(totalActualGp)}</td>`;
-        htmlRows += `<td class="${pctGp >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctGp)}</td></tr>`;
+        realIndices.forEach(i => htmlRows += `<td>${formatNumber(data.gpActual[i])}</td>`);
+        htmlRows += `<td class="txt-green">${formatNumber(sum(realIndices.map(i => data.gpActual[i])))}</td>`;
+        prognosaIndices.forEach(i => htmlRows += `<td>${formatNumber(data.gpActual[i])}</td>`);
+        htmlRows += `<td class="txt-green">${formatNumber(sum(prognosaIndices.map(i => data.gpActual[i])))}</td>`;
+        htmlRows += `<td>${formatNumber(totalPlanGp)}</td><td class="metric-actual">${formatNumber(totalActGp)}</td>`;
+        htmlRows += `<td class="${getAchievement(totalActGp, totalPlanGp) >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(getAchievement(totalActGp, totalPlanGp))}</td></tr>`;
 
+        // Baris GPM
         htmlRows += `<tr><td class="row-label">GROSS PROFIT MARGIN (%)</td>`;
-        realIndices.forEach(i => { htmlRows += `<td>${formatPercent(data.gpmActual[i])}</td>`; });
-        htmlRows += `<td class="txt-green">${formatPercent(realGpm)}</td>`;
-        prognosaIndices.forEach(i => { htmlRows += `<td>${formatPercent(data.gpmActual[i])}</td>`; });
-        htmlRows += `<td class="txt-green">${formatPercent(progGpm)}</td>`;
-        htmlRows += `<td>${formatPercent(totalPlanGpm)}</td><td class="metric-actual">${formatPercent(totalActualGpm)}</td>`;
-        htmlRows += `<td class="${pctGpm >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctGpm)}</td></tr>`;
+        realIndices.forEach(i => htmlRows += `<td>${formatPercent(data.gpmActual[i])}</td>`);
+        htmlRows += `<td class="txt-green">${formatPercent(sum(realIndices.map(i => data.revenueActual[i])) > 0 ? sum(realIndices.map(i => data.gpActual[i])) / sum(realIndices.map(i => data.revenueActual[i])) * 100 : 0)}</td>`;
+        prognosaIndices.forEach(i => htmlRows += `<td>${formatPercent(data.gpmActual[i])}</td>`);
+        htmlRows += `<td class="txt-green">${formatPercent(sum(prognosaIndices.map(i => data.revenueActual[i])) > 0 ? sum(prognosaIndices.map(i => data.gpActual[i])) / sum(prognosaIndices.map(i => data.revenueActual[i])) * 100 : 0)}</td>`;
+        htmlRows += `<td>${formatPercent(totalPlanGpm)}</td><td class="metric-actual">${formatPercent(totalActGpm)}</td>`;
+        htmlRows += `<td class="${getAchievement(totalActGpm, totalPlanGpm) >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(getAchievement(totalActGpm, totalPlanGpm))}</td></tr>`;
 
         tableBody.innerHTML = htmlRows;
       }
 
-      // Render Alt/Dashboard 2 Table (Urutan baru: NCP, Biaya Tidak Langsung, Net Profit, Net Profit Margin)
-      const altRealTh = document.getElementById("alt-th-realisasi-hdr");
-      const altProgTh = document.getElementById("alt-th-prognosa-hdr");
-      if (altRealTh) {
-        altRealTh.setAttribute("colspan", realCount + 1);
-        altRealTh.textContent = `JAN - ${getMonthShortName(lastRealMonth).toUpperCase()} 2026 (REALISASI)`;
-      }
-      if (altProgTh) {
-        altProgTh.setAttribute("colspan", progCount + 1);
-        altProgTh.textContent = `${getMonthShortName(firstProgMonth).toUpperCase()} - ${getMonthShortName(lastProgMonth).toUpperCase()} 2026 (PROGNOSA)`;
-      }
-
-      const altSubheadersTr = document.getElementById("alt-table-subheaders");
-      if (altSubheadersTr) {
-        let subHtml = "";
-        realIndices.forEach(i => { subHtml += `<th>${monthLabels[i]}</th>`; });
-        subHtml += `<th class="th-realisasi">TOTAL</th>`;
-        prognosaIndices.forEach(i => { subHtml += `<th>${monthLabels[i]}</th>`; });
-        subHtml += `<th class="th-prognosa">TOTAL</th><th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>`;
-        altSubheadersTr.innerHTML = subHtml;
-      }
-
+      // Tabel Kedua (Alt Table)
       const altTableBody = document.querySelector("#alt-table tbody");
       if (altTableBody) {
-        const realNcp = realIndices.reduce((t, i) => t + data.ncpActual[i], 0);
-        const progNcp = prognosaIndices.reduce((t, i) => t + data.ncpActual[i], 0);
-        const totalPlanNcp = sum(data.ncpPlan);
-        const totalActualNcp = sum(data.ncpActual);
-        const pctNcp = getAchievement(totalActualNcp, totalPlanNcp);
-
-        // Biaya Tidak Langsung menggunakan data ncp sebagai contoh atau placeholder
-        const realBtl = realNcp;
-        const progBtl = progNcp;
-        const totalPlanBtl = totalPlanNcp;
-        const totalActualBtl = totalActualNcp;
-        const pctBtl = pctNcp;
-
-        const realNp = realIndices.reduce((t, i) => t + data.npActual[i], 0);
-        const progNp = prognosaIndices.reduce((t, i) => t + data.npActual[i], 0);
-        const totalPlanNp = sum(data.npPlan);
-        const totalActualNp = sum(data.npActual);
-        const pctNp = getAchievement(totalActualNp, totalPlanNp);
-
-        const realRev = realIndices.reduce((t, i) => t + data.revenueActual[i], 0);
-        const progRev = prognosaIndices.reduce((t, i) => t + data.revenueActual[i], 0);
-        const realNpm = realRev > 0 ? (realNp / realRev * 100) : 0;
-        const progRevProg = progRev > 0 ? (progNp / progRev * 100) : 0;
-        const totalPlanNpm = sum(data.revenuePlan) > 0 ? (sum(data.npPlan) / sum(data.revenuePlan) * 100) : 0;
-        const totalActualNpm = sum(data.revenueActual) > 0 ? (sum(data.npActual) / sum(data.revenueActual) * 100) : 0;
-        const pctNpm = getAchievement(totalActualNpm, totalPlanNpm);
-
         let altHtmlRows = "";
-        // 1. Non-Contributing Plant (Juta Rp)
+        const totalPlanNcp = sum(data.ncpPlan), totalActNcp = sum(data.ncpActual);
+        const totalPlanNp = sum(data.npPlan), totalActNp = sum(data.npActual);
+        const totalPlanNpm = sum(data.revenuePlan) > 0 ? totalPlanNp / sum(data.revenuePlan) * 100 : 0;
+        const totalActNpm = sum(data.revenueActual) > 0 ? totalActNp / sum(data.revenueActual) * 100 : 0;
+
+        // 1. NCP
         altHtmlRows += `<tr><td class="row-label">NON-CONTRIBUTING PLANT (Juta Rp)</td>`;
-        realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
-        altHtmlRows += `<td class="txt-green">${formatNumber(realNcp)}</td>`;
-        prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
-        altHtmlRows += `<td class="txt-green">${formatNumber(progNcp)}</td>`;
-        altHtmlRows += `<td>${formatNumber(totalPlanNcp)}</td><td class="metric-actual">${formatNumber(totalActualNcp)}</td>`;
-        altHtmlRows += `<td class="${pctNcp <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctNcp)}</td></tr>`;
+        realIndices.forEach(i => altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`);
+        altHtmlRows += `<td class="txt-green">${formatNumber(sum(realIndices.map(i => data.ncpActual[i])))}</td>`;
+        prognosaIndices.forEach(i => altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`);
+        altHtmlRows += `<td class="txt-green">${formatNumber(sum(prognosaIndices.map(i => data.ncpActual[i])))}</td>`;
+        altHtmlRows += `<td>${formatNumber(totalPlanNcp)}</td><td class="metric-actual">${formatNumber(totalActNcp)}</td>`;
+        altHtmlRows += `<td class="${getAchievement(totalActNcp, totalPlanNcp) <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(getAchievement(totalActNcp, totalPlanNcp))}</td></tr>`;
 
-        // 2. Biaya Tidak Langsung (Juta Rp)
+        // 2. Biaya Tidak Langsung
         altHtmlRows += `<tr><td class="row-label">BIAYA TIDAK LANGSUNG (Juta Rp)</td>`;
-        realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
-        altHtmlRows += `<td class="txt-green">${formatNumber(realBtl)}</td>`;
-        prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
-        altHtmlRows += `<td class="txt-green">${formatNumber(progBtl)}</td>`;
-        altHtmlRows += `<td>${formatNumber(totalPlanBtl)}</td><td class="metric-actual">${formatNumber(totalActualBtl)}</td>`;
-        altHtmlRows += `<td class="${pctBtl <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctBtl)}</td></tr>`;
+        realIndices.forEach(i => altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`);
+        altHtmlRows += `<td class="txt-green">${formatNumber(sum(realIndices.map(i => data.ncpActual[i])))}</td>`;
+        prognosaIndices.forEach(i => altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`);
+        altHtmlRows += `<td class="txt-green">${formatNumber(sum(prognosaIndices.map(i => data.ncpActual[i])))}</td>`;
+        altHtmlRows += `<td>${formatNumber(totalPlanNcp)}</td><td class="metric-actual">${formatNumber(totalActNcp)}</td>`;
+        altHtmlRows += `<td class="${getAchievement(totalActNcp, totalPlanNcp) <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(getAchievement(totalActNcp, totalPlanNcp))}</td></tr>`;
 
-        // 3. Net Profit (Juta Rp)
+        // 3. Net Profit
         altHtmlRows += `<tr><td class="row-label">NET PROFIT (Juta Rp)</td>`;
-        realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.npActual[i])}</td>`; });
-        altHtmlRows += `<td class="txt-green">${formatNumber(realNp)}</td>`;
-        prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.npActual[i])}</td>`; });
-        altHtmlRows += `<td class="txt-green">${formatNumber(progNp)}</td>`;
-        altHtmlRows += `<td>${formatNumber(totalPlanNp)}</td><td class="metric-actual">${formatNumber(totalActualNp)}</td>`;
-        altHtmlRows += `<td class="${pctNp >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctNp)}</td></tr>`;
+        realIndices.forEach(i => altHtmlRows += `<td>${formatNumber(data.npActual[i])}</td>`);
+        altHtmlRows += `<td class="txt-green">${formatNumber(sum(realIndices.map(i => data.npActual[i])))}</td>`;
+        prognosaIndices.forEach(i => altHtmlRows += `<td>${formatNumber(data.npActual[i])}</td>`);
+        altHtmlRows += `<td class="txt-green">${formatNumber(sum(prognosaIndices.map(i => data.npActual[i])))}</td>`;
+        altHtmlRows += `<td>${formatNumber(totalPlanNp)}</td><td class="metric-actual">${formatNumber(totalActNp)}</td>`;
+        altHtmlRows += `<td class="${getAchievement(totalActNp, totalPlanNp) >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(getAchievement(totalActNp, totalPlanNp))}</td></tr>`;
 
-        // 4. Net Profit Margin (%)
+        // 4. NPM
         altHtmlRows += `<tr><td class="row-label">NET PROFIT MARGIN (%)</td>`;
-        realIndices.forEach(i => { altHtmlRows += `<td>${formatPercent(data.npmActual[i])}</td>`; });
-        altHtmlRows += `<td class="txt-green">${formatPercent(realNpm)}</td>`;
-        prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatPercent(data.npmActual[i])}</td>`; });
-        altHtmlRows += `<td class="txt-green">${formatPercent(progRevProg)}</td>`;
-        altHtmlRows += `<td>${formatPercent(totalPlanNpm)}</td><td class="metric-actual">${formatPercent(totalActualNpm)}</td>`;
-        altHtmlRows += `<td class="${pctNpm >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctNpm)}</td></tr>`;
+        realIndices.forEach(i => altHtmlRows += `<td>${formatPercent(data.npmActual[i])}</td>`);
+        altHtmlRows += `<td class="txt-green">${formatPercent(sum(realIndices.map(i => data.revenueActual[i])) > 0 ? sum(realIndices.map(i => data.npActual[i])) / sum(realIndices.map(i => data.revenueActual[i])) * 100 : 0)}</td>`;
+        prognosaIndices.forEach(i => altHtmlRows += `<td>${formatPercent(data.npmActual[i])}</td>`);
+        altHtmlRows += `<td class="txt-green">${formatPercent(sum(prognosaIndices.map(i => data.revenueActual[i])) > 0 ? sum(prognosaIndices.map(i => data.npActual[i])) / sum(prognosaIndices.map(i => data.revenueActual[i])) * 100 : 0)}</td>`;
+        altHtmlRows += `<td>${formatPercent(totalPlanNpm)}</td><td class="metric-actual">${formatPercent(totalActNpm)}</td>`;
+        altHtmlRows += `<td class="${getAchievement(totalActNpm, totalPlanNpm) >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(getAchievement(totalActNpm, totalPlanNpm))}</td></tr>`;
 
         altTableBody.innerHTML = altHtmlRows;
       }
-
-      const legendReal = document.getElementById("legend-real-text");
-      const legendProg = document.getElementById("legend-prog-text");
-      if (legendReal) legendReal.textContent = `Data Jan - ${getMonthShortName(lastRealMonth)} 2026 merupakan Realisasi`;
-      if (legendProg) legendProg.textContent = `Data ${getMonthShortName(firstProgMonth)} - Dec 2026 merupakan Prognosa`;
     }
 
     function renderLightSectionDirect() {
       const data = getFinancialArrays();
-      const totalRevPlan = sum(data.revenuePlan);
-      const totalBppPlan = sum(data.bppPlan);
-      const totalGpPlan = sum(data.gpPlan);
-      const totalGpmPlan = totalRevPlan > 0 ? totalGpPlan / totalRevPlan * 100 : 0;
+      const totalRevPlan = sum(data.revenuePlan), totalBppPlan = sum(data.bppPlan);
+      const totalGpPlan = sum(data.gpPlan), totalGpmPlan = totalRevPlan > 0 ? totalGpPlan / totalRevPlan * 100 : 0;
 
-      setText("sec1-tot-rev", formatNumber(totalRevPlan));
-      setText("sec1-avg-rev", formatNumber(average(data.revenuePlan)));
-      setText("sec1-tot-bpp", formatNumber(totalBppPlan));
-      setText("sec1-avg-bpp", formatNumber(average(data.bppPlan)));
-      setText("sec2-tot-gp", formatNumber(totalGpPlan));
-      setText("sec2-avg-gp", formatNumber(average(data.gpPlan)));
-      setText("sec2-tot-gpm", formatPercentOne(totalGpmPlan));
-      setText("sec2-avg-gpm", formatPercentOne(average(data.gpmPlan)));
+      setText("sec1-tot-rev", formatNumber(totalRevPlan)); setText("sec1-avg-rev", formatNumber(average(data.revenuePlan)));
+      setText("sec1-tot-bpp", formatNumber(totalBppPlan)); setText("sec1-avg-bpp", formatNumber(average(data.bppPlan)));
+      setText("sec2-tot-gp", formatNumber(totalGpPlan)); setText("sec2-avg-gp", formatNumber(average(data.gpPlan)));
+      setText("sec2-tot-gpm", formatPercentOne(totalGpmPlan)); setText("sec2-avg-gpm", formatPercentOne(average(data.gpmPlan)));
 
-      setText("sec1-side-tot", formatNumber(totalRevPlan));
-      setText("side-val-rev", formatNumber(totalRevPlan));
-      setText("side-val-bpp", formatNumber(totalBppPlan));
-      setText("sec2-side-tot", formatNumber(totalGpPlan));
-      setText("side-val-gp", formatNumber(totalGpPlan));
-      setText("side-val-gpm", formatPercentOne(totalGpmPlan));
+      setText("sec1-side-tot", formatNumber(totalRevPlan)); setText("side-val-rev", formatNumber(totalRevPlan));
+      setText("side-val-bpp", formatNumber(totalBppPlan)); setText("sec2-side-tot", formatNumber(totalGpPlan));
+      setText("side-val-gp", formatNumber(totalGpPlan)); setText("side-val-gpm", formatPercentOne(totalGpmPlan));
 
       const bppBar = document.getElementById("side-bar-bpp-col");
       if (bppBar) bppBar.style.height = (totalRevPlan > 0 ? Math.max(5, Math.min(100, totalBppPlan / totalRevPlan * 100)) : 5) + "%";
-
       const gpmBar = document.getElementById("side-bar-gpm-col");
       if (gpmBar) gpmBar.style.height = Math.max(5, Math.min(100, totalGpmPlan)) + "%";
 
-      // Chart Section 1
       destroyChart("chartSec1");
       chartInstances["chartSec1"] = new Chart(document.getElementById("chartSec1").getContext("2d"), {
         type: "bar",
         data: {
           labels: monthsList,
           datasets: [
-            {
-              label: "Pendapatan Usaha (Rencana)", data: data.revenuePlan, backgroundColor: "#0b63ce",
-              borderRadius: 4, barPercentage: 0.65, categoryPercentage: 0.6,
-              datalabels: { align: "top", anchor: "end", color: "#0b63ce", font: { size: 8.5, weight: "bold" }, offset: 2, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) }
-            },
-            {
-              label: "Beban Pokok Pendapatan (Rencana)", data: data.bppPlan, backgroundColor: "#008767",
-              borderRadius: 4, barPercentage: 0.65, categoryPercentage: 0.6,
-              datalabels: { align: "top", anchor: "end", color: "#008767", font: { size: 8.5, weight: "bold" }, offset: 2, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) }
-            }
+            { label: "Pendapatan Usaha (Rencana)", data: data.revenuePlan, backgroundColor: "#0b63ce", borderRadius: 4, barPercentage: 0.65, categoryPercentage: 0.6, datalabels: { align: "top", anchor: "end", color: "#0b63ce", font: { size: 8.5, weight: "bold" }, formatter: v => formatNumber(v) } },
+            { label: "Beban Pokok Pendapatan (Rencana)", data: data.bppPlan, backgroundColor: "#008767", borderRadius: 4, barPercentage: 0.65, categoryPercentage: 0.6, datalabels: { align: "top", anchor: "end", color: "#008767", font: { size: 8.5, weight: "bold" }, formatter: v => formatNumber(v) } }
           ]
         },
-        options: {
-          responsive: true, maintainAspectRatio: false, layout: { padding: { top: 32 } },
-          plugins: { legend: { display: true, position: "top", labels: { color: "#334155", font: { size: 10, weight: "bold" }, usePointStyle: true, boxWidth: 8 } } },
-          scales: {
-            x: { ticks: { color: "#475569", font: { size: 9, weight: "600" } }, grid: { display: false } },
-            y: { ticks: { color: "#475569", font: { size: 9 } }, grid: { color: "#f1f5f9" }, min: 0 }
-          }
-        }
+        options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 32 } }, plugins: { legend: { display: true, position: "top", labels: { color: "#334155", font: { size: 10, weight: "bold" } } } }, scales: { x: { grid: { display: false } }, y: { min: 0 } } }
       });
 
-      // Chart Section 2
       destroyChart("chartSec2");
       chartInstances["chartSec2"] = new Chart(document.getElementById("chartSec2").getContext("2d"), {
         data: {
           labels: monthsList,
           datasets: [
-            {
-              type: "line", label: "Gross Profit Margin (%)", data: data.gpmPlan,
-              borderColor: "#e67e22", backgroundColor: "#e67e22", borderWidth: 2.5, pointRadius: 5, pointBackgroundColor: "#e67e22", yAxisID: "y1",
-              datalabels: {
-                align: "top", anchor: "end", color: "#e67e22", backgroundColor: "rgba(255, 255, 255, 0.95)",
-                borderColor: "#e67e22", borderWidth: 1.5, borderRadius: 12, padding: { top: 3, bottom: 3, left: 6, right: 6 },
-                font: { size: 9, weight: "bold" }, offset: 6, formatter: v => Number(v).toFixed(1) + "%"
-              }
-            },
-            {
-              type: "bar", label: "Gross Profit (Rp)", data: data.gpPlan, backgroundColor: "#7c3aed",
-              borderRadius: 4, barPercentage: 0.45, yAxisID: "y",
-              datalabels: { align: "start", anchor: "end", color: "#ffffff", font: { size: 8.5, weight: "bold" }, offset: 4, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) }
-            }
+            { type: "line", label: "Gross Profit Margin (%)", data: data.gpmPlan, borderColor: "#e67e22", backgroundColor: "#e67e22", borderWidth: 2.5, pointRadius: 5, yAxisID: "y1", datalabels: { align: "top", anchor: "end", color: "#e67e22", backgroundColor: "#fff", borderRadius: 12, font: { size: 9, weight: "bold" }, formatter: v => Number(v).toFixed(1) + "%" } },
+            { type: "bar", label: "Gross Profit (Rp)", data: data.gpPlan, backgroundColor: "#7c3aed", borderRadius: 4, barPercentage: 0.45, yAxisID: "y", datalabels: { align: "start", anchor: "end", color: "#fff", font: { size: 8.5, weight: "bold" }, formatter: v => formatNumber(v) } }
           ]
         },
-        options: {
-          responsive: true, maintainAspectRatio: false, layout: { padding: { top: 38 } },
-          plugins: { legend: { display: true, position: "top", labels: { color: "#334155", font: { size: 10, weight: "bold" }, usePointStyle: true, boxWidth: 8 } } },
-          scales: {
-            x: { ticks: { color: "#475569", font: { size: 9, weight: "600" } }, grid: { display: false } },
-            y: { type: "linear", display: true, position: "left", ticks: { color: "#475569", font: { size: 9 } }, grid: { color: "#f1f5f9" }, min: 0 },
-            y1: { type: "linear", display: true, position: "right", ticks: { color: "#e67e22", font: { size: 9 }, callback: v => v + "%" }, grid: { drawOnChartArea: false }, min: 0, max: 100 }
-          }
-        }
+        options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 38 } }, plugins: { legend: { display: true, position: "top", labels: { color: "#334155", font: { size: 10, weight: "bold" } } } }, scales: { y: { type: "linear", position: "left", min: 0 }, y1: { type: "linear", position: "right", min: 0, max: 100, grid: { drawOnChartArea: false } } } }
       });
     }
 
@@ -1194,44 +1017,26 @@
       const actualBppCum = sum(data.bppActual.slice(0, actualEndIndex + 1));
       const planGpCum = sum(data.gpPlan.slice(0, actualEndIndex + 1));
       const actualGpCum = sum(data.gpActual.slice(0, actualEndIndex + 1));
-
-      const planGpmCum = planRevCum > 0 ? planGpCum / planRevCum * 100 : 0;
       const actualGpmCum = actualRevCum > 0 ? actualGpCum / actualRevCum * 100 : 0;
+      const planGpmCum = planRevCum > 0 ? planGpCum / planRevCum * 100 : 0;
 
-      const actualMonthName = monthsList[actualEndIndex];
-      const actualMonthFull = getMonthFullName(actualMonthName);
-
-      setText("d3-subtitle", "Rencana vs Realisasi | Januari – " + actualMonthFull + " " + financialData.year + " | Outlook Full Year " + financialData.year);
-      setText("d3-badge-top", "Data s.d. " + actualMonthFull + " " + financialData.year);
-      setText("d3-section1-sub", "Monthly performance – actual data available through " + actualMonthFull + " " + financialData.year);
-      setText("d3-section2-sub", "Monthly profitability performance and full-year target positioning");
+      const actualMonthName = getMonthFullName(monthsList[actualEndIndex]);
+      setText("d3-subtitle", "Rencana vs Realisasi | Januari – " + actualMonthName + " " + financialData.year + " | Outlook Full Year " + financialData.year);
+      setText("d3-badge-top", "Data s.d. " + actualMonthName + " " + financialData.year);
 
       setText("d3-kpi-rev", formatNumber(actualRevCum));
       setText("d3-kpi-rev-sub", formatPercent(getAchievement(actualRevCum, sum(data.revenuePlan))) + " dari target 2026");
-
       setText("d3-kpi-bpp", formatNumber(actualBppCum));
       setText("d3-kpi-bpp-sub", formatPercent(getAchievement(actualBppCum, sum(data.bppPlan))) + " dari target 2026");
-
       setText("d3-kpi-gp", formatNumber(actualGpCum));
       setText("d3-kpi-gp-sub", formatPercent(getAchievement(actualGpCum, sum(data.gpPlan))) + " dari target 2026");
-
       setText("d3-kpi-gpm", formatPercent(actualGpmCum));
       setText("d3-kpi-gpm-sub", "Target 2026: " + formatPercent(financialData.targetGPM));
 
-      const cumulativeLabel = "Pencapaian s.d. " + getMonthShortName(actualMonthName) + " " + financialData.year;
-      setText("d3-rev-cumul-title", cumulativeLabel);
-      setText("d3-bpp-cumul-title", cumulativeLabel);
-      setText("d3-gp-cumul-title", cumulativeLabel);
-      setText("d3-gpm-cumul-title", cumulativeLabel);
-
-      setText("d3-rev-act-cumul", formatNumber(actualRevCum));
-      setText("d3-rev-plan-cumul", formatNumber(planRevCum));
-      setText("d3-bpp-act-cumul", formatNumber(actualBppCum));
-      setText("d3-bpp-plan-cumul", formatNumber(planBppCum));
-      setText("d3-gp-act-cumul", formatNumber(actualGpCum));
-      setText("d3-gp-plan-cumul", formatNumber(planGpCum));
-      setText("d3-gpm-act-cumul", formatPercent(actualGpmCum));
-      setText("d3-gpm-plan-cumul", formatPercent(planGpmCum));
+      setText("d3-rev-act-cumul", formatNumber(actualRevCum)); setText("d3-rev-plan-cumul", formatNumber(planRevCum));
+      setText("d3-bpp-act-cumul", formatNumber(actualBppCum)); setText("d3-bpp-plan-cumul", formatNumber(planBppCum));
+      setText("d3-gp-act-cumul", formatNumber(actualGpCum)); setText("d3-gp-plan-cumul", formatNumber(planGpCum));
+      setText("d3-gpm-act-cumul", formatPercent(actualGpmCum)); setText("d3-gpm-plan-cumul", formatPercent(planGpmCum));
 
       setBarHeight("d3-rev-act-bar", actualRevCum, Math.max(actualRevCum, planRevCum));
       setBarHeight("d3-rev-plan-bar", planRevCum, Math.max(actualRevCum, planRevCum));
@@ -1239,154 +1044,52 @@
       setBarHeight("d3-bpp-plan-bar", planBppCum, Math.max(actualBppCum, planBppCum));
       setBarHeight("d3-gp-act-bar", actualGpCum, Math.max(actualGpCum, planGpCum));
       setBarHeight("d3-gp-plan-bar", planGpCum, Math.max(actualGpCum, planGpCum));
-      setBarHeight("d3-gpm-act-bar", actualGpmCum, 100);
-      setBarHeight("d3-gpm-plan-bar", planGpmCum, 100);
 
-      createDashboard3Charts(data);
-    }
+      const shortMonths = monthsList.slice(0, actualEndIndex + 1);
+      createSimpleBarChart("d3ChartRev", shortMonths, data.revenuePlan.slice(0, actualEndIndex + 1), data.revenueActual.slice(0, actualEndIndex + 1), "#0b63ce");
+      createSimpleBarChart("d3ChartBpp", shortMonths, data.bppPlan.slice(0, actualEndIndex + 1), data.bppActual.slice(0, actualEndIndex + 1), "#008767");
+      createSimpleBarChart("d3ChartGp", shortMonths, data.gpPlan.slice(0, actualEndIndex + 1), data.gpActual.slice(0, actualEndIndex + 1), "#7c3aed");
 
-    function createDashboard3Charts(data) {
-      const latestIndex = getLatestActualIndex();
-      const endIndex = latestIndex >= 0 ? latestIndex : 0;
-      const shortMonths = monthsList.slice(0, endIndex + 1);
-
-      const planRev = data.revenuePlan.slice(0, endIndex + 1);
-      const actRev = data.revenueActual.slice(0, endIndex + 1);
-      const planBpp = data.bppPlan.slice(0, endIndex + 1);
-      const actBpp = data.bppActual.slice(0, endIndex + 1);
-      const planGp = data.gpPlan.slice(0, endIndex + 1);
-      const actGp = data.gpActual.slice(0, endIndex + 1);
-      const planGpm = data.gpmPlan.slice(0, endIndex + 1);
-      const actGpm = data.gpmActual.slice(0, endIndex + 1);
-
-      // 1. Pendapatan Usaha
-      destroyChart("d3ChartRev");
-      chartInstances["d3ChartRev"] = new Chart(document.getElementById("d3ChartRev").getContext("2d"), {
-        data: {
-          labels: shortMonths,
-          datasets: [
-            { type: "bar", label: "Rencana", data: planRev, backgroundColor: "#cbd5e1", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#475569", font: { size: 8, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } },
-            { type: "bar", label: "Realisasi", data: actRev, backgroundColor: "#0b63ce", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#0b63ce", font: { size: 8.5, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } }
-          ]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } } }
-      });
-
-      // 2. Beban Pokok
-      destroyChart("d3ChartBpp");
-      chartInstances["d3ChartBpp"] = new Chart(document.getElementById("d3ChartBpp").getContext("2d"), {
-        data: {
-          labels: shortMonths,
-          datasets: [
-            { type: "bar", label: "Rencana", data: planBpp, backgroundColor: "#cbd5e1", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#475569", font: { size: 8, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } },
-            { type: "bar", label: "Realisasi", data: actBpp, backgroundColor: "#008767", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#008767", font: { size: 8.5, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } }
-          ]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } } }
-      });
-
-      // 3. Gross Profit
-      destroyChart("d3ChartGp");
-      chartInstances["d3ChartGp"] = new Chart(document.getElementById("d3ChartGp").getContext("2d"), {
-        data: {
-          labels: shortMonths,
-          datasets: [
-            { type: "bar", label: "Rencana", data: planGp, backgroundColor: "#cbd5e1", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#475569", font: { size: 8, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } },
-            { type: "bar", label: "Realisasi", data: actGp, backgroundColor: "#7c3aed", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#7c3aed", font: { size: 8.5, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } }
-          ]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } } }
-      });
-
-      // 4. Gross Profit Margin
-      const targetLine = shortMonths.map(() => financialData.targetGPM);
+      // GPM Chart D3
       destroyChart("d3ChartGpm");
       chartInstances["d3ChartGpm"] = new Chart(document.getElementById("d3ChartGpm").getContext("2d"), {
         data: {
           labels: shortMonths,
           datasets: [
-            { type: "line", label: "Target FY", data: targetLine, borderColor: "#e67e22", borderDash: [4, 4], borderWidth: 1.5, pointRadius: 0, datalabels: { display: false } },
-            {
-              type: "line", label: "Rencana", data: planGpm, borderColor: "#e67e22", backgroundColor: "#e67e22", borderWidth: 2, pointRadius: 4,
-              datalabels: {
-                align: function(context) { return context.dataIndex === 4 ? 'bottom' : 'top'; },
-                anchor: 'end', color: "#e67e22", font: { size: 8, weight: "bold" },
-                formatter: value => Number(value).toFixed(1) + "%"
-              }
-            },
-            {
-              type: "line", label: "Realisasi", data: actGpm, borderColor: "#1e293b", backgroundColor: "#1e293b", borderWidth: 2, pointRadius: 4,
-              datalabels: {
-                align: function(context) { return context.dataIndex === 4 ? 'top' : 'bottom'; },
-                anchor: 'start', color: "#1e293b", font: { size: 8, weight: "bold" },
-                formatter: value => Number(value).toFixed(1) + "%"
-              }
-            }
+            { type: "line", label: "Target FY", data: shortMonths.map(() => financialData.targetGPM), borderColor: "#e67e22", borderDash: [4, 4], borderWidth: 1.5, pointRadius: 0, datalabels: { display: false } },
+            { type: "line", label: "Rencana", data: data.gpmPlan.slice(0, actualEndIndex + 1), borderColor: "#e67e22", borderWidth: 2, pointRadius: 4, datalabels: { align: "top", color: "#e67e22", font: { size: 8 }, formatter: v => Number(v).toFixed(1) + "%" } },
+            { type: "line", label: "Realisasi", data: data.gpmActual.slice(0, actualEndIndex + 1), borderColor: "#1e293b", borderWidth: 2, pointRadius: 4, datalabels: { align: "bottom", color: "#1e293b", font: { size: 8 }, formatter: v => Number(v).toFixed(1) + "%" } }
           ]
         },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              enabled: true,
-              callbacks: {
-                label: function(tooltipItem) {
-                  return tooltipItem.dataset.label + ': ' + Number(tooltipItem.raw).toFixed(2) + '%';
-                }
-              }
-            }
-          },
-          scales: {
-            x: { grid: { display: false }, ticks: { font: { size: 9 } } },
-            y: { min: 0, max: 100, ticks: { font: { size: 9 }, callback: value => value + "%" } }
-          }
-        }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 0, max: 100, ticks: { callback: v => v + "%" } } } }
+      });
+    }
+
+    function createSimpleBarChart(id, labels, planData, actData, actColor) {
+      destroyChart(id);
+      chartInstances[id] = new Chart(document.getElementById(id).getContext("2d"), {
+        data: {
+          labels,
+          datasets: [
+            { type: "bar", label: "Rencana", data: planData, backgroundColor: "#cbd5e1", barPercentage: 0.6, datalabels: { display: false } },
+            { type: "bar", label: "Realisasi", data: actData, backgroundColor: actColor, barPercentage: 0.6, datalabels: { align: "top", color: actColor, font: { size: 8, weight: "bold" }, formatter: v => formatNumber(v) } }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { min: 0 } } }
       });
     }
 
     function renderHeaderStatus() {
       const latestIndex = getLatestActualIndex();
       if (latestIndex < 0) return;
-
       const actualMonth = monthsList[latestIndex];
       const actualFull = getMonthFullName(actualMonth);
-      const nextIndex = latestIndex + 1;
-      const nextMonth = nextIndex < monthsList.length ? getMonthShortName(monthsList[nextIndex]) : null;
-
       setText("badge-realisasi-text", "Jan - " + actualFull + " " + financialData.year + " (Realisasi)");
-
-      if (nextMonth) {
-        setText("badge-prognosa-text", nextMonth + " - " + getMonthShortName(monthsList[monthsList.length - 1]) + " " + financialData.year + " (Prognosa)");
-      } else {
-        setText("badge-prognosa-text", "Full Year " + financialData.year + " (Realisasi)");
-      }
     }
 
-    function setText(id, value) {
-      const element = document.getElementById(id);
-      if (element) element.textContent = value;
-    }
-
-    function setBarHeight(id, value, maxValue) {
-      const element = document.getElementById(id);
-      if (!element) return;
-      if (!maxValue || maxValue <= 0) {
-        element.style.height = "0%";
-        return;
-      }
-      element.style.height = Math.max(0, Math.min(100, value / maxValue * 100)) + "%";
-    }
-
-    function getMonthShortName(month) {
-      const map = { Jan: "Jan", Feb: "Feb", Mar: "Mar", Apr: "Apr", May: "Mei", Jun: "Jun", Jul: "Jul", Aug: "Aug", Sep: "Sep", Oct: "Okt", Nov: "Nov", Dec: "Des" };
-      return map[month] || month;
-    }
-
-    function getMonthFullName(month) {
-      const map = { Jan: "Januari", Feb: "Februari", Mar: "Maret", Apr: "April", May: "Mei", Jun: "Juni", Jul: "Juli", Aug: "Agustus", Sep: "September", Oct: "Oktober", Nov: "November", Dec: "Desember" };
-      return map[month] || month;
-    }
+    function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+    function setBarHeight(id, val, max) { const el = document.getElementById(id); if (el) el.style.height = (max > 0 ? Math.max(0, Math.min(100, val / max * 100)) : 0) + "%"; }
+    function getMonthFullName(m) { const map = { Jan: "Januari", Feb: "Februari", Mar: "Maret", Apr: "April", May: "Mei", Jun: "Juni", Jul: "Juli", Aug: "Agustus", Sep: "September", Oct: "Oktober", Nov: "November", Dec: "Desember" }; return map[m] || m; }
 
     function renderAll() {
       renderHeaderStatus();
@@ -1397,77 +1100,10 @@
       renderDashboard3();
     }
 
-    window.addEventListener("storage", function(event) {
-      if (event.key === "financialData2026") {
-        financialData = loadFinancialData();
-        renderAll();
-      }
-    });
-
-    let lastStorageData = localStorage.getItem("financialData2026");
-    setInterval(function() {
-      const currentStorageData = localStorage.getItem("financialData2026");
-      if (currentStorageData !== lastStorageData) {
-        lastStorageData = currentStorageData;
-        financialData = loadFinancialData();
-        renderAll();
-      }
-    }, 1000);
-
-    renderAll();
-  </script>
-
-  <!-- SCRIPT OTOMATIS FORMAT INPUT RIBUAN -->
-  <script>
-    function formatRupiahAdmin(angka) {
-        let number_string = angka.toString().replace(/[^,\d]/g, ''),
-            split   = number_string.split(','),
-            sisa    = split[0].length % 3,
-            rupiah  = split[0].substr(0, sisa),
-            ribuan  = split[0].substr(sisa).match(/\d{3}/gi);
-
-        if (ribuan) {
-            let separator = sisa ? '.' : '';
-            rupiah += separator + ribuan.join('.');
-        }
-
-        rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
-        return rupiah;
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const inputs = document.querySelectorAll("input");
-        inputs.forEach(input => {
-            if (input.type === "number" || input.closest("table") || input.id.includes("plan") || input.id.includes("act") || input.name) {
-                input.type = "text";
-                if (input.value && !isNaN(input.value.replace(/\./g, ''))) {
-                    input.value = formatRupiahAdmin(input.value);
-                }
-            }
-        });
-    });
-
-    document.addEventListener('input', function (e) {
-        if (e.target && e.target.tagName === 'INPUT') {
-            if (e.target.type === 'number') {
-                e.target.type = 'text';
-            }
-            let val = e.target.value;
-            if (/^\d/.test(val.replace(/\./g, '')) || val === '') {
-                let cursorPosition = e.target.selectionStart;
-                let originalLength = e.target.value.length;
-                
-                e.target.value = formatRupiahAdmin(e.target.value);
-                
-                let newLength = e.target.value.length;
-                cursorPosition = cursorPosition + (newLength - originalLength);
-                try {
-                    e.target.setSelectionRange(cursorPosition, cursorPosition);
-                } catch(err) {}
-            }
-        }
+    // Jalankan listener saat halaman dimuat
+    window.addEventListener("DOMContentLoaded", () => {
+      initFirebaseListener();
     });
   </script>
-
 </body>
 </html>
