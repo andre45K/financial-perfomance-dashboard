@@ -78,7 +78,7 @@
     <div id="alertSuccess" class="alert-success"><i class="fa-solid fa-circle-check"></i> Data berhasil disimpan ke Firebase Firestore!</div>
 
     <div class="instruction-box">
-      <strong>Petunjuk:</strong> Perubahan data di sini akan langsung dikirim ke Cloud Database Firestore sehingga halaman utama akan otomatis memperbarui grafik secara realtime.
+      <strong>Petunjuk:</strong> Perubahan data di sini akan langsung dikirim ke Cloud Database Firestore sehingga perangkat lain maupun halaman utama akan otomatis memperbarui grafik secara realtime.
     </div>
 
     <!-- Navigation Tabs -->
@@ -284,7 +284,7 @@
         const revPlanEl = document.querySelector(`[name="revPlan_${m}"]`);
         const bppPlanEl = document.querySelector(`[name="bppPlan_${m}"]`);
         const revActEl = document.querySelector(`[name="revAct_${m}"]`);
-        const bppActEl = document.querySelector(`[name="bppAct_${m}"]`);
+        const bppActEl = document.querySelector(`[name="bppAct_${m}"]`); // Tangkap elemen Realisasi BPP
         const ncpPlanEl = document.querySelector(`[name="ncpPlan_${m}"]`);
         const ncpActEl = document.querySelector(`[name="ncpAct_${m}"]`);
 
@@ -292,9 +292,9 @@
 
         if (statusEl) currentData.months[m].status = statusEl.value;
         if (revPlanEl) currentData.months[m].revenuePlan = toNumber(revPlanEl.value);
-        if (bppPlanEl) currentData.months[m].bppPlan = toNumber(bppPlanEl.value); // PERBAIKAN: Menyimpan Rencana BPP
+        if (bppPlanEl) currentData.months[m].bppPlan = toNumber(bppPlanEl.value);
         if (revActEl) currentData.months[m].revenueActual = toNumber(revActEl.value);
-        if (bppActEl) currentData.months[m].bppActual = toNumber(bppActEl.value);
+        if (bppActEl) currentData.months[m].bppActual = toNumber(bppActEl.value); // Simpan Realisasi BPP
         
         if (ncpPlanEl) currentData.months[m].ncpPlan = toNumber(ncpPlanEl.value);
         if (ncpActEl) currentData.months[m].ncpActual = toNumber(ncpActEl.value);
