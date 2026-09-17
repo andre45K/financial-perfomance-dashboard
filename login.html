@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Input - Financial Performance Dashboard</title>
-  <!-- FontAwesome Icons -->
+  <title>Admin Input - Financial Dashboard 2026</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <!-- FIREBASE SDK (Modular v10) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
@@ -25,290 +24,313 @@
     const db = getFirestore(app);
 
     window.firebaseDB = db;
-    window.firebaseFns = { doc, getDoc, setDoc, onSnapshot };
+    window.firebaseFns = { doc, getDoc, setDoc };
   </script>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
     body { background-color: #060d1a; color: #ffffff; padding: 20px; font-size: 13px; }
-    
-    .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #1a2a40; padding-bottom: 12px; }
-    .title-area h1 { font-size: 18px; letter-spacing: 0.5px; color: #ffffff; text-transform: uppercase; font-weight: 800; display: flex; align-items: center; gap: 8px; }
-    .title-area p { color: #8ba0b8; font-size: 11px; margin-top: 2px; }
-    
-    .back-link { color: #ffffff; background: #1e293b; text-decoration: none; font-size: 12px; font-weight: bold; border: 1px solid #334155; padding: 6px 12px; border-radius: 6px; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
-    .back-link:hover { background: #334155; }
 
-    .notification { background: rgba(13, 148, 136, 0.15); border: 1px solid #0d9488; color: #2dd4bf; padding: 10px 14px; border-radius: 6px; margin-bottom: 20px; font-size: 12px; display: flex; align-items: center; gap: 10px; }
-
-    .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-    .tab-btn { background: #0f1926; color: #94a3b8; border: 1px solid #1e2d42; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; transition: 0.2s; }
-    .tab-btn.active { background: #2563eb; color: white; border-color: #2563eb; }
-
-    .table-container { background: #0f1926; border: 1px solid #1e2d42; border-radius: 8px; overflow-x: auto; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; }
-    th, td { border: 1px solid #1e2d42; padding: 8px 10px; }
-    th { background: #09121d; color: #cbd5e1; font-weight: bold; text-align: center; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; }
+    .modal-container { background: #0f1926; border: 1px solid #1e2d42; border-radius: 12px; padding: 24px; max-width: 1300px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e2d42; padding-bottom: 15px; margin-bottom: 20px; }
+    .modal-title { font-size: 18px; font-weight: 800; color: #3b82f6; display: flex; align-items: center; gap: 10px; }
+    .modal-desc { color: #94a3b8; font-size: 12px; margin-top: 4px; }
     
-    tr:nth-child(even) { background-color: #0b1420; }
-    td.row-label { font-weight: bold; color: #f8fafc; background: #09121d; text-align: center; width: 110px; }
-    
-    input, select { width: 100%; background: #060d1a; border: 1px solid #2a3d54; color: #ffffff; padding: 6px 8px; border-radius: 4px; font-size: 11px; text-align: right; }
-    select { text-align: center; cursor: pointer; }
-    input:focus, select:focus { outline: none; border-color: #3b82f6; background: #0b1420; }
+    .instruction-box { background: #132238; border-left: 4px solid #3b82f6; padding: 12px 15px; border-radius: 4px; margin-bottom: 20px; color: #cbd5e1; font-size: 12px; line-height: 1.5; }
 
-    .save-bar { display: flex; justify-content: flex-end; gap: 12px; background: #0f1926; padding: 15px 20px; border-radius: 8px; border: 1px solid #1e2d42; align-items: center; }
-    .btn-save { background: #16a34a; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-    .btn-save:hover { background: #15803d; }
-    .save-status { font-size: 11px; color: #22c55e; font-weight: bold; }
+    .tabs-nav { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #1e2d42; padding-bottom: 10px; }
+    .tab-btn { background: #132238; color: #94a3b8; border: 1px solid #2a3d54; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+    .tab-btn.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+
+    .admin-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 12px; }
+    .admin-table th, .admin-table td { border: 1px solid #1e2d42; padding: 8px 10px; text-align: center; }
+    .admin-table th { background: #09121d; color: #cbd5e1; font-weight: bold; text-transform: uppercase; font-size: 11px; }
+    .admin-table td.bulan-col { text-align: left; font-weight: bold; background: #09121d; color: #ffffff; }
+    .admin-table input, .admin-table select { width: 100%; background: #132238; border: 1px solid #2a3d54; color: white; padding: 6px 8px; border-radius: 4px; text-align: right; font-size: 12px; }
+    .admin-table select { text-align: left; cursor: pointer; }
+    .admin-table input:focus, .admin-table select:focus { border-color: #3b82f6; outline: none; background: #172a46; }
+
+    .readonly-val { font-weight: bold; color: #22c55e; }
+
+    .footer-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #1e2d42; padding-top: 20px; }
+    .btn { padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; border: none; text-decoration: none; }
+    .btn-primary { background: #2563eb; color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-danger { background: #dc2626; color: white; }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-secondary { background: #334155; color: white; }
+    .btn-secondary:hover { background: #475569; }
+
+    .alert-success { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; color: #22c55e; padding: 10px; border-radius: 6px; margin-bottom: 15px; display: none; text-align: center; font-weight: bold; }
   </style>
 </head>
-
 <body>
 
-  <div class="header-container">
-    <div class="title-area">
-      <h1><i class="fa-solid fa-pen-to-square"></i> ADMIN INPUT DATA KEUANGAN 2026</h1>
-      <p>Kelola dan perbarui data target rencana serta realisasi/prognosa keuangan secara real-time.</p>
+  <div class="modal-container">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title"><i class="fa-solid fa-pen-to-square"></i> ADMIN INPUT DATA KEUANGAN 2026</div>
+        <div class="modal-desc">Kelola dan perbarui data target rencana serta realisasi/prognosa untuk kedua dashboard secara terpisah.</div>
+      </div>
+      <a href="index.html" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</a>
     </div>
-    <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</a>
-  </div>
 
-  <div class="notification">
-    <i class="fa-solid fa-circle-info fa-lg"></i>
-    <span>Perubahan data di sini akan langsung dikirim ke Cloud Database Firestore sehingga halaman utama akan otomatis memperbarui grafik secara real-time.</span>
-  </div>
+    <div id="alertSuccess" class="alert-success"><i class="fa-solid fa-circle-check"></i> Data berhasil disimpan ke Firebase Firestore!</div>
 
-  <div class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab(1)" id="btn-tab-1"><i class="fa-solid fa-chart-line"></i> Dashboard 1: Pendapatan & BPP</button>
-    <button class="tab-btn" onclick="switchTab(2)" id="btn-tab-2"><i class="fa-solid fa-wallet"></i> Dashboard 2: NCP & Biaya Tidak Langsung</button>
-  </div>
+    <div class="instruction-box">
+      <strong>Petunjuk:</strong> Perubahan data di sini akan langsung dikirim ke Cloud Database Firestore[cite: 5] sehingga perangkat lain (Laptop B) maupun halaman utama akan otomatis memperbarui grafik secara realtime[cite: 6].
+    </div>
 
-  <!-- TAB 1 FORM -->
-  <div id="form-tab-1" class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>Bulan</th>
-          <th>Status</th>
-          <th>Rencana Pendapatan Usaha</th>
-          <th>Realisasi/Prognosa Pendapatan</th>
-          <th>Rencana Beban Pokok Pendapatan (BPP)</th>
-          <th>Realisasi/Prognosa Beban Pokok (BPP)</th>
-        </tr>
-      </thead>
-      <tbody id="tbody-tab-1">
-        <!-- Render otomatis via JS -->
-      </tbody>
-    </table>
-  </div>
+    <!-- Navigation Tabs -->
+    <div class="tabs-nav">
+      <button type="button" class="tab-btn active" onclick="switchTab('tab1', this)"><i class="fa-solid fa-chart-line"></i> Dashboard 1: Pendapatan & BPP</button>
+      <button type="button" class="tab-btn" onclick="switchTab('tab2', this)"><i class="fa-solid fa-coins"></i> Dashboard 2: NCP & Biaya Tidak Langsung</button>
+    </div>
 
-  <!-- TAB 2 FORM -->
-  <div id="form-tab-2" class="table-container" style="display: none;">
-    <table>
-      <thead>
-        <tr>
-          <th>Bulan</th>
-          <th>Status</th>
-          <th>Realisasi/Prognosa Non-Contributing Plant</th>
-          <th>Realisasi/Prognosa Biaya Tidak Langsung</th>
-          <th>Net Profit (Otomatis)</th>
-          <th>NPM (%) (Otomatis)</th>
-        </tr>
-      </thead>
-      <tbody id="tbody-tab-2">
-        <!-- Render otomatis via JS -->
-      </tbody>
-    </table>
-  </div>
+    <form id="adminForm">
+      <!-- TAB 1 -->
+      <div id="tab1" class="tab-content">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th style="width: 12%;">Bulan</th>
+              <th style="width: 13%;">Status</th>
+              <th style="width: 15%;">Rencana Pendapatan</th>
+              <th style="width: 15%;">Rencana BPP</th>
+              <th style="width: 15%;">Realisasi/Prognosa Pendapatan</th>
+              <th style="width: 15%;">Realisasi/Prognosa BPP</th>
+              <th style="width: 7%;">Gross Profit</th>
+              <th style="width: 8%;">GPM (%)</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyTab1"></tbody>
+        </table>
+      </div>
 
-  <div class="save-bar">
-    <span id="save-status" class="save-status"></span>
-    <button class="btn-save" onclick="saveDataToFirebase()"><i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan ke Database</button>
+      <!-- TAB 2 -->
+      <div id="tab2" class="tab-content" style="display: none;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th style="width: 12%;">Bulan</th>
+              <th style="width: 13%;">Status</th>
+              <th style="width: 15%;">Rencana Non-Contributing Plant</th>
+              <th style="width: 15%;">Rencana Biaya Tidak Langsung</th>
+              <th style="width: 15%;">Realisasi/Prognosa Non-Contributing Plant</th>
+              <th style="width: 15%;">Realisasi/Prognosa Biaya Tidak Langsung</th>
+              <th style="width: 7%;">Net Profit</th>
+              <th style="width: 8%;">NPM (%)</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyTab2"></tbody>
+        </table>
+      </div>
+
+      <div class="footer-actions">
+        <button type="button" class="btn btn-danger" onclick="resetDefaultData()"><i class="fa-solid fa-rotate-left"></i> Reset Data Awal</button>
+        <div style="display: flex; gap: 10px;">
+          <a href="index.html" class="btn btn-secondary">Tutup</a>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Simpan & Update Dashboard</button>
+        </div>
+      </div>
+    </form>
   </div>
 
   <script type="module">
     const monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    const monthNamesFull = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
     const defaultFinancialData = {
       year: 2026,
       targetGPM: 45.59,
       months: {
-        Jan: { revenuePlan: 554, revenueActual: 823, bppPlan: 195, bppActual: 647, gpPlan: 359, gpActual: 176, ncpPlan: 359, ncpActual: 176, status: "REALISASI" },
-        Feb: { revenuePlan: 554, revenueActual: 787, bppPlan: 195, bppActual: 632, gpPlan: 359, gpActual: 155, ncpPlan: 359, ncpActual: 155, status: "REALISASI" },
-        Mar: { revenuePlan: 449, revenueActual: 99,  bppPlan: 195, bppActual: 92,  gpPlan: 254, gpActual: 7,   ncpPlan: 254, ncpActual: 7,   status: "REALISASI" },
-        Apr: { revenuePlan: 380, revenueActual: 782, bppPlan: 165, bppActual: 680, gpPlan: 215, gpActual: 102, ncpPlan: 215, ncpActual: 102, status: "REALISASI" },
-        May: { revenuePlan: 502, revenueActual: 688, bppPlan: 308, bppActual: 404, gpPlan: 194, gpActual: 284, ncpPlan: 194, ncpActual: 284, status: "REALISASI" },
-        Jun: { revenuePlan: 879, revenueActual: 1117, bppPlan: 495, bppActual: 913, gpPlan: 384, gpActual: 204, ncpPlan: 384, ncpActual: 204, status: "REALISASI" },
-        Jul: { revenuePlan: 927, revenueActual: 1668, bppPlan: 531, bppActual: 1342, gpPlan: 396, gpActual: 326, ncpPlan: 396, ncpActual: 326, status: "REALISASI" },
-        Aug: { revenuePlan: 1042, revenueActual: 1703, bppPlan: 613, bppActual: 1164, gpPlan: 429, gpActual: 539, ncpPlan: 429, ncpActual: 539, status: "REALISASI" },
-        Sep: { revenuePlan: 2196, revenueActual: 1786, bppPlan: 1218, bppActual: 1340, gpPlan: 978, gpActual: 446, ncpPlan: 978, ncpActual: 446, status: "REALISASI" },
-        Oct: { revenuePlan: 2196, revenueActual: 1670, bppPlan: 1218, bppActual: 1280, gpPlan: 978, gpActual: 390, ncpPlan: 978, ncpActual: 390, status: "PROGNOSA" },
-        Nov: { revenuePlan: 2145, revenueActual: 1393, bppPlan: 1198, bppActual: 1088, gpPlan: 947, gpActual: 305, ncpPlan: 947, ncpActual: 305, status: "PROGNOSA" },
-        Dec: { revenuePlan: 1678, revenueActual: 1393, bppPlan: 1013, bppActual: 1088, gpPlan: 665, gpActual: 305, ncpPlan: 665, ncpActual: 305, status: "PROGNOSA" }
+        Jan: { revenuePlan: 554, revenueActual: 823, bppPlan: 195, bppActual: 647, gpPlan: 359, gpActual: 176, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Feb: { revenuePlan: 554, revenueActual: 787, bppPlan: 195, bppActual: 632, gpPlan: 359, gpActual: 155, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Mar: { revenuePlan: 449, revenueActual: 99,  bppPlan: 195, bppActual: 92,  gpPlan: 254, gpActual: 7,   ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Apr: { revenuePlan: 380, revenueActual: 782, bppPlan: 165, bppActual: 680, gpPlan: 215, gpActual: 102, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        May: { revenuePlan: 502, revenueActual: 688, bppPlan: 308, bppActual: 404, gpPlan: 194, gpActual: 284, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Jun: { revenuePlan: 879, revenueActual: 1117, bppPlan: 495, bppActual: 913, gpPlan: 384, gpActual: 204, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Jul: { revenuePlan: 927, revenueActual: 1668, bppPlan: 531, bppActual: 1342, gpPlan: 396, gpActual: 326, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Aug: { revenuePlan: 1042, revenueActual: 1703, bppPlan: 613, bppActual: 1164, gpPlan: 429, gpActual: 539, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Sep: { revenuePlan: 2196, revenueActual: 1786, bppPlan: 1218, bppActual: 1340, gpPlan: 978, gpActual: 446, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Oct: { revenuePlan: 2196, revenueActual: 1670, bppPlan: 1218, bppActual: 1280, gpPlan: 978, gpActual: 390, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" },
+        Nov: { revenuePlan: 2145, revenueActual: 1393, bppPlan: 1198, bppActual: 1088, gpPlan: 947, gpActual: 305, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" },
+        Dec: { revenuePlan: 1678, revenueActual: 1393, bppPlan: 1013, bppActual: 1088, gpPlan: 665, gpActual: 305, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" }
       }
     };
 
-    let workingData = structuredClone(defaultFinancialData);
+    let currentData = structuredClone(defaultFinancialData);
 
-    window.switchTab = function(tabNum) {
-      document.getElementById("form-tab-1").style.display = tabNum === 1 ? "block" : "none";
-      document.getElementById("form-tab-2").style.display = tabNum === 2 ? "block" : "none";
-      document.getElementById("btn-tab-1").className = tabNum === 1 ? "tab-btn active" : "tab-btn";
-      document.getElementById("btn-tab-2").className = tabNum === 2 ? "tab-btn active" : "tab-btn";
-    }
-
-    function initAdminListener() {
-      const checkInterval = setInterval(() => {
+    async function loadDataFromFirestore() {
+      const checkInterval = setInterval(async () => {
         if (window.firebaseDB && window.firebaseFns) {
           clearInterval(checkInterval);
           const { doc, getDoc, setDoc } = window.firebaseFns;
           const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
-
-          getDoc(docRef).then((docSnap) => {
-            if (docSnap.exists()) {
-              workingData = normalizeData(docSnap.data());
-            } else {
-              setDoc(docRef, defaultFinancialData);
-              workingData = structuredClone(defaultFinancialData);
-            }
-            renderAdminTables();
-          }).catch(err => {
-            console.error("Gagal memuat data admin:", err);
-            renderAdminTables();
-          });
+          const docSnap = await getDoc(docRef);
+          
+          if (docSnap.exists()) {
+            currentData = docSnap.data();
+          } else {
+            await setDoc(docRef, defaultFinancialData);
+            currentData = structuredClone(defaultFinancialData);
+          }
+          renderTableRows();
         }
       }, 100);
     }
 
-    function normalizeData(data) {
-      let result = structuredClone(defaultFinancialData);
-      if (data && data.months) {
-        if (data.targetGPM) result.targetGPM = Number(data.targetGPM);
-        monthsList.forEach(m => {
-          if (data.months[m]) {
-            let src = data.months[m];
-            result.months[m].revenuePlan = src.revenuePlan ?? result.months[m].revenuePlan;
-            result.months[m].revenueActual = src.revenueActual ?? result.months[m].revenueActual;
-            result.months[m].bppPlan = src.bppPlan ?? result.months[m].bppPlan;
-            result.months[m].bppActual = src.bppActual ?? result.months[m].bppActual;
-            result.months[m].ncpActual = src.ncpActual ?? result.months[m].ncpActual;
-            result.months[m].status = src.status ?? result.months[m].status;
-          }
-        });
-      }
-      return result;
+    window.switchTab = function(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).style.display = 'block';
+      btn.classList.add('active');
+    };
+
+    function formatNumber(num) { return Number(num || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); }
+    function toNumber(val) {
+      if (!val) return 0;
+      let str = String(val).replace(/\./g, '').replace(',', '.');
+      let num = Number(str);
+      return isNaN(num) ? 0 : num;
     }
 
-    function renderAdminTables() {
-      const tbody1 = document.getElementById("tbody-tab-1");
-      const tbody2 = document.getElementById("tbody-tab-2");
-      let html1 = "";
-      let html2 = "";
-
+    function renderTableRows() {
+      let htmlTab1 = "", htmlTab2 = "";
       monthsList.forEach((m, idx) => {
-        let item = workingData.months[m];
-        let revPlan = item.revenuePlan || 0;
-        let revAct = item.revenueActual || 0;
-        let bppPlan = item.bppPlan || 0;
-        let bppAct = item.bppActual || 0;
-        let ncpAct = item.ncpActual || 0;
-        let status = item.status || "PROGNOSA";
+        const item = currentData.months[m] || { revenuePlan: 0, revenueActual: 0, bppPlan: 0, bppActual: 0, status: "PROGNOSA" };
+        const statusSelected = item.status === "REALISASI" ? "REALISASI" : "PROGNOSA";
+        
+        const revPlan = item.revenuePlan, bppPlan = item.bppPlan, revAct = item.revenueActual, bppAct = item.bppActual;
+        const gpActTab1 = revAct - bppAct;
+        const gpmActTab1 = revAct > 0 ? (gpActTab1 / revAct * 100).toFixed(2) + "%" : "0,00%";
 
-        let gpAct = revAct - bppAct;
-        let npAct = gpAct - ncpAct;
-        let npmAct = revAct > 0 ? (npAct / revAct * 100) : 0;
+        const gpPlan = item.gpPlan !== undefined ? item.gpPlan : (revPlan - bppPlan);
+        const gpAct = item.gpActual !== undefined ? item.gpActual : gpActTab1;
+        const ncpPlan = item.ncpPlan || 0, ncpAct = item.ncpActual || 0;
+        const npAct = gpAct - ncpAct;
+        const npmAct = revAct > 0 ? (npAct / revAct * 100).toFixed(2) + "%" : "0,00%";
 
-        html1 += `
+        htmlTab1 += `
           <tr>
-            <td class="row-label">${monthNames[idx]}</td>
+            <td class="bulan-col">${monthNamesFull[idx]}</td>
             <td>
-              <select id="status_${m}" onchange="updateVal('${m}', 'status', this.value)">
-                <option value="REALISASI" ${status === "REALISASI" ? "selected" : ""}>REALISASI</option>
-                <option value="PROGNOSA" ${status === "PROGNOSA" ? "selected" : ""}>PROGNOSA</option>
+              <select name="status_${m}" onchange="syncStatus('${m}', this.value, 1)">
+                <option value="REALISASI" ${statusSelected === "REALISASI" ? "selected" : ""}>REALISASI</option>
+                <option value="PROGNOSA" ${statusSelected === "PROGNOSA" ? "selected" : ""}>PROGNOSA</option>
               </select>
             </td>
-            <td><input type="number" step="any" id="revPlan_${m}" value="${revPlan}" oninput="updateVal('${m}', 'revenuePlan', this.value)"></td>
-            <td><input type="number" step="any" id="revAct_${m}" value="${revAct}" oninput="updateVal('${m}', 'revenueActual', this.value)"></td>
-            <td><input type="number" step="any" id="bppPlan_${m}" value="${bppPlan}" oninput="updateVal('${m}', 'bppPlan', this.value)"></td>
-            <td><input type="number" step="any" id="bppAct_${m}" value="${bppAct}" oninput="updateVal('${m}', 'bppActual', this.value)"></td>
+            <td><input type="text" name="revPlan_${m}" value="${formatNumber(revPlan)}" oninput="formatInput(this)"></td>
+            <td><input type="text" name="bppPlan_${m}" value="${formatNumber(bppPlan)}" oninput="formatInput(this)"></td>
+            <td><input type="text" name="revAct_${m}" value="${formatNumber(revAct)}" oninput="formatInput(this)"></td>
+            <td><input type="text" name="bppAct_${m}" value="${formatNumber(bppAct)}" oninput="formatInput(this)"></td>
+            <td class="readonly-val">${formatNumber(gpActTab1)}</td>
+            <td class="readonly-val">${gpmActTab1}</td>
           </tr>
         `;
 
-        html2 += `
+        htmlTab2 += `
           <tr>
-            <td class="row-label">${monthNames[idx]}</td>
-            <td style="text-align:center; font-weight:bold; color:${status==='REALISASI'?'#3b82f6':'#d97706'}">${status}</td>
-            <td><input type="number" step="any" id="ncpAct_${m}" value="${ncpAct}" oninput="updateVal('${m}', 'ncpActual', this.value)"></td>
-            <td><input type="number" step="any" id="ncpAct_btl_${m}" value="${ncpAct}" oninput="updateVal('${m}', 'ncpActual', this.value)"></td>
-            <td style="text-align:right; font-weight:bold;" id="np_${m}">${npAct.toLocaleString('id-ID', {maximumFractionDigits:2})}</td>
-            <td style="text-align:right; font-weight:bold; color:${npmAct>=0?'#22c55e':'#ef4444'}" id="npm_${m}">${npmAct.toFixed(2)}%</td>
+            <td class="bulan-col">${monthNamesFull[idx]}</td>
+            <td>
+              <select name="status2_${m}" onchange="syncStatus('${m}', this.value, 2)">
+                <option value="REALISASI" ${statusSelected === "REALISASI" ? "selected" : ""}>REALISASI</option>
+                <option value="PROGNOSA" ${statusSelected === "PROGNOSA" ? "selected" : ""}>PROGNOSA</option>
+              </select>
+            </td>
+            <td><input type="text" name="gpPlan_${m}" value="${formatNumber(gpPlan)}" oninput="formatInput(this)"></td>
+            <td><input type="text" name="ncpPlan_${m}" value="${formatNumber(ncpPlan)}" oninput="formatInput(this)"></td>
+            <td><input type="text" name="gpAct_${m}" value="${formatNumber(gpAct)}" oninput="formatInput(this)"></td>
+            <td><input type="text" name="ncpAct_${m}" value="${formatNumber(ncpAct)}" oninput="formatInput(this)"></td>
+            <td class="readonly-val">${formatNumber(npAct)}</td>
+            <td class="readonly-val">${npmAct}</td>
           </tr>
         `;
       });
 
-      tbody1.innerHTML = html1;
-      tbody2.innerHTML = html2;
+      document.getElementById("tbodyTab1").innerHTML = htmlTab1;
+      document.getElementById("tbodyTab2").innerHTML = htmlTab2;
     }
 
-    window.updateVal = function(monthKey, field, val) {
-      if (field === 'status') {
-        workingData.months[monthKey].status = val;
-        renderAdminTables();
-        return;
-      }
-
-      let num = parseFloat(val);
-      if (isNaN(num)) num = 0;
-
-      if (field === 'ncpActual') {
-        workingData.months[monthKey].ncpActual = num;
-        let item = workingData.months[monthKey];
-        let gpAct = (item.revenueActual || 0) - (item.bppActual || 0);
-        let npAct = gpAct - num;
-        let npmAct = (item.revenueActual || 0) > 0 ? (npAct / item.revenueActual * 100) : 0;
-
-        let npEl = document.getElementById(`np_${monthKey}`);
-        let npmEl = document.getElementById(`npm_${monthKey}`);
-        if (npEl) npEl.textContent = npAct.toLocaleString('id-ID', {maximumFractionDigits:2});
-        if (npmEl) {
-          npmEl.textContent = npmAct.toFixed(2) + "%";
-          npmEl.style.color = npmAct >= 0 ? '#22c55e' : '#ef4444';
-        }
+    window.syncStatus = function(month, val, sourceTab) {
+      if (sourceTab === 1) {
+        const sel2 = document.querySelector(`[name="status2_${month}"]`);
+        if (sel2) sel2.value = val;
       } else {
-        workingData.months[monthKey][field] = num;
+        const sel1 = document.querySelector(`[name="status_${month}"]`);
+        if (sel1) sel1.value = val;
       }
-    }
+    };
 
-    window.saveDataToFirebase = async function() {
-      const statusEl = document.getElementById("save-status");
-      statusEl.textContent = "Menyimpan ke Cloud...";
+    window.formatInput = function(el) {
+      let val = el.value.replace(/[^,\d]/g, '');
+      let parts = val.split(',');
+      let sisa = parts[0].length % 3;
+      let rupiah = parts[0].substr(0, sisa);
+      let ribuan = parts[0].substr(sisa).match(/\d{3}/g);
+      if (ribuan) {
+        let separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+      }
+      el.value = parts[1] !== undefined ? rupiah + ',' + parts[1] : rupiah;
+    };
 
-      try {
+    document.getElementById("adminForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      
+      monthsList.forEach(m => {
+        const statusEl = document.querySelector(`[name="status_${m}"]`) || document.querySelector(`[name="status2_${m}"]`);
+        const revPlanEl = document.querySelector(`[name="revPlan_${m}"]`);
+        const bppPlanEl = document.querySelector(`[name="bppPlan_${m}"]`);
+        const revActEl = document.querySelector(`[name="revAct_${m}"]`);
+        const bppActEl = document.querySelector(`[name="bppAct_${m}"]`);
+        const gpPlanEl = document.querySelector(`[name="gpPlan_${m}"]`);
+        const ncpPlanEl = document.querySelector(`[name="ncpPlan_${m}"]`);
+        const gpActEl = document.querySelector(`[name="gpAct_${m}"]`);
+        const ncpActEl = document.querySelector(`[name="ncpAct_${m}"]`);
+
+        if (!currentData.months[m]) currentData.months[m] = {};
+
+        if (statusEl) currentData.months[m].status = statusEl.value;
+        if (revPlanEl) currentData.months[m].revenuePlan = toNumber(revPlanEl.value);
+        if (bppPlanEl) currentData.months[m].bppPlan = toNumber(bppPlanEl.value);
+        if (revActEl) currentData.months[m].revenueActual = toNumber(revActEl.value);
+        if (bppActEl) currentData.months[m].bppActual = toNumber(bppActEl.value);
+        if (gpPlanEl) currentData.months[m].gpPlan = toNumber(gpPlanEl.value);
+        if (ncpPlanEl) currentData.months[m].ncpPlan = toNumber(ncpPlanEl.value);
+        if (gpActEl) currentData.months[m].gpActual = toNumber(gpActEl.value);
+        if (ncpActEl) currentData.months[m].ncpActual = toNumber(ncpActEl.value);
+      });
+
+      if (window.firebaseDB && window.firebaseFns) {
         const { doc, setDoc } = window.firebaseFns;
         const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
-        
-        monthsList.forEach(m => {
-          let item = workingData.months[m];
-          item.gpPlan = (item.revenuePlan || 0) - (item.bppPlan || 0);
-          item.gpAct = (item.revenueActual || 0) - (item.bppActual || 0);
-          item.ncpPlan = item.gpPlan;
-        });
-
-        await setDoc(docRef, workingData);
-        statusEl.textContent = "✓ Berhasil disimpan!";
-        setTimeout(() => { statusEl.textContent = ""; }, 3000);
-      } catch (err) {
-        console.error("Gagal menyimpan:", err);
-        statusEl.textContent = "Gagal menyimpan!";
+        await setDoc(docRef, currentData);
       }
-    }
+
+      const alertBox = document.getElementById("alertSuccess");
+      alertBox.style.display = "block";
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      setTimeout(() => { alertBox.style.display = "none"; }, 2500);
+    });
+
+    window.resetDefaultData = async function() {
+      if (confirm("Apakah Anda yakin ingin mereset seluruh data kembali ke pengaturan awal?")) {
+        currentData = structuredClone(defaultFinancialData);
+        if (window.firebaseDB && window.firebaseFns) {
+          const { doc, setDoc } = window.firebaseFns;
+          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+          await setDoc(docRef, currentData);
+        }
+        renderTableRows();
+        alert("Data berhasil direset ke awal!");
+      }
+    };
 
     window.addEventListener("DOMContentLoaded", () => {
-      initAdminListener();
+      loadDataFromFirestore();
     });
   </script>
-
 </body>
 </html>
