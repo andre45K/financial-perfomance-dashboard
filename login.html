@@ -78,7 +78,7 @@
     <div id="alertSuccess" class="alert-success"><i class="fa-solid fa-circle-check"></i> Data berhasil disimpan ke Firebase Firestore!</div>
 
     <div class="instruction-box">
-      <strong>Petunjuk:</strong> Perubahan data di sini akan langsung dikirim ke Cloud Database Firestore[cite: 5] sehingga perangkat lain (Laptop B) maupun halaman utama akan otomatis memperbarui grafik secara realtime[cite: 6].
+      <strong>Petunjuk:</strong> Perubahan data di sini akan langsung dikirim ke Cloud Database Firestore[cite: 2] sehingga perangkat lain maupun halaman utama akan otomatis memperbarui grafik secara realtime[cite: 2].
     </div>
 
     <!-- Navigation Tabs -->
@@ -94,13 +94,11 @@
           <thead>
             <tr>
               <th style="width: 12%;">Bulan</th>
-              <th style="width: 13%;">Status</th>
-              <th style="width: 15%;">Rencana Pendapatan</th>
-              <th style="width: 15%;">Rencana BPP</th>
-              <th style="width: 15%;">Realisasi/Prognosa Pendapatan</th>
-              <th style="width: 15%;">Realisasi/Prognosa BPP</th>
-              <th style="width: 7%;">Gross Profit</th>
-              <th style="width: 8%;">GPM (%)</th>
+              <th style="width: 15%;">Status</th>
+              <th style="width: 18%;">Rencana Pendapatan</th>
+              <th style="width: 18%;">Rencana BPP</th>
+              <th style="width: 18%;">Realisasi/Prognosa Pendapatan</th>
+              <th style="width: 19%;">Realisasi/Prognosa BPP</th>
             </tr>
           </thead>
           <tbody id="tbodyTab1"></tbody>
@@ -112,14 +110,12 @@
         <table class="admin-table">
           <thead>
             <tr>
-              <th style="width: 12%;">Bulan</th>
-              <th style="width: 13%;">Status</th>
-              <th style="width: 15%;">Rencana Non-Contributing Plant</th>
-              <th style="width: 15%;">Rencana Biaya Tidak Langsung</th>
-              <th style="width: 15%;">Realisasi/Prognosa Non-Contributing Plant</th>
-              <th style="width: 15%;">Realisasi/Prognosa Biaya Tidak Langsung</th>
-              <th style="width: 7%;">Net Profit</th>
-              <th style="width: 8%;">NPM (%)</th>
+              <th style="width: 14%;">Bulan</th>
+              <th style="width: 15%;">Status</th>
+              <th style="width: 25%;">Realisasi/Prognosa Non-Contributing Plant</th>
+              <th style="width: 25%;">Realisasi/Prognosa Biaya Tidak Langsung</th>
+              <th style="width: 10%;">Net Profit</th>
+              <th style="width: 11%;">NPM (%)</th>
             </tr>
           </thead>
           <tbody id="tbodyTab2"></tbody>
@@ -144,18 +140,18 @@
       year: 2026,
       targetGPM: 45.59,
       months: {
-        Jan: { revenuePlan: 554, revenueActual: 823, bppPlan: 195, bppActual: 647, gpPlan: 359, gpActual: 176, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Feb: { revenuePlan: 554, revenueActual: 787, bppPlan: 195, bppActual: 632, gpPlan: 359, gpActual: 155, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Mar: { revenuePlan: 449, revenueActual: 99,  bppPlan: 195, bppActual: 92,  gpPlan: 254, gpActual: 7,   ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Apr: { revenuePlan: 380, revenueActual: 782, bppPlan: 165, bppActual: 680, gpPlan: 215, gpActual: 102, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        May: { revenuePlan: 502, revenueActual: 688, bppPlan: 308, bppActual: 404, gpPlan: 194, gpActual: 284, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Jun: { revenuePlan: 879, revenueActual: 1117, bppPlan: 495, bppActual: 913, gpPlan: 384, gpActual: 204, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Jul: { revenuePlan: 927, revenueActual: 1668, bppPlan: 531, bppActual: 1342, gpPlan: 396, gpActual: 326, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Aug: { revenuePlan: 1042, revenueActual: 1703, bppPlan: 613, bppActual: 1164, gpPlan: 429, gpActual: 539, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Sep: { revenuePlan: 2196, revenueActual: 1786, bppPlan: 1218, bppActual: 1340, gpPlan: 978, gpActual: 446, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Oct: { revenuePlan: 2196, revenueActual: 1670, bppPlan: 1218, bppActual: 1280, gpPlan: 978, gpActual: 390, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" },
-        Nov: { revenuePlan: 2145, revenueActual: 1393, bppPlan: 1198, bppActual: 1088, gpPlan: 947, gpActual: 305, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" },
-        Dec: { revenuePlan: 1678, revenueActual: 1393, bppPlan: 1013, bppActual: 1088, gpPlan: 665, gpActual: 305, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" }
+        Jan: { revenuePlan: 554, revenueActual: 823, bppPlan: 195, bppActual: 647, gpPlan: 359, gpActual: 176, ncpPlan: 359, ncpActual: 176, btlActual: 176, status: "REALISASI" },
+        Feb: { revenuePlan: 554, revenueActual: 787, bppPlan: 195, bppActual: 632, gpPlan: 359, gpActual: 155, ncpPlan: 359, ncpActual: 155, btlActual: 155, status: "REALISASI" },
+        Mar: { revenuePlan: 449, revenueActual: 99,  bppPlan: 195, bppActual: 92,  gpPlan: 254, gpActual: 7,   ncpPlan: 254, ncpActual: 7,   btlActual: 7,   status: "REALISASI" },
+        Apr: { revenuePlan: 380, revenueActual: 782, bppPlan: 165, bppActual: 680, gpPlan: 215, gpActual: 102, ncpPlan: 215, ncpActual: 102, btlActual: 102, status: "REALISASI" },
+        May: { revenuePlan: 502, revenueActual: 688, bppPlan: 308, bppActual: 404, gpPlan: 194, gpActual: 284, ncpPlan: 194, ncpActual: 284, btlActual: 284, status: "REALISASI" },
+        Jun: { revenuePlan: 879, revenueActual: 1117, bppPlan: 495, bppActual: 913, gpPlan: 384, gpActual: 204, ncpPlan: 384, ncpActual: 204, btlActual: 204, status: "REALISASI" },
+        Jul: { revenuePlan: 927, revenueActual: 1668, bppPlan: 531, bppActual: 1342, gpPlan: 396, gpActual: 326, ncpPlan: 396, ncpActual: 326, btlActual: 326, status: "REALISASI" },
+        Aug: { revenuePlan: 1042, revenueActual: 1703, bppPlan: 613, bppActual: 1164, gpPlan: 429, gpActual: 539, ncpPlan: 429, ncpActual: 539, btlActual: 539, status: "REALISASI" },
+        Sep: { revenuePlan: 2196, revenueActual: 1786, bppPlan: 1218, bppActual: 1340, gpPlan: 978, gpActual: 446, ncpPlan: 978, ncpActual: 446, btlActual: 446, status: "REALISASI" },
+        Oct: { revenuePlan: 2196, revenueActual: 1670, bppPlan: 1218, bppActual: 1280, gpPlan: 978, gpActual: 390, ncpPlan: 978, ncpActual: 390, btlActual: 390, status: "PROGNOSA" },
+        Nov: { revenuePlan: 2145, revenueActual: 1393, bppPlan: 1198, bppActual: 1088, gpPlan: 947, gpActual: 305, ncpPlan: 947, ncpActual: 305, btlActual: 305, status: "PROGNOSA" },
+        Dec: { revenuePlan: 1678, revenueActual: 1393, bppPlan: 1013, bppActual: 1088, gpPlan: 665, gpActual: 305, ncpPlan: 665, ncpActual: 305, btlActual: 305, status: "PROGNOSA" }
       }
     };
 
@@ -198,18 +194,19 @@
     function renderTableRows() {
       let htmlTab1 = "", htmlTab2 = "";
       monthsList.forEach((m, idx) => {
-        const item = currentData.months[m] || { revenuePlan: 0, revenueActual: 0, bppPlan: 0, bppActual: 0, status: "PROGNOSA" };
+        const item = currentData.months[m] || {};
         const statusSelected = item.status === "REALISASI" ? "REALISASI" : "PROGNOSA";
         
-        const revPlan = item.revenuePlan, bppPlan = item.bppPlan, revAct = item.revenueActual, bppAct = item.bppActual;
-        const gpActTab1 = revAct - bppAct;
-        const gpmActTab1 = revAct > 0 ? (gpActTab1 / revAct * 100).toFixed(2) + "%" : "0,00%";
+        const revPlan = item.revenuePlan || 0;
+        const bppPlan = item.bppPlan || 0;
+        const revAct = item.revenueActual || 0;
+        const bppAct = item.bppActual || 0;
+        const ncpAct = item.ncpActual || 0;
+        const btlAct = item.btlActual !== undefined ? item.btlActual : ncpAct;
 
-        const gpPlan = item.gpPlan !== undefined ? item.gpPlan : (revPlan - bppPlan);
-        const gpAct = item.gpActual !== undefined ? item.gpActual : gpActTab1;
-        const ncpPlan = item.ncpPlan || 0, ncpAct = item.ncpActual || 0;
-        const npAct = gpAct - ncpAct;
-        const npmAct = revAct > 0 ? (npAct / revAct * 100).toFixed(2) + "%" : "0,00%";
+        const gpActTab1 = revAct - bppAct;
+        const npAct = gpActTab1 - ncpAct;
+        const npmAct = revAct > 0 ? (npAct / revAct * 100) : 0;
 
         htmlTab1 += `
           <tr>
@@ -224,8 +221,6 @@
             <td><input type="text" name="bppPlan_${m}" value="${formatNumber(bppPlan)}" oninput="formatInput(this)"></td>
             <td><input type="text" name="revAct_${m}" value="${formatNumber(revAct)}" oninput="formatInput(this)"></td>
             <td><input type="text" name="bppAct_${m}" value="${formatNumber(bppAct)}" oninput="formatInput(this)"></td>
-            <td class="readonly-val">${formatNumber(gpActTab1)}</td>
-            <td class="readonly-val">${gpmActTab1}</td>
           </tr>
         `;
 
@@ -238,12 +233,10 @@
                 <option value="PROGNOSA" ${statusSelected === "PROGNOSA" ? "selected" : ""}>PROGNOSA</option>
               </select>
             </td>
-            <td><input type="text" name="gpPlan_${m}" value="${formatNumber(gpPlan)}" oninput="formatInput(this)"></td>
-            <td><input type="text" name="ncpPlan_${m}" value="${formatNumber(ncpPlan)}" oninput="formatInput(this)"></td>
-            <td><input type="text" name="gpAct_${m}" value="${formatNumber(gpAct)}" oninput="formatInput(this)"></td>
-            <td><input type="text" name="ncpAct_${m}" value="${formatNumber(ncpAct)}" oninput="formatInput(this)"></td>
-            <td class="readonly-val">${formatNumber(npAct)}</td>
-            <td class="readonly-val">${npmAct}</td>
+            <td><input type="text" name="ncpAct_${m}" value="${formatNumber(ncpAct)}" oninput="formatInput(this); updateLiveCalc('${m}')"></td>
+            <td><input type="text" name="btlAct_${m}" value="${formatNumber(btlAct)}" oninput="formatInput(this); updateLiveCalc('${m}')"></td>
+            <td class="readonly-val" id="np_disp_${m}">${formatNumber(npAct)}</td>
+            <td class="readonly-val" id="npm_disp_${m}">${npmAct.toFixed(2)}%</td>
           </tr>
         `;
       });
@@ -260,6 +253,20 @@
         const sel1 = document.querySelector(`[name="status_${month}"]`);
         if (sel1) sel1.value = val;
       }
+    };
+
+    window.updateLiveCalc = function(m) {
+      const item = currentData.months[m] || {};
+      const revAct = item.revenueActual || 0;
+      const bppAct = item.bppActual || 0;
+      const ncpVal = toNumber(document.querySelector(`[name="ncpAct_${m}"]`).value);
+      
+      const gpAct = revAct - bppAct;
+      const npAct = gpAct - ncpVal;
+      const npmAct = revAct > 0 ? (npAct / revAct * 100) : 0;
+
+      document.getElementById(`np_disp_${m}`).textContent = formatNumber(npAct);
+      document.getElementById(`npm_disp_${m}`).textContent = npmAct.toFixed(2) + "%";
     };
 
     window.formatInput = function(el) {
@@ -284,10 +291,8 @@
         const bppPlanEl = document.querySelector(`[name="bppPlan_${m}"]`);
         const revActEl = document.querySelector(`[name="revAct_${m}"]`);
         const bppActEl = document.querySelector(`[name="bppAct_${m}"]`);
-        const gpPlanEl = document.querySelector(`[name="gpPlan_${m}"]`);
-        const ncpPlanEl = document.querySelector(`[name="ncpPlan_${m}"]`);
-        const gpActEl = document.querySelector(`[name="gpAct_${m}"]`);
         const ncpActEl = document.querySelector(`[name="ncpAct_${m}"]`);
+        const btlActEl = document.querySelector(`[name="btlAct_${m}"]`);
 
         if (!currentData.months[m]) currentData.months[m] = {};
 
@@ -296,10 +301,8 @@
         if (bppPlanEl) currentData.months[m].bppPlan = toNumber(bppPlanEl.value);
         if (revActEl) currentData.months[m].revenueActual = toNumber(revActEl.value);
         if (bppActEl) currentData.months[m].bppActual = toNumber(bppActEl.value);
-        if (gpPlanEl) currentData.months[m].gpPlan = toNumber(gpPlanEl.value);
-        if (ncpPlanEl) currentData.months[m].ncpPlan = toNumber(ncpPlanEl.value);
-        if (gpActEl) currentData.months[m].gpActual = toNumber(gpActEl.value);
         if (ncpActEl) currentData.months[m].ncpActual = toNumber(ncpActEl.value);
+        if (btlActEl) currentData.months[m].btlActual = toNumber(btlActEl.value);
       });
 
       if (window.firebaseDB && window.firebaseFns) {
