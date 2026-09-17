@@ -72,7 +72,6 @@
     .box-blue { width: 12px; height: 12px; background: #0056b3; }
     .box-orange { width: 12px; height: 12px; background: #d97706; }
 
-    /* DASHBOARD 2 VARIANT STYLING */
     .dashboard-divider { margin: 25px 0 15px 0; border: none; }
 
     /* DASHBOARD 3 (LIGHT THEME) */
@@ -256,9 +255,34 @@
   </div>
 
 
+  <!-- TABEL UTAMA DARK 1 -->
+  <div class="table-container">
+    <table id="main-table">
+      <thead>
+        <tr>
+          <th rowspan="2" class="th-header-main" style="width: 14%;">URAIAN</th>
+          <th colspan="10" id="th-realisasi-hdr" class="th-realisasi">JAN - SEP 2026 (REALISASI)</th>
+          <th colspan="4" id="th-prognosa-hdr" class="th-prognosa">OKT - DES 2026 (PROGNOSA)</th>
+          <th colspan="3" class="th-total">TOTAL 2026</th>
+        </tr>
+        <tr id="main-table-subheaders">
+          <th>Jan-26</th><th>Feb-26</th><th>Mar-26</th><th>Apr-26</th><th>Mei-26</th><th>Jun-26</th><th>Jul-26</th><th>Aug-26</th><th>Sep-26</th>
+          <th class="th-realisasi">TOTAL</th>
+          <th>Okt-26</th><th>Nov-26</th><th>Des-26</th>
+          <th class="th-prognosa">TOTAL</th>
+          <th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Baris tabel dirender otomatis oleh JS -->
+      </tbody>
+    </table>
+  </div>
+
+
   <!-- DASHBOARD 2: NEW ALTERNATE ORDER -->
   <hr class="dashboard-divider">
-  <div class="kpi-grid">
+  <div class="kpi-grid" style="margin-top: 15px;">
     <div class="kpi-card">
       <div class="kpi-header"><div class="kpi-icon icon-green">Rp</div><div class="kpi-title">GROSS PROFIT (JUTA RP)</div></div>
       <div class="kpi-body">
@@ -309,17 +333,17 @@
   </div>
 
 
-  <!-- TABEL UTAMA DARK -->
+  <!-- TABEL KEDUA UNTUK DASHBOARD BARU -->
   <div class="table-container">
-    <table id="main-table">
+    <table id="alt-table">
       <thead>
         <tr>
           <th rowspan="2" class="th-header-main" style="width: 14%;">URAIAN</th>
-          <th colspan="10" id="th-realisasi-hdr" class="th-realisasi">JAN - SEP 2026 (REALISASI)</th>
-          <th colspan="4" id="th-prognosa-hdr" class="th-prognosa">OKT - DES 2026 (PROGNOSA)</th>
+          <th colspan="10" id="alt-th-realisasi-hdr" class="th-realisasi">JAN - SEP 2026 (REALISASI)</th>
+          <th colspan="4" id="alt-th-prognosa-hdr" class="th-prognosa">OKT - DES 2026 (PROGNOSA)</th>
           <th colspan="3" class="th-total">TOTAL 2026</th>
         </tr>
-        <tr id="main-table-subheaders">
+        <tr id="alt-table-subheaders">
           <th>Jan-26</th><th>Feb-26</th><th>Mar-26</th><th>Apr-26</th><th>Mei-26</th><th>Jun-26</th><th>Jul-26</th><th>Aug-26</th><th>Sep-26</th>
           <th class="th-realisasi">TOTAL</th>
           <th>Okt-26</th><th>Nov-26</th><th>Des-26</th>
@@ -328,7 +352,7 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Baris tabel dirender otomatis oleh JS -->
+        <!-- Baris tabel kedua dirender otomatis oleh JS -->
       </tbody>
     </table>
   </div>
@@ -940,13 +964,6 @@
 
     function renderMainTable() {
       const data = getFinancialArrays();
-      for (let i = 0; i < 12; i++) {
-        setText("tbl-rev-" + i, formatNumber(data.revenueActual[i]));
-        setText("tbl-bpp-" + i, formatNumber(data.bppActual[i]));
-        setText("tbl-gp-" + i, formatNumber(data.gpActual[i]));
-        setText("tbl-gpm-" + i, formatPercent(data.gpmActual[i]));
-      }
-
       const realIndices = data.status.map((status, index) => status === "REALISASI" ? index : -1).filter(index => index >= 0);
       const prognosaIndices = data.status.map((status, index) => status === "PROGNOSA" ? index : -1).filter(index => index >= 0);
 
@@ -1037,6 +1054,96 @@
         htmlRows += `<td class="${pctGpm >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctGpm)}</td></tr>`;
 
         tableBody.innerHTML = htmlRows;
+      }
+
+      // Render Alt/Dashboard 2 Table
+      const altRealTh = document.getElementById("alt-th-realisasi-hdr");
+      const altProgTh = document.getElementById("alt-th-prognosa-hdr");
+      if (altRealTh) {
+        altRealTh.setAttribute("colspan", realCount + 1);
+        altRealTh.textContent = `JAN - ${getMonthShortName(lastRealMonth).toUpperCase()} 2026 (REALISASI)`;
+      }
+      if (altProgTh) {
+        altProgTh.setAttribute("colspan", progCount + 1);
+        altProgTh.textContent = `${getMonthShortName(firstProgMonth).toUpperCase()} - ${getMonthShortName(lastProgMonth).toUpperCase()} 2026 (PROGNOSA)`;
+      }
+
+      const altSubheadersTr = document.getElementById("alt-table-subheaders");
+      if (altSubheadersTr) {
+        let subHtml = "";
+        realIndices.forEach(i => { subHtml += `<th>${monthLabels[i]}</th>`; });
+        subHtml += `<th class="th-realisasi">TOTAL</th>`;
+        prognosaIndices.forEach(i => { subHtml += `<th>${monthLabels[i]}</th>`; });
+        subHtml += `<th class="th-prognosa">TOTAL</th><th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>`;
+        altSubheadersTr.innerHTML = subHtml;
+      }
+
+      const altTableBody = document.querySelector("#alt-table tbody");
+      if (altTableBody) {
+        const realGp = realIndices.reduce((t, i) => t + data.gpActual[i], 0);
+        const progGp = prognosaIndices.reduce((t, i) => t + data.gpActual[i], 0);
+        const totalPlanGp = sum(data.gpPlan);
+        const totalActualGp = sum(data.gpActual);
+        const pctGp = getAchievement(totalActualGp, totalPlanGp);
+
+        const realNcp = realIndices.reduce((t, i) => t + data.ncpActual[i], 0);
+        const progNcp = prognosaIndices.reduce((t, i) => t + data.ncpActual[i], 0);
+        const totalPlanNcp = sum(data.ncpPlan);
+        const totalActualNcp = sum(data.ncpActual);
+        const pctNcp = getAchievement(totalActualNcp, totalPlanNcp);
+
+        const realNp = realIndices.reduce((t, i) => t + data.npActual[i], 0);
+        const progNp = prognosaIndices.reduce((t, i) => t + data.npActual[i], 0);
+        const totalPlanNp = sum(data.npPlan);
+        const totalActualNp = sum(data.npActual);
+        const pctNp = getAchievement(totalActualNp, totalPlanNp);
+
+        const realRev = realIndices.reduce((t, i) => t + data.revenueActual[i], 0);
+        const progRev = prognosaIndices.reduce((t, i) => t + data.revenueActual[i], 0);
+        const realNpm = realRev > 0 ? (realNp / realRev * 100) : 0;
+        const progRevProg = progRev > 0 ? (progNp / progRev * 100) : 0;
+        const totalPlanNpm = sum(data.revenuePlan) > 0 ? (sum(data.npPlan) / sum(data.revenuePlan) * 100) : 0;
+        const totalActualNpm = sum(data.revenueActual) > 0 ? (sum(data.npActual) / sum(data.revenueActual) * 100) : 0;
+        const pctNpm = getAchievement(totalActualNpm, totalPlanNpm);
+
+        let altHtmlRows = "";
+        // 1. Gross Profit
+        altHtmlRows += `<tr><td class="row-label">GROSS PROFIT (Juta Rp)</td>`;
+        realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.gpActual[i])}</td>`; });
+        altHtmlRows += `<td class="txt-green">${formatNumber(realGp)}</td>`;
+        prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.gpActual[i])}</td>`; });
+        altHtmlRows += `<td class="txt-green">${formatNumber(progGp)}</td>`;
+        altHtmlRows += `<td>${formatNumber(totalPlanGp)}</td><td class="metric-actual">${formatNumber(totalActualGp)}</td>`;
+        altHtmlRows += `<td class="${pctGp >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctGp)}</td></tr>`;
+
+        // 2. Non-Contributing Plant
+        altHtmlRows += `<tr><td class="row-label">NON-CONTRIBUTING PLANT (Juta Rp)</td>`;
+        realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
+        altHtmlRows += `<td class="txt-green">${formatNumber(realNcp)}</td>`;
+        prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
+        altHtmlRows += `<td class="txt-green">${formatNumber(progNcp)}</td>`;
+        altHtmlRows += `<td>${formatNumber(totalPlanNcp)}</td><td class="metric-actual">${formatNumber(totalActualNcp)}</td>`;
+        altHtmlRows += `<td class="${pctNcp <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctNcp)}</td></tr>`;
+
+        // 3. Net Profit
+        altHtmlRows += `<tr><td class="row-label">NET PROFIT (Juta Rp)</td>`;
+        realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.npActual[i])}</td>`; });
+        altHtmlRows += `<td class="txt-green">${formatNumber(realNp)}</td>`;
+        prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.npActual[i])}</td>`; });
+        altHtmlRows += `<td class="txt-green">${formatNumber(progNp)}</td>`;
+        altHtmlRows += `<td>${formatNumber(totalPlanNp)}</td><td class="metric-actual">${formatNumber(totalActualNp)}</td>`;
+        altHtmlRows += `<td class="${pctNp >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctNp)}</td></tr>`;
+
+        // 4. Net Profit Margin (%)
+        altHtmlRows += `<tr><td class="row-label">NET PROFIT MARGIN (%)</td>`;
+        realIndices.forEach(i => { altHtmlRows += `<td>${formatPercent(data.npmActual[i])}</td>`; });
+        altHtmlRows += `<td class="txt-green">${formatPercent(realNpm)}</td>`;
+        prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatPercent(data.npmActual[i])}</td>`; });
+        altHtmlRows += `<td class="txt-green">${formatPercent(progRevProg)}</td>`;
+        altHtmlRows += `<td>${formatPercent(totalPlanNpm)}</td><td class="metric-actual">${formatPercent(totalActualNpm)}</td>`;
+        altHtmlRows += `<td class="${pctNpm >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctNpm)}</td></tr>`;
+
+        altTableBody.innerHTML = altHtmlRows;
       }
 
       const legendReal = document.getElementById("legend-real-text");
