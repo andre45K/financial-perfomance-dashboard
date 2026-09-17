@@ -311,7 +311,7 @@
   </div>
 
 
-  <!-- TABEL KEDUA UNTUK DASHBOARD BARU -->
+  <!-- TABEL KEDUA UNTUK DASHBOARD BARU (URUTAN DISESUAIKAN) -->
   <div class="table-container">
     <table id="alt-table">
       <thead>
@@ -626,7 +626,7 @@
   </div>
 
 
-  <!-- SCRIPT UTAMA -->
+  <!-- SCRIPT UTAMA (TERINTEGRASI FIRESTORE & REALTIME LISTENER) -->
   <script type="module">
     if (typeof ChartDataLabels !== 'undefined') {
       Chart.register(ChartDataLabels);
@@ -639,18 +639,18 @@
       year: 2026,
       targetGPM: 45.59,
       months: {
-        Jan: { revenuePlan: 554, revenueActual: 823, bppPlan: 195, bppActual: 647, gpPlan: 359, gpActual: 176, ncpPlan: 359, ncpActual: 176, status: "REALISASI" },
-        Feb: { revenuePlan: 554, revenueActual: 787, bppPlan: 195, bppActual: 632, gpPlan: 359, gpActual: 155, ncpPlan: 359, ncpActual: 155, status: "REALISASI" },
-        Mar: { revenuePlan: 449, revenueActual: 99,  bppPlan: 195, bppActual: 92,  gpPlan: 254, gpActual: 7,   ncpPlan: 254, ncpActual: 7,   status: "REALISASI" },
-        Apr: { revenuePlan: 380, revenueActual: 782, bppPlan: 165, bppActual: 680, gpPlan: 215, gpActual: 102, ncpPlan: 215, ncpActual: 102, status: "REALISASI" },
-        May: { revenuePlan: 502, revenueActual: 688, bppPlan: 308, bppActual: 404, gpPlan: 194, gpActual: 284, ncpPlan: 194, ncpActual: 284, status: "REALISASI" },
-        Jun: { revenuePlan: 879, revenueActual: 1117, bppPlan: 495, bppActual: 913, gpPlan: 384, gpActual: 204, ncpPlan: 384, ncpActual: 204, status: "REALISASI" },
-        Jul: { revenuePlan: 927, revenueActual: 1668, bppPlan: 531, bppActual: 1342, gpPlan: 396, gpActual: 326, ncpPlan: 396, ncpActual: 326, status: "REALISASI" },
-        Aug: { revenuePlan: 1042, revenueActual: 1703, bppPlan: 613, bppActual: 1164, gpPlan: 429, gpActual: 539, ncpPlan: 429, ncpActual: 539, status: "REALISASI" },
-        Sep: { revenuePlan: 2196, revenueActual: 1786, bppPlan: 1218, bppActual: 1340, gpPlan: 978, gpActual: 446, ncpPlan: 978, ncpActual: 446, status: "REALISASI" },
-        Oct: { revenuePlan: 2196, revenueActual: 1670, bppPlan: 1218, bppActual: 1280, gpPlan: 978, gpActual: 390, ncpPlan: 978, ncpActual: 390, status: "PROGNOSA" },
-        Nov: { revenuePlan: 2145, revenueActual: 1393, bppPlan: 1198, bppActual: 1088, gpPlan: 947, gpActual: 305, ncpPlan: 947, ncpActual: 305, status: "PROGNOSA" },
-        Dec: { revenuePlan: 1678, revenueActual: 1393, bppPlan: 1013, bppActual: 1088, gpPlan: 665, gpActual: 305, ncpPlan: 665, ncpActual: 305, status: "PROGNOSA" }
+        Jan: { revenuePlan: 554, revenueActual: 823, bppPlan: 195, bppActual: 647, gpPlan: 359, gpActual: 176, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Feb: { revenuePlan: 554, revenueActual: 787, bppPlan: 195, bppActual: 632, gpPlan: 359, gpActual: 155, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Mar: { revenuePlan: 449, revenueActual: 99,  bppPlan: 195, bppActual: 92,  gpPlan: 254, gpActual: 7,   ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Apr: { revenuePlan: 380, revenueActual: 782, bppPlan: 165, bppActual: 680, gpPlan: 215, gpActual: 102, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        May: { revenuePlan: 502, revenueActual: 688, bppPlan: 308, bppActual: 404, gpPlan: 194, gpActual: 284, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Jun: { revenuePlan: 879, revenueActual: 1117, bppPlan: 495, bppActual: 913, gpPlan: 384, gpActual: 204, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Jul: { revenuePlan: 927, revenueActual: 1668, bppPlan: 531, bppActual: 1342, gpPlan: 396, gpActual: 326, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Aug: { revenuePlan: 1042, revenueActual: 1703, bppPlan: 613, bppActual: 1164, gpPlan: 429, gpActual: 539, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Sep: { revenuePlan: 2196, revenueActual: 1786, bppPlan: 1218, bppActual: 1340, gpPlan: 978, gpActual: 446, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Oct: { revenuePlan: 2196, revenueActual: 1670, bppPlan: 1218, bppActual: 1280, gpPlan: 978, gpActual: 390, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" },
+        Nov: { revenuePlan: 2145, revenueActual: 1393, bppPlan: 1198, bppActual: 1088, gpPlan: 947, gpActual: 305, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" },
+        Dec: { revenuePlan: 1678, revenueActual: 1393, bppPlan: 1013, bppActual: 1088, gpPlan: 665, gpActual: 305, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" }
       }
     };
 
@@ -692,29 +692,21 @@
               let revAct = toNumber(source.revenueActual, result.months[month].revenueActual);
               let bppPlan = toNumber(source.bppPlan, result.months[month].bppPlan);
               let bppAct = toNumber(source.bppActual, result.months[month].bppActual);
-              let gpPlan = source.gpPlan !== undefined ? toNumber(source.gpPlan, revPlan - bppPlan) : (revPlan - bppPlan);
-              let gpAct = source.gpActual !== undefined ? toNumber(source.gpAct, revAct - bppAct) : (revAct - bppAct);
-              let ncpPlan = toNumber(source.ncpPlan, gpPlan);
-              let ncpAct = toNumber(source.ncpActual, gpAct);
 
               if (revPlan > 10000) revPlan /= 1000000;
               if (revAct > 10000) revAct /= 1000000;
               if (bppPlan > 10000) bppPlan /= 1000000;
               if (bppAct > 10000) bppAct /= 1000000;
-              if (gpPlan > 10000) gpPlan /= 1000000;
-              if (gpAct > 10000) gpAct /= 1000000;
-              if (ncpPlan > 10000) ncpPlan /= 1000000;
-              if (ncpAct > 10000) ncpAct /= 1000000;
 
               result.months[month] = {
                 revenuePlan: revPlan,
                 revenueActual: revAct,
                 bppPlan: bppPlan,
-                bppAct: bppAct,
-                gpPlan: gpPlan,
-                gpAct: gpAct,
-                ncpPlan: ncpPlan,
-                ncpActual: ncpAct,
+                bppActual: bppAct,
+                gpPlan: source.gpPlan !== undefined ? toNumber(source.gpPlan, revPlan - bppPlan) : (revPlan - bppPlan),
+                gpActual: source.gpActual !== undefined ? toNumber(source.gpActual, revAct - bppAct) : (revAct - bppAct),
+                ncpPlan: toNumber(source.ncpPlan, 0),
+                ncpActual: toNumber(source.ncpActual, 0),
                 status: source.status === "REALISASI" ? "REALISASI" : "PROGNOSA"
               };
             }
@@ -741,6 +733,46 @@
       return Number.isFinite(number) ? number : fallback;
     }
 
+    window.FinancialDashboard = {
+      getData: function() { return structuredClone(financialData); },
+      saveData: async function(newData) {
+        financialData = normalizeFinancialData(mergeFinancialData(financialData, newData));
+        if (window.firebaseDB && window.firebaseFns) {
+          const { doc, setDoc } = window.firebaseFns;
+          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+          await setDoc(docRef, financialData);
+        }
+        renderAll();
+        window.dispatchEvent(new CustomEvent("financialDashboardUpdated"));
+        return true;
+      },
+      resetData: async function() {
+        financialData = structuredClone(defaultFinancialData);
+        if (window.firebaseDB && window.firebaseFns) {
+          const { doc, setDoc } = window.firebaseFns;
+          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+          await setDoc(docRef, financialData);
+        }
+        renderAll();
+        return true;
+      }
+    };
+
+    function mergeFinancialData(oldData, newData) {
+      const merged = structuredClone(oldData);
+      if (!newData) return merged;
+      if (newData.year !== undefined) merged.year = Number(newData.year);
+      if (newData.targetGPM !== undefined) merged.targetGPM = Number(newData.targetGPM);
+      if (newData.months && typeof newData.months === "object") {
+        Object.keys(newData.months).forEach(month => {
+          if (merged.months[month] && newData.months[month]) {
+            merged.months[month] = { ...merged.months[month], ...newData.months[month] };
+          }
+        });
+      }
+      return merged;
+    }
+
     function getFinancialArrays() {
       const revenuePlan = [];
       const revenueActual = [];
@@ -760,8 +792,8 @@
         bppActual.push(Number(item.bppActual) || 0);
         gpPlan.push(item.gpPlan !== undefined ? Number(item.gpPlan) : (Number(item.revenuePlan) || 0) - (Number(item.bppPlan) || 0));
         gpActual.push(item.gpActual !== undefined ? Number(item.gpActual) : (Number(item.revenueActual) || 0) - (Number(item.bppActual) || 0));
-        ncpPlan.push(item.ncpPlan !== undefined ? Number(item.ncpPlan) : gpPlan[gpPlan.length - 1]);
-        ncpActual.push(item.ncpActual !== undefined ? Number(item.ncpActual) : gpActual[gpActual.length - 1]);
+        ncpPlan.push(Number(item.ncpPlan) || 0);
+        ncpActual.push(Number(item.ncpActual) || 0);
         status.push(item.status || "PROGNOSA");
       });
 
@@ -1392,6 +1424,58 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       initFirebaseListener();
+    });
+  </script>
+
+  <!-- SCRIPT OTOMATIS FORMAT INPUT RIBUAN -->
+  <script>
+    function formatRupiahAdmin(angka) {
+        let number_string = angka.toString().replace(/[^,\d]/g, ''),
+            split   = number_string.split(','),
+            sisa    = split[0].length % 3,
+            rupiah  = split[0].substr(0, sisa),
+            ribuan  = split[0].substr(sisa).match(/\d{3}/gi);
+
+        if (ribuan) {
+            let separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+        return rupiah;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const inputs = document.querySelectorAll("input");
+        inputs.forEach(input => {
+            if (input.type === "number" || input.closest("table") || input.id.includes("plan") || input.id.includes("act") || input.name) {
+                input.type = "text";
+                if (input.value && !isNaN(input.value.replace(/\./g, ''))) {
+                    input.value = formatRupiahAdmin(input.value);
+                }
+            }
+        });
+    });
+
+    document.addEventListener('input', function (e) {
+        if (e.target && e.target.tagName === 'INPUT') {
+            if (e.target.type === 'number') {
+                e.target.type = 'text';
+            }
+            let val = e.target.value;
+            if (/^\d/.test(val.replace(/\./g, '')) || val === '') {
+                let cursorPosition = e.target.selectionStart;
+                let originalLength = e.target.value.length;
+                
+                e.target.value = formatRupiahAdmin(e.target.value);
+                
+                let newLength = e.target.value.length;
+                cursorPosition = cursorPosition + (newLength - originalLength);
+                try {
+                    e.target.setSelectionRange(cursorPosition, cursorPosition);
+                } catch(err) {}
+            }
+        }
     });
   </script>
 
