@@ -78,7 +78,7 @@
     <div id="alertSuccess" class="alert-success"><i class="fa-solid fa-circle-check"></i> Data berhasil disimpan ke Firebase Firestore!</div>
 
     <div class="instruction-box">
-      <strong>Petunjuk:</strong> Perubahan data di sini akan langsung dikirim ke Cloud Database Firestore sehingga perangkat lain maupun halaman utama akan otomatis memperbarui grafik secara realtime.
+      <strong>Petunjuk:</strong> Perubahan data di sini akan langsung dikirim ke Cloud Database Firestore sehingga halaman utama akan otomatis memperbarui grafik secara realtime.
     </div>
 
     <!-- Navigation Tabs -->
@@ -292,15 +292,13 @@
 
         if (statusEl) currentData.months[m].status = statusEl.value;
         if (revPlanEl) currentData.months[m].revenuePlan = toNumber(revPlanEl.value);
-        if (bppPlanEl) currentData.months[m].bppPlan = toNumber(bppPlanEl.value);
+        if (bppPlanEl) currentData.months[m].bppPlan = toNumber(bppPlanEl.value); // PERBAIKAN: Menyimpan Rencana BPP
         if (revActEl) currentData.months[m].revenueActual = toNumber(revActEl.value);
         if (bppActEl) currentData.months[m].bppActual = toNumber(bppActEl.value);
         
-        // Simpan nilai inputan NCP (Non-Contributing Plant) ke properti ncpPlan & ncpActual
         if (ncpPlanEl) currentData.months[m].ncpPlan = toNumber(ncpPlanEl.value);
         if (ncpActEl) currentData.months[m].ncpActual = toNumber(ncpActEl.value);
 
-        // Auto kalkulasi GP jika belum ada
         currentData.months[m].gpPlan = currentData.months[m].revenuePlan - currentData.months[m].bppPlan;
         currentData.months[m].gpActual = currentData.months[m].revenueActual - currentData.months[m].bppActual;
       });
