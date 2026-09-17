@@ -193,7 +193,6 @@
             result.months[m].revenueActual = src.revenueActual ?? result.months[m].revenueActual;
             result.months[m].bppPlan = src.bppPlan ?? result.months[m].bppPlan;
             result.months[m].bppActual = src.bppActual ?? result.months[m].bppActual;
-            result.months[m].ncpPlan = src.ncpPlan ?? result.months[m].ncpPlan;
             result.months[m].ncpActual = src.ncpActual ?? result.months[m].ncpActual;
             result.months[m].status = src.status ?? result.months[m].status;
           }
@@ -265,7 +264,6 @@
 
       if (field === 'ncpActual') {
         workingData.months[monthKey].ncpActual = num;
-        // Sinkronkan kedua kolom tab 2 (NCP & Biaya Tidak Langsung) agar seragam
         let item = workingData.months[monthKey];
         let gpAct = (item.revenueActual || 0) - (item.bppActual || 0);
         let npAct = gpAct - num;
@@ -291,7 +289,6 @@
         const { doc, setDoc } = window.firebaseFns;
         const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
         
-        // Hitung ulang gpPlan dan gpAct secara otomatis sebelum simpan
         monthsList.forEach(m => {
           let item = workingData.months[m];
           item.gpPlan = (item.revenuePlan || 0) - (item.bppPlan || 0);
