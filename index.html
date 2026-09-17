@@ -14,14 +14,13 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // PENTING: Pastikan konfigurasi ini sama persis dengan yang ada di login.html
     const firebaseConfig = {
-      apiKey: "MASUKKAN_API_KEY_ANDA",
-      authDomain: "MASUKKAN_AUTH_DOMAIN_ANDA",
-      projectId: "MASUKKAN_PROJECT_ID_ANDA",
-      storageBucket: "MASUKKAN_STORAGE_BUCKET_ANDA",
-      messagingSenderId: "MASUKKAN_MESSAGING_SENDER_ID_ANDA",
-      appId: "MASUKKAN_APP_ID_ANDA"
+      apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
+      authDomain: "financial-perfomance-dashboard.firebaseapp.com",
+      projectId: "financial-perfomance-dashboard",
+      storageBucket: "financial-perfomance-dashboard.firebasestorage.app",
+      messagingSenderId: "136866453174",
+      appId: "1:136866453174:web:b69a3e14672eb96cc53817"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -627,9 +626,7 @@
   </div>
 
 
-  <!-- ========================================================= -->
   <!-- SCRIPT UTAMA (TERINTEGRASI FIRESTORE & REALTIME LISTENER) -->
-  <!-- ========================================================= -->
   <script type="module">
     if (typeof ChartDataLabels !== 'undefined') {
       Chart.register(ChartDataLabels);
@@ -659,7 +656,6 @@
 
     let financialData = structuredClone(defaultFinancialData);
 
-    // Inisialisasi Realtime Listener Firestore (onSnapshot) agar Laptop A & B tersinkronisasi otomatis
     function initFirebaseListener() {
       const checkInterval = setInterval(() => {
         if (window.firebaseDB && window.firebaseFns) {
@@ -1413,7 +1409,7 @@
     }
 
     function getMonthFullName(month) {
-      const map = { Jan: "Januari", Feb: "Februari", Mar: "Maret", Apr: "April", May: "Mei", Jun: "Juni", Juli: "Juli", Aug: "Agustus", Sep: "September", Oct: "Oktober", Nov: "November", Dec: "Desember" };
+      const map = { Jan: "Januari", Feb: "Februari", Mar: "Maret", Apr: "April", May: "Mei", Jun: "Juni", Jul: "Juli", Aug: "Agustus", Sep: "September", Oct: "Oktober", Nov: "November", Dec: "Desember" };
       return map[month] || month;
     }
 
@@ -1426,7 +1422,6 @@
       renderDashboard3();
     }
 
-    // Jalankan listener Firestore saat halaman dimuat
     window.addEventListener("DOMContentLoaded", () => {
       initFirebaseListener();
     });
