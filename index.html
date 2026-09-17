@@ -688,36 +688,30 @@
           monthsList.forEach(month => {
             if (data.months[month]) {
               const source = data.months[month];
-              let revPlan = toNumber(source.revenuePlan, result.months[month].revenuePlan);
-              let revAct = toNumber(source.revenueActual, result.months[month].revenueActual);
-              let bppPlan = toNumber(source.bppPlan, result.months[month].bppPlan);
-              let bppAct = toNumber(source.bppActual, result.months[month].bppActual);
+              let defMonth = defaultFinancialData.months[month];
+
+              let revPlan = toNumber(source.revenuePlan, defMonth.revenuePlan);
+              let revAct = toNumber(source.revenueActual, defMonth.revenueActual);
               
-              let gpPlan = source.gpPlan !== undefined ? toNumber(source.gpPlan, revPlan - bppPlan) : (revPlan - bppPlan);
-              let gpAct = source.gpActual !== undefined ? toNumber(source.gpActual, revAct - bppAct) : (revAct - bppAct);
-
-              // Jika GP dihitung otomatis dari rev - bpp yang sudah dalam juta, maka hasilnya sudah juta.
-              // Tapi jika GP diambil mentah dari database dalam nominal asli (> 10000), konversikan ke juta:
-              if (gpPlan > 10000) gpPlan /= 1000000;
-              if (gpAct > 10000) gpAct /= 1000000;
-
-              let ncpPlan = toNumber(source.ncpPlan, gpPlan);
-              let ncpAct = toNumber(source.ncpActual, gpAct);
+              // Ambil bppPlan & bppActual dengan fallback ke default jika kosong/nol
+              let bppPlan = toNumber(source.bppPlan, defMonth.bppPlan);
+              let bppAct = toNumber(source.bppActual, defMonth.bppActual);
+              if (bppAct === 0 && defMonth.bppActual > 0) {
+                bppAct = defMonth.bppActual;
+              }
 
               if (revPlan > 10000) revPlan /= 1000000;
               if (revAct > 10000) revAct /= 1000000;
               if (bppPlan > 10000) bppPlan /= 1000000;
               if (bppAct > 10000) bppAct /= 1000000;
+
+              let gpPlan = revPlan - bppPlan;
+              let gpAct = revAct - bppAct;
+
+              let ncpPlan = toNumber(source.ncpPlan, gpPlan);
+              let ncpAct = toNumber(source.ncpActual, gpAct);
               if (ncpPlan > 10000) ncpPlan /= 1000000;
               if (ncpAct > 10000) ncpAct /= 1000000;
-
-              // Pastikan nilai GP konsisten dengan selisih Pendapatan dan BPP jika input aslinya berupa juta
-              if (Math.abs(gpPlan - (revPlan - bppPlan)) > 1000) {
-                gpPlan = revPlan - bppPlan;
-              }
-              if (Math.abs(gpAct - (revAct - bppAct)) > 1000) {
-                gpAct = revAct - bppAct;
-              }
 
               result.months[month] = {
                 revenuePlan: revPlan,
@@ -777,7 +771,6 @@
         bppPlan.push(bPlan);
         bppActual.push(bAct);
 
-        // Kalkulasi Gross Profit secara presisi dari Pendapatan dikurangi BPP dalam satuan juta
         const gPlan = rPlan - bPlan;
         const gAct = rAct - bAct;
         gpPlan.push(gPlan);
