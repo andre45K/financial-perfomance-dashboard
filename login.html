@@ -184,11 +184,19 @@
     };
 
     function formatNumber(num) { return Number(num || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); }
+    
+    // Diperbarui agar mendukung angka negatif (minus)
     function toNumber(val) {
-      if (!val) return 0;
-      let str = String(val).replace(/\./g, '').replace(',', '.');
+      if (val === null || val === undefined || val === "") return 0;
+      let str = String(val).trim();
+      let isNegative = str.startsWith('-');
+      if (isNegative) {
+        str = str.substring(1);
+      }
+      str = str.replace(/\./g, '').replace(',', '.');
       let num = Number(str);
-      return isNaN(num) ? 0 : num;
+      if (isNaN(num)) return 0;
+      return isNegative ? -num : num;
     }
 
     function renderTableRows() {
@@ -269,9 +277,12 @@
       document.getElementById(`npm_disp_${m}`).textContent = npmAct.toFixed(2) + "%";
     };
 
+    // Diperbarui agar karakter minus (-) di awal bisa diketikkan dengan aman
     window.formatInput = function(el) {
-      let val = el.value.replace(/[^,\d]/g, '');
-      let parts = val.split(',');
+      let val = el.value;
+      let isNegative = val.startsWith('-');
+      let cleaned = val.replace(/[^,\d]/g, '');
+      let parts = cleaned.split(',');
       let sisa = parts[0].length % 3;
       let rupiah = parts[0].substr(0, sisa);
       let ribuan = parts[0].substr(sisa).match(/\d{3}/g);
@@ -279,7 +290,8 @@
         let separator = sisa ? '.' : '';
         rupiah += separator + ribuan.join('.');
       }
-      el.value = parts[1] !== undefined ? rupiah + ',' + parts[1] : rupiah;
+      let finalVal = parts[1] !== undefined ? rupiah + ',' + parts[1] : rupiah;
+      el.value = (isNegative ? '-' : '') + finalVal;
     };
 
     document.getElementById("adminForm").addEventListener("submit", async function(e) {
