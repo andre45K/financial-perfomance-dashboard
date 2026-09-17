@@ -280,52 +280,9 @@
   </div>
 
 
-  <!-- DASHBOARD 2: NEW ALTERNATE ORDER -->
+  <!-- DASHBOARD 2: GRAFIK & TABEL KEDUA (BAGIAN KARTU KPI DIATASNYA TELAH DIHAPUS) -->
   <hr class="dashboard-divider">
-  <div class="kpi-grid" style="margin-top: 15px;">
-    <div class="kpi-card">
-      <div class="kpi-header"><div class="kpi-icon icon-green">Rp</div><div class="kpi-title">GROSS PROFIT (JUTA RP)</div></div>
-      <div class="kpi-body">
-        <div class="kpi-metrics">
-          <div class="metric-item"><span>RENCANA</span><strong id="alt-kpi-gp-plan">6.158</strong></div>
-          <div class="metric-item"><span>REALISASI</span><strong id="alt-kpi-gp-act" class="metric-actual">3.239</strong></div>
-        </div>
-        <div><div id="alt-kpi-gp-badge" class="kpi-badge badge-down">▼ 52,60%</div><span class="kpi-subtext">vs Rencana</span></div>
-      </div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-header"><div class="kpi-icon icon-orange">Rp</div><div class="kpi-title">NON-CONTRIBUTING PLANT (JUTA RP)</div></div>
-      <div class="kpi-body">
-        <div class="kpi-metrics">
-          <div class="metric-item"><span>RENCANA</span><strong id="alt-kpi-ncp-plan">0</strong></div>
-          <div class="metric-item"><span>REALISASI</span><strong id="alt-kpi-ncp-act" class="metric-actual">0</strong></div>
-        </div>
-        <div><div id="alt-kpi-ncp-badge" class="kpi-badge badge-up">▲ 100,00%</div><span class="kpi-subtext">vs Rencana</span></div>
-      </div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-header"><div class="kpi-icon icon-blue">Rp</div><div class="kpi-title">NET PROFIT (JUTA RP)</div></div>
-      <div class="kpi-body">
-        <div class="kpi-metrics">
-          <div class="metric-item"><span>RENCANA</span><strong id="alt-kpi-np-plan">6.158</strong></div>
-          <div class="metric-item"><span>REALISASI</span><strong id="alt-kpi-np-act" class="metric-actual">3.239</strong></div>
-        </div>
-        <div><div id="alt-kpi-np-badge" class="kpi-badge badge-down">▼ 52,60%</div><span class="kpi-subtext">vs Rencana</span></div>
-      </div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-header"><div class="kpi-icon icon-purple">%</div><div class="kpi-title">NET PROFIT MARGIN (%)</div></div>
-      <div class="kpi-body">
-        <div class="kpi-metrics">
-          <div class="metric-item"><span>RENCANA</span><strong id="alt-kpi-npm-plan">45,61%</strong></div>
-          <div class="metric-item"><span>REALISASI</span><strong id="alt-kpi-npm-act" class="metric-actual">23,29%</strong></div>
-        </div>
-        <div><div id="alt-kpi-npm-badge" class="kpi-badge badge-down">▼ 51,06%</div><span class="kpi-subtext">vs Rencana</span></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="charts-grid">
+  <div class="charts-grid" style="margin-top: 15px;">
     <div class="chart-card"><div class="chart-title">GROSS PROFIT (Juta Rp)</div><div class="chart-container"><canvas id="altChartGP"></canvas></div></div>
     <div class="chart-card"><div class="chart-title">NON-CONTRIBUTING PLANT (Juta Rp)</div><div class="chart-container"><canvas id="altChartNCP"></canvas></div></div>
     <div class="chart-card"><div class="chart-title">NET PROFIT (Juta Rp)</div><div class="chart-container"><canvas id="altChartNP"></canvas></div></div>
@@ -663,18 +620,18 @@
       year: 2026,
       targetGPM: 45.59,
       months: {
-        Jan: { revenuePlan: 554, revenueActual: 823, bppPlan: 195, bppActual: 647, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Feb: { revenuePlan: 554, revenueActual: 787, bppPlan: 195, bppActual: 632, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Mar: { revenuePlan: 449, revenueActual: 99,  bppPlan: 195, bppActual: 92,  ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Apr: { revenuePlan: 380, revenueActual: 782, bppPlan: 165, bppActual: 680, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        May: { revenuePlan: 502, revenueActual: 688, bppPlan: 308, bppActual: 404, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Jun: { revenuePlan: 879, revenueActual: 1117, bppPlan: 495, bppActual: 913, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Jul: { revenuePlan: 927, revenueActual: 1668, bppPlan: 531, bppActual: 1342, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Aug: { revenuePlan: 1042, revenueActual: 1703, bppPlan: 613, bppActual: 1164, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Sep: { revenuePlan: 2196, revenueActual: 1786, bppPlan: 1218, bppActual: 1340, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Oct: { revenuePlan: 2196, revenueActual: 1670, bppPlan: 1218, bppActual: 1280, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" },
-        Nov: { revenuePlan: 2145, revenueActual: 1393, bppPlan: 1198, bppActual: 1088, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" },
-        Dec: { revenuePlan: 1678, revenueActual: 1393, bppPlan: 1013, bppActual: 1088, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" }
+        Jan: { revenuePlan: 554, revenueActual: 823, bppPlan: 195, bppActual: 647, gpPlan: 359, gpActual: 176, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Feb: { revenuePlan: 554, revenueActual: 787, bppPlan: 195, bppActual: 632, gpPlan: 359, gpActual: 155, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Mar: { revenuePlan: 449, revenueActual: 99,  bppPlan: 195, bppActual: 92,  gpPlan: 254, gpActual: 7,   ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Apr: { revenuePlan: 380, revenueActual: 782, bppPlan: 165, bppActual: 680, gpPlan: 215, gpActual: 102, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        May: { revenuePlan: 502, revenueActual: 688, bppPlan: 308, bppActual: 404, gpPlan: 194, gpActual: 284, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Jun: { revenuePlan: 879, revenueActual: 1117, bppPlan: 495, bppActual: 913, gpPlan: 384, gpActual: 204, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Jul: { revenuePlan: 927, revenueActual: 1668, bppPlan: 531, bppActual: 1342, gpPlan: 396, gpActual: 326, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Aug: { revenuePlan: 1042, revenueActual: 1703, bppPlan: 613, bppActual: 1164, gpPlan: 429, gpActual: 539, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Sep: { revenuePlan: 2196, revenueActual: 1786, bppPlan: 1218, bppActual: 1340, gpPlan: 978, gpActual: 446, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
+        Oct: { revenuePlan: 2196, revenueActual: 1670, bppPlan: 1218, bppActual: 1280, gpPlan: 978, gpActual: 390, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" },
+        Nov: { revenuePlan: 2145, revenueActual: 1393, bppPlan: 1198, bppActual: 1088, gpPlan: 947, gpActual: 305, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" },
+        Dec: { revenuePlan: 1678, revenueActual: 1393, bppPlan: 1013, bppActual: 1088, gpPlan: 665, gpActual: 305, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" }
       }
     };
 
@@ -716,6 +673,8 @@
                 revenueActual: revAct,
                 bppPlan: bppPlan,
                 bppActual: bppAct,
+                gpPlan: source.gpPlan !== undefined ? toNumber(source.gpPlan, revPlan - bppPlan) : (revPlan - bppPlan),
+                gpActual: source.gpActual !== undefined ? toNumber(source.gpActual, revAct - bppAct) : (revAct - bppAct),
                 ncpPlan: toNumber(source.ncpPlan, 0),
                 ncpActual: toNumber(source.ncpActual, 0),
                 status: source.status === "REALISASI" ? "REALISASI" : "PROGNOSA"
@@ -781,6 +740,8 @@
       const revenueActual = [];
       const bppPlan = [];
       const bppActual = [];
+      const gpPlan = [];
+      const gpActual = [];
       const ncpPlan = [];
       const ncpActual = [];
       const status = [];
@@ -791,13 +752,13 @@
         revenueActual.push(Number(item.revenueActual) || 0);
         bppPlan.push(Number(item.bppPlan) || 0);
         bppActual.push(Number(item.bppActual) || 0);
+        gpPlan.push(item.gpPlan !== undefined ? Number(item.gpPlan) : (Number(item.revenuePlan) || 0) - (Number(item.bppPlan) || 0));
+        gpActual.push(item.gpActual !== undefined ? Number(item.gpActual) : (Number(item.revenueActual) || 0) - (Number(item.bppActual) || 0));
         ncpPlan.push(Number(item.ncpPlan) || 0);
         ncpActual.push(Number(item.ncpActual) || 0);
         status.push(item.status || "PROGNOSA");
       });
 
-      const gpPlan = revenuePlan.map((value, index) => value - bppPlan[index]);
-      const gpActual = revenueActual.map((value, index) => value - bppActual[index]);
       const gpmPlan = revenuePlan.map((value, index) => value > 0 ? gpPlan[index] / value * 100 : 0);
       const gpmActual = revenueActual.map((value, index) => value > 0 ? gpActual[index] / value * 100 : 0);
 
@@ -917,30 +878,6 @@
       updateKpiBadge("kpi-bpp-badge", getAchievement(totalActualBpp, totalPlanBpp), false);
       updateKpiBadge("kpi-gp-badge", getAchievement(totalActualGp, totalPlanGp), true);
       updateKpiBadge("kpi-gpm-badge", getAchievement(totalActualGpm, totalPlanGpm), true);
-
-      // Dashboard 2 (Alt Order KPI)
-      const totalPlanNcp = sum(data.ncpPlan);
-      const totalActualNcp = sum(data.ncpActual);
-      const totalPlanNp = sum(data.npPlan);
-      const totalActualNp = sum(data.npActual);
-      const totalPlanNpm = totalPlanRev > 0 ? totalPlanNp / totalPlanRev * 100 : 0;
-      const totalActualNpm = totalActualRev > 0 ? totalActualNp / totalActualRev * 100 : 0;
-
-      setText("alt-kpi-gp-plan", formatNumber(totalPlanGp));
-      setText("alt-kpi-gp-act", formatNumber(totalActualGp));
-      updateKpiBadge("alt-kpi-gp-badge", getAchievement(totalActualGp, totalPlanGp), true);
-
-      setText("alt-kpi-ncp-plan", formatNumber(totalPlanNcp));
-      setText("alt-kpi-ncp-act", formatNumber(totalActualNcp));
-      updateKpiBadge("alt-kpi-ncp-badge", getAchievement(totalActualNcp, totalPlanNcp), false);
-
-      setText("alt-kpi-np-plan", formatNumber(totalPlanNp));
-      setText("alt-kpi-np-act", formatNumber(totalActualNp));
-      updateKpiBadge("alt-kpi-np-badge", getAchievement(totalActualNp, totalPlanNp), true);
-
-      setText("alt-kpi-npm-plan", formatPercent(totalPlanNpm));
-      setText("alt-kpi-npm-act", formatPercent(totalActualNpm));
-      updateKpiBadge("alt-kpi-npm-badge", getAchievement(totalActualNpm, totalPlanNpm), true);
     }
 
     function updateKpiBadge(id, percentage, higherIsGood = true) {
@@ -949,7 +886,7 @@
       element.classList.remove("badge-up", "badge-down");
       
       let isGood = higherIsGood ? percentage >= 100 : percentage <= 100;
-      if (id === "kpi-bpp-badge" || id === "alt-kpi-ncp-badge") {
+      if (id === "kpi-bpp-badge") {
         isGood = percentage <= 100;
       }
 
