@@ -280,17 +280,17 @@
   </div>
 
 
-  <!-- DASHBOARD 2: GRAFIK & TABEL KEDUA (BAGIAN KARTU KPI DIATASNYA TELAH DIHAPUS) -->
+  <!-- DASHBOARD 2: URUTAN BARU (NON-CONTRIBUTING PLANT, BIAYA TIDAK LANGSUNG, NET PROFIT, NET PROFIT MARGIN) -->
   <hr class="dashboard-divider">
   <div class="charts-grid" style="margin-top: 15px;">
-    <div class="chart-card"><div class="chart-title">GROSS PROFIT (Juta Rp)</div><div class="chart-container"><canvas id="altChartGP"></canvas></div></div>
     <div class="chart-card"><div class="chart-title">NON-CONTRIBUTING PLANT (Juta Rp)</div><div class="chart-container"><canvas id="altChartNCP"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">BIAYA TIDAK LANGSUNG (Juta Rp)</div><div class="chart-container"><canvas id="altChartBTL"></canvas></div></div>
     <div class="chart-card"><div class="chart-title">NET PROFIT (Juta Rp)</div><div class="chart-container"><canvas id="altChartNP"></canvas></div></div>
     <div class="chart-card"><div class="chart-title">NET PROFIT MARGIN (%)</div><div class="chart-container"><canvas id="altChartNPM"></canvas></div></div>
   </div>
 
 
-  <!-- TABEL KEDUA UNTUK DASHBOARD BARU -->
+  <!-- TABEL KEDUA UNTUK DASHBOARD BARU (URUTAN DISESUAIKAN) -->
   <div class="table-container">
     <table id="alt-table">
       <thead>
@@ -805,6 +805,7 @@
       const realGpBg = status.map(s => s === "REALISASI" ? "#16a34a" : "#d97706");
       const realGpmBg = status.map(s => s === "REALISASI" ? "#9333ea" : "#d97706");
       const realNcpBg = status.map(s => s === "REALISASI" ? "#d97706" : "#b45309");
+      const realBtlBg = status.map(s => s === "REALISASI" ? "#2563eb" : "#d97706");
       const realNpBg = status.map(s => s === "REALISASI" ? "#2563eb" : "#d97706");
       const realNpmBg = status.map(s => s === "REALISASI" ? "#7c3aed" : "#d97706");
 
@@ -813,9 +814,9 @@
       createComboChart("chartGP", gpActual, realGpBg, "#ffffff", false);
       createComboChart("chartGPM", gpmActual, realGpmBg, "#ffffff", true);
 
-      // Alt Dashboard Charts (Urutan: GP, NCP, Net Profit, NPM)
-      createComboChart("altChartGP", gpActual, realGpBg, "#ffffff", false);
+      // Alt Dashboard Charts (Urutan baru: NCP, Biaya Tidak Langsung / BTL, Net Profit, NPM)
       createComboChart("altChartNCP", ncpActual, realNcpBg, "#ffffff", false);
+      createComboChart("altChartBTL", ncpActual, realBtlBg, "#ffffff", false);
       createComboChart("altChartNP", npActual, realNpBg, "#ffffff", false);
       createComboChart("altChartNPM", npmActual, realNpmBg, "#ffffff", true);
     }
@@ -993,7 +994,7 @@
         tableBody.innerHTML = htmlRows;
       }
 
-      // Render Alt/Dashboard 2 Table
+      // Render Alt/Dashboard 2 Table (Urutan baru: NCP, Biaya Tidak Langsung, Net Profit, Net Profit Margin)
       const altRealTh = document.getElementById("alt-th-realisasi-hdr");
       const altProgTh = document.getElementById("alt-th-prognosa-hdr");
       if (altRealTh) {
@@ -1017,17 +1018,18 @@
 
       const altTableBody = document.querySelector("#alt-table tbody");
       if (altTableBody) {
-        const realGp = realIndices.reduce((t, i) => t + data.gpActual[i], 0);
-        const progGp = prognosaIndices.reduce((t, i) => t + data.gpActual[i], 0);
-        const totalPlanGp = sum(data.gpPlan);
-        const totalActualGp = sum(data.gpActual);
-        const pctGp = getAchievement(totalActualGp, totalPlanGp);
-
         const realNcp = realIndices.reduce((t, i) => t + data.ncpActual[i], 0);
         const progNcp = prognosaIndices.reduce((t, i) => t + data.ncpActual[i], 0);
         const totalPlanNcp = sum(data.ncpPlan);
         const totalActualNcp = sum(data.ncpActual);
         const pctNcp = getAchievement(totalActualNcp, totalPlanNcp);
+
+        // Biaya Tidak Langsung menggunakan data ncp sebagai contoh atau placeholder
+        const realBtl = realNcp;
+        const progBtl = progNcp;
+        const totalPlanBtl = totalPlanNcp;
+        const totalActualBtl = totalActualNcp;
+        const pctBtl = pctNcp;
 
         const realNp = realIndices.reduce((t, i) => t + data.npActual[i], 0);
         const progNp = prognosaIndices.reduce((t, i) => t + data.npActual[i], 0);
@@ -1044,16 +1046,7 @@
         const pctNpm = getAchievement(totalActualNpm, totalPlanNpm);
 
         let altHtmlRows = "";
-        // 1. Gross Profit
-        altHtmlRows += `<tr><td class="row-label">GROSS PROFIT (Juta Rp)</td>`;
-        realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.gpActual[i])}</td>`; });
-        altHtmlRows += `<td class="txt-green">${formatNumber(realGp)}</td>`;
-        prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.gpActual[i])}</td>`; });
-        altHtmlRows += `<td class="txt-green">${formatNumber(progGp)}</td>`;
-        altHtmlRows += `<td>${formatNumber(totalPlanGp)}</td><td class="metric-actual">${formatNumber(totalActualGp)}</td>`;
-        altHtmlRows += `<td class="${pctGp >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctGp)}</td></tr>`;
-
-        // 2. Non-Contributing Plant
+        // 1. Non-Contributing Plant (Juta Rp)
         altHtmlRows += `<tr><td class="row-label">NON-CONTRIBUTING PLANT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realNcp)}</td>`;
@@ -1062,7 +1055,16 @@
         altHtmlRows += `<td>${formatNumber(totalPlanNcp)}</td><td class="metric-actual">${formatNumber(totalActualNcp)}</td>`;
         altHtmlRows += `<td class="${pctNcp <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctNcp)}</td></tr>`;
 
-        // 3. Net Profit
+        // 2. Biaya Tidak Langsung (Juta Rp)
+        altHtmlRows += `<tr><td class="row-label">BIAYA TIDAK LANGSUNG (Juta Rp)</td>`;
+        realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
+        altHtmlRows += `<td class="txt-green">${formatNumber(realBtl)}</td>`;
+        prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
+        altHtmlRows += `<td class="txt-green">${formatNumber(progBtl)}</td>`;
+        altHtmlRows += `<td>${formatNumber(totalPlanBtl)}</td><td class="metric-actual">${formatNumber(totalActualBtl)}</td>`;
+        altHtmlRows += `<td class="${pctBtl <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctBtl)}</td></tr>`;
+
+        // 3. Net Profit (Juta Rp)
         altHtmlRows += `<tr><td class="row-label">NET PROFIT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.npActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realNp)}</td>`;
