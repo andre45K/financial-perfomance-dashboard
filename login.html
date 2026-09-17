@@ -25,8 +25,8 @@
     .admin-table th { background: #09121d; color: #cbd5e1; font-weight: bold; text-transform: uppercase; font-size: 11px; }
     .admin-table td.bulan-col { text-align: left; font-weight: bold; background: #09121d; color: #ffffff; }
     .admin-table input, .admin-table select { width: 100%; background: #132238; border: 1px solid #2a3d54; color: white; padding: 6px 8px; border-radius: 4px; text-align: right; font-size: 12px; }
-    .admin-table select { text-align: left; }
-    .admin-table input:focus { border-color: #3b82f6; outline: none; background: #172a46; }
+    .admin-table select { text-align: left; cursor: pointer; }
+    .admin-table input:focus, .admin-table select:focus { border-color: #3b82f6; outline: none; background: #172a46; }
 
     .readonly-val { font-weight: bold; color: #22c55e; }
 
@@ -56,7 +56,7 @@
     <div id="alertSuccess" class="alert-success"><i class="fa-solid fa-circle-check"></i> Data berhasil disimpan dan diperbarui!</div>
 
     <div class="instruction-box">
-      <strong>Petunjuk:</strong> Gunakan Tab 1 untuk mengatur data Dashboard Utama (Pendapatan & BPP). Gunakan Tab 2 untuk mengatur data Non-Contributing Plant & Biaya Tidak Langsung secara mandiri. Net Profit & Margin dihitung otomatis.
+      <strong>Petunjuk:</strong> Gunakan Tab 1 untuk mengatur data Dashboard Utama (Pendapatan & BPP). Gunakan Tab 2 untuk mengatur data Non-Contributing Plant & Biaya Tidak Langsung secara mandiri. Status Realisasi/Prognosa pada kedua tab dapat diatur bebas.
     </div>
 
     <!-- Navigation Tabs -->
@@ -87,7 +87,7 @@
         </table>
       </div>
 
-      <!-- TAB 2: DASHBOARD KEDUA (INPUT DENGAN NAMA KOLOM BARU) -->
+      <!-- TAB 2: DASHBOARD KEDUA -->
       <div id="tab2" class="tab-content" style="display: none;">
         <table class="admin-table">
           <thead>
@@ -203,7 +203,7 @@
           <tr>
             <td class="bulan-col">${monthNamesFull[idx]}</td>
             <td>
-              <select name="status_${m}">
+              <select name="status_${m}" onchange="syncStatus('${m}', this.value, 1)">
                 <option value="REALISASI" ${statusSelected === "REALISASI" ? "selected" : ""}>REALISASI</option>
                 <option value="PROGNOSA" ${statusSelected === "PROGNOSA" ? "selected" : ""}>PROGNOSA</option>
               </select>
@@ -221,8 +221,9 @@
           <tr>
             <td class="bulan-col">${monthNamesFull[idx]}</td>
             <td>
-              <select name="status2_${m}" disabled style="opacity:0.7;">
-                <option value="${statusSelected}">${statusSelected}</option>
+              <select name="status2_${m}" onchange="syncStatus('${m}', this.value, 2)">
+                <option value="REALISASI" ${statusSelected === "REALISASI" ? "selected" : ""}>REALISASI</option>
+                <option value="PROGNOSA" ${statusSelected === "PROGNOSA" ? "selected" : ""}>PROGNOSA</option>
               </select>
             </td>
             <td><input type="text" name="gpPlan_${m}" value="${formatNumber(gpPlan)}" oninput="formatInput(this)"></td>
@@ -237,6 +238,16 @@
 
       document.getElementById("tbodyTab1").innerHTML = htmlTab1;
       document.getElementById("tbodyTab2").innerHTML = htmlTab2;
+    }
+
+    function syncStatus(month, val, sourceTab) {
+      if (sourceTab === 1) {
+        const sel2 = document.querySelector(`[name="status2_${month}"]`);
+        if (sel2) sel2.value = val;
+      } else {
+        const sel1 = document.querySelector(`[name="status_${month}"]`);
+        if (sel1) sel1.value = val;
+      }
     }
 
     function formatInput(el) {
@@ -257,7 +268,7 @@
       const data = loadData();
 
       monthsList.forEach(m => {
-        const statusEl = document.querySelector(`[name="status_${m}"]`);
+        const statusEl = document.querySelector(`[name="status_${m}"]`) || document.querySelector(`[name="status2_${m}"]`);
         const revPlanEl = document.querySelector(`[name="revPlan_${m}"]`);
         const bppPlanEl = document.querySelector(`[name="bppPlan_${m}"]`);
         const revActEl = document.querySelector(`[name="revAct_${m}"]`);
