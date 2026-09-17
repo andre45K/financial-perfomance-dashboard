@@ -695,7 +695,12 @@
               
               let gpPlan = source.gpPlan !== undefined ? toNumber(source.gpPlan, revPlan - bppPlan) : (revPlan - bppPlan);
               let gpAct = source.gpActual !== undefined ? toNumber(source.gpActual, revAct - bppAct) : (revAct - bppAct);
-              
+
+              // Jika GP dihitung otomatis dari rev - bpp yang sudah dalam juta, maka hasilnya sudah juta.
+              // Tapi jika GP diambil mentah dari database dalam nominal asli (> 10000), konversikan ke juta:
+              if (gpPlan > 10000) gpPlan /= 1000000;
+              if (gpAct > 10000) gpAct /= 1000000;
+
               let ncpPlan = toNumber(source.ncpPlan, gpPlan);
               let ncpAct = toNumber(source.ncpActual, gpAct);
 
@@ -703,10 +708,16 @@
               if (revAct > 10000) revAct /= 1000000;
               if (bppPlan > 10000) bppPlan /= 1000000;
               if (bppAct > 10000) bppAct /= 1000000;
-              if (gpPlan > 10000) gpPlan /= 1000000;
-              if (gpAct > 10000) gpAct /= 1000000;
               if (ncpPlan > 10000) ncpPlan /= 1000000;
               if (ncpAct > 10000) ncpAct /= 1000000;
+
+              // Pastikan nilai GP konsisten dengan selisih Pendapatan dan BPP jika input aslinya berupa juta
+              if (Math.abs(gpPlan - (revPlan - bppPlan)) > 1000) {
+                gpPlan = revPlan - bppPlan;
+              }
+              if (Math.abs(gpAct - (revAct - bppAct)) > 1000) {
+                gpAct = revAct - bppAct;
+              }
 
               result.months[month] = {
                 revenuePlan: revPlan,
@@ -766,25 +777,24 @@
         bppPlan.push(bPlan);
         bppActual.push(bAct);
 
-        // Paksa Gross Profit dikalkulasi ulang otomatis secara presisi agar selalu sinkron dalam satuan juta
-        const calculatedGpPlan = rPlan - bPlan;
-        const calculatedGpAct = rAct - bAct;
+        // Kalkulasi Gross Profit secara presisi dari Pendapatan dikurangi BPP dalam satuan juta
+        const gPlan = rPlan - bPlan;
+        const gAct = rAct - bAct;
+        gpPlan.push(gPlan);
+        gpActual.push(gAct);
 
-        gpPlan.push(calculatedGpPlan);
-        gpActual.push(calculatedGpAct);
-
-        ncpPlan.push(item.ncpPlan !== undefined ? Number(item.ncpPlan) : calculatedGpPlan);
-        ncpActual.push(item.ncpActual !== undefined ? Number(item.ncpActual) : calculatedGpAct);
+        ncpPlan.push(item.ncpPlan !== undefined ? Number(item.ncpPlan) : gPlan);
+        ncpActual.push(item.ncpActual !== undefined ? Number(item.ncpActual) : gAct);
         status.push(item.status || "PROGNOSA");
       });
 
-      const gpmPlan = revenuePlan.map((value, index) => value > 0 ? (gpPlan[index] / value) * 100 : 0);
-      const gpmActual = revenueActual.map((value, index) => value > 0 ? (gpActual[index] / value) * 100 : 0);
+      const gpmPlan = revenuePlan.map((value, index) => value > 0 ? gpPlan[index] / value * 100 : 0);
+      const gpmActual = revenueActual.map((value, index) => value > 0 ? gpActual[index] / value * 100 : 0);
 
       const npPlan = gpPlan.map((value, index) => value - ncpPlan[index]);
       const npActual = gpActual.map((value, index) => value - ncpActual[index]);
-      const npmPlan = revenuePlan.map((value, index) => value > 0 ? (npPlan[index] / value) * 100 : 0);
-      const npmActual = revenueActual.map((value, index) => value > 0 ? (npActual[index] / value) * 100 : 0);
+      const npmPlan = revenuePlan.map((value, index) => value > 0 ? npPlan[index] / value * 100 : 0);
+      const npmActual = revenueActual.map((value, index) => value > 0 ? npActual[index] / value * 100 : 0);
 
       return { revenuePlan, revenueActual, bppPlan, bppActual, gpPlan, gpActual, gpmPlan, gpmActual, ncpPlan, ncpActual, npPlan, npActual, npmPlan, npmActual, status };
     }
@@ -881,8 +891,8 @@
       const totalActualBpp = sum(data.bppActual);
       const totalPlanGp = sum(data.gpPlan);
       const totalActualGp = sum(data.gpActual);
-      const totalPlanGpm = totalPlanRev > 0 ? (totalPlanGp / totalPlanRev) * 100 : 0;
-      const totalActualGpm = totalActualRev > 0 ? (totalActualGp / totalActualRev) * 100 : 0;
+      const totalPlanGpm = totalPlanRev > 0 ? totalPlanGp / totalPlanRev * 100 : 0;
+      const totalActualGpm = totalActualRev > 0 ? totalActualGp / totalActualRev * 100 : 0;
 
       setText("kpi-rev-plan", formatNumber(totalPlanRev));
       setText("kpi-rev-act", formatNumber(totalActualRev));
@@ -970,10 +980,10 @@
         const totalActualGp = sum(data.gpActual);
         const pctGp = getAchievement(totalActualGp, totalPlanGp);
 
-        const realGpm = realRev > 0 ? (realGp / realRev) * 100 : 0;
-        const progGpm = progRev > 0 ? (progGp / progRev) * 100 : 0;
-        const totalPlanGpm = totalPlanRev > 0 ? (totalPlanGp / totalPlanRev) * 100 : 0;
-        const totalActualGpm = totalActualRev > 0 ? (totalActualGp / totalActualRev) * 100 : 0;
+        const realGpm = realRev > 0 ? (realGp / realRev * 100) : 0;
+        const progGpm = progRev > 0 ? (progGp / progRev * 100) : 0;
+        const totalPlanGpm = totalPlanRev > 0 ? (totalPlanGp / totalPlanRev * 100) : 0;
+        const totalActualGpm = totalActualRev > 0 ? (totalActualGp / totalActualRev * 100) : 0;
         const pctGpm = getAchievement(totalActualGpm, totalPlanGpm);
 
         let htmlRows = "";
@@ -1055,10 +1065,10 @@
 
         const realRev = realIndices.reduce((t, i) => t + data.revenueActual[i], 0);
         const progRev = prognosaIndices.reduce((t, i) => t + data.revenueActual[i], 0);
-        const realNpm = realRev > 0 ? (realNp / realRev) * 100 : 0;
-        const progRevProg = progRev > 0 ? (progNp / progRev) * 100 : 0;
-        const totalPlanNpm = sum(data.revenuePlan) > 0 ? (sum(data.npPlan) / sum(data.revenuePlan)) * 100 : 0;
-        const totalActualNpm = sum(data.revenueActual) > 0 ? (sum(data.npActual) / sum(data.revenueActual)) * 100 : 0;
+        const realNpm = realRev > 0 ? (realNp / realRev * 100) : 0;
+        const progRevProg = progRev > 0 ? (progNp / progRev * 100) : 0;
+        const totalPlanNpm = sum(data.revenuePlan) > 0 ? (sum(data.npPlan) / sum(data.revenuePlan) * 100) : 0;
+        const totalActualNpm = sum(data.revenueActual) > 0 ? (sum(data.npActual) / sum(data.revenueActual) * 100) : 0;
         const pctNpm = getAchievement(totalActualNpm, totalPlanNpm);
 
         let altHtmlRows = "";
@@ -1108,7 +1118,7 @@
       const totalRevPlan = sum(data.revenuePlan);
       const totalBppPlan = sum(data.bppPlan);
       const totalGpPlan = sum(data.gpPlan);
-      const totalGpmPlan = totalRevPlan > 0 ? (totalGpPlan / totalRevPlan) * 100 : 0;
+      const totalGpmPlan = totalRevPlan > 0 ? totalGpPlan / totalRevPlan * 100 : 0;
 
       setText("sec1-tot-rev", formatNumber(totalRevPlan));
       setText("sec1-avg-rev", formatNumber(average(data.revenuePlan)));
@@ -1127,7 +1137,7 @@
       setText("side-val-gpm", formatPercentOne(totalGpmPlan));
 
       const bppBar = document.getElementById("side-bar-bpp-col");
-      if (bppBar) bppBar.style.height = (totalRevPlan > 0 ? Math.max(5, Math.min(100, (totalBppPlan / totalRevPlan) * 100)) : 5) + "%";
+      if (bppBar) bppBar.style.height = (totalRevPlan > 0 ? Math.max(5, Math.min(100, totalBppPlan / totalRevPlan * 100)) : 5) + "%";
 
       const gpmBar = document.getElementById("side-bar-gpm-col");
       if (gpmBar) gpmBar.style.height = Math.max(5, Math.min(100, totalGpmPlan)) + "%";
@@ -1205,8 +1215,8 @@
       const planGpCum = sum(data.gpPlan.slice(0, actualEndIndex + 1));
       const actualGpCum = sum(data.gpActual.slice(0, actualEndIndex + 1));
 
-      const planGpmCum = planRevCum > 0 ? (planGpCum / planRevCum) * 100 : 0;
-      const actualGpmCum = actualRevCum > 0 ? (actualGpCum / actualRevCum) * 100 : 0;
+      const planGpmCum = planRevCum > 0 ? planGpCum / planRevCum * 100 : 0;
+      const actualGpmCum = actualRevCum > 0 ? actualGpCum / actualRevCum * 100 : 0;
 
       const actualMonthName = monthsList[actualEndIndex];
       const actualMonthFull = getMonthFullName(actualMonthName);
@@ -1381,7 +1391,7 @@
         element.style.height = "0%";
         return;
       }
-      element.style.height = Math.max(0, Math.min(100, (value / maxValue) * 100)) + "%";
+      element.style.height = Math.max(0, Math.min(100, value / maxValue * 100)) + "%";
     }
 
     function getMonthShortName(month) {
