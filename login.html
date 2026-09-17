@@ -56,13 +56,13 @@
     <div id="alertSuccess" class="alert-success"><i class="fa-solid fa-circle-check"></i> Data berhasil disimpan dan diperbarui!</div>
 
     <div class="instruction-box">
-      <strong>Petunjuk:</strong> Gunakan Tab 1 untuk mengatur data Dashboard Utama (Pendapatan & BPP). Gunakan Tab 2 untuk mengatur data terpisah pada Dashboard Kedua (Gross Profit & Non-Contributing Plant). Net Profit & Margin dihitung otomatis.
+      <strong>Petunjuk:</strong> Gunakan Tab 1 untuk mengatur data Dashboard Utama (Pendapatan & BPP). Gunakan Tab 2 untuk mengatur data Non-Contributing Plant & Biaya Tidak Langsung secara mandiri. Net Profit & Margin dihitung otomatis.
     </div>
 
     <!-- Navigation Tabs -->
     <div class="tabs-nav">
       <button type="button" class="tab-btn active" onclick="switchTab('tab1', this)"><i class="fa-solid fa-chart-line"></i> Dashboard 1: Pendapatan & BPP</button>
-      <button type="button" class="tab-btn" onclick="switchTab('tab2', this)"><i class="fa-solid fa-coins"></i> Dashboard 2: Gross Profit & NCP</button>
+      <button type="button" class="tab-btn" onclick="switchTab('tab2', this)"><i class="fa-solid fa-coins"></i> Dashboard 2: NCP & Biaya Tidak Langsung</button>
     </div>
 
     <form id="adminForm">
@@ -87,17 +87,17 @@
         </table>
       </div>
 
-      <!-- TAB 2: DASHBOARD KEDUA (INPUT TERPISAH) -->
+      <!-- TAB 2: DASHBOARD KEDUA (INPUT DENGAN NAMA KOLOM BARU) -->
       <div id="tab2" class="tab-content" style="display: none;">
         <table class="admin-table">
           <thead>
             <tr>
               <th style="width: 12%;">Bulan</th>
               <th style="width: 13%;">Status</th>
-              <th style="width: 15%;">Rencana Gross Profit</th>
-              <th style="width: 15%;">Rencana NCP</th>
-              <th style="width: 15%;">Realisasi/Prognosa Gross Profit</th>
-              <th style="width: 15%;">Realisasi/Prognosa NCP</th>
+              <th style="width: 15%;">Rencana Non-Contributing Plant</th>
+              <th style="width: 15%;">Rencana Biaya Tidak Langsung</th>
+              <th style="width: 15%;">Realisasi/Prognosa Non-Contributing Plant</th>
+              <th style="width: 15%;">Realisasi/Prognosa Biaya Tidak Langsung</th>
               <th style="width: 7%;">Net Profit</th>
               <th style="width: 8%;">NPM (%)</th>
             </tr>
@@ -146,7 +146,6 @@
         const saved = localStorage.getItem("financialData2026");
         if (!saved) return JSON.parse(JSON.stringify(defaultFinancialData));
         let parsed = JSON.parse(saved);
-        // Pastikan properti gpPlan & gpActual ada di setiap bulan jika data lama
         monthsList.forEach(m => {
           if (parsed.months[m]) {
             if (parsed.months[m].gpPlan === undefined) parsed.months[m].gpPlan = parsed.months[m].revenuePlan - parsed.months[m].bppPlan;
@@ -186,7 +185,6 @@
         const item = data.months[m] || { revenuePlan:0, revenueActual:0, bppPlan:0, bppActual:0, gpPlan:0, gpActual:0, ncpPlan:0, ncpActual:0, status:"PROGNOSA" };
         const statusSelected = item.status === "REALISASI" ? "REALISASI" : "PROGNOSA";
         
-        // Tab 1 Data
         const revPlan = item.revenuePlan;
         const bppPlan = item.bppPlan;
         const revAct = item.revenueActual;
@@ -194,7 +192,6 @@
         const gpActTab1 = revAct - bppAct;
         const gpmActTab1 = revAct > 0 ? (gpActTab1 / revAct * 100).toFixed(2) + "%" : "0,00%";
 
-        // Tab 2 Data (Independent inputs for Gross Profit & NCP)
         const gpPlan = item.gpPlan !== undefined ? item.gpPlan : (revPlan - bppPlan);
         const gpAct = item.gpActual !== undefined ? item.gpActual : gpActTab1;
         const ncpPlan = item.ncpPlan || 0;
