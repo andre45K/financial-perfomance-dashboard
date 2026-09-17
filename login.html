@@ -5,6 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Input - Financial Dashboard 2026</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- FIREBASE SDK (Modular v10) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
+      authDomain: "financial-perfomance-dashboard.firebaseapp.com",
+      projectId: "financial-perfomance-dashboard",
+      storageBucket: "financial-perfomance-dashboard.firebasestorage.app",
+      messagingSenderId: "136866453174",
+      appId: "1:136866453174:web:b69a3e14672eb96cc53817"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.firebaseDB = db;
+    window.firebaseFns = { doc, getDoc, setDoc };
+  </script>
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
     body { background-color: #060d1a; color: #ffffff; padding: 20px; font-size: 13px; }
@@ -53,10 +75,10 @@
       <a href="index.html" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</a>
     </div>
 
-    <div id="alertSuccess" class="alert-success"><i class="fa-solid fa-circle-check"></i> Data berhasil disimpan dan diperbarui!</div>
+    <div id="alertSuccess" class="alert-success"><i class="fa-solid fa-circle-check"></i> Data berhasil disimpan ke Firebase Firestore!</div>
 
     <div class="instruction-box">
-      <strong>Petunjuk:</strong> Gunakan Tab 1 untuk mengatur data Dashboard Utama (Pendapatan & BPP). Gunakan Tab 2 untuk mengatur data Non-Contributing Plant & Biaya Tidak Langsung secara mandiri. Status Realisasi/Prognosa pada kedua tab dapat diatur bebas.
+      <strong>Petunjuk:</strong> Perubahan data di sini akan langsung dikirim ke Cloud Database Firestore[cite: 5] sehingga perangkat lain (Laptop B) maupun halaman utama akan otomatis memperbarui grafik secara realtime[cite: 6].
     </div>
 
     <!-- Navigation Tabs -->
@@ -66,7 +88,7 @@
     </div>
 
     <form id="adminForm">
-      <!-- TAB 1: DASHBOARD UTAMA -->
+      <!-- TAB 1 -->
       <div id="tab1" class="tab-content">
         <table class="admin-table">
           <thead>
@@ -81,13 +103,11 @@
               <th style="width: 8%;">GPM (%)</th>
             </tr>
           </thead>
-          <tbody id="tbodyTab1">
-            <!-- Render via JS -->
-          </tbody>
+          <tbody id="tbodyTab1"></tbody>
         </table>
       </div>
 
-      <!-- TAB 2: DASHBOARD KEDUA -->
+      <!-- TAB 2 -->
       <div id="tab2" class="tab-content" style="display: none;">
         <table class="admin-table">
           <thead>
@@ -102,9 +122,7 @@
               <th style="width: 8%;">NPM (%)</th>
             </tr>
           </thead>
-          <tbody id="tbodyTab2">
-            <!-- Render via JS -->
-          </tbody>
+          <tbody id="tbodyTab2"></tbody>
         </table>
       </div>
 
@@ -118,7 +136,7 @@
     </form>
   </div>
 
-  <script>
+  <script type="module">
     const monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const monthNamesFull = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
@@ -141,34 +159,35 @@
       }
     };
 
-    function loadData() {
-      try {
-        const saved = localStorage.getItem("financialData2026");
-        if (!saved) return JSON.parse(JSON.stringify(defaultFinancialData));
-        let parsed = JSON.parse(saved);
-        monthsList.forEach(m => {
-          if (parsed.months[m]) {
-            if (parsed.months[m].gpPlan === undefined) parsed.months[m].gpPlan = parsed.months[m].revenuePlan - parsed.months[m].bppPlan;
-            if (parsed.months[m].gpActual === undefined) parsed.months[m].gpActual = parsed.months[m].revenueActual - parsed.months[m].bppActual;
+    let currentData = structuredClone(defaultFinancialData);
+
+    async function loadDataFromFirestore() {
+      const checkInterval = setInterval(async () => {
+        if (window.firebaseDB && window.firebaseFns) {
+          clearInterval(checkInterval);
+          const { doc, getDoc, setDoc } = window.firebaseFns;
+          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+          const docSnap = await getDoc(docRef);
+          
+          if (docSnap.exists()) {
+            currentData = docSnap.data();
+          } else {
+            await setDoc(docRef, defaultFinancialData);
+            currentData = structuredClone(defaultFinancialData);
           }
-        });
-        return parsed;
-      } catch(e) {
-        return JSON.parse(JSON.stringify(defaultFinancialData));
-      }
+          renderTableRows();
+        }
+      }, 100);
     }
 
-    function switchTab(tabId, btn) {
+    window.switchTab = function(tabId, btn) {
       document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
       document.getElementById(tabId).style.display = 'block';
       btn.classList.add('active');
-    }
+    };
 
-    function formatNumber(num) {
-      return Number(num || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 });
-    }
-
+    function formatNumber(num) { return Number(num || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); }
     function toNumber(val) {
       if (!val) return 0;
       let str = String(val).replace(/\./g, '').replace(',', '.');
@@ -177,25 +196,18 @@
     }
 
     function renderTableRows() {
-      const data = loadData();
-      let htmlTab1 = "";
-      let htmlTab2 = "";
-
+      let htmlTab1 = "", htmlTab2 = "";
       monthsList.forEach((m, idx) => {
-        const item = data.months[m] || { revenuePlan:0, revenueActual:0, bppPlan:0, bppActual:0, gpPlan:0, gpActual:0, ncpPlan:0, ncpActual:0, status:"PROGNOSA" };
+        const item = currentData.months[m] || { revenuePlan: 0, revenueActual: 0, bppPlan: 0, bppActual: 0, status: "PROGNOSA" };
         const statusSelected = item.status === "REALISASI" ? "REALISASI" : "PROGNOSA";
         
-        const revPlan = item.revenuePlan;
-        const bppPlan = item.bppPlan;
-        const revAct = item.revenueActual;
-        const bppAct = item.bppActual;
+        const revPlan = item.revenuePlan, bppPlan = item.bppPlan, revAct = item.revenueActual, bppAct = item.bppActual;
         const gpActTab1 = revAct - bppAct;
         const gpmActTab1 = revAct > 0 ? (gpActTab1 / revAct * 100).toFixed(2) + "%" : "0,00%";
 
         const gpPlan = item.gpPlan !== undefined ? item.gpPlan : (revPlan - bppPlan);
         const gpAct = item.gpActual !== undefined ? item.gpActual : gpActTab1;
-        const ncpPlan = item.ncpPlan || 0;
-        const ncpAct = item.ncpActual || 0;
+        const ncpPlan = item.ncpPlan || 0, ncpAct = item.ncpActual || 0;
         const npAct = gpAct - ncpAct;
         const npmAct = revAct > 0 ? (npAct / revAct * 100).toFixed(2) + "%" : "0,00%";
 
@@ -240,7 +252,7 @@
       document.getElementById("tbodyTab2").innerHTML = htmlTab2;
     }
 
-    function syncStatus(month, val, sourceTab) {
+    window.syncStatus = function(month, val, sourceTab) {
       if (sourceTab === 1) {
         const sel2 = document.querySelector(`[name="status2_${month}"]`);
         if (sel2) sel2.value = val;
@@ -248,9 +260,9 @@
         const sel1 = document.querySelector(`[name="status_${month}"]`);
         if (sel1) sel1.value = val;
       }
-    }
+    };
 
-    function formatInput(el) {
+    window.formatInput = function(el) {
       let val = el.value.replace(/[^,\d]/g, '');
       let parts = val.split(',');
       let sisa = parts[0].length % 3;
@@ -261,57 +273,64 @@
         rupiah += separator + ribuan.join('.');
       }
       el.value = parts[1] !== undefined ? rupiah + ',' + parts[1] : rupiah;
-    }
+    };
 
-    document.getElementById("adminForm").addEventListener("submit", function(e) {
+    document.getElementById("adminForm").addEventListener("submit", async function(e) {
       e.preventDefault();
-      const data = loadData();
-
+      
       monthsList.forEach(m => {
         const statusEl = document.querySelector(`[name="status_${m}"]`) || document.querySelector(`[name="status2_${m}"]`);
         const revPlanEl = document.querySelector(`[name="revPlan_${m}"]`);
         const bppPlanEl = document.querySelector(`[name="bppPlan_${m}"]`);
         const revActEl = document.querySelector(`[name="revAct_${m}"]`);
         const bppActEl = document.querySelector(`[name="bppAct_${m}"]`);
-        
         const gpPlanEl = document.querySelector(`[name="gpPlan_${m}"]`);
         const ncpPlanEl = document.querySelector(`[name="ncpPlan_${m}"]`);
         const gpActEl = document.querySelector(`[name="gpAct_${m}"]`);
         const ncpActEl = document.querySelector(`[name="ncpAct_${m}"]`);
 
-        if (statusEl) data.months[m].status = statusEl.value;
-        if (revPlanEl) data.months[m].revenuePlan = toNumber(revPlanEl.value);
-        if (bppPlanEl) data.months[m].bppPlan = toNumber(bppPlanEl.value);
-        if (revActEl) data.months[m].revenueActual = toNumber(revActEl.value);
-        if (bppActEl) data.months[m].bppActual = toNumber(bppActEl.value);
-        
-        if (gpPlanEl) data.months[m].gpPlan = toNumber(gpPlanEl.value);
-        if (ncpPlanEl) data.months[m].ncpPlan = toNumber(ncpPlanEl.value);
-        if (gpActEl) data.months[m].gpActual = toNumber(gpActEl.value);
-        if (ncpActEl) data.months[m].ncpActual = toNumber(ncpActEl.value);
+        if (!currentData.months[m]) currentData.months[m] = {};
+
+        if (statusEl) currentData.months[m].status = statusEl.value;
+        if (revPlanEl) currentData.months[m].revenuePlan = toNumber(revPlanEl.value);
+        if (bppPlanEl) currentData.months[m].bppPlan = toNumber(bppPlanEl.value);
+        if (revActEl) currentData.months[m].revenueActual = toNumber(revActEl.value);
+        if (bppActEl) currentData.months[m].bppActual = toNumber(bppActEl.value);
+        if (gpPlanEl) currentData.months[m].gpPlan = toNumber(gpPlanEl.value);
+        if (ncpPlanEl) currentData.months[m].ncpPlan = toNumber(ncpPlanEl.value);
+        if (gpActEl) currentData.months[m].gpActual = toNumber(gpActEl.value);
+        if (ncpActEl) currentData.months[m].ncpActual = toNumber(ncpActEl.value);
       });
 
-      localStorage.setItem("financialData2026", JSON.stringify(data));
-      
+      if (window.firebaseDB && window.firebaseFns) {
+        const { doc, setDoc } = window.firebaseFns;
+        const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+        await setDoc(docRef, currentData);
+      }
+
       const alertBox = document.getElementById("alertSuccess");
       alertBox.style.display = "block";
       window.scrollTo({ top: 0, behavior: 'smooth' });
       
-      setTimeout(() => {
-        alertBox.style.display = "none";
-        renderTableRows();
-      }, 2000);
+      setTimeout(() => { alertBox.style.display = "none"; }, 2500);
     });
 
-    function resetDefaultData() {
+    window.resetDefaultData = async function() {
       if (confirm("Apakah Anda yakin ingin mereset seluruh data kembali ke pengaturan awal?")) {
-        localStorage.setItem("financialData2026", JSON.stringify(defaultFinancialData));
+        currentData = structuredClone(defaultFinancialData);
+        if (window.firebaseDB && window.firebaseFns) {
+          const { doc, setDoc } = window.firebaseFns;
+          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+          await setDoc(docRef, currentData);
+        }
         renderTableRows();
         alert("Data berhasil direset ke awal!");
       }
-    }
+    };
 
-    window.onload = renderTableRows;
+    window.addEventListener("DOMContentLoaded", () => {
+      loadDataFromFirestore();
+    });
   </script>
 </body>
 </html>
