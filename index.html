@@ -34,7 +34,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
     body { background-color: #060d1a; color: #ffffff; padding: 15px; font-size: 13px; }
     
-    /* DASHBOARD 1 (DARK THEME) */
     .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #1a2a40; padding-bottom: 10px; }
     .title-area h1 { font-size: 20px; letter-spacing: 1px; color: #ffffff; text-transform: uppercase; font-weight: 800; }
     .title-area p { color: #8ba0b8; font-size: 12px; margin-top: 2px; }
@@ -95,11 +94,9 @@
 
     .dashboard-divider { margin: 25px 0 15px 0; border: none; }
 
-    /* DASHBOARD 3 (LIGHT THEME) */
     .section-divider-title { color: #94a3b8; font-size: 12px; font-weight: bold; margin-bottom: 15px; letter-spacing: 1px; text-transform: uppercase; border-left: 4px solid #0052cc; padding-left: 8px; }
 
     .panel-card-light { background: #ffffff; color: #333333; border-radius: 14px; margin-bottom: 30px; padding: 24px 26px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-    
     .panel-light-head { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
     .num-badge-light { font-size: 15px; font-weight: 800; padding: 4px 10px; border-radius: 6px; color: #ffffff; }
     .num-blue { background: #0f4c81; }
@@ -108,7 +105,6 @@
     .title-purple { color: #4a154b; }
 
     .panel-light-grid { display: grid; grid-template-columns: 240px 1fr 170px; gap: 20px; align-items: stretch; }
-
     .ringkasan-box-light { background: #f0f5fc; border-radius: 12px; padding: 0 0 16px 0; display: flex; flex-direction: column; justify-content: flex-start; border: 1px solid #d0dbe9; overflow: hidden; }
     .ringkasan-header-banner { background: #0b63ce; color: white; padding: 12px; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
     .ringkasan-header-purple { background: #7c3aed; }
@@ -159,7 +155,6 @@
     .val-purple-text { color: #7c3aed; }
     .val-orange-text { color: #e67e22; }
 
-    /* DASHBOARD 4 STYLING */
     .dashboard-3-container { background: #ffffff; color: #333333; border-radius: 14px; padding: 24px; margin-top: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
     .d3-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 20px; }
     .d3-title { font-size: 22px; font-weight: 900; color: #0f4c81; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -224,7 +219,7 @@
   </div>
 
 
-  <!-- DASHBOARD 1: ORIGINAL ORDER -->
+  <!-- DASHBOARD 1 -->
   <div class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-header"><div class="kpi-icon icon-blue">Rp</div><div class="kpi-title">PENDAPATAN USAHA (JUTA RP)</div></div>
@@ -294,14 +289,12 @@
           <th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- Baris tabel dirender otomatis oleh JS -->
-      </tbody>
+      <tbody></tbody>
     </table>
   </div>
 
 
-  <!-- DASHBOARD 2: URUTAN BARU (NON-CONTRIBUTING PLANT, BIAYA TIDAK LANGSUNG, NET PROFIT, NET PROFIT MARGIN) -->
+  <!-- DASHBOARD 2 -->
   <hr class="dashboard-divider">
   <div class="charts-grid" style="margin-top: 15px;">
     <div class="chart-card"><div class="chart-title">NON-CONTRIBUTING PLANT (Juta Rp)</div><div class="chart-container"><canvas id="altChartNCP"></canvas></div></div>
@@ -310,8 +303,6 @@
     <div class="chart-card"><div class="chart-title">NET PROFIT MARGIN (%)</div><div class="chart-container"><canvas id="altChartNPM"></canvas></div></div>
   </div>
 
-
-  <!-- TABEL KEDUA UNTUK DASHBOARD BARU (URUTAN DISESUAIKAN) -->
   <div class="table-container">
     <table id="alt-table">
       <thead>
@@ -329,14 +320,10 @@
           <th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- Baris tabel kedua dirender otomatis oleh JS -->
-      </tbody>
+      <tbody></tbody>
     </table>
   </div>
 
-
-  <!-- LEGEND DARK -->
   <div class="footer-legend">
     <strong>CATATAN :</strong>
     <div class="legend-item"><div class="box-blue"></div><span id="legend-real-text">Data Jan - Sep 2026 merupakan Realisasi</span></div>
@@ -344,7 +331,7 @@
   </div>
 
 
-  <!-- DASHBOARD 3 (LIGHT MODE KOMPARATIF) -->
+  <!-- DASHBOARD 3 (LIGHT MODE) -->
   <div class="section-divider-title">VISUALISASI ANALISIS KOMPARATIF</div>
   <div class="panel-card-light">
     <div class="panel-light-head">
@@ -394,8 +381,6 @@
     </div>
   </div>
 
-
-  <!-- PANEL 02 -->
   <div class="panel-card-light">
     <div class="panel-light-head">
       <span class="num-badge-light num-purple">02</span>
@@ -477,7 +462,6 @@
       </div>
     </div>
 
-
     <!-- BAGIAN 01 -->
     <div style="margin-bottom: 25px;">
       <div class="d3-section-title">
@@ -486,15 +470,12 @@
       </div>
       <div id="d3-section1-sub" class="d3-section-sub">Monthly performance – actual data available through September 2026</div>
       <div class="d3-charts-row">
-        <!-- Pendapatan Usaha -->
         <div class="d3-chart-box">
           <div>
             <div class="d3-chart-title">Pendapatan Usaha</div>
             <div class="d3-chart-sub">
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#cbd5e1; display:inline-block;"></span>Rencana (per bulan)</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#0b63ce; display:inline-block;"></span>Realisasi</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #0b63ce; display:inline-block;"></span>Realisasi s.d. Sep (Kumulatif)</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #94a3b8; display:inline-block;"></span>Rencana s.d. Sep (Kumulatif)</span>
+              <span><span style="width:9px; height:9px; background:#cbd5e1; display:inline-block;"></span>Rencana</span>
+              <span><span style="width:9px; height:9px; background:#0b63ce; display:inline-block;"></span>Realisasi</span>
             </div>
           </div>
           <div class="d3-panel-flex">
@@ -505,27 +486,24 @@
                 <div class="d3-cumul-item">
                   <div id="d3-rev-plan-cumul" class="d3-cumul-val" style="color:#475569;">7.483</div>
                   <div class="d3-cumul-bar-wrap"><div id="d3-rev-plan-bar" style="width:100%; height:100%; background:#cbd5e1; border:1px dashed #94a3b8; border-radius:3px 3px 0 0;"></div></div>
-                  <div class="d3-cumul-label">Rencana (Kumulatif)</div>
+                  <div class="d3-cumul-label">Rencana</div>
                 </div>
                 <div class="d3-cumul-item">
                   <div id="d3-rev-act-cumul" class="d3-cumul-val" style="color:#0b63ce;">9.453</div>
                   <div class="d3-cumul-bar-wrap"><div id="d3-rev-act-bar" style="width:100%; height:82%; background:#0b63ce; border-radius:3px 3px 0 0;"></div></div>
-                  <div class="d3-cumul-label">Realisasi (Kumulatif)</div>
+                  <div class="d3-cumul-label">Realisasi</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Beban Pokok Pendapatan -->
         <div class="d3-chart-box">
           <div>
             <div class="d3-chart-title">Beban Pokok Pendapatan</div>
             <div class="d3-chart-sub">
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#cbd5e1; display:inline-block;"></span>Rencana (per bulan)</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#008767; display:inline-block;"></span>Realisasi</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #008767; display:inline-block;"></span>Realisasi s.d. Sep (Kumulatif)</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #94a3b8; display:inline-block;"></span>Rencana s.d. Sep (Kumulatif)</span>
+              <span><span style="width:9px; height:9px; background:#cbd5e1; display:inline-block;"></span>Rencana</span>
+              <span><span style="width:9px; height:9px; background:#008767; display:inline-block;"></span>Realisasi</span>
             </div>
           </div>
           <div class="d3-panel-flex">
@@ -536,12 +514,12 @@
                 <div class="d3-cumul-item">
                   <div id="d3-bpp-plan-cumul" class="d3-cumul-val" style="color:#475569;">3.915</div>
                   <div class="d3-cumul-bar-wrap"><div id="d3-bpp-plan-bar" style="width:100%; height:100%; background:#cbd5e1; border:1px dashed #94a3b8; border-radius:3px 3px 0 0;"></div></div>
-                  <div class="d3-cumul-label">Rencana (Kumulatif)</div>
+                  <div class="d3-cumul-label">Rencana</div>
                 </div>
                 <div class="d3-cumul-item">
                   <div id="d3-bpp-act-cumul" class="d3-cumul-val" style="color:#008767;">7.214</div>
                   <div class="d3-cumul-bar-wrap"><div id="d3-bpp-act-bar" style="width:100%; height:80%; background:#008767; border-radius:3px 3px 0 0;"></div></div>
-                  <div class="d3-cumul-label">Realisasi (Kumulatif)</div>
+                  <div class="d3-cumul-label">Realisasi</div>
                 </div>
               </div>
             </div>
@@ -558,15 +536,12 @@
       </div>
       <div id="d3-section2-sub" class="d3-section-sub">Monthly profitability performance and full-year target positioning</div>
       <div class="d3-charts-row">
-        <!-- Gross Profit -->
         <div class="d3-chart-box">
           <div>
             <div class="d3-chart-title">Gross Profit</div>
             <div class="d3-chart-sub">
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#cbd5e1; display:inline-block;"></span>Rencana (per bulan)</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; background:#7c3aed; display:inline-block;"></span>Realisasi</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #7c3aed; display:inline-block;"></span>Realisasi s.d. Sep (Kumulatif)</span>
-              <span style="display:inline-flex; align-items:center; gap:3px;"><span style="width:9px; height:9px; border:1px dashed #94a3b8; display:inline-block;"></span>Rencana s.d. Sep (Kumulatif)</span>
+              <span><span style="width:9px; height:9px; background:#cbd5e1; display:inline-block;"></span>Rencana</span>
+              <span><span style="width:9px; height:9px; background:#7c3aed; display:inline-block;"></span>Realisasi</span>
             </div>
           </div>
           <div class="d3-panel-flex">
@@ -577,28 +552,24 @@
                 <div class="d3-cumul-item">
                   <div id="d3-gp-plan-cumul" class="d3-cumul-val" style="color:#475569;">3.568</div>
                   <div class="d3-cumul-bar-wrap"><div id="d3-gp-plan-bar" style="width:100%; height:100%; background:#cbd5e1; border:1px dashed #94a3b8; border-radius:3px 3px 0 0;"></div></div>
-                  <div class="d3-cumul-label">Rencana (Kumulatif)</div>
+                  <div class="d3-cumul-label">Rencana</div>
                 </div>
                 <div class="d3-cumul-item">
                   <div id="d3-gp-act-cumul" class="d3-cumul-val" style="color:#7c3aed;">2.239</div>
                   <div class="d3-cumul-bar-wrap"><div id="d3-gp-act-bar" style="width:100%; height:29%; background:#7c3aed; border-radius:3px 3px 0 0;"></div></div>
-                  <div class="d3-cumul-label">Realisasi (Kumulatif)</div>
+                  <div class="d3-cumul-label">Realisasi</div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Gross Profit Margin -->
         <div class="d3-chart-box">
           <div>
             <div class="d3-chart-title">Gross Profit Margin</div>
             <div class="d3-chart-sub">
-              <span style="display:inline-flex; align-items:center; gap:2px;"><span style="width:8px; height:8px; background:#e67e22; border-radius:50%; display:inline-block;"></span>Rencana</span>
-              <span style="display:inline-flex; align-items:center; gap:2px;"><span style="width:8px; height:8px; background:#1e293b; border-radius:50%; display:inline-block;"></span>Realisasi</span>
-              <span>--- Target FY 45,59%</span>
-              <span style="display:inline-flex; align-items:center; gap:2px;"><span style="width:8px; height:8px; border:1px dashed #1e293b; display:inline-block;"></span>Realisasi s.d. Sep</span>
-              <span style="display:inline-flex; align-items:center; gap:2px;"><span style="width:8px; height:8px; border:1px dashed #e67e22; display:inline-block;"></span>Rencana s.d. Sep</span>
+              <span><span style="width:8px; height:8px; background:#e67e22; border-radius:50%; display:inline-block;"></span>Rencana</span>
+              <span><span style="width:8px; height:8px; background:#1e293b; border-radius:50%; display:inline-block;"></span>Realisasi</span>
             </div>
           </div>
           <div class="d3-panel-flex">
@@ -609,12 +580,12 @@
                 <div class="d3-cumul-item">
                   <div id="d3-gpm-plan-cumul" class="d3-gpm-plan-cumul-val d3-cumul-val" style="color:#e67e22;">47,68%</div>
                   <div class="d3-cumul-bar-wrap"><div id="d3-gpm-plan-bar" style="width:100%; height:47.68%; background:#e67e22; opacity:0.85; border-radius:3px 3px 0 0;"></div></div>
-                  <div class="d3-cumul-label">Rencana (Kumulatif)</div>
+                  <div class="d3-cumul-label">Rencana</div>
                 </div>
                 <div class="d3-cumul-item">
                   <div id="d3-gpm-act-cumul" class="d3-gpm-act-cumul-val d3-cumul-val" style="color:#1e293b;">23,69%</div>
                   <div class="d3-cumul-bar-wrap"><div id="d3-gpm-act-bar" style="width:100%; height:23.69%; background:#1e293b; border-radius:3px 3px 0 0;"></div></div>
-                  <div class="d3-cumul-label">Realisasi (Kumulatif)</div>
+                  <div class="d3-cumul-label">Realisasi</div>
                 </div>
               </div>
             </div>
@@ -626,7 +597,7 @@
   </div>
 
 
-  <!-- SCRIPT UTAMA (TERINTEGRASI FIRESTORE & REALTIME LISTENER) -->
+  <!-- SCRIPT UTAMA -->
   <script type="module">
     if (typeof ChartDataLabels !== 'undefined') {
       Chart.register(ChartDataLabels);
@@ -639,18 +610,18 @@
       year: 2026,
       targetGPM: 45.59,
       months: {
-        Jan: { revenuePlan: 554, revenueActual: 823, bppPlan: 195, bppActual: 647, gpPlan: 359, gpActual: 176, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Feb: { revenuePlan: 554, revenueActual: 787, bppPlan: 195, bppActual: 632, gpPlan: 359, gpActual: 155, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Mar: { revenuePlan: 449, revenueActual: 99,  bppPlan: 195, bppActual: 92,  gpPlan: 254, gpActual: 7,   ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Apr: { revenuePlan: 380, revenueActual: 782, bppPlan: 165, bppActual: 680, gpPlan: 215, gpActual: 102, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        May: { revenuePlan: 502, revenueActual: 688, bppPlan: 308, bppActual: 404, gpPlan: 194, gpActual: 284, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Jun: { revenuePlan: 879, revenueActual: 1117, bppPlan: 495, bppActual: 913, gpPlan: 384, gpActual: 204, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Jul: { revenuePlan: 927, revenueActual: 1668, bppPlan: 531, bppActual: 1342, gpPlan: 396, gpActual: 326, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Aug: { revenuePlan: 1042, revenueActual: 1703, bppPlan: 613, bppActual: 1164, gpPlan: 429, gpActual: 539, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Sep: { revenuePlan: 2196, revenueActual: 1786, bppPlan: 1218, bppActual: 1340, gpPlan: 978, gpActual: 446, ncpPlan: 0, ncpActual: 0, status: "REALISASI" },
-        Oct: { revenuePlan: 2196, revenueActual: 1670, bppPlan: 1218, bppActual: 1280, gpPlan: 978, gpActual: 390, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" },
-        Nov: { revenuePlan: 2145, revenueActual: 1393, bppPlan: 1198, bppActual: 1088, gpPlan: 947, gpActual: 305, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" },
-        Dec: { revenuePlan: 1678, revenueActual: 1393, bppPlan: 1013, bppActual: 1088, gpPlan: 665, gpActual: 305, ncpPlan: 0, ncpActual: 0, status: "PROGNOSA" }
+        Jan: { revenuePlan: 554, revenueActual: 823, bppPlan: 195, bppActual: 647, gpPlan: 359, gpActual: 176, ncpPlan: 359, ncpActual: 176, status: "REALISASI" },
+        Feb: { revenuePlan: 554, revenueActual: 787, bppPlan: 195, bppActual: 632, gpPlan: 359, gpActual: 155, ncpPlan: 359, ncpActual: 155, status: "REALISASI" },
+        Mar: { revenuePlan: 449, revenueActual: 99,  bppPlan: 195, bppActual: 92,  gpPlan: 254, gpActual: 7,   ncpPlan: 254, ncpActual: 7,   status: "REALISASI" },
+        Apr: { revenuePlan: 380, revenueActual: 782, bppPlan: 165, bppActual: 680, gpPlan: 215, gpActual: 102, ncpPlan: 215, ncpActual: 102, status: "REALISASI" },
+        May: { revenuePlan: 502, revenueActual: 688, bppPlan: 308, bppActual: 404, gpPlan: 194, gpActual: 284, ncpPlan: 194, ncpActual: 284, status: "REALISASI" },
+        Jun: { revenuePlan: 879, revenueActual: 1117, bppPlan: 495, bppActual: 913, gpPlan: 384, gpActual: 204, ncpPlan: 384, ncpActual: 204, status: "REALISASI" },
+        Jul: { revenuePlan: 927, revenueActual: 1668, bppPlan: 531, bppActual: 1342, gpPlan: 396, gpActual: 326, ncpPlan: 396, ncpActual: 326, status: "REALISASI" },
+        Aug: { revenuePlan: 1042, revenueActual: 1703, bppPlan: 613, bppActual: 1164, gpPlan: 429, gpActual: 539, ncpPlan: 429, ncpActual: 539, status: "REALISASI" },
+        Sep: { revenuePlan: 2196, revenueActual: 1786, bppPlan: 1218, bppActual: 1340, gpPlan: 978, gpActual: 446, ncpPlan: 978, ncpActual: 446, status: "REALISASI" },
+        Oct: { revenuePlan: 2196, revenueActual: 1670, bppPlan: 1218, bppActual: 1280, gpPlan: 978, gpActual: 390, ncpPlan: 978, ncpActual: 390, status: "PROGNOSA" },
+        Nov: { revenuePlan: 2145, revenueActual: 1393, bppPlan: 1198, bppActual: 1088, gpPlan: 947, gpActual: 305, ncpPlan: 947, ncpActual: 305, status: "PROGNOSA" },
+        Dec: { revenuePlan: 1678, revenueActual: 1393, bppPlan: 1013, bppActual: 1088, gpPlan: 665, gpActual: 305, ncpPlan: 665, ncpActual: 305, status: "PROGNOSA" }
       }
     };
 
@@ -692,21 +663,31 @@
               let revAct = toNumber(source.revenueActual, result.months[month].revenueActual);
               let bppPlan = toNumber(source.bppPlan, result.months[month].bppPlan);
               let bppAct = toNumber(source.bppActual, result.months[month].bppActual);
+              let gpPlan = toNumber(source.gpPlan, revPlan - bppPlan);
+              let gpAct = toNumber(source.gpActual, revAct - bppAct);
 
+              // Konversi otomatis ke Juta Rp jika angka diinput dalam nominal penuh
               if (revPlan > 10000) revPlan /= 1000000;
               if (revAct > 10000) revAct /= 1000000;
               if (bppPlan > 10000) bppPlan /= 1000000;
               if (bppAct > 10000) bppAct /= 1000000;
+              if (gpPlan > 10000) gpPlan /= 1000000;
+              if (gpAct > 10000) gpAct /= 1000000;
+
+              let ncpPlan = toNumber(source.ncpPlan, gpPlan);
+              let ncpAct = toNumber(source.ncpActual, gpAct);
+              if (ncpPlan > 10000) ncpPlan /= 1000000;
+              if (ncpAct > 10000) ncpAct /= 1000000;
 
               result.months[month] = {
                 revenuePlan: revPlan,
                 revenueActual: revAct,
                 bppPlan: bppPlan,
-                bppActual: bppAct,
-                gpPlan: source.gpPlan !== undefined ? toNumber(source.gpPlan, revPlan - bppPlan) : (revPlan - bppPlan),
-                gpActual: source.gpActual !== undefined ? toNumber(source.gpActual, revAct - bppAct) : (revAct - bppAct),
-                ncpPlan: toNumber(source.ncpPlan, 0),
-                ncpActual: toNumber(source.ncpActual, 0),
+                bppAct: bppAct,
+                gpPlan: gpPlan,
+                gpAct: gpAct,
+                ncpPlan: ncpPlan,
+                ncpActual: ncpAct,
                 status: source.status === "REALISASI" ? "REALISASI" : "PROGNOSA"
               };
             }
@@ -733,46 +714,6 @@
       return Number.isFinite(number) ? number : fallback;
     }
 
-    window.FinancialDashboard = {
-      getData: function() { return structuredClone(financialData); },
-      saveData: async function(newData) {
-        financialData = normalizeFinancialData(mergeFinancialData(financialData, newData));
-        if (window.firebaseDB && window.firebaseFns) {
-          const { doc, setDoc } = window.firebaseFns;
-          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
-          await setDoc(docRef, financialData);
-        }
-        renderAll();
-        window.dispatchEvent(new CustomEvent("financialDashboardUpdated"));
-        return true;
-      },
-      resetData: async function() {
-        financialData = structuredClone(defaultFinancialData);
-        if (window.firebaseDB && window.firebaseFns) {
-          const { doc, setDoc } = window.firebaseFns;
-          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
-          await setDoc(docRef, financialData);
-        }
-        renderAll();
-        return true;
-      }
-    };
-
-    function mergeFinancialData(oldData, newData) {
-      const merged = structuredClone(oldData);
-      if (!newData) return merged;
-      if (newData.year !== undefined) merged.year = Number(newData.year);
-      if (newData.targetGPM !== undefined) merged.targetGPM = Number(newData.targetGPM);
-      if (newData.months && typeof newData.months === "object") {
-        Object.keys(newData.months).forEach(month => {
-          if (merged.months[month] && newData.months[month]) {
-            merged.months[month] = { ...merged.months[month], ...newData.months[month] };
-          }
-        });
-      }
-      return merged;
-    }
-
     function getFinancialArrays() {
       const revenuePlan = [];
       const revenueActual = [];
@@ -792,8 +733,8 @@
         bppActual.push(Number(item.bppActual) || 0);
         gpPlan.push(item.gpPlan !== undefined ? Number(item.gpPlan) : (Number(item.revenuePlan) || 0) - (Number(item.bppPlan) || 0));
         gpActual.push(item.gpActual !== undefined ? Number(item.gpActual) : (Number(item.revenueActual) || 0) - (Number(item.bppActual) || 0));
-        ncpPlan.push(Number(item.ncpPlan) || 0);
-        ncpActual.push(Number(item.ncpActual) || 0);
+        ncpPlan.push(item.ncpPlan !== undefined ? Number(item.ncpPlan) : gpPlan[gpPlan.length - 1]);
+        ncpActual.push(item.ncpActual !== undefined ? Number(item.ncpActual) : gpActual[gpActual.length - 1]);
         status.push(item.status || "PROGNOSA");
       });
 
@@ -810,11 +751,7 @@
 
     function sum(array) { return array.reduce((total, value) => total + (Number(value) || 0), 0); }
     function average(array) { if (!array.length) return 0; return sum(array) / array.length; }
-    
-    function formatNumber(value) { 
-      return Number(value || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); 
-    }
-
+    function formatNumber(value) { return Number(value || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); }
     function formatPercent(value) { return Number(value || 0).toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%"; }
     function formatPercentOne(value) { return Number(value || 0).toLocaleString("id-ID", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%"; }
     function getAchievement(actual, plan) { if (!plan) return 0; return actual / plan * 100; }
@@ -924,9 +861,7 @@
       element.classList.remove("badge-up", "badge-down");
       
       let isGood = higherIsGood ? percentage >= 100 : percentage <= 100;
-      if (id === "kpi-bpp-badge") {
-        isGood = percentage <= 100;
-      }
+      if (id === "kpi-bpp-badge") isGood = percentage <= 100;
 
       if (isGood) {
         element.classList.add("badge-up");
@@ -1060,12 +995,6 @@
         const totalActualNcp = sum(data.ncpActual);
         const pctNcp = getAchievement(totalActualNcp, totalPlanNcp);
 
-        const realBtl = realNcp;
-        const progBtl = progNcp;
-        const totalPlanBtl = totalPlanNcp;
-        const totalActualBtl = totalActualNcp;
-        const pctBtl = pctNcp;
-
         const realNp = realIndices.reduce((t, i) => t + data.npActual[i], 0);
         const progNp = prognosaIndices.reduce((t, i) => t + data.npActual[i], 0);
         const totalPlanNp = sum(data.npPlan);
@@ -1091,11 +1020,11 @@
 
         altHtmlRows += `<tr><td class="row-label">BIAYA TIDAK LANGSUNG (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
-        altHtmlRows += `<td class="txt-green">${formatNumber(realBtl)}</td>`;
+        altHtmlRows += `<td class="txt-green">${formatNumber(realNcp)}</td>`;
         prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
-        altHtmlRows += `<td class="txt-green">${formatNumber(progBtl)}</td>`;
-        altHtmlRows += `<td>${formatNumber(totalPlanBtl)}</td><td class="metric-actual">${formatNumber(totalActualBtl)}</td>`;
-        altHtmlRows += `<td class="${pctBtl <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctBtl)}</td></tr>`;
+        altHtmlRows += `<td class="txt-green">${formatNumber(progNcp)}</td>`;
+        altHtmlRows += `<td>${formatNumber(totalPlanNcp)}</td><td class="metric-actual">${formatNumber(totalActualNcp)}</td>`;
+        altHtmlRows += `<td class="${pctNcp <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctNcp)}</td></tr>`;
 
         altHtmlRows += `<tr><td class="row-label">NET PROFIT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.npActual[i])}</td>`; });
@@ -1115,11 +1044,6 @@
 
         altTableBody.innerHTML = altHtmlRows;
       }
-
-      const legendReal = document.getElementById("legend-real-text");
-      const legendProg = document.getElementById("legend-prog-text");
-      if (legendReal) legendReal.textContent = `Data Jan - ${getMonthShortName(lastRealMonth)} 2026 merupakan Realisasi`;
-      if (legendProg) legendProg.textContent = `Data ${getMonthShortName(firstProgMonth)} - Dec 2026 merupakan Prognosa`;
     }
 
     function renderLightSectionDirect() {
@@ -1232,8 +1156,6 @@
 
       setText("d3-subtitle", "Rencana vs Realisasi | Januari – " + actualMonthFull + " " + financialData.year + " | Outlook Full Year " + financialData.year);
       setText("d3-badge-top", "Data s.d. " + actualMonthFull + " " + financialData.year);
-      setText("d3-section1-sub", "Monthly performance – actual data available through " + actualMonthFull + " " + financialData.year);
-      setText("d3-section2-sub", "Monthly profitability performance and full-year target positioning");
 
       setText("d3-kpi-rev", formatNumber(actualRevCum));
       setText("d3-kpi-rev-sub", formatPercent(getAchievement(actualRevCum, sum(data.revenuePlan))) + " dari target 2026");
@@ -1331,37 +1253,13 @@
           labels: shortMonths,
           datasets: [
             { type: "line", label: "Target FY", data: targetLine, borderColor: "#e67e22", borderDash: [4, 4], borderWidth: 1.5, pointRadius: 0, datalabels: { display: false } },
-            {
-              type: "line", label: "Rencana", data: planGpm, borderColor: "#e67e22", backgroundColor: "#e67e22", borderWidth: 2, pointRadius: 4,
-              datalabels: {
-                align: function(context) { return context.dataIndex === 4 ? 'bottom' : 'top'; },
-                anchor: 'end', color: "#e67e22", font: { size: 8, weight: "bold" },
-                formatter: value => Number(value).toFixed(1) + "%"
-              }
-            },
-            {
-              type: "line", label: "Realisasi", data: actGpm, borderColor: "#1e293b", backgroundColor: "#1e293b", borderWidth: 2, pointRadius: 4,
-              datalabels: {
-                align: function(context) { return context.dataIndex === 4 ? 'top' : 'bottom'; },
-                anchor: 'start', color: "#1e293b", font: { size: 8, weight: "bold" },
-                formatter: value => Number(value).toFixed(1) + "%"
-              }
-            }
+            { type: "line", label: "Rencana", data: planGpm, borderColor: "#e67e22", backgroundColor: "#e67e22", borderWidth: 2, pointRadius: 4, datalabels: { align: "top", anchor: "end", color: "#e67e22", font: { size: 8, weight: "bold" }, formatter: v => Number(v).toFixed(1) + "%" } },
+            { type: "line", label: "Realisasi", data: actGpm, borderColor: "#1e293b", backgroundColor: "#1e293b", borderWidth: 2, pointRadius: 4, datalabels: { align: "bottom", anchor: "start", color: "#1e293b", font: { size: 8, weight: "bold" }, formatter: v => Number(v).toFixed(1) + "%" } }
           ]
         },
         options: {
           responsive: true, maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              enabled: true,
-              callbacks: {
-                label: function(tooltipItem) {
-                  return tooltipItem.dataset.label + ': ' + Number(tooltipItem.raw).toFixed(2) + '%';
-                }
-              }
-            }
-          },
+          plugins: { legend: { display: false }, tooltip: { enabled: true } },
           scales: {
             x: { grid: { display: false }, ticks: { font: { size: 9 } } },
             y: { min: 0, max: 100, ticks: { font: { size: 9 }, callback: value => value + "%" } }
@@ -1373,19 +1271,9 @@
     function renderHeaderStatus() {
       const latestIndex = getLatestActualIndex();
       if (latestIndex < 0) return;
-
       const actualMonth = monthsList[latestIndex];
       const actualFull = getMonthFullName(actualMonth);
-      const nextIndex = latestIndex + 1;
-      const nextMonth = nextIndex < monthsList.length ? getMonthShortName(monthsList[nextIndex]) : null;
-
       setText("badge-realisasi-text", "Jan - " + actualFull + " " + financialData.year + " (Realisasi)");
-
-      if (nextMonth) {
-        setText("badge-prognosa-text", nextMonth + " - " + getMonthShortName(monthsList[monthsList.length - 1]) + " " + financialData.year + " (Prognosa)");
-      } else {
-        setText("badge-prognosa-text", "Full Year " + financialData.year + " (Realisasi)");
-      }
     }
 
     function setText(id, value) {
@@ -1426,58 +1314,5 @@
       initFirebaseListener();
     });
   </script>
-
-  <!-- SCRIPT OTOMATIS FORMAT INPUT RIBUAN -->
-  <script>
-    function formatRupiahAdmin(angka) {
-        let number_string = angka.toString().replace(/[^,\d]/g, ''),
-            split   = number_string.split(','),
-            sisa    = split[0].length % 3,
-            rupiah  = split[0].substr(0, sisa),
-            ribuan  = split[0].substr(sisa).match(/\d{3}/gi);
-
-        if (ribuan) {
-            let separator = sisa ? '.' : '';
-            rupiah += separator + ribuan.join('.');
-        }
-
-        rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
-        return rupiah;
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const inputs = document.querySelectorAll("input");
-        inputs.forEach(input => {
-            if (input.type === "number" || input.closest("table") || input.id.includes("plan") || input.id.includes("act") || input.name) {
-                input.type = "text";
-                if (input.value && !isNaN(input.value.replace(/\./g, ''))) {
-                    input.value = formatRupiahAdmin(input.value);
-                }
-            }
-        });
-    });
-
-    document.addEventListener('input', function (e) {
-        if (e.target && e.target.tagName === 'INPUT') {
-            if (e.target.type === 'number') {
-                e.target.type = 'text';
-            }
-            let val = e.target.value;
-            if (/^\d/.test(val.replace(/\./g, '')) || val === '') {
-                let cursorPosition = e.target.selectionStart;
-                let originalLength = e.target.value.length;
-                
-                e.target.value = formatRupiahAdmin(e.target.value);
-                
-                let newLength = e.target.value.length;
-                cursorPosition = cursorPosition + (newLength - originalLength);
-                try {
-                    e.target.setSelectionRange(cursorPosition, cursorPosition);
-                } catch(err) {}
-            }
-        }
-    });
-  </script>
-
 </body>
 </html>
