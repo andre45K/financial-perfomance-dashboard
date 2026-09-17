@@ -633,7 +633,7 @@
     }
 
     const monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const monthLabels = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26", "Okt-26", "Nov-26", "Des-26"];
+    const monthLabels = ["Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26", "Oct-26", "Nov-26", "Des-26"];
 
     const defaultFinancialData = {
       year: 2026,
@@ -756,7 +756,7 @@
         const rPlan = Number(item.revenuePlan) || 0;
         const rAct = Number(item.revenueActual) || 0;
         const bPlan = Number(item.bppPlan) || 0;
-        const bAct = Number(item.bppAct) || 0;
+        const bAct = Number(item.bppActual) || 0;
         const nAct = Number(item.ncpActual) || 0;
         const btlVal = Number(item.btlActual) || 0;
 
@@ -1061,21 +1061,21 @@
 
         let altHtmlRows = "";
         
-        // Baris 1: Non-Contributing Plant (Kolom Rencana & % vs Rencana dihilangkan border dan isinya)
+        // Baris 1: Non-Contributing Plant (Kolom Total 2026 disatukan/colspan 3 dengan isi Realisasi)
         altHtmlRows += `<tr><td class="row-label">NON-CONTRIBUTING PLANT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realNcp)}</td>`;
         prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(progNcp)}</td>`;
-        altHtmlRows += `<td style="border: none; background: #0b1420;"></td><td class="metric-actual">${formatNumber(totalActualNcp)}</td><td style="border: none; background: #0b1420;"></td></tr>`;
+        altHtmlRows += `<td colspan="3" class="metric-actual" style="text-align: center;">${formatNumber(totalActualNcp)}</td></tr>`;
 
-        // Baris 2: Biaya Tidak Langsung (Kolom Rencana & % vs Rencana dihilangkan border dan isinya)
+        // Baris 2: Biaya Tidak Langsung (Kolom Total 2026 disatukan/colspan 3 dengan isi Realisasi)
         altHtmlRows += `<tr><td class="row-label">BIAYA TIDAK LANGSUNG (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.btlActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realBtl)}</td>`;
         prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.btlActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(progBtl)}</td>`;
-        altHtmlRows += `<td style="border: none; background: #0b1420;"></td><td class="metric-actual">${formatNumber(totalActualBtl)}</td><td style="border: none; background: #0b1420;"></td></tr>`;
+        altHtmlRows += `<td colspan="3" class="metric-actual" style="text-align: center;">${formatNumber(totalActualBtl)}</td></tr>`;
 
         // Baris 3: Net Profit
         altHtmlRows += `<tr><td class="row-label">NET PROFIT (Juta Rp)</td>`;
