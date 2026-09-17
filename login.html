@@ -211,11 +211,11 @@
         const ncpAct = item.ncpActual || 0;
         const btlAct = item.btlActual !== undefined ? item.btlActual : 0;
 
-        // Perhitungan GP = Pendapatan Actual - BPP Actual
+        // Gross Profit (GP) = Pendapatan Actual - BPP Actual
         const gpAct = revAct - bppAct;
-        // Perhitungan Net Profit = GP - NCP - BTL
+        // Net Profit = GP - NCP - BTL
         const npAct = gpAct - ncpAct - btlAct;
-        // Perhitungan Net Profit Margin (NPM) = (Net Profit / Pendapatan Actual) * 100%
+        // Net Profit Margin = (Net Profit / Pendapatan Actual) * 100%
         const npmAct = revAct > 0 ? (npAct / revAct * 100) : 0;
 
         htmlTab1 += `
@@ -274,7 +274,7 @@
       const ncpVal = toNumber(document.querySelector(`[name="ncpAct_${m}"]`).value);
       const btlVal = toNumber(document.querySelector(`[name="btlAct_${m}"]`).value);
       
-      // Update kalkulasi live: NP = GP - NCP - BTL
+      // Update kalkulasi live menggunakan rumus: Net Profit = GP - NCP - BTL
       const npAct = gpAct - ncpVal - btlVal;
       const npmAct = revAct > 0 ? (npAct / revAct * 100) : 0;
 
