@@ -87,6 +87,9 @@
     td.row-label { text-align: left; font-weight: bold; padding-left: 8px; background: #09121d; }
     .txt-green { color: #22c55e; font-weight: bold; }
     .txt-red { color: #ef4444; font-weight: bold; }
+    /* TOTAL 2026: NCP & Biaya Tidak Langsung hanya menampilkan nilai Realisasi. */
+    .total-empty { color: transparent; background: inherit; }
+    .total-realisasi-only { color: #22c55e; font-weight: bold; }
 
     .footer-legend { display: flex; gap: 20px; font-size: 10px; align-items: center; background: #09121d; padding: 6px 12px; border-radius: 4px; border: 1px solid #1e2d42; margin-bottom: 30px; }
     .legend-item { display: flex; align-items: center; gap: 6px; }
@@ -1069,16 +1072,18 @@
         altHtmlRows += `<td class="txt-green">${formatNumber(realNcp)}</td>`;
         prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(progNcp)}</td>`;
-        altHtmlRows += `<td>${formatNumber(totalPlanNcp)}</td><td class="metric-actual">${formatNumber(totalActualNcp)}</td>`;
-        altHtmlRows += `<td class="${pctNcp <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctNcp)}</td></tr>`;
+        // Untuk NCP: bagian TOTAL 2026 hanya menampilkan TOTAL REALISASI.
+        altHtmlRows += `<td class="total-empty"></td><td class="metric-actual total-realisasi-only">${formatNumber(totalActualNcp)}</td>`;
+        altHtmlRows += `<td class="total-empty"></td></tr>`;
 
         altHtmlRows += `<tr><td class="row-label">BIAYA TIDAK LANGSUNG (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.btlActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realBtl)}</td>`;
         prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.btlActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(progBtl)}</td>`;
-        altHtmlRows += `<td>${formatNumber(totalPlanBtl)}</td><td class="metric-actual">${formatNumber(totalActualBtl)}</td>`;
-        altHtmlRows += `<td class="${pctBtl <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctBtl)}</td></tr>`;
+        // Untuk Biaya Tidak Langsung: bagian TOTAL 2026 hanya menampilkan TOTAL REALISASI.
+        altHtmlRows += `<td class="total-empty"></td><td class="metric-actual total-realisasi-only">${formatNumber(totalActualBtl)}</td>`;
+        altHtmlRows += `<td class="total-empty"></td></tr>`;
 
         altHtmlRows += `<tr><td class="row-label">NET PROFIT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.npActual[i])}</td>`; });
