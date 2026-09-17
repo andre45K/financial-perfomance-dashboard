@@ -756,7 +756,7 @@
         const rPlan = Number(item.revenuePlan) || 0;
         const rAct = Number(item.revenueActual) || 0;
         const bPlan = Number(item.bppPlan) || 0;
-        const bAct = Number(item.bppActual) || 0;
+        const bAct = Number(item.bppAct) || 0;
         const nAct = Number(item.ncpActual) || 0;
         const btlVal = Number(item.btlActual) || 0;
 
@@ -1039,11 +1039,15 @@
       if (altTableBody) {
         const realNcp = realIndices.reduce((t, i) => t + data.ncpActual[i], 0);
         const progNcp = prognosaIndices.reduce((t, i) => t + data.ncpActual[i], 0);
+        const totalPlanNcp = sum(data.ncpPlan);
         const totalActualNcp = sum(data.ncpActual);
+        const pctNcp = getAchievement(totalActualNcp, totalPlanNcp);
 
         const realBtl = realIndices.reduce((t, i) => t + data.btlActual[i], 0);
         const progBtl = prognosaIndices.reduce((t, i) => t + data.btlActual[i], 0);
+        const totalPlanBtl = sum(data.ncpPlan);
         const totalActualBtl = sum(data.btlActual);
+        const pctBtl = getAchievement(totalActualBtl, totalPlanBtl);
 
         const realNp = realIndices.reduce((t, i) => t + data.npActual[i], 0);
         const progNp = prognosaIndices.reduce((t, i) => t + data.npActual[i], 0);
@@ -1060,24 +1064,22 @@
         const pctNpm = getAchievement(totalActualNpm, totalPlanNpm);
 
         let altHtmlRows = "";
-        
-        // Baris 1: Non-Contributing Plant (Kolom Total 2026 disatukan/colspan 3 dengan isi Realisasi)
         altHtmlRows += `<tr><td class="row-label">NON-CONTRIBUTING PLANT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realNcp)}</td>`;
         prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(progNcp)}</td>`;
-        altHtmlRows += `<td colspan="3" class="metric-actual" style="text-align: center;">${formatNumber(totalActualNcp)}</td></tr>`;
+        altHtmlRows += `<td>${formatNumber(totalPlanNcp)}</td><td class="metric-actual">${formatNumber(totalActualNcp)}</td>`;
+        altHtmlRows += `<td class="${pctNcp <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctNcp)}</td></tr>`;
 
-        // Baris 2: Biaya Tidak Langsung (Kolom Total 2026 disatukan/colspan 3 dengan isi Realisasi)
         altHtmlRows += `<tr><td class="row-label">BIAYA TIDAK LANGSUNG (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.btlActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realBtl)}</td>`;
         prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.btlActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(progBtl)}</td>`;
-        altHtmlRows += `<td colspan="3" class="metric-actual" style="text-align: center;">${formatNumber(totalActualBtl)}</td></tr>`;
+        altHtmlRows += `<td>${formatNumber(totalPlanBtl)}</td><td class="metric-actual">${formatNumber(totalActualBtl)}</td>`;
+        altHtmlRows += `<td class="${pctBtl <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctBtl)}</td></tr>`;
 
-        // Baris 3: Net Profit
         altHtmlRows += `<tr><td class="row-label">NET PROFIT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.npActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realNp)}</td>`;
@@ -1086,7 +1088,6 @@
         altHtmlRows += `<td>${formatNumber(totalPlanNp)}</td><td class="metric-actual">${formatNumber(totalActualNp)}</td>`;
         altHtmlRows += `<td class="${pctNp >= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctNp)}</td></tr>`;
 
-        // Baris 4: Net Profit Margin
         altHtmlRows += `<tr><td class="row-label">NET PROFIT MARGIN (%)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatPercent(data.npmActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatPercent(realNpm)}</td>`;
