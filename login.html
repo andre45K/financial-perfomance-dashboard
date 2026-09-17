@@ -78,7 +78,7 @@
     <div id="alertSuccess" class="alert-success"><i class="fa-solid fa-circle-check"></i> Data berhasil disimpan ke Firebase Firestore!</div>
 
     <div class="instruction-box">
-      <strong>Petunjuk:</strong> Perubahan data di sini akan langsung dikirim ke Cloud Database Firestore sehingga perangkat lain maupun halaman utama akan otomatis memperbarui grafik secara realtime.
+      <strong>Petunjuk:</strong> Perubahan data di sini akan langsung dikirim ke Cloud Database Firestore sehingga perangkat lain maupun halaman utama akan otomatis memperbarui grafik secara realtime. Anda dapat memasukkan angka minus (misal: -5000000).
     </div>
 
     <!-- Navigation Tabs -->
@@ -184,11 +184,16 @@
     };
 
     function formatNumber(num) { return Number(num || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); }
+    
     function toNumber(val) {
       if (!val) return 0;
-      let str = String(val).replace(/\./g, '').replace(',', '.');
+      let str = String(val).trim();
+      let isNegative = str.startsWith('-');
+      // Hapus semua karakter kecuali angka, koma, dan titik
+      str = str.replace(/[^,\d]/g, '').replace(/\./g, '').replace(',', '.');
       let num = Number(str);
-      return isNaN(num) ? 0 : num;
+      if (isNaN(num)) return 0;
+      return isNegative ? -num : num;
     }
 
     function renderTableRows() {
@@ -202,7 +207,7 @@
         const revAct = item.revenueActual || 0;
         const bppAct = item.bppActual || 0;
         const ncpAct = item.ncpActual || 0;
-        const btlAct = item.btlActual !== undefined ? item.btlActual : 0;
+        const btlAct = item.btlAct !== undefined ? item.btlAct : (item.btlActual !== undefined ? item.btlActual : 0);
 
         const gpActTab1 = revAct - bppAct;
         const npAct = gpActTab1 - ncpAct;
@@ -270,16 +275,23 @@
     };
 
     window.formatInput = function(el) {
-      let val = el.value.replace(/[^,\d]/g, '');
-      let parts = val.split(',');
+      let val = el.value;
+      let isNegative = val.startsWith('-');
+      
+      // Ambil hanya angka dan koma
+      let cleanVal = val.replace(/[^,\d]/g, '');
+      let parts = cleanVal.split(',');
       let sisa = parts[0].length % 3;
       let rupiah = parts[0].substr(0, sisa);
       let ribuan = parts[0].substr(sisa).match(/\d{3}/g);
+      
       if (ribuan) {
         let separator = sisa ? '.' : '';
         rupiah += separator + ribuan.join('.');
       }
-      el.value = parts[1] !== undefined ? rupiah + ',' + parts[1] : rupiah;
+      
+      let formatted = parts[1] !== undefined ? rupiah + ',' + parts[1] : rupiah;
+      el.value = (isNegative && formatted !== "" ? '-' : '') + formatted;
     };
 
     document.getElementById("adminForm").addEventListener("submit", async function(e) {
