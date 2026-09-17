@@ -82,6 +82,22 @@
     .th-realisasi { background: #0f4c81; color: #ffffff; }
     .th-prognosa { background: #b45309; color: #ffffff; }
     .th-total { background: #0f4c81; color: #ffffff; }
+
+    /* TOTAL 2026 khusus NCP & Biaya Tidak Langsung */
+    #alt-table td.alt-total-realisasi {
+      background: #0f4c81;
+      color: #22c55e;
+      font-weight: bold;
+      text-align: center;
+      vertical-align: middle;
+    }
+    #alt-table td.alt-total-realisasi .alt-total-label {
+      color: #ffffff;
+      font-size: 9px;
+      font-weight: 700;
+      margin-right: 6px;
+      text-transform: uppercase;
+    }
     
     tr:nth-child(even) { background-color: #0b1420; }
     td.row-label { text-align: left; font-weight: bold; padding-left: 8px; background: #09121d; }
@@ -1069,16 +1085,14 @@
         altHtmlRows += `<td class="txt-green">${formatNumber(realNcp)}</td>`;
         prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(progNcp)}</td>`;
-        altHtmlRows += `<td>${formatNumber(totalPlanNcp)}</td><td class="metric-actual">${formatNumber(totalActualNcp)}</td>`;
-        altHtmlRows += `<td class="${pctNcp <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctNcp)}</td></tr>`;
+        altHtmlRows += `<td colspan="3" class="alt-total-realisasi"><span class="alt-total-label">Realisasi</span>${formatNumber(totalActualNcp)}</td></tr>`;
 
         altHtmlRows += `<tr><td class="row-label">BIAYA TIDAK LANGSUNG (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.btlActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realBtl)}</td>`;
         prognosaIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.btlActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(progBtl)}</td>`;
-        altHtmlRows += `<td>${formatNumber(totalPlanBtl)}</td><td class="metric-actual">${formatNumber(totalActualBtl)}</td>`;
-        altHtmlRows += `<td class="${pctBtl <= 100 ? 'txt-green' : 'txt-red'}">${formatPercent(pctBtl)}</td></tr>`;
+        altHtmlRows += `<td colspan="3" class="alt-total-realisasi"><span class="alt-total-label">Realisasi</span>${formatNumber(totalActualBtl)}</td></tr>`;
 
         altHtmlRows += `<tr><td class="row-label">NET PROFIT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.npActual[i])}</td>`; });
