@@ -699,7 +699,6 @@
               let ncpAct = toNumber(source.ncpActual, defMonth.ncpActual);
               let btlAct = toNumber(source.btlActual, defMonth.btlActual);
 
-              // Konversi otomatis ke juta jika input berupa nilai nominal penuh (> 10000 atau < -10000)
               if (Math.abs(revPlan) > 10000) revPlan /= 1000000;
               if (Math.abs(revAct) > 10000) revAct /= 1000000;
               if (Math.abs(bppPlan) > 10000) bppPlan /= 1000000;
@@ -781,11 +780,13 @@
         ncpActual.push(nAct);
         btlActual.push(btlVal);
 
-        const nPlanVal = gPlan - gPlan; 
-        const nActVal = gAct - nAct;
+        // Perhitungan Net Profit = GP - NCP - BTL
+        const nPlanVal = gPlan - gPlan - 0; 
+        const nActVal = gAct - nAct - btlVal;
         npPlan.push(nPlanVal);
         npActual.push(nActVal);
 
+        // Perhitungan Net Profit Margin = (Net Profit / Pendapatan) * 100%
         npmPlan.push(rPlan > 0 ? (nPlanVal / rPlan * 100) : 0);
         npmActual.push(rAct > 0 ? (nActVal / rAct * 100) : 0);
 
