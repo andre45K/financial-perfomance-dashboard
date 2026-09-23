@@ -45,6 +45,10 @@
     .badge-prognosa { background-color: #d97706; color: white; }
     .period-box { background: #111d2e; border: 1px solid #2a3d54; padding: 4px 10px; border-radius: 4px; display: flex; align-items: center; gap: 8px; font-size: 12px; }
 
+    /* Styling Menu NKB */
+    .nkb-link { color: #22c55e; text-decoration: none; font-size: 12px; font-weight: bold; border: 1px solid #22c55e; padding: 4px 8px; border-radius: 4px; background: rgba(34, 197, 94, 0.1); }
+    .nkb-link:hover { background: #22c55e; color: white; }
+
     .admin-link { color: #3b82f6; text-decoration: none; font-size: 12px; font-weight: bold; border: 1px solid #3b82f6; padding: 4px 8px; border-radius: 4px; }
     .admin-link:hover { background: #3b82f6; color: white; }
 
@@ -219,6 +223,8 @@
         <span>📅 Periode: <strong>Jan - Dec 2026</strong></span>
       </div>
 
+      <!-- Menu NKB yang dikembalikan -->
+      <a href="nkb.html" class="nkb-link">Menu NKB</a>
       <a href="login.html" class="admin-link">Admin Input</a>
     </div>
   </div>
@@ -699,7 +705,6 @@
               let ncpAct = toNumber(source.ncpActual, defMonth.ncpActual);
               let btlAct = toNumber(source.btlActual, defMonth.btlActual);
 
-              // Konversi otomatis ke juta jika input berupa nilai nominal penuh (> 10000 atau < -10000)
               if (Math.abs(revPlan) > 10000) revPlan /= 1000000;
               if (Math.abs(revAct) > 10000) revAct /= 1000000;
               if (Math.abs(bppPlan) > 10000) bppPlan /= 1000000;
@@ -763,7 +768,7 @@
         const rPlan = Number(item.revenuePlan) || 0;
         const rAct = Number(item.revenueActual) || 0;
         const bPlan = Number(item.bppPlan) || 0;
-        const bAct = Number(item.bppAct) || 0;
+        const bAct = Number(item.bppActual) || 0;
         const nAct = Number(item.ncpActual) || 0;
         const btlVal = Number(item.btlActual) || 0;
 
