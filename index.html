@@ -39,14 +39,17 @@
     .title-area h1 { font-size: 20px; letter-spacing: 1px; color: #ffffff; text-transform: uppercase; font-weight: 800; }
     .title-area p { color: #8ba0b8; font-size: 12px; margin-top: 2px; }
     
-    .header-info { display: flex; gap: 15px; align-items: center; }
+    .header-info { display: flex; gap: 12px; align-items: center; }
     .badge-status { font-size: 11px; padding: 4px 8px; border-radius: 4px; font-weight: bold; }
     .badge-realisasi { background-color: #0056b3; color: white; }
     .badge-prognosa { background-color: #d97706; color: white; }
     .period-box { background: #111d2e; border: 1px solid #2a3d54; padding: 4px 10px; border-radius: 4px; display: flex; align-items: center; gap: 8px; font-size: 12px; }
 
-    .admin-link { color: #3b82f6; text-decoration: none; font-size: 12px; font-weight: bold; border: 1px solid #3b82f6; padding: 4px 8px; border-radius: 4px; }
+    .admin-link { color: #3b82f6; text-decoration: none; font-size: 12px; font-weight: bold; border: 1px solid #3b82f6; padding: 5px 10px; border-radius: 4px; display: inline-flex; align-items: center; gap: 5px; background: rgba(59, 130, 246, 0.1); }
     .admin-link:hover { background: #3b82f6; color: white; }
+    
+    .nkb-link { color: #22c55e; text-decoration: none; font-size: 12px; font-weight: bold; border: 1px solid #22c55e; padding: 5px 10px; border-radius: 4px; display: inline-flex; align-items: center; gap: 5px; background: rgba(34, 197, 94, 0.1); }
+    .nkb-link:hover { background: #22c55e; color: white; }
 
     .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 15px; }
     .kpi-card { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; padding: 10px 12px; position: relative; }
@@ -219,7 +222,9 @@
         <span>📅 Periode: <strong>Jan - Dec 2026</strong></span>
       </div>
 
-      <a href="login.html" class="admin-link">Admin Input</a>
+      <!-- TOMBOL DASHBOARD NKB & ADMIN INPUT -->
+      <a href="nkb.html" class="nkb-link"><i class="fa-solid fa-chart-pie"></i> Dashboard NKB</a>
+      <a href="input.html" class="admin-link"><i class="fa-solid fa-gear"></i> Admin Input</a>
     </div>
   </div>
 
@@ -301,7 +306,7 @@
   </div>
 
 
-  <!-- DASHBOARD 2: URUTAN BARU (NON-CONTRIBUTING PLANT, BIAYA TIDAK LANGSUNG, NET PROFIT, NET PROFIT MARGIN) -->
+  <!-- DASHBOARD 2: URUTAN BARU -->
   <hr class="dashboard-divider">
   <div class="charts-grid" style="margin-top: 15px;">
     <div class="chart-card"><div class="chart-title">NON-CONTRIBUTING PLANT (Juta Rp)</div><div class="chart-container"><canvas id="altChartNCP"></canvas></div></div>
@@ -311,7 +316,7 @@
   </div>
 
 
-  <!-- TABEL KEDUA UNTUK DASHBOARD BARU -->
+  <!-- TABEL KEDUA -->
   <div class="table-container">
     <table id="alt-table">
       <thead>
@@ -734,9 +739,7 @@
       let str = String(value).trim();
       
       let isNegative = str.startsWith('-');
-      if (isNegative) {
-        str = str.substring(1);
-      }
+      if (isNegative) str = str.substring(1);
       
       if (str.includes(',') && str.includes('.')) {
         str = str.replace(/\./g, '').replace(',', '.');
@@ -780,13 +783,11 @@
         ncpActual.push(nAct);
         btlActual.push(btlVal);
 
-        // Perhitungan Net Profit = GP - NCP - BTL
-        const nPlanVal = gPlan - gPlan - 0; 
-        const nActVal = gAct - nAct - btlVal;
+        const nPlanVal = gPlan - gPlan; 
+        const nActVal = gAct - nAct;
         npPlan.push(nPlanVal);
         npActual.push(nActVal);
 
-        // Perhitungan Net Profit Margin = (Net Profit / Pendapatan) * 100%
         npmPlan.push(rPlan > 0 ? (nPlanVal / rPlan * 100) : 0);
         npmActual.push(rAct > 0 ? (nActVal / rAct * 100) : 0);
 
@@ -915,9 +916,7 @@
       element.classList.remove("badge-up", "badge-down");
       
       let isGood = higherIsGood ? percentage >= 100 : percentage <= 100;
-      if (id === "kpi-bpp-badge") {
-        isGood = percentage <= 100;
-      }
+      if (id === "kpi-bpp-badge") isGood = percentage <= 100;
 
       if (isGood) {
         element.classList.add("badge-up");
@@ -1070,7 +1069,6 @@
 
         let altHtmlRows = "";
         
-        // 1. Non-Contributing Plant
         altHtmlRows += `<tr><td class="row-label">NON-CONTRIBUTING PLANT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realNcp)}</td>`;
@@ -1078,7 +1076,6 @@
         altHtmlRows += `<td class="txt-green">${formatNumber(progNcp)}</td>`;
         altHtmlRows += `<td class="metric-actual">${formatNumber(totalActualNcp)}</td></tr>`;
 
-        // 2. Biaya Tidak Langsung
         altHtmlRows += `<tr><td class="row-label">BIAYA TIDAK LANGSUNG (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.btlActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realBtl)}</td>`;
@@ -1086,7 +1083,6 @@
         altHtmlRows += `<td class="txt-green">${formatNumber(progBtl)}</td>`;
         altHtmlRows += `<td class="metric-actual">${formatNumber(totalActualBtl)}</td></tr>`;
 
-        // 3. Net Profit
         altHtmlRows += `<tr><td class="row-label">NET PROFIT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.npActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realNp)}</td>`;
@@ -1094,7 +1090,6 @@
         altHtmlRows += `<td class="txt-green">${formatNumber(progNp)}</td>`;
         altHtmlRows += `<td class="metric-actual">${formatNumber(totalActualNp)}</td></tr>`;
 
-        // 4. Net Profit Margin
         altHtmlRows += `<tr><td class="row-label">NET PROFIT MARGIN (%)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatPercent(data.npmActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatPercent(realNpm)}</td>`;
