@@ -61,6 +61,8 @@
     .btn-danger:hover { background: #b91c1c; }
     .btn-secondary { background: #334155; color: white; }
     .btn-secondary:hover { background: #475569; }
+    .btn-info { background: #0b63ce; color: white; }
+    .btn-info:hover { background: #0952b0; }
 
     .alert-success { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; color: #22c55e; padding: 10px; border-radius: 6px; margin-bottom: 15px; display: none; text-align: center; font-weight: bold; }
   </style>
@@ -73,13 +75,17 @@
         <div class="modal-title"><i class="fa-solid fa-pen-to-square"></i> ADMIN INPUT DATA KEUANGAN 2026</div>
         <div class="modal-desc">Kelola dan perbarui data target rencana serta realisasi/prognosa untuk kedua dashboard secara terpisah.</div>
       </div>
-      <a href="index.html" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</a>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <!-- Tombol Tambahan Menuju Dashboard NKB -->
+        <a href="nkb.html" class="btn btn-info"><i class="fa-solid fa-chart-pie"></i> Dashboard NKB</a>
+        <a href="index.html" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</a>
+      </div>
     </div>
 
     <div id="alertSuccess" class="alert-success"><i class="fa-solid fa-circle-check"></i> Data berhasil disimpan ke Firebase Firestore!</div>
 
     <div class="instruction-box">
-      <strong>Petunjuk:</strong> Perubahan data di sini akan langsung dikirim ke Cloud Database Firestore sehingga perangkat lain (Laptop B) maupun halaman utama akan otomatis memperbarui grafik secara realtime[cite: 5].
+      <strong>Petunjuk:</strong> Perubahan data di sini akan langsung dikirim ke Cloud Database Firestore sehingga perangkat lain maupun halaman utama akan otomatis memperbarui grafik secara realtime[cite: 35].
     </div>
 
     <!-- Navigation Tabs -->
@@ -303,7 +309,6 @@
         if (ncpActEl) currentData.months[m].ncpActual = toNumber(ncpActEl.value);
       });
 
-      // Kirim data langsung ke Firestore supaya ter-sync secara online ke seluruh device
       if (window.firebaseDB && window.firebaseFns) {
         const { doc, setDoc } = window.firebaseFns;
         const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
