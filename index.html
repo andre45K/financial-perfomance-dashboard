@@ -1422,13 +1422,12 @@
       const targetElement = document.getElementById(elementId);
       if (!targetElement) return;
 
-      // Indikator loading sederhana
       const btn = event.currentTarget;
       const originalText = btn.innerHTML;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
 
       html2canvas(targetElement, {
-        scale: 2, // Kualitas tinggi (retina/HD)
+        scale: 2, 
         useCORS: true,
         backgroundColor: elementId === 'dashboardPart3' || elementId === 'dashboardPart2' ? '#ffffff' : '#060d1a'
       }).then(canvas => {
