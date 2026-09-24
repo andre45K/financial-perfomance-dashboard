@@ -115,73 +115,34 @@
       background-position: center 48%;
       border: 1px solid #cbd5e1;
     }
- 
-    /* LABEL PETA: otomatis dirapikan agar tidak saling bertumpuk */
-    .map-label-box {
-      position: absolute;
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      padding: 4px 7px;
-      min-width: 0;
-      max-width: 150px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.14);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 8;
-      text-align: center;
-      white-space: normal;
-      line-height: 1.15;
-      pointer-events: none;
-      visibility: hidden;
-    }
-    .map-label-box .region-name {
-      font-size: 9px;
-      font-weight: 800;
-      color: #0b2246;
-      white-space: nowrap;
-    }
-    .map-label-box .region-val {
-      font-size: 9px;
-      font-weight: 900;
-      color: #0b63ce;
-      margin-top: 2px;
-      white-space: nowrap;
-    }
 
-    .map-location-point {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #ffffff;
-      border: 2px solid #0b2246;
-      box-shadow: 0 1px 5px rgba(0,0,0,.4);
-      transform: translate(-50%,-50%);
-      z-index: 7;
-    }
+    .map-label-box { position: absolute; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 5px; padding: 3px 6px; box-shadow: 0 3px 8px rgba(0,0,0,0.12); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); z-index: 8; text-align: center; white-space: nowrap; margin-top: -12px; pointer-events: none; }
+    .map-label-box .region-name { font-size: 9px; font-weight: 700; color: #0b2246; }
+    .map-label-box .region-val { font-size: 9.5px; font-weight: 900; color: #0b63ce; }
 
-    .map-badge-pin {
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      color: white;
-      font-size: 9px;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      z-index: 9;
-      transform: translate(-50%, -50%);
-      border: 1.5px solid white;
-    }
+    /* Marker dan label dapat diposisikan manual melalui tombol "Atur Posisi". */
+    .map-marker-group { position:absolute; width:18px; height:18px; transform:translate(-50%,-50%); z-index:7; cursor:default; }
+    .map-marker-group .map-location-point,
+    .map-marker-group .map-badge-pin { top:50% !important; left:50% !important; }
+    .map-location-point { position:absolute; width:7px; height:7px; border-radius:50%; background:#ffffff; border:2px solid #0b2246; box-shadow:0 1px 4px rgba(0,0,0,.35); transform:translate(-50%,-50%); z-index:7; pointer-events:none; }
+
+    .map-badge-pin { position: absolute; width: 18px; height: 18px; border-radius: 50%; color: white; font-size: 9px; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 6; transform: translate(-50%, -50%); border: 1.5px solid white; pointer-events:none; }
     .badge-rendah { background: #3b82f6; }
     .badge-sedang { background: #1d4ed8; }
     .badge-tinggi { background: #0f172a; }
+
+    .map-position-mode .map-marker-group { cursor: grab; outline: 1px dashed rgba(11,99,206,.45); outline-offset: 3px; }
+    .map-position-mode .map-marker-group:active { cursor: grabbing; }
+    .map-position-mode .map-label-box { cursor: grab; pointer-events: auto; outline: 1px dashed rgba(11,99,206,.35); outline-offset: 2px; }
+    .map-position-mode .map-label-box:active { cursor: grabbing; }
+    .map-position-mode .map-label-box::after { content: '↕↔'; position:absolute; top:-10px; right:-10px; width:14px; height:14px; border-radius:50%; background:#0b63ce; color:#fff; font-size:8px; line-height:14px; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,.2); }
+
+    .d2-map-position-tools { display:flex; align-items:center; gap:5px; margin-left:auto; }
+    .d2-map-position-btn { border:1px solid #cbd5e1; background:#fff; color:#0b2246; border-radius:4px; padding:3px 7px; font-size:9px; font-weight:800; cursor:pointer; white-space:nowrap; }
+    .d2-map-position-btn:hover { background:#f1f5f9; }
+    .d2-map-position-btn.active { background:#0b63ce; color:#fff; border-color:#0b63ce; }
+    .d2-map-position-help { display:none; font-size:8.5px; color:#64748b; font-weight:700; }
+    .d2-map-position-mode .d2-map-position-help { display:inline; }
 
     .d2-summary-box { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 10px; position: absolute; bottom: 12px; left: 12px; width: 210px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; }
     .d2-summary-box-title { font-size: 10px; font-weight: 800; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; margin-bottom: 4px; color: #0b2246; text-transform: uppercase; }
@@ -313,7 +274,7 @@
       padding: 6px 8px; border-bottom: 1px solid #cbd5e1;
     }
     .d3-admin-table td {
-      padding: 4px 7px; border-bottom: 1px solid #e2e8f0; color: #1e293b;
+      padding: 5px 8px; border-bottom: 1px solid #e2e8f0; color: #1e293b;
     }
     .d3-admin-count {
       display: inline-block; margin-left: 5px; padding: 2px 6px;
@@ -977,6 +938,15 @@
                 <span><i class="fa-solid fa-circle" style="color: #3b82f6; font-size: 8px;"></i> Rendah</span>
                 <span><i class="fa-solid fa-circle" style="color: #1d4ed8; font-size: 8px;"></i> Sedang</span>
                 <span><i class="fa-solid fa-circle" style="color: #0f172a; font-size: 8px;"></i> Tinggi</span>
+                <div class="d2-map-position-tools">
+                  <span class="d2-map-position-help">Drag titik / nama lokasi untuk mengatur posisi</span>
+                  <button type="button" class="d2-map-position-btn" id="d2MapPositionToggle" onclick="toggleMapPositionMode()">
+                    <i class="fa-solid fa-up-down-left-right"></i> Atur Posisi
+                  </button>
+                  <button type="button" class="d2-map-position-btn" onclick="resetMapPositions()" title="Kembalikan posisi awal">
+                    <i class="fa-solid fa-rotate-left"></i>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1645,29 +1615,29 @@
 
     // KOORDINAT TITIK PETA DIKERJAKAN PRESISI PERSIS SEPERTI GAMBAR REFERENSI C7DA70.PNG
     const provinceMapCoords = {
-      'Aceh': { top: '36.1%', left: '13.6%' },
+      'Aceh': { top: '35%', left: '16.5%', labelTop: '27%', labelLeft: '16%' },
       'Sumatera Utara': { top: '41%', left: '21.5%', labelTop: '33%', labelLeft: '21%' },
       'Sumatera Barat': { top: '48%', left: '25%', labelTop: '40%', labelLeft: '24%' },
       'Riau': { top: '47%', left: '30%', labelTop: '39%', labelLeft: '29%' },
       'Jambi': { top: '53%', left: '31%', labelTop: '45%', labelLeft: '30%' },
-      'Sumatera Selatan': { top: '58.6%', left: '24.5%' },
+      'Sumatera Selatan': { top: '57%', left: '32.5%', labelTop: '49%', labelLeft: '28%' },
       'Bengkulu': { top: '60%', left: '28.5%', labelTop: '52%', labelLeft: '28%' },
-      'Lampung': { top: '66.9%', left: '26.5%' },
+      'Lampung': { top: '62%', left: '34.5%', labelTop: '70%', labelLeft: '24%' },
       'Kepulauan Bangka Belitung': { top: '54%', left: '37.5%', labelTop: '46%', labelLeft: '37%' },
       'Kepulauan Riau': { top: '40%', left: '39%', labelTop: '32%', labelLeft: '39%' },
-      'DKI Jakarta': { top: '69.3%', left: '40.8%' },
-      'Banten': { top: '66.9%', left: '29.3%' },
-      'Jawa Barat': { top: '68.1%', left: '36.1%' },
-      'DI Yogyakarta': { top: '72.2%', left: '53.1%' },
-      'Jawa Tengah': { top: '69.3%', left: '47.6%' },
-      'Jawa Timur': { top: '69.3%', left: '59.9%' },
+      'DKI Jakarta': { top: '65.5%', left: '42.5%', labelTop: '57%', labelLeft: '43%' },
+      'Banten': { top: '64.5%', left: '38.5%', labelTop: '56%', labelLeft: '39%' },
+      'Jawa Barat': { top: '67.5%', left: '46.5%', labelTop: '75%', labelLeft: '42%' },
+      'DI Yogyakarta': { top: '69%', left: '55%', labelTop: '76%', labelLeft: '55%' },
+      'Jawa Tengah': { top: '67%', left: '51%', labelTop: '74%', labelLeft: '50%' },
+      'Jawa Timur': { top: '66%', left: '60.5%', labelTop: '58%', labelLeft: '61%' },
       'Bali': { top: '70.5%', left: '69.5%', labelTop: '78%', labelLeft: '70%' },
       'Nusa Tenggara Barat': { top: '71.5%', left: '75%', labelTop: '79%', labelLeft: '75%' },
       'Nusa Tenggara Timur': { top: '74.5%', left: '84%', labelTop: '82%', labelLeft: '84%' },
       'Kalimantan Barat': { top: '48%', left: '55%', labelTop: '40%', labelLeft: '55%' },
       'Kalimantan Tengah': { top: '51%', left: '61%', labelTop: '43%', labelLeft: '61%' },
       'Kalimantan Selatan': { top: '57%', left: '65.5%', labelTop: '50%', labelLeft: '65%' },
-      'Kalimantan Timur': { top: '38.5%', left: '60.5%' },
+      'Kalimantan Timur': { top: '44%', left: '67%', labelTop: '37%', labelLeft: '64%' },
       'Kalimantan Utara': { top: '35%', left: '67%', labelTop: '27%', labelLeft: '67%' },
       'Sulawesi Utara': { top: '36%', left: '78%', labelTop: '28%', labelLeft: '78%' },
       'Gorontalo': { top: '41%', left: '75%', labelTop: '33%', labelLeft: '75%' },
@@ -1684,6 +1654,9 @@
       'Papua Selatan': { top: '68%', left: '97.5%', labelTop: '76%', labelLeft: '97%' },
       'Papua Barat Daya': { top: '46%', left: '93%', labelTop: '38%', labelLeft: '93%' }
     };
+
+    // Muat posisi manual yang pernah disimpan pada browser.
+    loadSavedMapPositions();
 
     let d2MasterData = [
       { spsa: '00001/HAMORI/SPK/01/2026', customer: 'PT Hamori Medical Center', bulan: 0, unit: 1, kontrak: 2, alat: 'Mobile Crane + Bucket Cor', provinsi: 'Jawa Barat', lokasi: 'Subang', nilai: 220000000 },
@@ -2025,114 +1998,112 @@
       return aliases[n] || n;
     }
 
-    function layoutD2MapLabels() {
+    let mapPositionMode = false;
+    const MAP_POSITION_STORAGE_KEY = 'nkbDashboardMapPositionsV1';
+
+    function loadSavedMapPositions() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(MAP_POSITION_STORAGE_KEY) || '{}');
+        Object.keys(saved).forEach(provName => {
+          if (provinceMapCoords[provName]) {
+            provinceMapCoords[provName] = {
+              ...provinceMapCoords[provName],
+              ...saved[provName]
+            };
+          }
+        });
+      } catch (err) {
+        console.warn('Posisi peta tersimpan tidak dapat dibaca:', err);
+      }
+    }
+
+    function saveMapPositions() {
+      try {
+        localStorage.setItem(MAP_POSITION_STORAGE_KEY, JSON.stringify(provinceMapCoords));
+      } catch (err) {
+        console.warn('Posisi peta tidak dapat disimpan:', err);
+      }
+    }
+
+    function toggleMapPositionMode() {
+      mapPositionMode = !mapPositionMode;
       const mapCanvas = document.getElementById('d2MapCanvasContainer');
-      if (!mapCanvas) return;
+      const btn = document.getElementById('d2MapPositionToggle');
 
-      const labels = Array.from(mapCanvas.querySelectorAll('.map-label-box'));
-      if (!labels.length) return;
+      if (mapCanvas) mapCanvas.classList.toggle('map-position-mode', mapPositionMode);
+      if (btn) {
+        btn.classList.toggle('active', mapPositionMode);
+        btn.innerHTML = mapPositionMode
+          ? '<i class="fa-solid fa-check"></i> Selesai'
+          : '<i class="fa-solid fa-up-down-left-right"></i> Atur Posisi';
+      }
+    }
 
-      const mapRect = mapCanvas.getBoundingClientRect();
-      const summary = mapCanvas.parentElement?.querySelector('.d2-summary-box');
-      const summaryRect = summary ? summary.getBoundingClientRect() : null;
+    function resetMapPositions() {
+      if (!confirm('Kembalikan semua posisi titik dan nama lokasi ke posisi awal?')) return;
+      localStorage.removeItem(MAP_POSITION_STORAGE_KEY);
+      window.location.reload();
+    }
 
-      const rectToLocal = (r) => ({
-        left: r.left - mapRect.left,
-        top: r.top - mapRect.top,
-        right: r.right - mapRect.left,
-        bottom: r.bottom - mapRect.top
-      });
+    function enableMapDrag(element, provName, type) {
+      let dragging = false;
+      let startX = 0;
+      let startY = 0;
+      let startLeft = 0;
+      let startTop = 0;
 
-      const reserved = [];
-      if (summaryRect) reserved.push(rectToLocal(summaryRect));
+      element.addEventListener('pointerdown', function(e) {
+        if (!mapPositionMode) return;
+        e.preventDefault();
+        e.stopPropagation();
 
-      // Titik lokasi menjadi obstacle agar label tidak menutup marker lain.
-      Array.from(mapCanvas.querySelectorAll('.map-location-point')).forEach(point => {
-        const r = point.getBoundingClientRect();
-        const p = rectToLocal(r);
-        reserved.push({
-          left: p.left - 5,
-          top: p.top - 5,
-          right: p.right + 5,
-          bottom: p.bottom + 5
-        });
-      });
+        const mapCanvas = document.getElementById('d2MapCanvasContainer');
+        if (!mapCanvas) return;
 
-      const placed = [];
-      const pad = 8;
-      const gap = 7;
+        const rect = mapCanvas.getBoundingClientRect();
+        const currentLeft = parseFloat(element.style.left) || 0;
+        const currentTop = parseFloat(element.style.top) || 0;
 
-      const overlapArea = (a, b) => {
-        const w = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
-        const h = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
-        return w * h;
-      };
+        dragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        startLeft = currentLeft;
+        startTop = currentTop;
+        element.setPointerCapture?.(e.pointerId);
 
-      const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+        function move(ev) {
+          if (!dragging) return;
 
-      // Prioritas: label di atas titik, lalu kanan/kiri, kemudian bawah.
-      const candidateOffsets = [
-        [0, -4],
-        [58, -18],
-        [-58, -18],
-        [62, 14],
-        [-62, 14],
-        [0, 20],
-        [82, -30],
-        [-82, -30]
-      ];
+          let newLeft = startLeft + ((ev.clientX - startX) / rect.width) * 100;
+          let newTop = startTop + ((ev.clientY - startY) / rect.height) * 100;
 
-      labels.forEach(label => {
-        const provName = label.dataset.province;
-        const coords = provinceMapCoords[provName];
-        if (!coords) return;
+          // Tetap berada di area peta.
+          newLeft = Math.max(0.5, Math.min(99.5, newLeft));
+          newTop = Math.max(1, Math.min(99, newTop));
 
-        const px = mapCanvas.clientWidth * parseFloat(coords.left) / 100;
-        const py = mapCanvas.clientHeight * parseFloat(coords.top) / 100;
+          element.style.left = newLeft + '%';
+          element.style.top = newTop + '%';
 
-        // visibility:hidden tetap mempertahankan ukuran elemen sehingga
-        // browser dapat menghitung collision sebelum label ditampilkan.
-        const width = label.offsetWidth;
-        const height = label.offsetHeight;
+          if (!provinceMapCoords[provName]) return;
+          if (type === 'marker') {
+            provinceMapCoords[provName].left = newLeft + '%';
+            provinceMapCoords[provName].top = newTop + '%';
+          } else {
+            provinceMapCoords[provName].labelLeft = newLeft + '%';
+            provinceMapCoords[provName].labelTop = newTop + '%';
+          }
+        }
 
-        let best = null;
+        function up(ev) {
+          if (!dragging) return;
+          dragging = false;
+          try { element.releasePointerCapture?.(ev.pointerId); } catch (_) {}
+          saveMapPositions();
+        }
 
-        candidateOffsets.forEach(([dx, dy]) => {
-          let left = px - width / 2 + dx;
-          let top = py - height - 10 + dy;
-
-          left = clamp(left, pad, mapCanvas.clientWidth - width - pad);
-          top = clamp(top, pad, mapCanvas.clientHeight - height - pad);
-
-          const candidate = {
-            left, top,
-            right: left + width,
-            bottom: top + height
-          };
-
-          let score = Math.abs(dx) + Math.abs(dy);
-
-          reserved.forEach(obstacle => {
-            const overlap = overlapArea(candidate, obstacle);
-            if (overlap > 0) score += 100000 + overlap * 20;
-          });
-
-          placed.forEach(obstacle => {
-            const overlap = overlapArea(candidate, obstacle);
-            if (overlap > 0) score += 100000 + overlap * 20;
-          });
-
-          // Sedikit penalti bila terlalu dekat tepi agar visual lebih seimbang.
-          if (left < 16 || candidate.right > mapCanvas.clientWidth - 16) score += 250;
-          if (top < 12 || candidate.bottom > mapCanvas.clientHeight - 12) score += 250;
-
-          if (!best || score < best.score) best = { ...candidate, score };
-        });
-
-        label.style.left = `${best.left}px`;
-        label.style.top = `${best.top}px`;
-        label.style.visibility = 'visible';
-        placed.push(best);
+        element.addEventListener('pointermove', move);
+        element.addEventListener('pointerup', up, { once: true });
+        element.addEventListener('pointercancel', up, { once: true });
       });
     }
 
@@ -2152,13 +2123,16 @@
         if (data.nilai >= 1000000000) badgeClass = 'badge-tinggi';
         else if (data.nilai >= 500000000) badgeClass = 'badge-sedang';
 
+        // Marker/titik dan label mempunyai posisi yang bisa diatur terpisah.
         mapHtml += `
-          <div class="map-label-box" data-province="${provName}">
+          <div class="map-label-box" data-map-label="${provName}" style="top:${coords.labelTop}; left:${coords.labelLeft};">
             <span class="region-name">${provName}</span>
             <span class="region-val">Rp ${formatRupiah(data.nilai)}</span>
           </div>
-          <div class="map-location-point" style="top:${coords.top}; left:${coords.left};" aria-label="Lokasi ${provName}"></div>
-          <div class="map-badge-pin ${badgeClass}" style="top:${coords.top}; left:${coords.left};">${data.count}</div>
+          <div class="map-marker-group" data-map-marker="${provName}" style="top:${coords.top}; left:${coords.left};" aria-label="Lokasi ${provName}">
+            <div class="map-location-point"></div>
+            <div class="map-badge-pin ${badgeClass}">${data.count}</div>
+          </div>
         `;
       });
 
@@ -2167,18 +2141,15 @@
       }
 
       mapCanvas.innerHTML = mapHtml;
+      mapCanvas.classList.toggle('map-position-mode', mapPositionMode);
 
-      // Tunggu layout browser selesai agar ukuran label akurat.
-      requestAnimationFrame(() => layoutD2MapLabels());
+      mapCanvas.querySelectorAll('[data-map-marker]').forEach(el => {
+        enableMapDrag(el, el.getAttribute('data-map-marker'), 'marker');
+      });
+      mapCanvas.querySelectorAll('[data-map-label]').forEach(el => {
+        enableMapDrag(el, el.getAttribute('data-map-label'), 'label');
+      });
     }
-
-    window.addEventListener('resize', () => {
-      if (document.getElementById('d2MapCanvasContainer')) {
-        requestAnimationFrame(() => layoutD2MapLabels());
-      }
-    });
-
-
 
     // =========================================================
     // DASHBOARD 3: PROGNOSA NKB 2026
