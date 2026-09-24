@@ -1977,24 +1977,23 @@
       const entries = Object.keys(provMap).map(rawName => ({
         provName: normalizeProvinceName(rawName),
         data: provMap[rawName]
-      })).filter(x => provinceGeoCoords[x.provName]);
+      })).filter(x => provinceMapCoords[x.provName]);
 
       entries.forEach(({provName, data}) => {
-        const coords = getProvinceMapPosition(provName, mapCanvas);
+        const coords = provinceMapCoords[provName];
         let badgeClass = 'badge-rendah';
         if (data.nilai >= 1000000000) badgeClass = 'badge-tinggi';
         else if (data.nilai >= 500000000) badgeClass = 'badge-sedang';
 
-        // Titik selalu memakai koordinat geografis provinsi yang diproyeksikan
-        // ke posisi pixel peta dasar.
+        // Titik selalu memakai koordinat geografis provinsi.
         // Label boleh ditempatkan terpisah agar tidak menutup titik/peta.
         mapHtml += `
-          <div class="map-label-box" style="top:${Math.max(6, coords.top - 4)}%; left:${Math.max(4, Math.min(96, coords.left))}%;">
+          <div class="map-label-box" style="top:${coords.labelTop}; left:${coords.labelLeft};">
             <span class="region-name">${provName}</span>
             <span class="region-val">Rp ${formatRupiah(data.nilai)}</span>
           </div>
-          <div class="map-location-point" style="top:${coords.top}%; left:${coords.left}%;" aria-label="Lokasi ${provName}"></div>
-          <div class="map-badge-pin ${badgeClass}" style="top:${coords.top}%; left:${coords.left}%;">${data.count}</div>
+          <div class="map-location-point" style="top:${coords.top}; left:${coords.left};" aria-label="Lokasi ${provName}"></div>
+          <div class="map-badge-pin ${badgeClass}" style="top:${coords.top}; left:${coords.left};">${data.count}</div>
         `;
       });
 
