@@ -8,9 +8,28 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/firebase@10.14.1/firebase-app-compat.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/firebase@10.14.1/firebase-auth-compat.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/firebase@10.14.1/firebase-firestore-compat.js"></script>
+
+  <!-- FIREBASE SDK (Modular v10) - SAMA SEPERTI index.html -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
+      authDomain: "financial-perfomance-dashboard.firebaseapp.com",
+      projectId: "financial-perfomance-dashboard",
+      storageBucket: "financial-perfomance-dashboard.firebasestorage.app",
+      messagingSenderId: "136866453174",
+      appId: "1:136866453174:web:b69a3e14672eb96cc53817"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.firebaseDB = db;
+    window.firebaseFns = { doc, getDoc, setDoc, onSnapshot };
+  </script>
+
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
@@ -1484,6 +1503,7 @@
 
       resetContractForm();
       recalculateDashboard1();
+      saveNkbToFirebase();
     }
 
     function editContract(idx) {
@@ -1512,6 +1532,7 @@
         masterContracts.splice(idx, 1);
         resetContractForm();
         recalculateDashboard1();
+        saveNkbToFirebase();
       }
     }
 
@@ -1778,6 +1799,7 @@
         recalculateDashboard2();
         resetD2Form();
         if (typeof renderD2AdminTable === 'function') renderD2AdminTable();
+        saveNkbToFirebase();
         return false;
       } catch (err) {
         console.error('Gagal menyimpan data Dashboard 2:', err);
@@ -1825,6 +1847,7 @@
         d2MasterData.splice(idx, 1);
         resetD2Form();
         recalculateDashboard2();
+        saveNkbToFirebase();
       }
     }
 
@@ -2013,6 +2036,7 @@
       d2MapPositions = {};
       saveD2MapPositions();
       recalculateDashboard2();
+      saveNkbToFirebase();
     }
 
     function getD2MapPosition(provName, type, fallbackTop, fallbackLeft) {
@@ -2030,6 +2054,7 @@
         left: Math.max(0, Math.min(100, left))
       };
       saveD2MapPositions();
+      saveNkbToFirebase();
     }
 
     function enableD2MapDrag(element, provName, type) {
@@ -2284,6 +2309,7 @@
       resetD3MonthlyForm();
       document.getElementById('d3InBulan').value = String(monthIndex);
       recalculateDashboard3();
+      saveNkbToFirebase();
     }
 
     function deleteD3MonthlyItem(index) {
@@ -2292,6 +2318,7 @@
         d3ForecastMonthly[index] = 0;
         resetD3MonthlyForm();
         recalculateDashboard3();
+        saveNkbToFirebase();
       }
     }
 
@@ -2339,6 +2366,7 @@
       }
       resetD3EquipmentForm();
       recalculateDashboard3();
+      saveNkbToFirebase();
     }
 
     function deleteD3EquipmentItem(index) {
@@ -2348,6 +2376,7 @@
         d3ForecastEquipment.splice(index, 1);
         resetD3EquipmentForm();
         recalculateDashboard3();
+        saveNkbToFirebase();
       }
     }
 
@@ -2480,7 +2509,131 @@
       }).join('');
     }
 
+
+    // =========================================================
+    // FIREBASE REALTIME SYNC - SAMA SETTING DENGAN index.html
+    // Semua data Dashboard NKB disimpan pada 1 dokumen Firestore.
+    // Perubahan dari device mana pun akan diterima device lain via onSnapshot.
+    // =========================================================
+    let nkbFirebaseReady = false;
+    let nkbApplyingRemote = false;
+    let nkbSaveTimer = null;
+
+    const NKB_FIREBASE_COLLECTION = 'nkbDashboards';
+    const NKB_FIREBASE_DOCUMENT = 'year_2026';
+
+    function getNkbFirebaseState() {
+      return {
+        version: 1,
+        masterContracts: Array.isArray(masterContracts) ? masterContracts : [],
+        d2MasterData: Array.isArray(d2MasterData) ? d2MasterData : [],
+        d2MapPositions: (d2MapPositions && typeof d2MapPositions === 'object') ? d2MapPositions : {},
+        d3PlanMonthly: Array.isArray(d3PlanMonthly) ? d3PlanMonthly : [],
+        d3ForecastMonthly: Array.isArray(d3ForecastMonthly) ? d3ForecastMonthly : [],
+        d3EquipmentLabels: Array.isArray(d3EquipmentLabels) ? d3EquipmentLabels : [],
+        d3PlanEquipment: Array.isArray(d3PlanEquipment) ? d3PlanEquipment : [],
+        d3ForecastEquipment: Array.isArray(d3ForecastEquipment) ? d3ForecastEquipment : []
+      };
+    }
+
+    function applyNkbFirebaseState(data) {
+      if (!data || typeof data !== 'object') return;
+
+      nkbApplyingRemote = true;
+      try {
+        if (Array.isArray(data.masterContracts)) {
+          masterContracts = data.masterContracts;
+        }
+
+        if (Array.isArray(data.d2MasterData)) {
+          d2MasterData = data.d2MasterData;
+        }
+
+        if (data.d2MapPositions && typeof data.d2MapPositions === 'object') {
+          d2MapPositions = data.d2MapPositions;
+          try {
+            localStorage.setItem(D2_MAP_POSITION_STORAGE_KEY, JSON.stringify(d2MapPositions));
+          } catch (e) {}
+        }
+
+        if (Array.isArray(data.d3PlanMonthly)) {
+          d3PlanMonthly = data.d3PlanMonthly;
+        }
+        if (Array.isArray(data.d3ForecastMonthly)) {
+          d3ForecastMonthly = data.d3ForecastMonthly;
+        }
+        if (Array.isArray(data.d3EquipmentLabels)) {
+          d3EquipmentLabels = data.d3EquipmentLabels;
+        }
+        if (Array.isArray(data.d3PlanEquipment)) {
+          d3PlanEquipment = data.d3PlanEquipment;
+        }
+        if (Array.isArray(data.d3ForecastEquipment)) {
+          d3ForecastEquipment = data.d3ForecastEquipment;
+        }
+
+        // Refresh seluruh dashboard tanpa menulis ulang ke Firestore.
+        renderAdminTable();
+        recalculateDashboard1();
+        renderD2AdminTable();
+        recalculateDashboard2();
+        recalculateDashboard3();
+      } finally {
+        nkbApplyingRemote = false;
+      }
+    }
+
+    async function writeNkbFirebaseNow() {
+      if (!nkbFirebaseReady || nkbApplyingRemote || !window.firebaseDB || !window.firebaseFns) return;
+
+      try {
+        const { doc, setDoc } = window.firebaseFns;
+        const docRef = doc(window.firebaseDB, NKB_FIREBASE_COLLECTION, NKB_FIREBASE_DOCUMENT);
+        await setDoc(docRef, getNkbFirebaseState());
+      } catch (error) {
+        console.error('Gagal menyimpan data Dashboard NKB ke Firestore:', error);
+      }
+    }
+
+    function saveNkbToFirebase() {
+      if (nkbApplyingRemote) return;
+
+      // Debounce supaya drag peta / edit beruntun tidak menghasilkan terlalu banyak write.
+      clearTimeout(nkbSaveTimer);
+      nkbSaveTimer = setTimeout(() => {
+        writeNkbFirebaseNow();
+      }, 250);
+    }
+
+    function initNkbFirebaseListener() {
+      const checkInterval = setInterval(() => {
+        if (window.firebaseDB && window.firebaseFns) {
+          clearInterval(checkInterval);
+
+          const { doc, onSnapshot, setDoc } = window.firebaseFns;
+          const docRef = doc(window.firebaseDB, NKB_FIREBASE_COLLECTION, NKB_FIREBASE_DOCUMENT);
+
+          onSnapshot(docRef, (docSnap) => {
+            if (docSnap.exists()) {
+              applyNkbFirebaseState(docSnap.data());
+              nkbFirebaseReady = true;
+              console.log('Firebase Dashboard NKB realtime aktif.');
+            } else {
+              nkbFirebaseReady = true;
+              setDoc(docRef, getNkbFirebaseState())
+                .then(() => console.log('Data awal Dashboard NKB tersimpan di Firestore.'))
+                .catch(error => console.error('Gagal membuat data awal Dashboard NKB:', error));
+            }
+          }, (error) => {
+            nkbFirebaseReady = false;
+            console.error('Gagal menyinkronkan Dashboard NKB secara realtime:', error);
+          });
+        }
+      }, 100);
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      initNkbFirebaseListener();
       initD2Charts();
       renderAdminTable();
       recalculateDashboard1();
@@ -2488,207 +2641,6 @@
       recalculateDashboard2();
       initDashboard3();
     });
-  </script>
-
-
-  <script>
-    /* =========================================================
-       FIREBASE REALTIME SYNC
-       - Data disimpan di Cloud Firestore.
-       - Semua device yang membuka file/dashboard yang sama akan
-         menerima perubahan melalui onSnapshot secara realtime.
-       - Anonymous Auth dipakai agar Firestore tidak perlu dibuka
-         untuk publik.
-       ========================================================= */
-    (function initFirebaseRealtimeSync() {
-      const firebaseConfig = {
-        apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
-        authDomain: "financial-perfomance-dashboard.firebaseapp.com",
-        projectId: "financial-perfomance-dashboard",
-        storageBucket: "financial-perfomance-dashboard.firebasestorage.app",
-        messagingSenderId: "136866453174",
-        appId: "1:136866453174:web:b69a3e14672eb96cc53817"
-      };
-
-      const SYNC_COLLECTION = 'nkb_dashboard_realtime';
-      let cloudReady = false;
-      let suppressCloudWrite = false;
-      let mapSaveTimer = null;
-
-      function setSyncStatus(text, ok = false) {
-        let el = document.getElementById('firebaseSyncStatus');
-        if (!el) {
-          el = document.createElement('div');
-          el.id = 'firebaseSyncStatus';
-          el.style.cssText = [
-            'position:fixed','right:14px','bottom:14px','z-index:99999',
-            'padding:7px 10px','border-radius:999px','font:700 10px Segoe UI,Arial,sans-serif',
-            'box-shadow:0 3px 12px rgba(0,0,0,.25)','background:#475569','color:#fff'
-          ].join(';');
-          document.body.appendChild(el);
-        }
-        el.textContent = text;
-        el.style.background = ok ? '#008767' : '#475569';
-      }
-
-      function safeJson(value) {
-        try { return JSON.parse(JSON.stringify(value)); } catch (_) { return value; }
-      }
-
-      async function writeCloud(docId, data) {
-        if (!cloudReady || suppressCloudWrite) return;
-        try {
-          await firebase.firestore().collection(SYNC_COLLECTION).doc(docId).set({
-            ...safeJson(data),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-          }, { merge: true });
-          setSyncStatus('● Tersinkron realtime', true);
-        } catch (err) {
-          console.error('Firebase write error:', err);
-          setSyncStatus('● Gagal sinkron');
-        }
-      }
-
-      function listenCloud(docId, onData, fallbackData) {
-        firebase.firestore().collection(SYNC_COLLECTION).doc(docId).onSnapshot(async snap => {
-          if (snap.exists) {
-            suppressCloudWrite = true;
-            try { onData(snap.data()); }
-            finally { suppressCloudWrite = false; }
-            setSyncStatus('● Realtime aktif', true);
-          } else if (fallbackData !== undefined) {
-            await writeCloud(docId, fallbackData);
-          }
-        }, err => {
-          console.error('Firebase listener error [' + docId + ']:', err);
-          setSyncStatus('● Firebase belum terhubung');
-        });
-      }
-
-      function refreshAllDashboards() {
-        if (typeof renderAdminTable === 'function') renderAdminTable();
-        if (typeof recalculateDashboard1 === 'function') recalculateDashboard1();
-        if (typeof renderD2AdminTable === 'function') renderD2AdminTable();
-        if (typeof recalculateDashboard2 === 'function') recalculateDashboard2();
-        if (typeof recalculateDashboard3 === 'function') recalculateDashboard3();
-      }
-
-      function installWriteWrappers() {
-        const wrap = (name, getPayload) => {
-          const original = window[name];
-          if (typeof original !== 'function') return;
-          window[name] = function(...args) {
-            const result = original.apply(this, args);
-            try {
-              if (!suppressCloudWrite) getPayload();
-            } catch (err) { console.error('Payload sync error [' + name + ']:', err); }
-            return result;
-          };
-        };
-
-        wrap('saveContractItem', () => writeCloud('dashboard1', { masterContracts }));
-        wrap('deleteContract', () => writeCloud('dashboard1', { masterContracts }));
-
-        wrap('saveD2Item', () => writeCloud('dashboard2', { d2MasterData }));
-        wrap('deleteD2Item', () => writeCloud('dashboard2', { d2MasterData }));
-
-        wrap('saveD3MonthlyItem', () => writeCloud('dashboard3', {
-          d3PlanMonthly, d3ForecastMonthly, d3MonthLabels
-        }));
-        wrap('deleteD3MonthlyItem', () => writeCloud('dashboard3', {
-          d3PlanMonthly, d3ForecastMonthly, d3MonthLabels
-        }));
-        wrap('saveD3EquipmentItem', () => writeCloud('dashboard3', {
-          d3EquipmentLabels, d3PlanEquipment, d3ForecastEquipment
-        }));
-        wrap('deleteD3EquipmentItem', () => writeCloud('dashboard3', {
-          d3EquipmentLabels, d3PlanEquipment, d3ForecastEquipment
-        }));
-
-        // Posisi titik/label peta disinkronkan dengan debounce agar
-        // drag tidak menghasilkan ratusan write per detik.
-        const originalSetMapPosition = window.setD2MapPosition;
-        if (typeof originalSetMapPosition === 'function') {
-          window.setD2MapPosition = function(...args) {
-            const result = originalSetMapPosition.apply(this, args);
-            if (!suppressCloudWrite) {
-              clearTimeout(mapSaveTimer);
-              mapSaveTimer = setTimeout(() => {
-                writeCloud('mapPositions', { d2MapPositions });
-              }, 350);
-            }
-            return result;
-          };
-        }
-
-        const originalResetMap = window.resetD2MapPositions;
-        if (typeof originalResetMap === 'function') {
-          window.resetD2MapPositions = function(...args) {
-            const result = originalResetMap.apply(this, args);
-            if (!suppressCloudWrite) writeCloud('mapPositions', { d2MapPositions });
-            return result;
-          };
-        }
-      }
-
-      function installListeners() {
-        listenCloud('dashboard1', data => {
-          if (Array.isArray(data.masterContracts)) masterContracts = data.masterContracts;
-          refreshAllDashboards();
-        }, { masterContracts: safeJson(masterContracts) });
-
-        listenCloud('dashboard2', data => {
-          if (Array.isArray(data.d2MasterData)) d2MasterData = data.d2MasterData;
-          refreshAllDashboards();
-        }, { d2MasterData: safeJson(d2MasterData) });
-
-        listenCloud('dashboard3', data => {
-          if (Array.isArray(data.d3PlanMonthly)) d3PlanMonthly = data.d3PlanMonthly;
-          if (Array.isArray(data.d3ForecastMonthly)) d3ForecastMonthly = data.d3ForecastMonthly;
-          if (Array.isArray(data.d3EquipmentLabels)) d3EquipmentLabels = data.d3EquipmentLabels;
-          if (Array.isArray(data.d3PlanEquipment)) d3PlanEquipment = data.d3PlanEquipment;
-          if (Array.isArray(data.d3ForecastEquipment)) d3ForecastEquipment = data.d3ForecastEquipment;
-          refreshAllDashboards();
-        }, {
-          d3PlanMonthly: safeJson(d3PlanMonthly),
-          d3ForecastMonthly: safeJson(d3ForecastMonthly),
-          d3EquipmentLabels: safeJson(d3EquipmentLabels),
-          d3PlanEquipment: safeJson(d3PlanEquipment),
-          d3ForecastEquipment: safeJson(d3ForecastEquipment),
-          d3MonthLabels: safeJson(d3MonthLabels)
-        });
-
-        listenCloud('mapPositions', data => {
-          if (data.d2MapPositions && typeof data.d2MapPositions === 'object') {
-            d2MapPositions = data.d2MapPositions;
-            try { localStorage.setItem(D2_MAP_POSITION_STORAGE_KEY, JSON.stringify(d2MapPositions)); } catch (_) {}
-            if (typeof recalculateDashboard2 === 'function') recalculateDashboard2();
-          }
-        }, { d2MapPositions: safeJson(d2MapPositions) });
-      }
-
-      async function start() {
-        try {
-          if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-          setSyncStatus('● Menghubungkan Firebase…');
-          await firebase.auth().signInAnonymously();
-          cloudReady = true;
-          setSyncStatus('● Realtime aktif', true);
-          installWriteWrappers();
-          installListeners();
-        } catch (err) {
-          console.error('Firebase initialization/authentication error:', err);
-          setSyncStatus('● Firebase belum siap');
-          alert('Firebase belum dapat terhubung. Pastikan Firestore dan Anonymous Authentication sudah diaktifkan di Firebase Console.\n\nDetail: ' + (err?.message || err));
-        }
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', start, { once: true });
-      } else {
-        start();
-      }
-    })();
   </script>
 
 </body>
