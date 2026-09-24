@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard NKB - PT Waskita Beton Precast, Tbk</title>
+  <title>Dashboard NKB - PT Karunia</title>
   <!-- FontAwesome Icons & Chart.js -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -116,33 +116,20 @@
       border: 1px solid #cbd5e1;
     }
 
-    .map-label-box { position: absolute; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 5px; padding: 3px 6px; box-shadow: 0 3px 8px rgba(0,0,0,0.12); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); z-index: 8; text-align: center; white-space: nowrap; margin-top: -12px; pointer-events: none; }
+    .map-label-box { position: absolute; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 5px; padding: 3px 6px; box-shadow: 0 3px 8px rgba(0,0,0,0.12); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); z-index: 8; text-align: center; white-space: nowrap; margin-top: -12px; pointer-events:auto; cursor:move; user-select:none; touch-action:none; }
+    .map-label-box:hover { border-color:#0b63ce; box-shadow:0 4px 10px rgba(11,99,206,0.25); }
     .map-label-box .region-name { font-size: 9px; font-weight: 700; color: #0b2246; }
     .map-label-box .region-val { font-size: 9.5px; font-weight: 900; color: #0b63ce; }
 
-    /* Marker dan label dapat diposisikan manual melalui tombol "Atur Posisi". */
-    .map-marker-group { position:absolute; width:18px; height:18px; transform:translate(-50%,-50%); z-index:7; cursor:default; }
-    .map-marker-group .map-location-point,
-    .map-marker-group .map-badge-pin { top:50% !important; left:50% !important; }
-    .map-location-point { position:absolute; width:7px; height:7px; border-radius:50%; background:#ffffff; border:2px solid #0b2246; box-shadow:0 1px 4px rgba(0,0,0,.35); transform:translate(-50%,-50%); z-index:7; pointer-events:none; }
+    .map-location-point { position:absolute; width:9px; height:9px; border-radius:50%; background:#ffffff; border:2px solid #0b2246; box-shadow:0 1px 4px rgba(0,0,0,.35); transform:translate(-50%,-50%); z-index:9; cursor:move; user-select:none; touch-action:none; }
+    .map-location-point:hover { box-shadow:0 0 0 4px rgba(11,99,206,.18), 0 1px 4px rgba(0,0,0,.35); }
 
-    .map-badge-pin { position: absolute; width: 18px; height: 18px; border-radius: 50%; color: white; font-size: 9px; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 6; transform: translate(-50%, -50%); border: 1.5px solid white; pointer-events:none; }
+    .map-badge-pin { position: absolute; width: 18px; height: 18px; border-radius: 50%; color: white; font-size: 9px; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 7; transform: translate(-50%, -50%); border: 1.5px solid white; pointer-events:none; }
+    .map-position-reset { background:#ffffff; color:#0b2246; border:1px solid #cbd5e1; border-radius:4px; padding:4px 7px; font-size:8.5px; font-weight:800; cursor:pointer; white-space:nowrap; }
+    .map-position-reset:hover { background:#f1f5f9; border-color:#0b63ce; color:#0b63ce; }
     .badge-rendah { background: #3b82f6; }
     .badge-sedang { background: #1d4ed8; }
     .badge-tinggi { background: #0f172a; }
-
-    .map-position-mode .map-marker-group { cursor: grab; outline: 1px dashed rgba(11,99,206,.45); outline-offset: 3px; }
-    .map-position-mode .map-marker-group:active { cursor: grabbing; }
-    .map-position-mode .map-label-box { cursor: grab; pointer-events: auto; outline: 1px dashed rgba(11,99,206,.35); outline-offset: 2px; }
-    .map-position-mode .map-label-box:active { cursor: grabbing; }
-    .map-position-mode .map-label-box::after { content: '↕↔'; position:absolute; top:-10px; right:-10px; width:14px; height:14px; border-radius:50%; background:#0b63ce; color:#fff; font-size:8px; line-height:14px; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,.2); }
-
-    .d2-map-position-tools { display:flex; align-items:center; gap:5px; margin-left:auto; }
-    .d2-map-position-btn { border:1px solid #cbd5e1; background:#fff; color:#0b2246; border-radius:4px; padding:3px 7px; font-size:9px; font-weight:800; cursor:pointer; white-space:nowrap; }
-    .d2-map-position-btn:hover { background:#f1f5f9; }
-    .d2-map-position-btn.active { background:#0b63ce; color:#fff; border-color:#0b63ce; }
-    .d2-map-position-help { display:none; font-size:8.5px; color:#64748b; font-weight:700; }
-    .d2-map-position-mode .d2-map-position-help { display:inline; }
 
     .d2-summary-box { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 10px; position: absolute; bottom: 12px; left: 12px; width: 210px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 10; }
     .d2-summary-box-title { font-size: 10px; font-weight: 800; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; margin-bottom: 4px; color: #0b2246; text-transform: uppercase; }
@@ -489,7 +476,7 @@
     <!-- MAIN HEADER -->
     <div class="header-container">
       <div class="title-area">
-        <h1><i class="fa-solid fa-chart-pie"></i> DASHBOARD NKB - PT WASKITA BETON PRECAST, TBK</h1>
+        <h1><i class="fa-solid fa-chart-pie"></i> DASHBOARD NKB - PT KARUNIA</h1>
         <p>Sistem Informasi Manajemen Kontrak & Perencanaan 2026</p>
       </div>
       <div class="header-right-area">
@@ -933,19 +920,15 @@
           <div class="d2-map-card">
             <div class="d2-map-header-row">
               <div class="d2-map-title">SEBARAN NILAI KONTRAK BARU BERDASARKAN PROVINSI</div>
-              <div class="d2-map-legend">
-                <span>Nilai Kontrak (Rp)</span>
-                <span><i class="fa-solid fa-circle" style="color: #3b82f6; font-size: 8px;"></i> Rendah</span>
-                <span><i class="fa-solid fa-circle" style="color: #1d4ed8; font-size: 8px;"></i> Sedang</span>
-                <span><i class="fa-solid fa-circle" style="color: #0f172a; font-size: 8px;"></i> Tinggi</span>
-                <div class="d2-map-position-tools">
-                  <span class="d2-map-position-help">Drag titik / nama lokasi untuk mengatur posisi</span>
-                  <button type="button" class="d2-map-position-btn" id="d2MapPositionToggle" onclick="toggleMapPositionMode()">
-                    <i class="fa-solid fa-up-down-left-right"></i> Atur Posisi
-                  </button>
-                  <button type="button" class="d2-map-position-btn" onclick="resetMapPositions()" title="Kembalikan posisi awal">
-                    <i class="fa-solid fa-rotate-left"></i>
-                  </button>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <button type="button" class="map-position-reset" onclick="resetD2MapPositions()" title="Kembalikan posisi peta ke posisi awal">
+                  <i class="fa-solid fa-rotate-left"></i> Reset Posisi
+                </button>
+                <div class="d2-map-legend">
+                  <span>Nilai Kontrak (Rp)</span>
+                  <span><i class="fa-solid fa-circle" style="color: #3b82f6; font-size: 8px;"></i> Rendah</span>
+                  <span><i class="fa-solid fa-circle" style="color: #1d4ed8; font-size: 8px;"></i> Sedang</span>
+                  <span><i class="fa-solid fa-circle" style="color: #0f172a; font-size: 8px;"></i> Tinggi</span>
                 </div>
               </div>
             </div>
@@ -1655,9 +1638,6 @@
       'Papua Barat Daya': { top: '46%', left: '93%', labelTop: '38%', labelLeft: '93%' }
     };
 
-    // Muat posisi manual yang pernah disimpan pada browser.
-    loadSavedMapPositions();
-
     let d2MasterData = [
       { spsa: '00001/HAMORI/SPK/01/2026', customer: 'PT Hamori Medical Center', bulan: 0, unit: 1, kontrak: 2, alat: 'Mobile Crane + Bucket Cor', provinsi: 'Jawa Barat', lokasi: 'Subang', nilai: 220000000 },
       { spsa: '001/SPSA/WSBP/2026', customer: 'PT Tirta Dan Mitra Pertiwi', bulan: 0, unit: 1, kontrak: 1, alat: 'Stone Crusher', provinsi: 'Lampung', lokasi: 'Lampung Selatan', nilai: 1140000000 },
@@ -1998,112 +1978,121 @@
       return aliases[n] || n;
     }
 
-    let mapPositionMode = false;
-    const MAP_POSITION_STORAGE_KEY = 'nkbDashboardMapPositionsV1';
+    // =========================================================
+    // PENGATURAN POSISI PETA DASHBOARD 2
+    // - Titik lokasi dan label dapat digeser dengan mouse/touch.
+    // - Posisi disimpan otomatis ke localStorage setelah dilepas.
+    // - Saat dashboard di-refresh, posisi terakhir akan dipakai kembali.
+    // =========================================================
+    const D2_MAP_POSITION_STORAGE_KEY = 'nkb_dashboard2_map_positions_v1';
+    let d2MapPositions = loadD2MapPositions();
 
-    function loadSavedMapPositions() {
+    function loadD2MapPositions() {
       try {
-        const saved = JSON.parse(localStorage.getItem(MAP_POSITION_STORAGE_KEY) || '{}');
-        Object.keys(saved).forEach(provName => {
-          if (provinceMapCoords[provName]) {
-            provinceMapCoords[provName] = {
-              ...provinceMapCoords[provName],
-              ...saved[provName]
-            };
-          }
-        });
+        const saved = localStorage.getItem(D2_MAP_POSITION_STORAGE_KEY);
+        return saved ? JSON.parse(saved) : {};
       } catch (err) {
-        console.warn('Posisi peta tersimpan tidak dapat dibaca:', err);
+        console.warn('Posisi peta tidak dapat dibaca dari localStorage:', err);
+        return {};
       }
     }
 
-    function saveMapPositions() {
+    function saveD2MapPositions() {
       try {
-        localStorage.setItem(MAP_POSITION_STORAGE_KEY, JSON.stringify(provinceMapCoords));
+        localStorage.setItem(D2_MAP_POSITION_STORAGE_KEY, JSON.stringify(d2MapPositions));
       } catch (err) {
-        console.warn('Posisi peta tidak dapat disimpan:', err);
+        console.warn('Posisi peta tidak dapat disimpan ke localStorage:', err);
       }
     }
 
-    function toggleMapPositionMode() {
-      mapPositionMode = !mapPositionMode;
-      const mapCanvas = document.getElementById('d2MapCanvasContainer');
-      const btn = document.getElementById('d2MapPositionToggle');
+    function resetD2MapPositions() {
+      if (!confirm('Kembalikan semua titik dan nama lokasi ke posisi awal?')) return;
+      d2MapPositions = {};
+      saveD2MapPositions();
+      recalculateDashboard2();
+    }
 
-      if (mapCanvas) mapCanvas.classList.toggle('map-position-mode', mapPositionMode);
-      if (btn) {
-        btn.classList.toggle('active', mapPositionMode);
-        btn.innerHTML = mapPositionMode
-          ? '<i class="fa-solid fa-check"></i> Selesai'
-          : '<i class="fa-solid fa-up-down-left-right"></i> Atur Posisi';
+    function getD2MapPosition(provName, type, fallbackTop, fallbackLeft) {
+      const saved = d2MapPositions[provName]?.[type];
+      if (saved && Number.isFinite(Number(saved.top)) && Number.isFinite(Number(saved.left))) {
+        return { top: Number(saved.top), left: Number(saved.left) };
       }
+      return { top: parseFloat(fallbackTop), left: parseFloat(fallbackLeft) };
     }
 
-    function resetMapPositions() {
-      if (!confirm('Kembalikan semua posisi titik dan nama lokasi ke posisi awal?')) return;
-      localStorage.removeItem(MAP_POSITION_STORAGE_KEY);
-      window.location.reload();
+    function setD2MapPosition(provName, type, top, left) {
+      if (!d2MapPositions[provName]) d2MapPositions[provName] = {};
+      d2MapPositions[provName][type] = {
+        top: Math.max(0, Math.min(100, top)),
+        left: Math.max(0, Math.min(100, left))
+      };
+      saveD2MapPositions();
     }
 
-    function enableMapDrag(element, provName, type) {
+    function enableD2MapDrag(element, provName, type) {
+      if (!element) return;
+
       let dragging = false;
-      let startX = 0;
-      let startY = 0;
-      let startLeft = 0;
-      let startTop = 0;
+      let pointerId = null;
 
-      element.addEventListener('pointerdown', function(e) {
-        if (!mapPositionMode) return;
-        e.preventDefault();
-        e.stopPropagation();
-
+      const move = (clientX, clientY) => {
         const mapCanvas = document.getElementById('d2MapCanvasContainer');
         if (!mapCanvas) return;
 
         const rect = mapCanvas.getBoundingClientRect();
-        const currentLeft = parseFloat(element.style.left) || 0;
-        const currentTop = parseFloat(element.style.top) || 0;
+        if (!rect.width || !rect.height) return;
 
-        dragging = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        startLeft = currentLeft;
-        startTop = currentTop;
-        element.setPointerCapture?.(e.pointerId);
+        const left = ((clientX - rect.left) / rect.width) * 100;
+        const top = ((clientY - rect.top) / rect.height) * 100;
+        const safeLeft = Math.max(0, Math.min(100, left));
+        const safeTop = Math.max(0, Math.min(100, top));
 
-        function move(ev) {
-          if (!dragging) return;
+        setD2MapPosition(provName, type, safeTop, safeLeft);
 
-          let newLeft = startLeft + ((ev.clientX - startX) / rect.width) * 100;
-          let newTop = startTop + ((ev.clientY - startY) / rect.height) * 100;
+        element.style.top = safeTop + '%';
+        element.style.left = safeLeft + '%';
 
-          // Tetap berada di area peta.
-          newLeft = Math.max(0.5, Math.min(99.5, newLeft));
-          newTop = Math.max(1, Math.min(99, newTop));
-
-          element.style.left = newLeft + '%';
-          element.style.top = newTop + '%';
-
-          if (!provinceMapCoords[provName]) return;
-          if (type === 'marker') {
-            provinceMapCoords[provName].left = newLeft + '%';
-            provinceMapCoords[provName].top = newTop + '%';
-          } else {
-            provinceMapCoords[provName].labelLeft = newLeft + '%';
-            provinceMapCoords[provName].labelTop = newTop + '%';
+        // Angka/badge selalu mengikuti titik lokasi.
+        if (type === 'point') {
+          const badge = Array.from(mapCanvas.querySelectorAll('.map-badge-pin'))
+            .find(el => el.dataset.prov === provName);
+          if (badge) {
+            badge.style.top = safeTop + '%';
+            badge.style.left = safeLeft + '%';
           }
         }
+      };
 
-        function up(ev) {
-          if (!dragging) return;
-          dragging = false;
-          try { element.releasePointerCapture?.(ev.pointerId); } catch (_) {}
-          saveMapPositions();
-        }
+      element.addEventListener('pointerdown', (event) => {
+        if (event.button !== undefined && event.button !== 0) return;
+        dragging = true;
+        pointerId = event.pointerId;
+        element.setPointerCapture?.(pointerId);
+        element.style.cursor = 'grabbing';
+        event.preventDefault();
+        event.stopPropagation();
+      });
 
-        element.addEventListener('pointermove', move);
-        element.addEventListener('pointerup', up, { once: true });
-        element.addEventListener('pointercancel', up, { once: true });
+      element.addEventListener('pointermove', (event) => {
+        if (!dragging || event.pointerId !== pointerId) return;
+        move(event.clientX, event.clientY);
+        event.preventDefault();
+      });
+
+      const finish = (event) => {
+        if (!dragging) return;
+        if (event.pointerId !== undefined && event.pointerId !== pointerId) return;
+        dragging = false;
+        element.style.cursor = 'move';
+        pointerId = null;
+      };
+
+      element.addEventListener('pointerup', finish);
+      element.addEventListener('pointercancel', finish);
+      element.addEventListener('lostpointercapture', () => {
+        dragging = false;
+        element.style.cursor = 'move';
+        pointerId = null;
       });
     }
 
@@ -2119,20 +2108,25 @@
 
       entries.forEach(({provName, data}) => {
         const coords = provinceMapCoords[provName];
+        const pointPos = getD2MapPosition(provName, 'point', coords.top, coords.left);
+        const labelPos = getD2MapPosition(provName, 'label', coords.labelTop, coords.labelLeft);
+
         let badgeClass = 'badge-rendah';
         if (data.nilai >= 1000000000) badgeClass = 'badge-tinggi';
         else if (data.nilai >= 500000000) badgeClass = 'badge-sedang';
 
-        // Marker/titik dan label mempunyai posisi yang bisa diatur terpisah.
         mapHtml += `
-          <div class="map-label-box" data-map-label="${provName}" style="top:${coords.labelTop}; left:${coords.labelLeft};">
+          <div class="map-label-box" data-prov="${provName}" data-map-drag="label"
+               style="top:${labelPos.top}%; left:${labelPos.left}%;"
+               title="Geser nama lokasi">
             <span class="region-name">${provName}</span>
             <span class="region-val">Rp ${formatRupiah(data.nilai)}</span>
           </div>
-          <div class="map-marker-group" data-map-marker="${provName}" style="top:${coords.top}; left:${coords.left};" aria-label="Lokasi ${provName}">
-            <div class="map-location-point"></div>
-            <div class="map-badge-pin ${badgeClass}">${data.count}</div>
-          </div>
+          <div class="map-location-point" data-prov="${provName}" data-map-drag="point"
+               style="top:${pointPos.top}%; left:${pointPos.left}%;"
+               aria-label="Lokasi ${provName}" title="Geser titik lokasi"></div>
+          <div class="map-badge-pin ${badgeClass}" data-prov="${provName}"
+               style="top:${pointPos.top}%; left:${pointPos.left}%;">${data.count}</div>
         `;
       });
 
@@ -2141,15 +2135,18 @@
       }
 
       mapCanvas.innerHTML = mapHtml;
-      mapCanvas.classList.toggle('map-position-mode', mapPositionMode);
 
-      mapCanvas.querySelectorAll('[data-map-marker]').forEach(el => {
-        enableMapDrag(el, el.getAttribute('data-map-marker'), 'marker');
-      });
-      mapCanvas.querySelectorAll('[data-map-label]').forEach(el => {
-        enableMapDrag(el, el.getAttribute('data-map-label'), 'label');
+      entries.forEach(({provName}) => {
+        const point = Array.from(mapCanvas.querySelectorAll('.map-location-point'))
+          .find(el => el.dataset.prov === provName);
+        const label = Array.from(mapCanvas.querySelectorAll('.map-label-box'))
+          .find(el => el.dataset.prov === provName);
+
+        enableD2MapDrag(point, provName, 'point');
+        enableD2MapDrag(label, provName, 'label');
       });
     }
+
 
     // =========================================================
     // DASHBOARD 3: PROGNOSA NKB 2026
