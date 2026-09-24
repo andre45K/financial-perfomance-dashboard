@@ -8,10 +8,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-
-  <!-- Firebase Realtime Database -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/firebase@10.14.1/firebase-app-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/firebase@10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/firebase@10.14.1/firebase-firestore-compat.js"></script>
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
@@ -27,11 +26,6 @@
     .header-right-area { display: flex; align-items: center; gap: 12px; }
     .back-btn { background: rgba(255, 255, 255, 0.2); color: white; text-decoration: none; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(255, 255, 255, 0.4); transition: background 0.2s; }
     .back-btn:hover { background: rgba(255, 255, 255, 0.3); }
-    .realtime-status { display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border-radius: 6px; font-size: 10.5px; font-weight: 800; border: 1px solid rgba(255,255,255,0.35); background: rgba(255,255,255,0.12); color: #fff; white-space: nowrap; }
-    .realtime-status .dot { width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; box-shadow: 0 0 7px rgba(245,158,11,.7); }
-    .realtime-status.online .dot { background: #22c55e; box-shadow: 0 0 7px rgba(34,197,94,.8); }
-    .realtime-status.offline .dot { background: #ef4444; box-shadow: 0 0 7px rgba(239,68,68,.8); }
-    @media (max-width: 700px) { .header-right-area { flex-wrap: wrap; justify-content: flex-end; } .realtime-status { font-size: 9.5px; } }
 
     /* NAVIGATION TABS BAR */
     .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #1e293b; padding-bottom: 10px; }
@@ -489,9 +483,6 @@
         <p>Sistem Informasi Manajemen Kontrak & Perencanaan 2026</p>
       </div>
       <div class="header-right-area">
-        <div id="realtimeStatus" class="realtime-status" title="Status koneksi Firebase">
-          <span class="dot"></span><span id="realtimeStatusText">Menghubungkan...</span>
-        </div>
         <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard Utama</a>
       </div>
     </div>
@@ -1422,179 +1413,6 @@
   </script>
 
   <script>
-    /* =========================================================
-       FIREBASE REALTIME DATABASE
-       - Menyimpan data Dashboard 1, 2, 3 dan posisi peta.
-       - Semua browser yang membuka dashboard akan menerima update
-         secara realtime tanpa perlu refresh.
-       ========================================================= */
-    const firebaseConfig = {
-      apiKey: "AIzaSyCR0KDRMDJpkFoQq-DRGM-1miU3DLLmoMI",
-      authDomain: "financial-perfomance-dashboard.firebaseapp.com",
-      projectId: "financial-perfomance-dashboard",
-      storageBucket: "financial-perfomance-dashboard.firebasestorage.app",
-      messagingSenderId: "136866453174",
-      appId: "1:136866453174:web:b69a3e14672eb96cc53817",
-      // URL default Realtime Database. Jika Firebase Console menampilkan URL berbeda,
-      // ganti nilai ini dengan URL pada Realtime Database > Data.
-      databaseURL: "https://financial-perfomance-dashboard-default-rtdb.firebaseio.com"
-    };
-
-    let firebaseDb = null;
-    let firebaseRootRef = null;
-    let firebaseApplyingRemote = false;
-    let firebaseSyncStarted = false;
-    let firebaseWriteTimer = null;
-
-    function setRealtimeStatus(state, textValue) {
-      const el = document.getElementById('realtimeStatus');
-      const txt = document.getElementById('realtimeStatusText');
-      if (!el || !txt) return;
-      el.classList.remove('online', 'offline');
-      if (state === 'online') el.classList.add('online');
-      if (state === 'offline') el.classList.add('offline');
-      txt.textContent = textValue;
-    }
-
-    function buildFirebasePayload() {
-      return {
-        dashboard1: {
-          masterContracts: masterContracts
-        },
-        dashboard2: {
-          masterData: d2MasterData,
-          mapPositions: d2MapPositions
-        },
-        dashboard3: {
-          planMonthly: d3PlanMonthly,
-          forecastMonthly: d3ForecastMonthly,
-          equipmentLabels: d3EquipmentLabels,
-          planEquipment: d3PlanEquipment,
-          forecastEquipment: d3ForecastEquipment
-        },
-        meta: {
-          updatedAt: firebase.database.ServerValue.TIMESTAMP
-        }
-      };
-    }
-
-    function normalizeFirebaseArray(value) {
-      if (Array.isArray(value)) return value;
-      if (value && typeof value === 'object') {
-        const keys = Object.keys(value).sort((a,b) => Number(a) - Number(b));
-        return keys.map(k => value[k]);
-      }
-      return [];
-    }
-
-    function applyFirebasePayload(data) {
-      if (!data || firebaseApplyingRemote) return;
-      firebaseApplyingRemote = true;
-      try {
-        if (data.dashboard1 && Array.isArray(data.dashboard1.masterContracts)) {
-          masterContracts = data.dashboard1.masterContracts.map(item => ({
-            customer: item.customer || '',
-            alat: item.alat || '',
-            bulan: Number(item.bulan) || 0,
-            nilai: Number(item.nilai) || 0
-          }));
-        }
-
-        if (data.dashboard2 && Array.isArray(data.dashboard2.masterData)) {
-          d2MasterData = data.dashboard2.masterData.map(item => ({
-            spsa: item.spsa || '',
-            customer: item.customer || '',
-            bulan: Number(item.bulan) || 0,
-            unit: Number(item.unit) || 0,
-            kontrak: Number(item.kontrak) || 0,
-            alat: item.alat || '',
-            provinsi: item.provinsi || 'Aceh',
-            lokasi: item.lokasi || item.provinsi || 'Aceh',
-            nilai: Number(item.nilai) || 0
-          }));
-        }
-
-        if (data.dashboard2 && data.dashboard2.mapPositions && typeof data.dashboard2.mapPositions === 'object') {
-          d2MapPositions = data.dashboard2.mapPositions;
-          try {
-            localStorage.setItem(D2_MAP_POSITION_STORAGE_KEY, JSON.stringify(d2MapPositions));
-          } catch (e) {}
-        }
-
-        if (data.dashboard3) {
-          const planMonthly = normalizeFirebaseArray(data.dashboard3.planMonthly);
-          const forecastMonthly = normalizeFirebaseArray(data.dashboard3.forecastMonthly);
-          const equipmentLabels = normalizeFirebaseArray(data.dashboard3.equipmentLabels);
-          const planEquipment = normalizeFirebaseArray(data.dashboard3.planEquipment);
-          const forecastEquipment = normalizeFirebaseArray(data.dashboard3.forecastEquipment);
-
-          if (planMonthly.length) d3PlanMonthly = planMonthly.map(v => Number(v) || 0);
-          if (forecastMonthly.length) d3ForecastMonthly = forecastMonthly.map(v => Number(v) || 0);
-          if (equipmentLabels.length) d3EquipmentLabels = equipmentLabels.map(v => String(v));
-          if (planEquipment.length) d3PlanEquipment = planEquipment.map(v => Number(v) || 0);
-          if (forecastEquipment.length) d3ForecastEquipment = forecastEquipment.map(v => Number(v) || 0);
-        }
-
-        if (typeof recalculateDashboard1 === 'function') recalculateDashboard1();
-        if (typeof recalculateDashboard2 === 'function') recalculateDashboard2();
-        if (typeof recalculateDashboard3 === 'function') recalculateDashboard3();
-      } finally {
-        firebaseApplyingRemote = false;
-      }
-    }
-
-    function queueFirebaseSave() {
-      if (!firebaseDb || !firebaseRootRef || firebaseApplyingRemote) return;
-      clearTimeout(firebaseWriteTimer);
-      firebaseWriteTimer = setTimeout(() => {
-        const payload = buildFirebasePayload();
-        firebaseRootRef.update(payload)
-          .then(() => setRealtimeStatus('online', 'Realtime aktif'))
-          .catch(err => {
-            console.error('Firebase write error:', err);
-            setRealtimeStatus('offline', 'Gagal menyimpan');
-          });
-      }, 120);
-    }
-
-    function startFirebaseRealtime() {
-      if (firebaseSyncStarted) return;
-      firebaseSyncStarted = true;
-      try {
-        if (!window.firebase) throw new Error('Firebase SDK belum termuat.');
-        const app = firebase.initializeApp(firebaseConfig);
-        firebaseDb = firebase.database(app);
-        firebaseRootRef = firebaseDb.ref('nkbDashboard');
-
-        firebaseDb.ref('.info/connected').on('value', snap => {
-          if (snap.val() === true) setRealtimeStatus('online', 'Realtime aktif');
-          else setRealtimeStatus('offline', 'Offline');
-        });
-
-        firebaseRootRef.on('value', snapshot => {
-          const data = snapshot.val();
-          if (data) {
-            applyFirebasePayload(data);
-            return;
-          }
-
-          // Database masih kosong: data bawaan file dijadikan data awal satu kali.
-          queueFirebaseSave();
-        }, err => {
-          console.error('Firebase read error:', err);
-          setRealtimeStatus('offline', 'Akses Firebase ditolak');
-        });
-      } catch (err) {
-        console.error('Firebase initialization error:', err);
-        setRealtimeStatus('offline', 'Firebase belum terhubung');
-      }
-    }
-
-    // Fungsi ini dipanggil dari perubahan data lokal.
-    function saveCurrentDataToFirebase() {
-      queueFirebaseSave();
-    }
-
     let masterContracts = [
       { customer: 'Bendungan Tiga Dihaji', alat: 'Truck Mixer', bulan: 3, nilai: 760000000 },
       { customer: 'SR Sampang', alat: 'Truck Mixer', bulan: 4, nilai: 318000000 },
@@ -1666,7 +1484,6 @@
 
       resetContractForm();
       recalculateDashboard1();
-      saveCurrentDataToFirebase();
     }
 
     function editContract(idx) {
@@ -1695,7 +1512,6 @@
         masterContracts.splice(idx, 1);
         resetContractForm();
         recalculateDashboard1();
-        saveCurrentDataToFirebase();
       }
     }
 
@@ -1962,7 +1778,6 @@
         recalculateDashboard2();
         resetD2Form();
         if (typeof renderD2AdminTable === 'function') renderD2AdminTable();
-        saveCurrentDataToFirebase();
         return false;
       } catch (err) {
         console.error('Gagal menyimpan data Dashboard 2:', err);
@@ -2010,7 +1825,6 @@
         d2MasterData.splice(idx, 1);
         resetD2Form();
         recalculateDashboard2();
-        saveCurrentDataToFirebase();
       }
     }
 
@@ -2192,8 +2006,6 @@
       } catch (err) {
         console.warn('Posisi peta tidak dapat disimpan ke localStorage:', err);
       }
-      // Posisi peta ikut realtime ke semua browser.
-      if (!firebaseApplyingRemote) saveCurrentDataToFirebase();
     }
 
     function resetD2MapPositions() {
@@ -2472,7 +2284,6 @@
       resetD3MonthlyForm();
       document.getElementById('d3InBulan').value = String(monthIndex);
       recalculateDashboard3();
-      saveCurrentDataToFirebase();
     }
 
     function deleteD3MonthlyItem(index) {
@@ -2481,7 +2292,6 @@
         d3ForecastMonthly[index] = 0;
         resetD3MonthlyForm();
         recalculateDashboard3();
-        saveCurrentDataToFirebase();
       }
     }
 
@@ -2529,7 +2339,6 @@
       }
       resetD3EquipmentForm();
       recalculateDashboard3();
-      saveCurrentDataToFirebase();
     }
 
     function deleteD3EquipmentItem(index) {
@@ -2539,7 +2348,6 @@
         d3ForecastEquipment.splice(index, 1);
         resetD3EquipmentForm();
         recalculateDashboard3();
-        saveCurrentDataToFirebase();
       }
     }
 
@@ -2679,10 +2487,208 @@
       renderD2AdminTable();
       recalculateDashboard2();
       initDashboard3();
-
-      // Setelah UI siap, hubungkan ke Firebase Realtime Database.
-      startFirebaseRealtime();
     });
+  </script>
+
+
+  <script>
+    /* =========================================================
+       FIREBASE REALTIME SYNC
+       - Data disimpan di Cloud Firestore.
+       - Semua device yang membuka file/dashboard yang sama akan
+         menerima perubahan melalui onSnapshot secara realtime.
+       - Anonymous Auth dipakai agar Firestore tidak perlu dibuka
+         untuk publik.
+       ========================================================= */
+    (function initFirebaseRealtimeSync() {
+      const firebaseConfig = {
+        apiKey: "AIzaSyCR0KDRMDJpKfoQ-DRGM-1miU3DLLmoM1",
+        authDomain: "financial-perfomance-dashboard.firebaseapp.com",
+        projectId: "financial-perfomance-dashboard",
+        storageBucket: "financial-perfomance-dashboard.firebasestorage.app",
+        messagingSenderId: "136866453174",
+        appId: "1:136866453174:web:b69a3e14672eb96cc53817"
+      };
+
+      const SYNC_COLLECTION = 'nkb_dashboard_realtime';
+      let cloudReady = false;
+      let suppressCloudWrite = false;
+      let mapSaveTimer = null;
+
+      function setSyncStatus(text, ok = false) {
+        let el = document.getElementById('firebaseSyncStatus');
+        if (!el) {
+          el = document.createElement('div');
+          el.id = 'firebaseSyncStatus';
+          el.style.cssText = [
+            'position:fixed','right:14px','bottom:14px','z-index:99999',
+            'padding:7px 10px','border-radius:999px','font:700 10px Segoe UI,Arial,sans-serif',
+            'box-shadow:0 3px 12px rgba(0,0,0,.25)','background:#475569','color:#fff'
+          ].join(';');
+          document.body.appendChild(el);
+        }
+        el.textContent = text;
+        el.style.background = ok ? '#008767' : '#475569';
+      }
+
+      function safeJson(value) {
+        try { return JSON.parse(JSON.stringify(value)); } catch (_) { return value; }
+      }
+
+      async function writeCloud(docId, data) {
+        if (!cloudReady || suppressCloudWrite) return;
+        try {
+          await firebase.firestore().collection(SYNC_COLLECTION).doc(docId).set({
+            ...safeJson(data),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: true });
+          setSyncStatus('● Tersinkron realtime', true);
+        } catch (err) {
+          console.error('Firebase write error:', err);
+          setSyncStatus('● Gagal sinkron');
+        }
+      }
+
+      function listenCloud(docId, onData, fallbackData) {
+        firebase.firestore().collection(SYNC_COLLECTION).doc(docId).onSnapshot(async snap => {
+          if (snap.exists) {
+            suppressCloudWrite = true;
+            try { onData(snap.data()); }
+            finally { suppressCloudWrite = false; }
+            setSyncStatus('● Realtime aktif', true);
+          } else if (fallbackData !== undefined) {
+            await writeCloud(docId, fallbackData);
+          }
+        }, err => {
+          console.error('Firebase listener error [' + docId + ']:', err);
+          setSyncStatus('● Firebase belum terhubung');
+        });
+      }
+
+      function refreshAllDashboards() {
+        if (typeof renderAdminTable === 'function') renderAdminTable();
+        if (typeof recalculateDashboard1 === 'function') recalculateDashboard1();
+        if (typeof renderD2AdminTable === 'function') renderD2AdminTable();
+        if (typeof recalculateDashboard2 === 'function') recalculateDashboard2();
+        if (typeof recalculateDashboard3 === 'function') recalculateDashboard3();
+      }
+
+      function installWriteWrappers() {
+        const wrap = (name, getPayload) => {
+          const original = window[name];
+          if (typeof original !== 'function') return;
+          window[name] = function(...args) {
+            const result = original.apply(this, args);
+            try {
+              if (!suppressCloudWrite) getPayload();
+            } catch (err) { console.error('Payload sync error [' + name + ']:', err); }
+            return result;
+          };
+        };
+
+        wrap('saveContractItem', () => writeCloud('dashboard1', { masterContracts }));
+        wrap('deleteContract', () => writeCloud('dashboard1', { masterContracts }));
+
+        wrap('saveD2Item', () => writeCloud('dashboard2', { d2MasterData }));
+        wrap('deleteD2Item', () => writeCloud('dashboard2', { d2MasterData }));
+
+        wrap('saveD3MonthlyItem', () => writeCloud('dashboard3', {
+          d3PlanMonthly, d3ForecastMonthly, d3MonthLabels
+        }));
+        wrap('deleteD3MonthlyItem', () => writeCloud('dashboard3', {
+          d3PlanMonthly, d3ForecastMonthly, d3MonthLabels
+        }));
+        wrap('saveD3EquipmentItem', () => writeCloud('dashboard3', {
+          d3EquipmentLabels, d3PlanEquipment, d3ForecastEquipment
+        }));
+        wrap('deleteD3EquipmentItem', () => writeCloud('dashboard3', {
+          d3EquipmentLabels, d3PlanEquipment, d3ForecastEquipment
+        }));
+
+        // Posisi titik/label peta disinkronkan dengan debounce agar
+        // drag tidak menghasilkan ratusan write per detik.
+        const originalSetMapPosition = window.setD2MapPosition;
+        if (typeof originalSetMapPosition === 'function') {
+          window.setD2MapPosition = function(...args) {
+            const result = originalSetMapPosition.apply(this, args);
+            if (!suppressCloudWrite) {
+              clearTimeout(mapSaveTimer);
+              mapSaveTimer = setTimeout(() => {
+                writeCloud('mapPositions', { d2MapPositions });
+              }, 350);
+            }
+            return result;
+          };
+        }
+
+        const originalResetMap = window.resetD2MapPositions;
+        if (typeof originalResetMap === 'function') {
+          window.resetD2MapPositions = function(...args) {
+            const result = originalResetMap.apply(this, args);
+            if (!suppressCloudWrite) writeCloud('mapPositions', { d2MapPositions });
+            return result;
+          };
+        }
+      }
+
+      function installListeners() {
+        listenCloud('dashboard1', data => {
+          if (Array.isArray(data.masterContracts)) masterContracts = data.masterContracts;
+          refreshAllDashboards();
+        }, { masterContracts: safeJson(masterContracts) });
+
+        listenCloud('dashboard2', data => {
+          if (Array.isArray(data.d2MasterData)) d2MasterData = data.d2MasterData;
+          refreshAllDashboards();
+        }, { d2MasterData: safeJson(d2MasterData) });
+
+        listenCloud('dashboard3', data => {
+          if (Array.isArray(data.d3PlanMonthly)) d3PlanMonthly = data.d3PlanMonthly;
+          if (Array.isArray(data.d3ForecastMonthly)) d3ForecastMonthly = data.d3ForecastMonthly;
+          if (Array.isArray(data.d3EquipmentLabels)) d3EquipmentLabels = data.d3EquipmentLabels;
+          if (Array.isArray(data.d3PlanEquipment)) d3PlanEquipment = data.d3PlanEquipment;
+          if (Array.isArray(data.d3ForecastEquipment)) d3ForecastEquipment = data.d3ForecastEquipment;
+          refreshAllDashboards();
+        }, {
+          d3PlanMonthly: safeJson(d3PlanMonthly),
+          d3ForecastMonthly: safeJson(d3ForecastMonthly),
+          d3EquipmentLabels: safeJson(d3EquipmentLabels),
+          d3PlanEquipment: safeJson(d3PlanEquipment),
+          d3ForecastEquipment: safeJson(d3ForecastEquipment),
+          d3MonthLabels: safeJson(d3MonthLabels)
+        });
+
+        listenCloud('mapPositions', data => {
+          if (data.d2MapPositions && typeof data.d2MapPositions === 'object') {
+            d2MapPositions = data.d2MapPositions;
+            try { localStorage.setItem(D2_MAP_POSITION_STORAGE_KEY, JSON.stringify(d2MapPositions)); } catch (_) {}
+            if (typeof recalculateDashboard2 === 'function') recalculateDashboard2();
+          }
+        }, { d2MapPositions: safeJson(d2MapPositions) });
+      }
+
+      async function start() {
+        try {
+          if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+          setSyncStatus('● Menghubungkan Firebase…');
+          await firebase.auth().signInAnonymously();
+          cloudReady = true;
+          setSyncStatus('● Realtime aktif', true);
+          installWriteWrappers();
+          installListeners();
+        } catch (err) {
+          console.error('Firebase initialization/authentication error:', err);
+          setSyncStatus('● Firebase belum siap');
+          alert('Firebase belum dapat terhubung. Pastikan Firestore dan Anonymous Authentication sudah diaktifkan di Firebase Console.\n\nDetail: ' + (err?.message || err));
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', start, { once: true });
+      } else {
+        start();
+      }
+    })();
   </script>
 
 </body>
