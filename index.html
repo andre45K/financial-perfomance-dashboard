@@ -50,14 +50,14 @@
     .admin-link { color: #3b82f6; text-decoration: none; font-size: 12px; font-weight: bold; border: 1px solid #3b82f6; padding: 4px 8px; border-radius: 4px; }
     .admin-link:hover { background: #3b82f6; color: white; }
 
-    /* TOMBOL DOWNLOAD DROPDOWN */
+    /* PERBAIKAN TOMBOL DOWNLOAD DROPDOWN AGAR MENU MUNCUL */
     .download-dropdown { position: relative; display: inline-block; }
     .download-btn { background: #008767; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     .download-btn:hover { background: #15803d; }
-    .download-content { display: none; position: absolute; right: 0; background-color: #0f1926; min-width: 220px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.4); z-index: 100; border: 1px solid #1e2d42; border-radius: 6px; overflow: hidden; }
+    .download-content { display: none; position: absolute; right: 0; top: 100%; margin-top: 4px; background-color: #0f1926; min-width: 240px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.6); z-index: 9999; border: 1px solid #1e2d42; border-radius: 6px; overflow: hidden; }
+    .download-dropdown:hover .download-content { display: block !important; }
     .download-content button { color: #ffffff; padding: 10px 14px; text-decoration: none; display: block; width: 100%; text-align: left; background: none; border: none; font-size: 11.5px; cursor: pointer; border-bottom: 1px solid #1e2d42; }
     .download-content button:hover { background-color: #1e2d42; color: #22c55e; }
-    .download-dropdown:hover .download-content { display: block; }
 
     .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 15px; }
     .kpi-card { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; padding: 10px 12px; position: relative; }
@@ -232,7 +232,7 @@
 
       <a href="login.html" class="admin-link">Admin Input</a>
 
-      <!-- TOMBOL DOWNLOAD JPG TERPISAH MENJADI 3 FILE -->
+      <!-- TOMBOL DOWNLOAD JPG DROPDOWN (MENU NKB) -->
       <div class="download-dropdown">
         <button class="download-btn"><i class="fa-solid fa-download"></i> Download JPG <i class="fa-solid fa-caret-down"></i></button>
         <div class="download-content">
