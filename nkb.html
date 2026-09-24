@@ -1587,47 +1587,94 @@
       "Sulawesi Utara", "Sumatera Barat", "Sumatera Selatan", "Sumatera Utara"
     ];
 
-    // KOORDINAT TITIK PETA DIKERJAKAN PRESISI PERSIS SEPERTI GAMBAR REFERENSI C7DA70.PNG
-    const provinceMapCoords = {
-      'Aceh': { top: '35%', left: '16.5%', labelTop: '27%', labelLeft: '16%' },
-      'Sumatera Utara': { top: '41%', left: '21.5%', labelTop: '33%', labelLeft: '21%' },
-      'Sumatera Barat': { top: '48%', left: '25%', labelTop: '40%', labelLeft: '24%' },
-      'Riau': { top: '47%', left: '30%', labelTop: '39%', labelLeft: '29%' },
-      'Jambi': { top: '53%', left: '31%', labelTop: '45%', labelLeft: '30%' },
-      'Sumatera Selatan': { top: '57%', left: '32.5%', labelTop: '49%', labelLeft: '28%' },
-      'Bengkulu': { top: '60%', left: '28.5%', labelTop: '52%', labelLeft: '28%' },
-      'Lampung': { top: '62%', left: '34.5%', labelTop: '70%', labelLeft: '24%' },
-      'Kepulauan Bangka Belitung': { top: '54%', left: '37.5%', labelTop: '46%', labelLeft: '37%' },
-      'Kepulauan Riau': { top: '40%', left: '39%', labelTop: '32%', labelLeft: '39%' },
-      'DKI Jakarta': { top: '65.5%', left: '42.5%', labelTop: '57%', labelLeft: '43%' },
-      'Banten': { top: '64.5%', left: '38.5%', labelTop: '56%', labelLeft: '39%' },
-      'Jawa Barat': { top: '67.5%', left: '46.5%', labelTop: '75%', labelLeft: '42%' },
-      'DI Yogyakarta': { top: '69%', left: '55%', labelTop: '76%', labelLeft: '55%' },
-      'Jawa Tengah': { top: '67%', left: '51%', labelTop: '74%', labelLeft: '50%' },
-      'Jawa Timur': { top: '66%', left: '60.5%', labelTop: '58%', labelLeft: '61%' },
-      'Bali': { top: '70.5%', left: '69.5%', labelTop: '78%', labelLeft: '70%' },
-      'Nusa Tenggara Barat': { top: '71.5%', left: '75%', labelTop: '79%', labelLeft: '75%' },
-      'Nusa Tenggara Timur': { top: '74.5%', left: '84%', labelTop: '82%', labelLeft: '84%' },
-      'Kalimantan Barat': { top: '48%', left: '55%', labelTop: '40%', labelLeft: '55%' },
-      'Kalimantan Tengah': { top: '51%', left: '61%', labelTop: '43%', labelLeft: '61%' },
-      'Kalimantan Selatan': { top: '57%', left: '65.5%', labelTop: '50%', labelLeft: '65%' },
-      'Kalimantan Timur': { top: '44%', left: '67%', labelTop: '37%', labelLeft: '64%' },
-      'Kalimantan Utara': { top: '35%', left: '67%', labelTop: '27%', labelLeft: '67%' },
-      'Sulawesi Utara': { top: '36%', left: '78%', labelTop: '28%', labelLeft: '78%' },
-      'Gorontalo': { top: '41%', left: '75%', labelTop: '33%', labelLeft: '75%' },
-      'Sulawesi Tengah': { top: '48%', left: '74%', labelTop: '40%', labelLeft: '74%' },
-      'Sulawesi Barat': { top: '55%', left: '71.5%', labelTop: '47%', labelLeft: '71%' },
-      'Sulawesi Selatan': { top: '61%', left: '73.5%', labelTop: '69%', labelLeft: '73%' },
-      'Sulawesi Tenggara': { top: '58%', left: '79.5%', labelTop: '50%', labelLeft: '79%' },
-      'Maluku': { top: '56%', left: '89%', labelTop: '48%', labelLeft: '89%' },
-      'Maluku Utara': { top: '43%', left: '90.5%', labelTop: '35%', labelLeft: '90%' },
-      'Papua': { top: '60%', left: '97%', labelTop: '52%', labelLeft: '97%' },
-      'Papua Barat': { top: '48%', left: '95%', labelTop: '40%', labelLeft: '95%' },
-      'Papua Tengah': { top: '59%', left: '96%', labelTop: '67%', labelLeft: '96%' },
-      'Papua Pegunungan': { top: '61%', left: '98%', labelTop: '69%', labelLeft: '98%' },
-      'Papua Selatan': { top: '68%', left: '97.5%', labelTop: '76%', labelLeft: '97%' },
-      'Papua Barat Daya': { top: '46%', left: '93%', labelTop: '38%', labelLeft: '93%' }
+    // KOORDINAT GEOGRAFIS PROVINSI — titik dihitung terhadap peta Indonesia,
+    // bukan lagi berdasarkan posisi manual. Koordinat menggunakan posisi ibu kota
+    // provinsi sebagai titik representatif sehingga marker mengikuti posisi geografis.
+    const provinceGeoCoords = {
+      'Aceh': { lat: 5.55, lon: 95.32 },
+      'Sumatera Utara': { lat: 3.59, lon: 98.67 },
+      'Sumatera Barat': { lat: -0.95, lon: 100.35 },
+      'Riau': { lat: 0.51, lon: 101.45 },
+      'Jambi': { lat: -1.61, lon: 103.61 },
+      'Sumatera Selatan': { lat: -2.99, lon: 104.78 },
+      'Bengkulu': { lat: -3.79, lon: 102.27 },
+      'Lampung': { lat: -5.43, lon: 105.26 },
+      'Kepulauan Bangka Belitung': { lat: -2.13, lon: 106.11 },
+      'Kepulauan Riau': { lat: 0.92, lon: 104.45 },
+      'DKI Jakarta': { lat: -6.21, lon: 106.85 },
+      'Banten': { lat: -6.12, lon: 106.15 },
+      'Jawa Barat': { lat: -6.92, lon: 107.61 },
+      'Jawa Tengah': { lat: -6.97, lon: 110.42 },
+      'DI Yogyakarta': { lat: -7.80, lon: 110.37 },
+      'Jawa Timur': { lat: -7.25, lon: 112.75 },
+      'Bali': { lat: -8.65, lon: 115.22 },
+      'Nusa Tenggara Barat': { lat: -8.58, lon: 116.10 },
+      'Nusa Tenggara Timur': { lat: -10.16, lon: 123.60 },
+      'Kalimantan Barat': { lat: -0.03, lon: 109.34 },
+      'Kalimantan Tengah': { lat: -2.21, lon: 113.92 },
+      'Kalimantan Selatan': { lat: -3.32, lon: 114.59 },
+      'Kalimantan Timur': { lat: -0.50, lon: 117.15 },
+      'Kalimantan Utara': { lat: 2.84, lon: 117.36 },
+      'Sulawesi Utara': { lat: 1.49, lon: 124.84 },
+      'Gorontalo': { lat: 0.54, lon: 123.06 },
+      'Sulawesi Tengah': { lat: -0.90, lon: 119.87 },
+      'Sulawesi Barat': { lat: -2.67, lon: 118.89 },
+      'Sulawesi Selatan': { lat: -5.15, lon: 119.43 },
+      'Sulawesi Tenggara': { lat: -3.99, lon: 122.51 },
+      'Maluku': { lat: -3.70, lon: 128.18 },
+      'Maluku Utara': { lat: 0.79, lon: 127.38 },
+      'Papua Barat Daya': { lat: -0.88, lon: 131.25 },
+      'Papua Barat': { lat: -0.86, lon: 134.06 },
+      'Papua Tengah': { lat: -4.05, lon: 136.39 },
+      'Papua Pegunungan': { lat: -4.10, lon: 138.68 },
+      'Papua Selatan': { lat: -8.49, lon: 140.40 },
+      'Papua': { lat: -2.53, lon: 140.72 }
     };
+
+    // Batas geografis area abu-abu pada gambar peta Indonesia.
+    // Batas ini dipakai untuk memproyeksikan lon/lat ke posisi piksel peta.
+    const mapGeoBounds = {
+      west: 95.0,
+      east: 141.0,
+      north: 6.0,
+      south: -11.0,
+      imageLeft: 31,
+      imageRight: 703,
+      imageTop: 123,
+      imageBottom: 366,
+      imageNativeWidth: 735,
+      imageNativeHeight: 490
+    };
+
+    function getProvinceMapPosition(provName, canvas) {
+      const geo = provinceGeoCoords[provName];
+      if (!geo || !canvas) return null;
+
+      // background-size: 100% auto pada canvas.
+      const imageWidth = canvas.clientWidth;
+      const scale = imageWidth / mapGeoBounds.imageNativeWidth;
+      const imageHeight = mapGeoBounds.imageNativeHeight * scale;
+
+      // background-position: center 48%.
+      const offsetX = (canvas.clientWidth - imageWidth) / 2;
+      const offsetY = (canvas.clientHeight - imageHeight) * 0.48;
+
+      const xNative = mapGeoBounds.imageLeft +
+        ((geo.lon - mapGeoBounds.west) / (mapGeoBounds.east - mapGeoBounds.west)) *
+        (mapGeoBounds.imageRight - mapGeoBounds.imageLeft);
+      const yNative = mapGeoBounds.imageTop +
+        ((mapGeoBounds.north - geo.lat) / (mapGeoBounds.north - mapGeoBounds.south)) *
+        (mapGeoBounds.imageBottom - mapGeoBounds.imageTop);
+
+      const x = offsetX + xNative * scale;
+      const y = offsetY + yNative * scale;
+
+      return {
+        left: (x / canvas.clientWidth) * 100,
+        top: (y / canvas.clientHeight) * 100
+      };
+    }
+
 
     let d2MasterData = [
       { spsa: '00001/HAMORI/SPK/01/2026', customer: 'PT Hamori Medical Center', bulan: 0, unit: 1, kontrak: 2, alat: 'Mobile Crane + Bucket Cor', provinsi: 'Jawa Barat', lokasi: 'Subang', nilai: 220000000 },
@@ -1980,7 +2027,8 @@
       })).filter(x => provinceMapCoords[x.provName]);
 
       entries.forEach(({provName, data}) => {
-        const coords = provinceMapCoords[provName];
+        const coords = getProvinceMapPosition(provName, mapCanvas);
+        if (!coords) return;
         let badgeClass = 'badge-rendah';
         if (data.nilai >= 1000000000) badgeClass = 'badge-tinggi';
         else if (data.nilai >= 500000000) badgeClass = 'badge-sedang';
@@ -1988,12 +2036,12 @@
         // Titik selalu memakai koordinat geografis provinsi.
         // Label boleh ditempatkan terpisah agar tidak menutup titik/peta.
         mapHtml += `
-          <div class="map-label-box" style="top:${coords.labelTop}; left:${coords.labelLeft};">
+          <div class="map-label-box" style="top:${Math.max(6, coords.top - 4)}%; left:${Math.max(4, Math.min(96, coords.left))}%;">
             <span class="region-name">${provName}</span>
             <span class="region-val">Rp ${formatRupiah(data.nilai)}</span>
           </div>
-          <div class="map-location-point" style="top:${coords.top}; left:${coords.left};" aria-label="Lokasi ${provName}"></div>
-          <div class="map-badge-pin ${badgeClass}" style="top:${coords.top}; left:${coords.left};">${data.count}</div>
+          <div class="map-location-point" style="top:${coords.top}%; left:${coords.left}%;" aria-label="Lokasi ${provName}"></div>
+          <div class="map-badge-pin ${badgeClass}" style="top:${coords.top}%; left:${coords.left}%;">${data.count}</div>
         `;
       });
 
