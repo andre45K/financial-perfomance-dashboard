@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard NKB - PT Waskita Beton Precast, Tbk</title>
+  <title>Dashboard NKB - PT Karunia</title>
   <!-- FontAwesome Icons & Chart.js -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -115,14 +115,70 @@
       background-position: center 48%;
       border: 1px solid #cbd5e1;
     }
+ 
+    /* LABEL PETA: otomatis dirapikan agar tidak saling bertumpuk */
+    .map-label-box {
+      position: absolute;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 4px 7px;
+      min-width: 0;
+      max-width: 150px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.14);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 8;
+      text-align: center;
+      white-space: normal;
+      line-height: 1.15;
+      pointer-events: none;
+      visibility: hidden;
+    }
+    .map-label-box .region-name {
+      font-size: 9px;
+      font-weight: 800;
+      color: #0b2246;
+      white-space: nowrap;
+    }
+    .map-label-box .region-val {
+      font-size: 9px;
+      font-weight: 900;
+      color: #0b63ce;
+      margin-top: 2px;
+      white-space: nowrap;
+    }
 
-    .map-label-box { position: absolute; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 5px; padding: 3px 6px; box-shadow: 0 3px 8px rgba(0,0,0,0.12); display: flex; flex-direction: column; align-items: center; transform: translate(-50%, -100%); z-index: 5; text-align: center; white-space: nowrap; margin-top: -12px; pointer-events:none; }
-    .map-label-box .region-name { font-size: 9px; font-weight: 700; color: #0b2246; }
-    .map-label-box .region-val { font-size: 9.5px; font-weight: 900; color: #0b63ce; }
-    
-    .map-location-point { position:absolute; width:7px; height:7px; border-radius:50%; background:#ffffff; border:2px solid #0b2246; box-shadow:0 1px 4px rgba(0,0,0,.35); transform:translate(-50%,-50%); z-index:7; }
+    .map-location-point {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid #0b2246;
+      box-shadow: 0 1px 5px rgba(0,0,0,.4);
+      transform: translate(-50%,-50%);
+      z-index: 7;
+    }
 
-    .map-badge-pin { position: absolute; width: 18px; height: 18px; border-radius: 50%; color: white; font-size: 9px; font-weight: bold; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 6; transform: translate(-50%, -50%); border: 1.5px solid white; }
+    .map-badge-pin {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      color: white;
+      font-size: 9px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      z-index: 9;
+      transform: translate(-50%, -50%);
+      border: 1.5px solid white;
+    }
     .badge-rendah { background: #3b82f6; }
     .badge-sedang { background: #1d4ed8; }
     .badge-tinggi { background: #0f172a; }
@@ -257,7 +313,7 @@
       padding: 6px 8px; border-bottom: 1px solid #cbd5e1;
     }
     .d3-admin-table td {
-      padding: 5px 8px; border-bottom: 1px solid #e2e8f0; color: #1e293b;
+      padding: 4px 7px; border-bottom: 1px solid #e2e8f0; color: #1e293b;
     }
     .d3-admin-count {
       display: inline-block; margin-left: 5px; padding: 2px 6px;
@@ -472,7 +528,7 @@
     <!-- MAIN HEADER -->
     <div class="header-container">
       <div class="title-area">
-        <h1><i class="fa-solid fa-chart-pie"></i> DASHBOARD NKB - PT WASKITA BETON PRECAST, Tbk</h1>
+        <h1><i class="fa-solid fa-chart-pie"></i> DASHBOARD NKB - PT KARUNIA</h1>
         <p>Sistem Informasi Manajemen Kontrak & Perencanaan 2026</p>
       </div>
       <div class="header-right-area">
@@ -1589,29 +1645,29 @@
 
     // KOORDINAT TITIK PETA DIKERJAKAN PRESISI PERSIS SEPERTI GAMBAR REFERENSI C7DA70.PNG
     const provinceMapCoords = {
-      'Aceh': { top: '35%', left: '16.5%', labelTop: '27%', labelLeft: '16%' },
+      'Aceh': { top: '36.1%', left: '13.6%' },
       'Sumatera Utara': { top: '41%', left: '21.5%', labelTop: '33%', labelLeft: '21%' },
       'Sumatera Barat': { top: '48%', left: '25%', labelTop: '40%', labelLeft: '24%' },
       'Riau': { top: '47%', left: '30%', labelTop: '39%', labelLeft: '29%' },
       'Jambi': { top: '53%', left: '31%', labelTop: '45%', labelLeft: '30%' },
-      'Sumatera Selatan': { top: '57%', left: '32.5%', labelTop: '49%', labelLeft: '28%' },
+      'Sumatera Selatan': { top: '58.6%', left: '24.5%' },
       'Bengkulu': { top: '60%', left: '28.5%', labelTop: '52%', labelLeft: '28%' },
-      'Lampung': { top: '62%', left: '34.5%', labelTop: '70%', labelLeft: '24%' },
+      'Lampung': { top: '66.9%', left: '26.5%' },
       'Kepulauan Bangka Belitung': { top: '54%', left: '37.5%', labelTop: '46%', labelLeft: '37%' },
       'Kepulauan Riau': { top: '40%', left: '39%', labelTop: '32%', labelLeft: '39%' },
-      'DKI Jakarta': { top: '65.5%', left: '42.5%', labelTop: '57%', labelLeft: '43%' },
-      'Banten': { top: '64.5%', left: '38.5%', labelTop: '56%', labelLeft: '39%' },
-      'Jawa Barat': { top: '67.5%', left: '46.5%', labelTop: '75%', labelLeft: '42%' },
-      'DI Yogyakarta': { top: '69%', left: '55%', labelTop: '76%', labelLeft: '55%' },
-      'Jawa Tengah': { top: '67%', left: '51%', labelTop: '74%', labelLeft: '50%' },
-      'Jawa Timur': { top: '66%', left: '60.5%', labelTop: '58%', labelLeft: '61%' },
+      'DKI Jakarta': { top: '69.3%', left: '40.8%' },
+      'Banten': { top: '66.9%', left: '29.3%' },
+      'Jawa Barat': { top: '68.1%', left: '36.1%' },
+      'DI Yogyakarta': { top: '72.2%', left: '53.1%' },
+      'Jawa Tengah': { top: '69.3%', left: '47.6%' },
+      'Jawa Timur': { top: '69.3%', left: '59.9%' },
       'Bali': { top: '70.5%', left: '69.5%', labelTop: '78%', labelLeft: '70%' },
       'Nusa Tenggara Barat': { top: '71.5%', left: '75%', labelTop: '79%', labelLeft: '75%' },
       'Nusa Tenggara Timur': { top: '74.5%', left: '84%', labelTop: '82%', labelLeft: '84%' },
       'Kalimantan Barat': { top: '48%', left: '55%', labelTop: '40%', labelLeft: '55%' },
       'Kalimantan Tengah': { top: '51%', left: '61%', labelTop: '43%', labelLeft: '61%' },
       'Kalimantan Selatan': { top: '57%', left: '65.5%', labelTop: '50%', labelLeft: '65%' },
-      'Kalimantan Timur': { top: '44%', left: '67%', labelTop: '37%', labelLeft: '64%' },
+      'Kalimantan Timur': { top: '38.5%', left: '60.5%' },
       'Kalimantan Utara': { top: '35%', left: '67%', labelTop: '27%', labelLeft: '67%' },
       'Sulawesi Utara': { top: '36%', left: '78%', labelTop: '28%', labelLeft: '78%' },
       'Gorontalo': { top: '41%', left: '75%', labelTop: '33%', labelLeft: '75%' },
@@ -1969,6 +2025,117 @@
       return aliases[n] || n;
     }
 
+    function layoutD2MapLabels() {
+      const mapCanvas = document.getElementById('d2MapCanvasContainer');
+      if (!mapCanvas) return;
+
+      const labels = Array.from(mapCanvas.querySelectorAll('.map-label-box'));
+      if (!labels.length) return;
+
+      const mapRect = mapCanvas.getBoundingClientRect();
+      const summary = mapCanvas.parentElement?.querySelector('.d2-summary-box');
+      const summaryRect = summary ? summary.getBoundingClientRect() : null;
+
+      const rectToLocal = (r) => ({
+        left: r.left - mapRect.left,
+        top: r.top - mapRect.top,
+        right: r.right - mapRect.left,
+        bottom: r.bottom - mapRect.top
+      });
+
+      const reserved = [];
+      if (summaryRect) reserved.push(rectToLocal(summaryRect));
+
+      // Titik lokasi menjadi obstacle agar label tidak menutup marker lain.
+      Array.from(mapCanvas.querySelectorAll('.map-location-point')).forEach(point => {
+        const r = point.getBoundingClientRect();
+        const p = rectToLocal(r);
+        reserved.push({
+          left: p.left - 5,
+          top: p.top - 5,
+          right: p.right + 5,
+          bottom: p.bottom + 5
+        });
+      });
+
+      const placed = [];
+      const pad = 8;
+      const gap = 7;
+
+      const overlapArea = (a, b) => {
+        const w = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
+        const h = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+        return w * h;
+      };
+
+      const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+      // Prioritas: label di atas titik, lalu kanan/kiri, kemudian bawah.
+      const candidateOffsets = [
+        [0, -4],
+        [58, -18],
+        [-58, -18],
+        [62, 14],
+        [-62, 14],
+        [0, 20],
+        [82, -30],
+        [-82, -30]
+      ];
+
+      labels.forEach(label => {
+        const provName = label.dataset.province;
+        const coords = provinceMapCoords[provName];
+        if (!coords) return;
+
+        const px = mapCanvas.clientWidth * parseFloat(coords.left) / 100;
+        const py = mapCanvas.clientHeight * parseFloat(coords.top) / 100;
+
+        // visibility:hidden tetap mempertahankan ukuran elemen sehingga
+        // browser dapat menghitung collision sebelum label ditampilkan.
+        const width = label.offsetWidth;
+        const height = label.offsetHeight;
+
+        let best = null;
+
+        candidateOffsets.forEach(([dx, dy]) => {
+          let left = px - width / 2 + dx;
+          let top = py - height - 10 + dy;
+
+          left = clamp(left, pad, mapCanvas.clientWidth - width - pad);
+          top = clamp(top, pad, mapCanvas.clientHeight - height - pad);
+
+          const candidate = {
+            left, top,
+            right: left + width,
+            bottom: top + height
+          };
+
+          let score = Math.abs(dx) + Math.abs(dy);
+
+          reserved.forEach(obstacle => {
+            const overlap = overlapArea(candidate, obstacle);
+            if (overlap > 0) score += 100000 + overlap * 20;
+          });
+
+          placed.forEach(obstacle => {
+            const overlap = overlapArea(candidate, obstacle);
+            if (overlap > 0) score += 100000 + overlap * 20;
+          });
+
+          // Sedikit penalti bila terlalu dekat tepi agar visual lebih seimbang.
+          if (left < 16 || candidate.right > mapCanvas.clientWidth - 16) score += 250;
+          if (top < 12 || candidate.bottom > mapCanvas.clientHeight - 12) score += 250;
+
+          if (!best || score < best.score) best = { ...candidate, score };
+        });
+
+        label.style.left = `${best.left}px`;
+        label.style.top = `${best.top}px`;
+        label.style.visibility = 'visible';
+        placed.push(best);
+      });
+    }
+
     function renderDynamicMapPins(provMap) {
       const mapCanvas = document.getElementById('d2MapCanvasContainer');
       if (!mapCanvas) return;
@@ -1985,10 +2152,8 @@
         if (data.nilai >= 1000000000) badgeClass = 'badge-tinggi';
         else if (data.nilai >= 500000000) badgeClass = 'badge-sedang';
 
-        // Titik selalu memakai koordinat geografis provinsi.
-        // Label boleh ditempatkan terpisah agar tidak menutup titik/peta.
         mapHtml += `
-          <div class="map-label-box" style="top:${coords.labelTop}; left:${coords.labelLeft};">
+          <div class="map-label-box" data-province="${provName}">
             <span class="region-name">${provName}</span>
             <span class="region-val">Rp ${formatRupiah(data.nilai)}</span>
           </div>
@@ -2000,8 +2165,19 @@
       if (!entries.length) {
         mapHtml = '<div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#e2e8f0; font-size:11px; font-weight:700;">Belum ada data provinsi</div>';
       }
+
       mapCanvas.innerHTML = mapHtml;
+
+      // Tunggu layout browser selesai agar ukuran label akurat.
+      requestAnimationFrame(() => layoutD2MapLabels());
     }
+
+    window.addEventListener('resize', () => {
+      if (document.getElementById('d2MapCanvasContainer')) {
+        requestAnimationFrame(() => layoutD2MapLabels());
+      }
+    });
+
 
 
     // =========================================================
