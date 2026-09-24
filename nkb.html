@@ -153,6 +153,120 @@
     /* ========================================================= */
     /* STYLING UNTUK DASHBOARD 3 (PROGNOSA NKB 2026)             */
     /* ========================================================= */
+    /* PANEL ADMIN DASHBOARD 3 - dibuat mengikuti pola Dashboard 1 & 2 */
+    .d3-admin-card {
+      margin: 15px;
+      margin-bottom: 0;
+      border-top: 4px solid #0b63ce;
+      background: #f8fafc;
+      color: #1e293b;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.10);
+    }
+    .d3-admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0b2246;
+      color: #fff;
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .d3-admin-toggle {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid #fff;
+      color: #fff;
+      padding: 3px 9px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .d3-admin-body { padding: 15px; }
+    .d3-admin-section {
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .d3-admin-section-title {
+      font-size: 10.5px;
+      font-weight: 900;
+      color: #0b2246;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .d3-admin-form-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr auto auto;
+      gap: 7px;
+      align-items: end;
+    }
+    .d3-admin-form-grid.equipment {
+      grid-template-columns: 1.5fr 1fr 1fr auto auto;
+    }
+    .d3-admin-field label {
+      display: block;
+      font-size: 8.5px;
+      font-weight: 800;
+      color: #334155;
+      margin-bottom: 3px;
+    }
+    .d3-admin-field input, .d3-admin-field select {
+      width: 100%;
+      padding: 6px 7px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      font-size: 9.5px;
+      color: #1e293b;
+      background: #fff;
+      outline: none;
+    }
+    .d3-admin-field input:focus, .d3-admin-field select:focus {
+      border-color: #0b63ce;
+      box-shadow: 0 0 0 2px rgba(11,99,206,0.10);
+    }
+    .d3-admin-btn {
+      border: none;
+      border-radius: 4px;
+      padding: 6px 10px;
+      cursor: pointer;
+      color: #fff;
+      font-size: 9.5px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .d3-admin-btn.save { background: #0b63ce; }
+    .d3-admin-btn.reset { background: #64748b; }
+    .d3-admin-btn.edit { background: #f59e0b; padding: 3px 7px; font-size: 9px; }
+    .d3-admin-btn.delete { background: #ef4444; padding: 3px 7px; font-size: 9px; }
+    .d3-admin-help {
+      font-size: 9.5px;
+      color: #64748b;
+      margin-top: 8px;
+      font-style: italic;
+    }
+    .d3-admin-table-wrap { overflow-x: auto; max-height: 285px; overflow-y: auto; }
+    .d3-admin-table { width: 100%; border-collapse: collapse; font-size: 9.5px; }
+    .d3-admin-table th {
+      position: sticky; top: 0; z-index: 1;
+      background: #f1f5f9; color: #334155; font-weight: 800;
+      padding: 6px 8px; border-bottom: 1px solid #cbd5e1;
+    }
+    .d3-admin-table td {
+      padding: 5px 8px; border-bottom: 1px solid #e2e8f0; color: #1e293b;
+    }
+    .d3-admin-count {
+      display: inline-block; margin-left: 5px; padding: 2px 6px;
+      background: #e2e8f0; color: #0b2246; border-radius: 10px; font-size: 8px;
+    }
+    @media (max-width: 900px) {
+      .d3-admin-form-grid, .d3-admin-form-grid.equipment { grid-template-columns: 1fr 1fr; }
+    }
+
     .d3-container {
       background: #ffffff;
       color: #1e293b;
@@ -911,6 +1025,74 @@
           </div>
         </div>
 
+        <!-- PANEL ADMIN: INPUT, EDIT & PERBARUI DATA PROGNOSA NKB -->
+        <div class="d3-admin-card">
+          <div class="d3-admin-header">
+            <span><i class="fa-solid fa-gear"></i> Panel Admin: Input, Edit &amp; Perbarui Data Dashboard Prognosa NKB</span>
+            <button type="button" class="d3-admin-toggle" onclick="toggleAdminPanelD3()">Tutup/Buka Panel</button>
+          </div>
+          <div id="adminFormBodyD3" class="d3-admin-body">
+            <div class="d3-admin-section">
+              <div class="d3-admin-section-title">Input / Edit Prognosa NKB Per Bulan</div>
+              <div class="d3-admin-form-grid">
+                <div class="d3-admin-field">
+                  <label for="d3InBulan">BULAN</label>
+                  <select id="d3InBulan">
+                    <option value="0">Januari</option><option value="1">Februari</option><option value="2">Maret</option>
+                    <option value="3">April</option><option value="4">Mei</option><option value="5">Juni</option>
+                    <option value="6">Juli</option><option value="7">Agustus</option><option value="8">September</option>
+                    <option value="9">Oktober</option><option value="10">November</option><option value="11">Desember</option>
+                  </select>
+                </div>
+                <div class="d3-admin-field">
+                  <label for="d3InPlan">RENCANA NKB (Rp)</label>
+                  <input type="number" id="d3InPlan" min="0" step="1" placeholder="0">
+                </div>
+                <div class="d3-admin-field">
+                  <label for="d3InForecast">PROGNOSA NKB (Rp)</label>
+                  <input type="number" id="d3InForecast" min="0" step="1" placeholder="0">
+                </div>
+                <button type="button" class="d3-admin-btn save" id="d3MonthlySaveBtn" onclick="saveD3MonthlyItem()"><i class="fa-solid fa-save"></i> Simpan</button>
+                <button type="button" class="d3-admin-btn reset" onclick="resetD3MonthlyForm()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+              </div>
+              <div class="d3-admin-help">Pilih bulan untuk menambah atau mengubah nilai Rencana dan Prognosa. Data akan langsung memperbarui KPI, grafik, dan tabel.</div>
+              <div class="d3-admin-table-wrap" style="margin-top:10px;">
+                <table class="d3-admin-table">
+                  <thead><tr><th style="width:35px;">No</th><th>Bulan</th><th style="text-align:right;">Rencana NKB (Rp)</th><th style="text-align:right;">Prognosa NKB (Rp)</th><th style="text-align:center;width:80px;">Aksi</th></tr></thead>
+                  <tbody id="d3AdminMonthlyBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="d3-admin-section" style="margin-bottom:0;">
+              <div class="d3-admin-section-title">Input / Edit Prognosa NKB Per Jenis Alat</div>
+              <div class="d3-admin-form-grid equipment">
+                <div class="d3-admin-field">
+                  <label for="d3InEquipment">JENIS ALAT</label>
+                  <input type="text" id="d3InEquipment" placeholder="Contoh: Truck Mixer">
+                </div>
+                <div class="d3-admin-field">
+                  <label for="d3InEquipmentPlan">RENCANA NKB (Rp)</label>
+                  <input type="number" id="d3InEquipmentPlan" min="0" step="1" placeholder="0">
+                </div>
+                <div class="d3-admin-field">
+                  <label for="d3InEquipmentForecast">PROGNOSA NKB (Rp)</label>
+                  <input type="number" id="d3InEquipmentForecast" min="0" step="1" placeholder="0">
+                </div>
+                <button type="button" class="d3-admin-btn save" id="d3EquipmentSaveBtn" onclick="saveD3EquipmentItem()"><i class="fa-solid fa-save"></i> Simpan</button>
+                <button type="button" class="d3-admin-btn reset" onclick="resetD3EquipmentForm()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+              </div>
+              <div class="d3-admin-help">Jenis alat dapat ditambah, diedit, atau dihapus. Perubahan otomatis masuk ke grafik dan tabel Dashboard Prognosa.</div>
+              <div class="d3-admin-table-wrap" style="margin-top:10px;">
+                <table class="d3-admin-table">
+                  <thead><tr><th style="width:35px;">No</th><th>Jenis Alat</th><th style="text-align:right;">Rencana NKB (Rp)</th><th style="text-align:right;">Prognosa NKB (Rp)</th><th style="text-align:center;width:80px;">Aksi</th></tr></thead>
+                  <tbody id="d3AdminEquipmentBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="d3-body">
           <div class="d3-kpi-grid">
             <div class="d3-kpi">
@@ -979,9 +1161,9 @@
                   <tfoot>
                     <tr class="d3-table-total">
                       <td>Total</td>
-                      <td class="text-right">13.155.200.000</td>
-                      <td class="text-right">13.236.066.657</td>
-                      <td class="text-right">80.866.657</td>
+                      <td class="text-right" id="d3MonthlyTotalPlan">13.155.200.000</td>
+                      <td class="text-right" id="d3MonthlyTotalForecast">13.236.066.657</td>
+                      <td class="text-right" id="d3MonthlyTotalDiff">80.866.657</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -1004,9 +1186,9 @@
                   <tfoot>
                     <tr class="d3-table-total">
                       <td>Total</td>
-                      <td class="text-right">13.155.200.000</td>
-                      <td class="text-right">13.236.066.657</td>
-                      <td class="text-right">80.866.657</td>
+                      <td class="text-right" id="d3EquipmentTotalPlan">13.155.200.000</td>
+                      <td class="text-right" id="d3EquipmentTotalForecast">13.236.066.657</td>
+                      <td class="text-right" id="d3EquipmentTotalDiff">80.866.657</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -1827,16 +2009,16 @@
     // Data dibuat terpisah agar tidak mengubah fungsi Dashboard 1 & 2.
     // =========================================================
     const d3MonthLabels = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-    const d3PlanMonthly = [
+    let d3PlanMonthly = [
       1140000000, 2416000000, 0, 760000000, 3893000000, 2196000000,
       2304000000, 2642200000, 0, 0, 0, 0
     ];
-    const d3ForecastMonthly = [
+    let d3ForecastMonthly = [
       1394500000, 1064150000, 326000000, 218000000, 2507050000, 2195550000,
       1081333326, 781000000, 2775150000, 233333331, 285000000, 375000000
     ];
 
-    const d3EquipmentLabels = [
+    let d3EquipmentLabels = [
       'Batching Plant',
       'Dump Truck',
       'Mobile Crane–Bucket Cor',
@@ -1845,10 +2027,10 @@
       'Truck Mixer',
       'Truck Trailer'
     ];
-    const d3PlanEquipment = [
+    let d3PlanEquipment = [
       994000000, 0, 0, 90000000, 1140000000, 8165200000, 2766000000
     ];
-    const d3ForecastEquipment = [
+    let d3ForecastEquipment = [
       0, 275000000, 220000000, 135000000, 1140000000, 9690066657, 1775000000
     ];
 
@@ -1875,6 +2057,201 @@
       return value >= 0 ? 'positive' : 'negative';
     }
 
+    let d3MonthlyEditIndex = -1;
+    let d3EquipmentEditIndex = -1;
+
+    function toggleAdminPanelD3() {
+      const body = document.getElementById('adminFormBodyD3');
+      if (body) body.style.display = body.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function d3ReadNumber(id) {
+      const value = parseFloat(document.getElementById(id)?.value);
+      return Number.isFinite(value) && value >= 0 ? value : 0;
+    }
+
+    function renderD3AdminTables() {
+      const monthlyBody = document.getElementById('d3AdminMonthlyBody');
+      const equipmentBody = document.getElementById('d3AdminEquipmentBody');
+      if (!monthlyBody || !equipmentBody) return;
+
+      monthlyBody.innerHTML = d3MonthLabels.map((_, i) => `
+        <tr>
+          <td class="text-center">${i + 1}</td>
+          <td style="font-weight:700;">${monthNames[i]}</td>
+          <td style="text-align:right;">${d3PlanMonthly[i] ? d3FormatRupiah(d3PlanMonthly[i]) : '-'}</td>
+          <td style="text-align:right;">${d3ForecastMonthly[i] ? d3FormatRupiah(d3ForecastMonthly[i]) : '-'}</td>
+          <td style="text-align:center; white-space:nowrap;">
+            <button type="button" class="d3-admin-btn edit" onclick="editD3MonthlyItem(${i})" title="Edit"><i class="fa-solid fa-pen"></i></button>
+            <button type="button" class="d3-admin-btn delete" onclick="deleteD3MonthlyItem(${i})" title="Kosongkan"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`).join('');
+
+      if (!d3EquipmentLabels.length) {
+        equipmentBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;font-style:italic;">Belum ada data jenis alat.</td></tr>';
+      } else {
+        equipmentBody.innerHTML = d3EquipmentLabels.map((name, i) => `
+          <tr>
+            <td class="text-center">${i + 1}</td>
+            <td style="font-weight:700;">${name}</td>
+            <td style="text-align:right;">${d3PlanEquipment[i] ? d3FormatRupiah(d3PlanEquipment[i]) : '-'}</td>
+            <td style="text-align:right;">${d3ForecastEquipment[i] ? d3FormatRupiah(d3ForecastEquipment[i]) : '-'}</td>
+            <td style="text-align:center; white-space:nowrap;">
+              <button type="button" class="d3-admin-btn edit" onclick="editD3EquipmentItem(${i})" title="Edit"><i class="fa-solid fa-pen"></i></button>
+              <button type="button" class="d3-admin-btn delete" onclick="deleteD3EquipmentItem(${i})" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>`).join('');
+      }
+    }
+
+    function resetD3MonthlyForm() {
+      d3MonthlyEditIndex = -1;
+      document.getElementById('d3InBulan').value = '0';
+      document.getElementById('d3InPlan').value = '';
+      document.getElementById('d3InForecast').value = '';
+      const btn = document.getElementById('d3MonthlySaveBtn');
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan';
+    }
+
+    function editD3MonthlyItem(index) {
+      d3MonthlyEditIndex = index;
+      document.getElementById('d3InBulan').value = String(index);
+      document.getElementById('d3InPlan').value = d3PlanMonthly[index] || 0;
+      document.getElementById('d3InForecast').value = d3ForecastMonthly[index] || 0;
+      document.getElementById('adminFormBodyD3').style.display = 'block';
+      const btn = document.getElementById('d3MonthlySaveBtn');
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-save"></i> Perbarui';
+    }
+
+    function saveD3MonthlyItem() {
+      const monthIndex = parseInt(document.getElementById('d3InBulan').value, 10);
+      if (!Number.isInteger(monthIndex) || monthIndex < 0 || monthIndex > 11) {
+        alert('Bulan belum dipilih.');
+        return;
+      }
+      const plan = d3ReadNumber('d3InPlan');
+      const forecast = d3ReadNumber('d3InForecast');
+      d3PlanMonthly[monthIndex] = plan;
+      d3ForecastMonthly[monthIndex] = forecast;
+      d3MonthlyEditIndex = -1;
+      resetD3MonthlyForm();
+      document.getElementById('d3InBulan').value = String(monthIndex);
+      recalculateDashboard3();
+    }
+
+    function deleteD3MonthlyItem(index) {
+      if (confirm('Kosongkan data Rencana dan Prognosa untuk bulan ' + monthNames[index] + '?')) {
+        d3PlanMonthly[index] = 0;
+        d3ForecastMonthly[index] = 0;
+        resetD3MonthlyForm();
+        recalculateDashboard3();
+      }
+    }
+
+    function resetD3EquipmentForm() {
+      d3EquipmentEditIndex = -1;
+      document.getElementById('d3InEquipment').value = '';
+      document.getElementById('d3InEquipmentPlan').value = '';
+      document.getElementById('d3InEquipmentForecast').value = '';
+      const btn = document.getElementById('d3EquipmentSaveBtn');
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan';
+    }
+
+    function editD3EquipmentItem(index) {
+      d3EquipmentEditIndex = index;
+      document.getElementById('d3InEquipment').value = d3EquipmentLabels[index] || '';
+      document.getElementById('d3InEquipmentPlan').value = d3PlanEquipment[index] || 0;
+      document.getElementById('d3InEquipmentForecast').value = d3ForecastEquipment[index] || 0;
+      document.getElementById('adminFormBodyD3').style.display = 'block';
+      const btn = document.getElementById('d3EquipmentSaveBtn');
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-save"></i> Perbarui';
+    }
+
+    function saveD3EquipmentItem() {
+      const name = document.getElementById('d3InEquipment').value.trim();
+      if (!name) {
+        alert('Jenis alat belum diisi.');
+        return;
+      }
+      const plan = d3ReadNumber('d3InEquipmentPlan');
+      const forecast = d3ReadNumber('d3InEquipmentForecast');
+      if (d3EquipmentEditIndex >= 0 && d3EquipmentEditIndex < d3EquipmentLabels.length) {
+        d3EquipmentLabels[d3EquipmentEditIndex] = name;
+        d3PlanEquipment[d3EquipmentEditIndex] = plan;
+        d3ForecastEquipment[d3EquipmentEditIndex] = forecast;
+      } else {
+        const existing = d3EquipmentLabels.findIndex(x => x.toLowerCase() === name.toLowerCase());
+        if (existing >= 0) {
+          d3PlanEquipment[existing] = plan;
+          d3ForecastEquipment[existing] = forecast;
+        } else {
+          d3EquipmentLabels.push(name);
+          d3PlanEquipment.push(plan);
+          d3ForecastEquipment.push(forecast);
+        }
+      }
+      resetD3EquipmentForm();
+      recalculateDashboard3();
+    }
+
+    function deleteD3EquipmentItem(index) {
+      if (confirm('Hapus jenis alat "' + d3EquipmentLabels[index] + '" dari Dashboard Prognosa?')) {
+        d3EquipmentLabels.splice(index, 1);
+        d3PlanEquipment.splice(index, 1);
+        d3ForecastEquipment.splice(index, 1);
+        resetD3EquipmentForm();
+        recalculateDashboard3();
+      }
+    }
+
+    function recalculateDashboard3() {
+      const totalPlan = d3PlanMonthly.reduce((a, b) => a + (Number(b) || 0), 0);
+      const totalForecast = d3ForecastMonthly.reduce((a, b) => a + (Number(b) || 0), 0);
+      const diff = totalForecast - totalPlan;
+      const achievement = totalPlan > 0 ? (totalForecast / totalPlan) * 100 : 0;
+
+      document.getElementById('d3KpiPlan').innerText = d3FormatRupiah(totalPlan);
+      document.getElementById('d3KpiForecast').innerText = d3FormatRupiah(totalForecast);
+      document.getElementById('d3KpiDiff').innerText = d3FormatRupiah(Math.abs(diff));
+      document.getElementById('d3KpiDiff').classList.toggle('green', diff >= 0);
+      document.getElementById('d3KpiAchievement').innerText = achievement.toFixed(2).replace('.', ',') + '%';
+
+      const monthlyTotalPlan = document.getElementById('d3MonthlyTotalPlan');
+      const monthlyTotalForecast = document.getElementById('d3MonthlyTotalForecast');
+      const monthlyTotalDiff = document.getElementById('d3MonthlyTotalDiff');
+      if (monthlyTotalPlan) monthlyTotalPlan.innerText = d3FormatRupiah(totalPlan);
+      if (monthlyTotalForecast) monthlyTotalForecast.innerText = d3FormatRupiah(totalForecast);
+      if (monthlyTotalDiff) monthlyTotalDiff.innerText = d3FormatDiff(diff);
+
+      const equipmentTotalPlan = d3PlanEquipment.reduce((a, b) => a + (Number(b) || 0), 0);
+      const equipmentTotalForecast = d3ForecastEquipment.reduce((a, b) => a + (Number(b) || 0), 0);
+      const equipmentDiff = equipmentTotalForecast - equipmentTotalPlan;
+      const equipmentTotalPlanEl = document.getElementById('d3EquipmentTotalPlan');
+      const equipmentTotalForecastEl = document.getElementById('d3EquipmentTotalForecast');
+      const equipmentTotalDiffEl = document.getElementById('d3EquipmentTotalDiff');
+      if (equipmentTotalPlanEl) equipmentTotalPlanEl.innerText = d3FormatRupiah(equipmentTotalPlan);
+      if (equipmentTotalForecastEl) equipmentTotalForecastEl.innerText = d3FormatRupiah(equipmentTotalForecast);
+      if (equipmentTotalDiffEl) equipmentTotalDiffEl.innerText = d3FormatDiff(equipmentDiff);
+
+      if (chartD3MonthlyObj) {
+        chartD3MonthlyObj.data.datasets[0].data = d3PlanMonthly;
+        chartD3MonthlyObj.data.datasets[1].data = d3ForecastMonthly;
+        const maxMonthly = Math.max(...d3PlanMonthly, ...d3ForecastMonthly, 0);
+        chartD3MonthlyObj.options.scales.y.max = maxMonthly > 0 ? Math.ceil(maxMonthly / 1000000000) * 1000000000 + 1000000000 : 1000000000;
+        chartD3MonthlyObj.update();
+      }
+      if (chartD3EquipmentObj) {
+        chartD3EquipmentObj.data.labels = d3EquipmentLabels;
+        chartD3EquipmentObj.data.datasets[0].data = d3PlanEquipment;
+        chartD3EquipmentObj.data.datasets[1].data = d3ForecastEquipment;
+        const maxEquipment = Math.max(...d3PlanEquipment, ...d3ForecastEquipment, 0);
+        chartD3EquipmentObj.options.scales.x.max = maxEquipment > 0 ? Math.ceil(maxEquipment / 1000000000) * 1000000000 + 1000000000 : 1000000000;
+        chartD3EquipmentObj.update();
+      }
+      renderDashboard3Tables();
+      renderD3AdminTables();
+    }
+
     function initDashboard3() {
       const monthlyCanvas = document.getElementById('chartD3Monthly');
       const equipmentCanvas = document.getElementById('chartD3Equipment');
@@ -1888,80 +2265,22 @@
         data: {
           labels: d3MonthLabels,
           datasets: [
-            {
-              label: 'Rencana NKB',
-              data: d3PlanMonthly,
-              backgroundColor: '#0b2246',
-              borderColor: '#0b2246',
-              borderWidth: 1,
-              borderRadius: 0,
-              barPercentage: 0.78,
-              categoryPercentage: 0.72
-            },
-            {
-              label: 'Prognosa NKB',
-              data: d3ForecastMonthly,
-              backgroundColor: '#1c9b8f',
-              borderColor: '#1c9b8f',
-              borderWidth: 1,
-              borderRadius: 0,
-              barPercentage: 0.78,
-              categoryPercentage: 0.72
-            }
+            { label: 'Rencana NKB', data: d3PlanMonthly, backgroundColor: '#0b2246', borderColor: '#0b2246', borderWidth: 1, borderRadius: 0, barPercentage: 0.78, categoryPercentage: 0.72 },
+            { label: 'Prognosa NKB', data: d3ForecastMonthly, backgroundColor: '#1c9b8f', borderColor: '#1c9b8f', borderWidth: 1, borderRadius: 0, barPercentage: 0.78, categoryPercentage: 0.72 }
           ]
         },
         plugins: [ChartDataLabels],
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
+          responsive: true, maintainAspectRatio: false, animation: false,
           layout: { padding: { top: 22, right: 8, bottom: 2, left: 2 } },
           plugins: {
-            legend: {
-              position: 'top',
-              align: 'start',
-              labels: { boxWidth: 10, font: { size: 9, weight: 'bold' }, color: '#1e293b' }
-            },
-            datalabels: {
-              color: '#1e293b',
-              anchor: 'end',
-              align: 'top',
-              clamp: true,
-              font: { size: 7.5, weight: '700' },
-              formatter: function(value) {
-                return value > 0 ? (value / 1000000).toFixed(0).replace('.', ',') + ' M' : '';
-              }
-            },
-            tooltip: {
-              callbacks: {
-                label: function(ctx) {
-                  return ctx.dataset.label + ': Rp ' + d3FormatRupiah(ctx.raw);
-                }
-              }
-            }
+            legend: { position: 'top', align: 'start', labels: { boxWidth: 10, font: { size: 9, weight: 'bold' }, color: '#1e293b' } },
+            datalabels: { color: '#1e293b', anchor: 'end', align: 'top', clamp: true, font: { size: 7.5, weight: '700' }, formatter: value => value > 0 ? (value / 1000000).toFixed(0).replace('.', ',') + ' M' : '' },
+            tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': Rp ' + d3FormatRupiah(ctx.raw) } }
           },
           scales: {
-            x: {
-              ticks: { font: { size: 9, weight: '700' }, color: '#334155' },
-              grid: { display: false }
-            },
-            y: {
-              beginAtZero: true,
-              max: 4000000000,
-              ticks: {
-                stepSize: 1000000000,
-                font: { size: 8 },
-                color: '#475569',
-                callback: function(value) { return d3FormatAxisMillion(value); }
-              },
-              title: {
-                display: true,
-                text: 'Nilai (Rp)',
-                color: '#334155',
-                font: { size: 8.5, weight: '700' }
-              },
-              grid: { color: '#e2e8f0' }
-            }
+            x: { ticks: { font: { size: 9, weight: '700' }, color: '#334155' }, grid: { display: false } },
+            y: { beginAtZero: true, max: 5000000000, ticks: { stepSize: 1000000000, font: { size: 8 }, color: '#475569', callback: value => d3FormatAxisMillion(value) }, title: { display: true, text: 'Nilai (Rp)', color: '#334155', font: { size: 8.5, weight: '700' } }, grid: { color: '#e2e8f0' } }
           }
         }
       });
@@ -1971,80 +2290,27 @@
         data: {
           labels: d3EquipmentLabels,
           datasets: [
-            {
-              label: 'Rencana NKB',
-              data: d3PlanEquipment,
-              backgroundColor: '#0b2246',
-              borderColor: '#0b2246',
-              borderWidth: 1,
-              barPercentage: 0.72,
-              categoryPercentage: 0.72
-            },
-            {
-              label: 'Prognosa NKB',
-              data: d3ForecastEquipment,
-              backgroundColor: '#1c9b8f',
-              borderColor: '#1c9b8f',
-              borderWidth: 1,
-              barPercentage: 0.72,
-              categoryPercentage: 0.72
-            }
+            { label: 'Rencana NKB', data: d3PlanEquipment, backgroundColor: '#0b2246', borderColor: '#0b2246', borderWidth: 1, barPercentage: 0.72, categoryPercentage: 0.72 },
+            { label: 'Prognosa NKB', data: d3ForecastEquipment, backgroundColor: '#1c9b8f', borderColor: '#1c9b8f', borderWidth: 1, barPercentage: 0.72, categoryPercentage: 0.72 }
           ]
         },
         plugins: [ChartDataLabels],
         options: {
-          indexAxis: 'y',
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
+          indexAxis: 'y', responsive: true, maintainAspectRatio: false, animation: false,
           layout: { padding: { top: 8, right: 68, bottom: 2, left: 0 } },
           plugins: {
-            legend: {
-              position: 'top',
-              align: 'start',
-              labels: { boxWidth: 10, font: { size: 9, weight: 'bold' }, color: '#1e293b' }
-            },
-            datalabels: {
-              color: '#1e293b',
-              anchor: 'end',
-              align: 'right',
-              clamp: false,
-              font: { size: 7.5, weight: '700' },
-              formatter: function(value) {
-                return value > 0 ? d3FormatRupiah(value) : '-';
-              }
-            },
-            tooltip: {
-              callbacks: {
-                label: function(ctx) {
-                  return ctx.dataset.label + ': Rp ' + d3FormatRupiah(ctx.raw);
-                }
-              }
-            }
+            legend: { position: 'top', align: 'start', labels: { boxWidth: 10, font: { size: 9, weight: 'bold' }, color: '#1e293b' } },
+            datalabels: { color: '#1e293b', anchor: 'end', align: 'right', clamp: false, font: { size: 7.5, weight: '700' }, formatter: value => value > 0 ? d3FormatRupiah(value) : '-' },
+            tooltip: { callbacks: { label: ctx => ctx.dataset.label + ': Rp ' + d3FormatRupiah(ctx.raw) } }
           },
           scales: {
-            x: {
-              beginAtZero: true,
-              max: 11000000000,
-              ticks: {
-                stepSize: 2000000000,
-                font: { size: 8 },
-                color: '#475569',
-                callback: function(value) {
-                  return (value / 1000000000).toFixed(0) + ' M';
-                }
-              },
-              grid: { color: '#e2e8f0' }
-            },
-            y: {
-              ticks: { font: { size: 9, weight: '600' }, color: '#334155' },
-              grid: { display: false }
-            }
+            x: { beginAtZero: true, max: 11000000000, ticks: { stepSize: 2000000000, font: { size: 8 }, color: '#475569', callback: value => (value / 1000000000).toFixed(0) + ' M' }, grid: { color: '#e2e8f0' } },
+            y: { ticks: { font: { size: 9, weight: '600' }, color: '#334155' }, grid: { display: false } }
           }
         }
       });
 
-      renderDashboard3Tables();
+      recalculateDashboard3();
     }
 
     function renderDashboard3Tables() {
@@ -2053,31 +2319,17 @@
       if (!monthlyBody || !equipmentBody) return;
 
       monthlyBody.innerHTML = d3MonthLabels.map((_, i) => {
-        const plan = d3PlanMonthly[i];
-        const forecast = d3ForecastMonthly[i];
+        const plan = Number(d3PlanMonthly[i]) || 0;
+        const forecast = Number(d3ForecastMonthly[i]) || 0;
         const diff = forecast - plan;
-        return `
-          <tr>
-            <td>${monthNames[i]}</td>
-            <td class="text-right">${plan ? d3FormatRupiah(plan) : '-'}</td>
-            <td class="text-right">${forecast ? d3FormatRupiah(forecast) : '-'}</td>
-            <td class="text-right ${d3DiffClass(diff)}">${d3FormatDiff(diff)}</td>
-          </tr>
-        `;
+        return `<tr><td>${monthNames[i]}</td><td class="text-right">${plan ? d3FormatRupiah(plan) : '-'}</td><td class="text-right">${forecast ? d3FormatRupiah(forecast) : '-'}</td><td class="text-right ${d3DiffClass(diff)}">${d3FormatDiff(diff)}</td></tr>`;
       }).join('');
 
       equipmentBody.innerHTML = d3EquipmentLabels.map((name, i) => {
-        const plan = d3PlanEquipment[i];
-        const forecast = d3ForecastEquipment[i];
+        const plan = Number(d3PlanEquipment[i]) || 0;
+        const forecast = Number(d3ForecastEquipment[i]) || 0;
         const diff = forecast - plan;
-        return `
-          <tr>
-            <td>${name}</td>
-            <td class="text-right">${plan ? d3FormatRupiah(plan) : '-'}</td>
-            <td class="text-right">${forecast ? d3FormatRupiah(forecast) : '-'}</td>
-            <td class="text-right ${d3DiffClass(diff)}">${d3FormatDiff(diff)}</td>
-          </tr>
-        `;
+        return `<tr><td>${name}</td><td class="text-right">${plan ? d3FormatRupiah(plan) : '-'}</td><td class="text-right">${forecast ? d3FormatRupiah(forecast) : '-'}</td><td class="text-right ${d3DiffClass(diff)}">${d3FormatDiff(diff)}</td></tr>`;
       }).join('');
     }
 
