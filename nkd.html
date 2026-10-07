@@ -634,13 +634,13 @@
     </div>
   </div>
 
-  <!-- BAGIAN KETERANGAN "NILAI KONTRAK YANG DIKELOLA" DAN FILTER BULAN (JAN-DES) & TAHUN (2026-2030) -->
+  <!-- BAGIAN KETERANGAN "NILAI KONTRAK YANG DIKELOLA" DAN FILTER -->
   <div class="top-section-layout">
     <div class="dashboard-main-title-box">
       <div class="title-box-icon"><i class="fa-solid fa-file-signature"></i></div>
       <div class="title-box-text">
         <h2>NILAI KONTRAK YANG DIKELOLA</h2>
-        <p id="displayPeriodeText">s.d. JULI 2026</p>
+        <p id="subPeriodeText">s.d. JULI 2026</p>
       </div>
     </div>
 
@@ -649,7 +649,7 @@
         <div class="filter-card-header">PERIODE DATA</div>
         <div class="filter-card-body">
           <select id="periodeFilter">
-            <!-- Generated via JS: Januari - Desember 2026 s.d. 2030 -->
+            <!-- Dinamis Bulan & Tahun 2026 - 2030 -->
           </select>
         </div>
       </div>
@@ -832,26 +832,34 @@
   ];
 
   // Inisialisasi Pilihan Periode Data (Januari - Desember, Tahun 2026 - 2030)
-  function populatePeriodeFilter() {
-    const months = [
-      "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-      "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-    ];
-    const selectEl = document.getElementById("periodeFilter");
-    selectEl.innerHTML = "";
+  function populatePeriodeOptions() {
+    const select = document.getElementById("periodeFilter");
+    const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
     
+    select.innerHTML = "";
     for (let year = 2026; year <= 2030; year++) {
-      for (let i = 0; i < months.length; i++) {
-        const val = `s.d. ${months[i]} ${year}`;
+      for (let m = 0; m < months.length; m++) {
+        const optVal = `s.d. ${months[m]} ${year}`;
         const opt = document.createElement("option");
-        opt.value = val;
-        opt.textContent = val;
-        if (months[i] === "Juli" && year === 2026) {
-          opt.selected = true;
-        }
-        selectEl.appendChild(opt);
+        opt.value = optVal;
+        opt.textContent = optVal;
+        select.appendChild(opt);
       }
     }
+
+    // Ambil dari localStorage jika ada, jika tidak default ke "s.d. Juli 2026"
+    const savedPeriode = localStorage.getItem("nkd_selected_periode");
+    if (savedPeriode) {
+      select.value = savedPeriode;
+    } else {
+      select.value = "s.d. Juli 2026";
+    }
+
+    updateSubPeriodeText(select.value);
+  }
+
+  function updateSubPeriodeText(val) {
+    document.getElementById("subPeriodeText").textContent = val.toUpperCase();
   }
 
   window.toggleInputPanel = function() {
@@ -936,19 +944,20 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    populatePeriodeFilter();
+    populatePeriodeOptions();
+
+    // Event listener untuk penguncian periode data ke localStorage
+    document.getElementById("periodeFilter").addEventListener("change", (e) => {
+      const val = e.target.value;
+      localStorage.setItem("nkd_selected_periode", val);
+      updateSubPeriodeText(val);
+    });
 
     if (typeof ChartDataLabels !== 'undefined') {
       Chart.register(ChartDataLabels);
     }
 
     const fmt = (value) => Number(value || 0).toLocaleString("id-ID");
-
-    // Event listener perubahan Periode Data untuk mengubah teks s.d. Bulan Tahun secara dinamis
-    document.getElementById("periodeFilter").addEventListener("change", (e) => {
-      const val = e.target.value.toUpperCase(); // Contoh: "s.d. JANUARI 2026"
-      document.getElementById("displayPeriodeText").textContent = val;
-    });
 
     function initListener() {
       const check = setInterval(() => {
