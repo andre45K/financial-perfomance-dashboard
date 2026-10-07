@@ -62,11 +62,11 @@
       margin: 0 auto;
     }
 
-    /* ================= HEADER UTAMA MIRIP REFERENSI ================= */
+    /* ================= HEADER UTAMA & NAVIGASI ================= */
     .header-main-box {
       background: var(--navy);
       color: #fff;
-      padding: 16px 20px;
+      padding: 14px 20px;
       border-radius: 8px;
       margin-bottom: 12px;
       display: flex;
@@ -87,7 +87,7 @@
     }
 
     .header-title-area h1 {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -99,6 +99,11 @@
       color: #cbd5e1;
       margin-top: 2px;
       font-weight: 600;
+    }
+
+    .nav-actions-wrap {
+      display: flex;
+      gap: 8px;
     }
 
     .nav-back-btn {
@@ -116,6 +121,8 @@
       transition: background 0.2s;
     }
     .nav-back-btn:hover { background: rgba(255, 255, 255, 0.25); }
+    .nav-back-btn.btn-input-toggle { background: var(--green); border-color: #146e1c; }
+    .nav-back-btn.btn-input-toggle:hover { background: #146e1c; }
 
     /* ================= PANEL ADMIN / INPUT & EDIT ================= */
     .admin-panel-container {
@@ -207,7 +214,6 @@
     .btn-reset { background: #64748b; }
     .btn-reset:hover { background: #475569; }
 
-    /* MASTER TABLE DI DALAM PANEL ADMIN */
     .master-table-title {
       font-size: 11px;
       font-weight: 800;
@@ -224,25 +230,91 @@
       border-radius: 4px;
     }
 
-    /* FILTER BAR */
-    .filter-row {
+    /* ================= TOP SECTION: JUDUL UTAMA & FILTER (SESUAI GAMBAR) ================= */
+    .top-section-layout {
       display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-bottom: 14px;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      gap: 16px;
     }
-    .filter-box {
-      background: #fff;
-      border: 1px solid #cbd5e1;
-      padding: 5px 10px;
-      border-radius: 6px;
+
+    .dashboard-main-title-box {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-weight: 700;
-      font-size: 11px;
+      gap: 12px;
+      background: #fff;
+      border: 1px solid #e2e5e9;
+      border-radius: 8px;
+      padding: 12px 18px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+      flex: 1;
     }
-    .filter-box select { border: none; outline: none; font-size: 11px; font-weight: 600; background: transparent; color: #333; }
+
+    .title-box-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .title-box-text h2 {
+      color: var(--navy);
+      font-size: 18px;
+      font-weight: 850;
+      text-transform: uppercase;
+      line-height: 1.15;
+    }
+
+    .title-box-text p {
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .filter-column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 190px;
+      flex-shrink: 0;
+    }
+
+    .filter-card-custom {
+      border: 1px solid #0b3267;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    }
+
+    .filter-card-header {
+      background: var(--navy);
+      color: #fff;
+      font-weight: 800;
+      font-size: 10px;
+      padding: 6px 10px;
+      text-transform: uppercase;
+    }
+
+    .filter-card-body select {
+      width: 100%;
+      height: 30px;
+      border: none;
+      padding: 0 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #333;
+      background: #fff;
+      outline: none;
+    }
 
     /* ================= KPI ================= */
     .kpi-grid {
@@ -388,7 +460,7 @@
     }
     .chart-box { height: 225px; position: relative; }
 
-    /* ================= TABLES (RAPIH & PROPORTIONAL) ================= */
+    /* ================= TABLES ================= */
     .table-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -440,7 +512,6 @@
     }
     tfoot td.left { text-align: left; }
 
-    /* Pengaturan Lebar Kolom Tabel Customer agar tidak terpotong dan seimbang */
     .customer-table th:nth-child(1), .customer-table td:nth-child(1) { width: 30px; }
     .customer-table th:nth-child(2), .customer-table td:nth-child(2) { width: 24%; text-align: left; }
     .customer-table th:nth-child(3), .customer-table td:nth-child(3) { width: 18%; text-align: left; }
@@ -449,7 +520,6 @@
     .customer-table th:nth-child(6), .customer-table td:nth-child(6) { width: 15%; }
     .customer-table th:nth-child(7), .customer-table td:nth-child(7) { width: 16%; }
 
-    /* Lebar Kolom Tabel Alat */
     .alat-table th:nth-child(1), .alat-table td:nth-child(1) { width: 30px; }
     .alat-table th:nth-child(2), .alat-table td:nth-child(2) { width: 31%; text-align: left; }
     .alat-table th:nth-child(3), .alat-table td:nth-child(3) { width: 16%; }
@@ -476,6 +546,8 @@
       .panel-grid { grid-template-columns: 1fr; }
       .kpi-grid { grid-template-columns: repeat(2, 1fr); }
       .table-grid { grid-template-columns: 1fr; }
+      .top-section-layout { flex-direction: column; }
+      .filter-column { width: 100%; }
     }
   </style>
 </head>
@@ -483,17 +555,18 @@
 <body>
 <div class="dashboard">
 
-  <!-- HEADER UTAMA MIRIP REFERENSI -->
+  <!-- HEADER UTAMA & NAVIGASI -->
   <div class="header-main-box">
     <div class="header-brand-wrap">
       <div class="header-logo-icon"><i class="fa-solid fa-file-signature"></i></div>
       <div class="header-title-area">
-        <h1>DASHBOARD NKD - PT WASKITA BETON PRECAST, TBK</h1>
-        <p>Sistem Informasi Manajemen Kontrak & Perencanaan 2026 (s.d. September 2026)</p>
+        <h1>DASHBOARD NKB - PT WASKITA BETON PRECAST, TBK</h1>
+        <p>Sistem Informasi Manajemen Kontrak & Perencanaan 2026</p>
       </div>
     </div>
-    <div>
+    <div class="nav-actions-wrap">
       <a href="index.html" class="nav-back-btn"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard Utama</a>
+      <button class="nav-back-btn btn-input-toggle" onclick="toggleInputPanel()"><i class="fa-solid fa-plus"></i> Input/Edit Data</button>
     </div>
   </div>
 
@@ -503,7 +576,7 @@
       <span><i class="fa-solid fa-gears"></i> PANEL ADMIN: INPUT, EDIT & PERBARUI DATA NILAI KONTRAK DIKELOLA (NKD)</span>
       <button class="toggle-panel-btn" onclick="toggleInputPanel()">Tutup/Buka Panel</button>
     </div>
-    <div class="admin-panel-body active" id="inputPanel">
+    <div class="admin-panel-body" id="inputPanel">
       <div class="admin-desc" id="formDescTitle">Tambahkan atau ubah data kontrak proyek pada form di bawah ini. Grafik, KPI, dan tabel rincian akan diperbarui secara otomatis.</div>
       
       <input type="hidden" id="editIndex" value="-1">
@@ -561,19 +634,39 @@
     </div>
   </div>
 
-  <!-- FILTER BAR -->
-  <div class="filter-row">
-    <div class="filter-box">
-      <span><i class="fa-solid fa-filter"></i> Tipe Alat:</span>
-      <select id="tipeAlatFilter">
-        <option>All</option>
-        <option>Truck Mixer</option>
-        <option>Stone Crusher</option>
-        <option>Truck Trailer</option>
-        <option>Mobile Crane+Bucket Cor</option>
-        <option>Dump Truck</option>
-        <option>Silo</option>
-      </select>
+  <!-- BAGIAN KETERANGAN "NILAI KONTRAK YANG DIKELOLA" DAN FILTER (SESUAI GAMBAR) -->
+  <div class="top-section-layout">
+    <div class="dashboard-main-title-box">
+      <div class="title-box-icon"><i class="fa-solid fa-file-signature"></i></div>
+      <div class="title-box-text">
+        <h2>NILAI KONTRAK YANG DIKELOLA</h2>
+        <p>s.d. JULI 2026</p>
+      </div>
+    </div>
+
+    <div class="filter-column">
+      <div class="filter-card-custom">
+        <div class="filter-card-header">PERIODE DATA</div>
+        <div class="filter-card-body">
+          <select id="periodeFilter">
+            <option>s.d. Juli 2026</option>
+          </select>
+        </div>
+      </div>
+      <div class="filter-card-custom">
+        <div class="filter-card-header">TIPE ALAT</div>
+        <div class="filter-card-body">
+          <select id="tipeAlatFilter">
+            <option>All</option>
+            <option>Truck Mixer</option>
+            <option>Stone Crusher</option>
+            <option>Truck Trailer</option>
+            <option>Mobile Crane+Bucket Cor</option>
+            <option>Dump Truck</option>
+            <option>Silo</option>
+          </select>
+        </div>
+      </div>
     </div>
   </div>
 
