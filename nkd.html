@@ -35,26 +35,25 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --navy: #123b73;
-      --navy-dark: #0b3267;
+      --navy: #0b3267;
+      --navy-dark: #072248;
       --blue: #1266c4;
       --green: #188b24;
       --orange: #f0b000;
       --purple: #6d43b6;
       --text: #111827;
       --muted: #6b7280;
-      --border: #e2e5e9;
+      --border: #d8dde4;
       --card: #ffffff;
       --bg: #f7f8fa;
     }
 
     body {
-      background: #fff;
+      background: #f4f6f9;
       color: var(--text);
       font-family: "Segoe UI", Arial, Helvetica, sans-serif;
       font-size: 12px;
-      min-width: 1120px;
-      padding: 0 16px 22px;
+      padding: 12px 16px 24px;
     }
 
     .dashboard {
@@ -63,239 +62,282 @@
       margin: 0 auto;
     }
 
-    /* ================= HEADER ================= */
-    .topbar {
-      display: grid;
-      grid-template-columns: 1fr 175px;
-      gap: 18px;
-      align-items: start;
-      margin-bottom: 10px;
-      padding-top: 15px;
-    }
-
-    .brand {
-      min-height: 86px;
-      display: flex;
-      align-items: center;
-      gap: 13px;
-      padding-left: 5px;
-    }
-
-    .brand-icon {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
+    /* ================= HEADER UTAMA MIRIP REFERENSI ================= */
+    .header-main-box {
       background: var(--navy);
       color: #fff;
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .header-brand-wrap {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 29px;
-      flex: 0 0 auto;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
+      gap: 12px;
     }
 
-    .brand h1 {
-      color: var(--navy-dark);
-      font-size: 26px;
-      line-height: 1.03;
+    .header-logo-icon {
+      font-size: 28px;
+      color: #fff;
+    }
+
+    .header-title-area h1 {
+      font-size: 20px;
       font-weight: 800;
-      letter-spacing: -.5px;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
+      line-height: 1.2;
     }
 
-    .brand p {
-      color: var(--navy);
-      font-size: 17px;
-      line-height: 1.1;
-      font-weight: 800;
-      margin-top: 4px;
+    .header-title-area p {
+      font-size: 11px;
+      color: #cbd5e1;
+      margin-top: 2px;
+      font-weight: 600;
     }
 
-    .nav-back-container {
-      margin-bottom: 8px;
-      display: flex;
-      gap: 8px;
-    }
-
-    .nav-btn {
-      background: var(--navy-dark);
+    .nav-back-btn {
+      background: rgba(255, 255, 255, 0.15);
       color: #fff;
       text-decoration: none;
-      padding: 6px 12px;
+      padding: 7px 14px;
       border-radius: 6px;
       font-weight: 700;
-      font-size: 11px;
+      font-size: 11.5px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       transition: background 0.2s;
     }
-    .nav-btn:hover { background: var(--navy); }
-    .nav-btn.btn-input { background: var(--green); }
-    .nav-btn.btn-input:hover { background: #146e1c; }
+    .nav-back-btn:hover { background: rgba(255, 255, 255, 0.25); }
 
-    .filters {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      width: 175px;
-    }
-
-    .filter-card {
-      border: 1px solid #dfe3e8;
+    /* ================= PANEL ADMIN / INPUT & EDIT ================= */
+    .admin-panel-container {
+      background: var(--navy);
       border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
       overflow: hidden;
-      background: #fff;
-      box-shadow: 0 1px 4px rgba(0,0,0,.08);
     }
 
-    .filter-title {
+    .admin-panel-header {
       background: var(--navy-dark);
       color: #fff;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       font-weight: 800;
-      font-size: 11px;
-      padding: 9px 10px;
+      font-size: 11.5px;
       text-transform: uppercase;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
-    .filter-select {
-      margin: 9px;
-      width: calc(100% - 18px);
-      height: 35px;
-      border: 1px solid #d7dbe0;
-      border-radius: 6px;
-      padding: 0 9px;
-      color: #444;
-      background: #fff;
-      font-size: 12px;
-      outline: none;
+    .toggle-panel-btn {
+      background: #ffffff;
+      color: var(--navy-dark);
+      border: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 10.5px;
+      cursor: pointer;
     }
+    .toggle-panel-btn:hover { background: #e2e8f0; }
 
-    /* ================= INPUT MODAL / PANEL MANUAL ================= */
-    .input-panel {
-      background: #f0f4f8;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 20px;
+    .admin-panel-body {
+      background: #ffffff;
+      padding: 16px;
+      color: #111827;
       display: none;
     }
-    .input-panel.active { display: block; }
-    .input-grid {
+    .admin-panel-body.active { display: block; }
+
+    .admin-desc {
+      font-size: 11px;
+      color: #4b5563;
+      margin-bottom: 12px;
+    }
+
+    .form-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr) auto;
+      grid-template-columns: 2fr 1.2fr 1fr 1fr auto auto;
       gap: 10px;
       align-items: end;
+      margin-bottom: 16px;
     }
-    .input-group label { display: block; font-size: 10px; font-weight: 700; margin-bottom: 4px; color: var(--navy-dark); }
-    .input-group input, .input-group select { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 11px; }
-    .save-btn { background: var(--green); color: white; border: none; padding: 7px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; height: 31px; }
-    .save-btn:hover { background: #146e1c; }
+
+    .form-group label {
+      display: block;
+      font-size: 10px;
+      font-weight: 800;
+      color: #374151;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .form-control {
+      width: 100%;
+      height: 32px;
+      padding: 0 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      font-size: 11px;
+      background: #fff;
+    }
+
+    .btn-action-form {
+      height: 32px;
+      padding: 0 14px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      color: #fff;
+    }
+    .btn-save { background: #1d4ed8; }
+    .btn-save:hover { background: #1e40af; }
+    .btn-reset { background: #64748b; }
+    .btn-reset:hover { background: #475569; }
+
+    /* MASTER TABLE DI DALAM PANEL ADMIN */
+    .master-table-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #1e293b;
+      margin-bottom: 8px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 12px;
+    }
+    .master-table-scroll {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+    }
+
+    /* FILTER BAR */
+    .filter-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .filter-box {
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      padding: 5px 10px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 11px;
+    }
+    .filter-box select { border: none; outline: none; font-size: 11px; font-weight: 600; background: transparent; color: #333; }
 
     /* ================= KPI ================= */
-    .main-area {
-      margin-right: 193px;
-    }
-
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 16px;
+      gap: 14px;
       margin-bottom: 14px;
     }
 
     .kpi-card {
-      min-height: 160px;
+      min-height: 150px;
       background: #fff;
       border: 1px solid #e2e5e9;
-      border-radius: 10px;
-      box-shadow: 0 2px 9px rgba(0,0,0,.08);
-      padding: 17px 18px 14px;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+      padding: 14px 14px 12px;
       position: relative;
       overflow: hidden;
     }
 
     .kpi-title {
       color: var(--navy-dark);
-      font-size: 13px;
+      font-size: 11.5px;
       font-weight: 800;
       text-align: center;
       text-transform: uppercase;
       white-space: nowrap;
-      margin-bottom: 11px;
+      margin-bottom: 8px;
     }
-
-    .kpi-card.green .kpi-title { color: #247a24; }
-    .kpi-card.orange .kpi-title { color: #e0a000; }
+    .kpi-card.green .kpi-title { color: #166534; }
+    .kpi-card.orange .kpi-title { color: #b45309; }
 
     .kpi-value {
       text-align: center;
       color: #101827;
-      font-size: 22px;
+      font-size: 19px;
       line-height: 1.1;
       font-weight: 850;
       white-space: nowrap;
     }
-
     .kpi-value .rp {
       font-size: 10px;
       font-weight: 700;
-      margin-left: 3px;
+      margin-left: 2px;
       color: #343a40;
     }
 
     .kpi-footer {
       position: absolute;
-      left: 18px;
-      bottom: 16px;
+      left: 14px;
+      bottom: 12px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       color: var(--navy-dark);
       font-weight: 800;
-      font-size: 14px;
+      font-size: 13px;
     }
-
-    .kpi-card.green .kpi-footer { color: #188b24; }
-    .kpi-card.orange .kpi-footer { color: #e4a400; }
-    .kpi-card.blue .kpi-footer { color: #1266c4; }
+    .kpi-card.green .kpi-footer { color: #166534; }
+    .kpi-card.orange .kpi-footer { color: #b45309; }
+    .kpi-card.blue .kpi-footer { color: #1d4ed8; }
 
     .circle-icon {
-      width: 40px;
-      height: 40px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
       background: var(--navy);
-      font-size: 18px;
+      font-size: 15px;
     }
+    .green .circle-icon { background: #166534; }
+    .orange .circle-icon { background: #d97706; }
+    .blue .circle-icon { background: #1d4ed8; }
 
-    .green .circle-icon { background: #188b24; }
-    .orange .circle-icon { background: #f1b000; }
-    .blue .circle-icon { background: #1266c4; }
+    .kpi-foot-text { line-height: 1.15; }
+    .kpi-foot-text small { display: block; font-size: 9.5px; font-weight: 600; margin-top: 1px; color: #4b5563; }
 
-    .kpi-foot-text { line-height: 1.2; }
-    .kpi-foot-text small { display: block; font-size: 10px; font-weight: 600; margin-top: 2px; }
-
-    /* ================= GAUGE ================= */
-    .gauge-card { padding-left: 12px; padding-right: 12px; }
-    .gauge-card .kpi-value { font-size: 21px; margin-top: -2px; }
+    /* GAUGE */
+    .gauge-card { padding-left: 10px; padding-right: 10px; }
+    .gauge-card .kpi-value { font-size: 19px; margin-top: -2px; }
     .gauge-wrap {
-      width: 118px;
-      height: 61px;
-      margin: 6px auto 0;
+      width: 100px;
+      height: 52px;
+      margin: 4px auto 0;
       position: relative;
       overflow: hidden;
     }
     .gauge-arc {
-      width: 118px;
-      height: 118px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
-      background: conic-gradient(from 270deg, #123b73 0deg 195.84deg, #e8e8e8 195.84deg 360deg);
+      background: conic-gradient(from 270deg, #0b3267 0deg 195.84deg, #e2e8f0 195.84deg 360deg);
       position: absolute;
       top: 0;
       left: 0;
@@ -303,28 +345,22 @@
     .gauge-arc::after {
       content: "";
       position: absolute;
-      width: 76px;
-      height: 76px;
+      width: 64px;
+      height: 64px;
       border-radius: 50%;
       background: #fff;
-      left: 21px;
-      top: 21px;
+      left: 18px;
+      top: 18px;
     }
     .gauge-scale {
       display: flex;
       justify-content: space-between;
-      width: 125px;
+      width: 105px;
       margin: 1px auto 0;
-      font-size: 9px;
+      font-size: 8.5px;
       color: #555;
     }
-    .gauge-card .kpi-footer {
-      bottom: 11px;
-      left: 15px;
-      right: 15px;
-      justify-content: center;
-      color: #123b73;
-    }
+    .gauge-card .kpi-footer { bottom: 10px; left: 12px; right: 12px; justify-content: center; color: var(--navy); }
 
     /* ================= PANELS / CHARTS ================= */
     .panel-grid {
@@ -337,30 +373,29 @@
     .panel {
       background: #fff;
       border: 1px solid #e0e4e8;
-      border-radius: 9px;
-      box-shadow: 0 1px 6px rgba(0,0,0,.06);
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
       overflow: hidden;
     }
 
-    .chart-panel { height: 280px; padding: 11px 13px 10px; }
+    .chart-panel { height: 270px; padding: 10px 12px; }
     .panel-title {
       color: var(--navy-dark);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 850;
       text-transform: uppercase;
-      margin: 0 0 7px;
-      padding-left: 1px;
+      margin: 0 0 6px;
     }
-    .chart-box { height: 235px; position: relative; }
+    .chart-box { height: 225px; position: relative; }
 
-    /* ================= TABLES ================= */
+    /* ================= TABLES (RAPIH & PROPORTIONAL) ================= */
     .table-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
     }
-    .table-panel { min-height: 390px; padding: 10px 8px 7px; }
-    .table-panel .panel-title { padding-left: 5px; margin-bottom: 7px; }
+    .table-panel { min-height: 380px; padding: 12px; }
+    .table-panel .panel-title { margin-bottom: 8px; }
     .table-scroll { width: 100%; overflow-x: auto; }
 
     table {
@@ -373,66 +408,72 @@
     th {
       background: var(--navy);
       color: #fff;
-      border: 1px solid #d8dde4;
-      height: 25px;
-      padding: 4px 3px;
+      border: 1px solid #cbd5e1;
+      height: 26px;
+      padding: 4px 6px;
       font-weight: 800;
-      line-height: 1.05;
+      line-height: 1.1;
+      text-align: center;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     td {
-      border: 1px solid #d9dde2;
-      height: 24px;
-      padding: 3px 4px;
+      border: 1px solid #e2e8f0;
+      height: 25px;
+      padding: 4px 6px;
       text-align: right;
       background: #fff;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     td.left { text-align: left; }
     td.center { text-align: center; }
-    tbody tr:nth-child(even) td { background: #fbfcfd; }
+    tbody tr:nth-child(even) td { background: #f8fafc; }
     tfoot td {
-      background: #fff;
-      border-top: 1px solid #d0d5dc;
+      background: #f1f5f9;
+      border-top: 1.5px solid #cbd5e1;
       font-weight: 800;
-      height: 31px;
+      height: 28px;
     }
 
-    .customer-table th:nth-child(1) { width: 30px; }
-    .customer-table th:nth-child(2) { width: 25%; }
-    .customer-table th:nth-child(3) { width: 22%; }
-    .customer-table th:nth-child(4) { width: 15%; }
-    .customer-table th:nth-child(5) { width: 12%; }
-    .customer-table th:nth-child(6) { width: 15%; }
-    .customer-table th:nth-child(7) { width: 15%; }
+    /* Lebar Kolom Tabel Customer agar tidak menumpuk */
+    .customer-table th:nth-child(1), .customer-table td:nth-child(1) { width: 35px; }
+    .customer-table th:nth-child(2), .customer-table td:nth-child(2) { width: 26%; text-align: left; }
+    .customer-table th:nth-child(3), .customer-table td:nth-child(3) { width: 20%; text-align: left; }
+    .customer-table th:nth-child(4), .customer-table td:nth-child(4) { width: 14%; }
+    .customer-table th:nth-child(5), .customer-table td:nth-child(5) { width: 13%; }
+    .customer-table th:nth-child(6), .customer-table td:nth-child(6) { width: 14%; }
+    .customer-table th:nth-child(7), .customer-table td:nth-child(7) { width: 14%; }
 
-    .alat-table th:nth-child(1) { width: 31px; }
-    .alat-table th:nth-child(2) { width: 31%; }
-    .alat-table th:nth-child(3) { width: 19%; }
-    .alat-table th:nth-child(4) { width: 15%; }
-    .alat-table th:nth-child(5) { width: 18%; }
-    .alat-table th:nth-child(6) { width: 17%; }
+    /* Lebar Kolom Tabel Alat */
+    .alat-table th:nth-child(1), .alat-table td:nth-child(1) { width: 35px; }
+    .alat-table th:nth-child(2), .alat-table td:nth-child(2) { width: 35%; text-align: left; }
+    .alat-table th:nth-child(3), .alat-table td:nth-child(3) { width: 16%; }
+    .alat-table th:nth-child(4), .alat-table td:nth-child(4) { width: 15%; }
+    .alat-table th:nth-child(5), .alat-table td:nth-child(5) { width: 17%; }
+    .alat-table th:nth-child(6), .alat-table td:nth-child(6) { width: 17%; }
 
-    .note { font-size: 10px; color: #333; font-style: italic; margin-top: 20px; padding-left: 2px; }
-
-    @media (max-width: 1250px) {
-      body { min-width: 0; }
-      .topbar { grid-template-columns: 1fr 175px; }
-      .main-area { margin-right: 193px; }
-      .brand h1 { font-size: 21px; }
-      .brand p { font-size: 14px; }
-      .kpi-grid { gap: 10px; }
-      .kpi-value { font-size: 18px; }
-      .panel-grid { grid-template-columns: 1fr 1fr 1fr; }
+    .btn-table-action {
+      padding: 2px 6px;
+      font-size: 9.5px;
+      border-radius: 3px;
+      border: none;
+      cursor: pointer;
+      color: #fff;
     }
+    .btn-edit { background: #d97706; margin-right: 2px; }
+    .btn-edit:hover { background: #b45309; }
+    .btn-delete { background: #dc2626; }
+    .btn-delete:hover { background: #b91c1c; }
 
-    @media (max-width: 900px) {
-      .topbar { grid-template-columns: 1fr; }
-      .filters { width: 100%; flex-direction: row; }
-      .filter-card { flex: 1; }
-      .main-area { margin-right: 0; }
+    .note { font-size: 10px; color: #4b5563; font-style: italic; margin-top: 15px; }
+
+    @media (max-width: 1200px) {
+      .panel-grid { grid-template-columns: 1fr; }
       .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-      .panel-grid, .table-grid { grid-template-columns: 1fr; }
+      .table-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -440,77 +481,101 @@
 <body>
 <div class="dashboard">
 
-  <!-- HEADER + NAVIGASI KEMBALI & INPUT MANUAL -->
-  <div class="topbar">
-    <div>
-      <div class="nav-back-container">
-        <a href="index.html" class="nav-btn"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard Utama</a>
-        <button class="nav-btn btn-input" onclick="toggleInputPanel()"><i class="fa-solid fa-plus"></i> Input / Edit Data</button>
+  <!-- HEADER UTAMA MIRIP REFERENSI -->
+  <div class="header-main-box">
+    <div class="header-brand-wrap">
+      <div class="header-logo-icon"><i class="fa-solid fa-file-signature"></i></div>
+      <div class="header-title-area">
+        <h1>DASHBOARD NKD - PT WASKITA BETON PRECAST, TBK</h1>
+        <p>Sistem Informasi Manajemen Kontrak & Perencanaan 2026 (s.d. Juli 2026)</p>
       </div>
-      <div class="brand" style="min-height: 50px;">
-        <div class="brand-icon"><i class="fa-solid fa-file-signature"></i></div>
+    </div>
+    <div>
+      <a href="index.html" class="nav-back-btn"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard Utama</a>
+    </div>
+  </div>
+
+  <!-- PANEL ADMIN: INPUT, EDIT & PERBARUI DATA -->
+  <div class="admin-panel-container">
+    <div class="admin-panel-header">
+      <span><i class="fa-solid fa-gears"></i> PANEL ADMIN: INPUT, EDIT & PERBARUI DATA NILAI KONTRAK DIKELOLA (NKD)</span>
+      <button class="toggle-panel-btn" onclick="toggleInputPanel()">Tutup/Buka Panel</button>
+    </div>
+    <div class="admin-panel-body active" id="inputPanel">
+      <div class="admin-desc" id="formDescTitle">Tambahkan atau ubah data kontrak proyek pada form di bawah ini. Grafik, KPI, dan tabel rincian akan diperbarui secara otomatis.</div>
+      
+      <input type="hidden" id="editIndex" value="-1">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Customer / Proyek</label>
+          <input type="text" id="inCustomer" class="form-control" placeholder="Nama Customer">
+        </div>
+        <div class="form-group">
+          <label>Jenis Alat</label>
+          <select id="inTipeAlat" class="form-control">
+            <option>Truck Mixer</option>
+            <option>Stone Crusher</option>
+            <option>Truck Trailer</option>
+            <option>Mobile Crane+Bucket Cor</option>
+            <option>Dump Truck</option>
+            <option>Silo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Total Kontrak (IDR)</label>
+          <input type="number" id="inTotalKontrak" class="form-control" placeholder="Contoh: 500000000">
+        </div>
+        <div class="form-group">
+          <label>PU Terealisasi (IDR)</label>
+          <input type="number" id="inPU" class="form-control" placeholder="Contoh: 250000000">
+        </div>
         <div>
-          <h1>NILAI KONTRAK YANG DIKELOLA</h1>
-          <p>s.d. JULI 2026</p>
+          <button class="btn-action-form btn-save" onclick="saveCustomerData()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
+        </div>
+        <div>
+          <button class="btn-action-form btn-reset" onclick="resetForm()">Reset</button>
         </div>
       </div>
-    </div>
 
-    <aside class="filters">
-      <div class="filter-card">
-        <div class="filter-title">PERIODE DATA</div>
-        <select class="filter-select" id="periodeFilter">
-          <option>s.d. Juli 2026</option>
-        </select>
-      </div>
-      <div class="filter-card">
-        <div class="filter-title">TIPE ALAT</div>
-        <select class="filter-select" id="tipeAlatFilter">
-          <option>All</option>
-          <option>Truck Mixer</option>
-          <option>Stone Crusher</option>
-          <option>Truck Trailer</option>
-          <option>Mobile Crane+Bucket Cor</option>
-          <option>Dump Truck</option>
-          <option>Silo</option>
-        </select>
-      </div>
-    </aside>
-  </div>
-
-  <!-- PANEL INPUT MANUAL FORM -->
-  <div class="input-panel" id="inputPanel">
-    <div style="font-weight: 800; margin-bottom: 10px; color: var(--navy-dark);">FORM TAMBAH / UPDATE DATA KONTRAK CUSTOMER</div>
-    <div class="input-grid">
-      <div class="input-group">
-        <label>Nama Customer</label>
-        <input type="text" id="inCustomer" placeholder="Contoh: PT ABC">
-      </div>
-      <div class="input-group">
-        <label>Tipe Alat</label>
-        <select id="inTipeAlat">
-          <option>Truck Mixer</option>
-          <option>Stone Crusher</option>
-          <option>Truck Trailer</option>
-          <option>Mobile Crane+Bucket Cor</option>
-          <option>Dump Truck</option>
-          <option>Silo</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <label>Total Kontrak (Rp)</label>
-        <input type="number" id="inTotalKontrak" placeholder="0">
-      </div>
-      <div class="input-group">
-        <label>PU Terealisasi (Rp)</label>
-        <input type="number" id="inPU" placeholder="0">
-      </div>
-      <div>
-        <button class="save-btn" onclick="addNewCustomerData()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
+      <div class="master-table-title">DAFTAR MASTER KONTRAK 2026 (<span id="totalContractCount">15</span> KONTRAK)</div>
+      <div class="master-table-scroll">
+        <table class="customer-table" style="margin-bottom: 0;">
+          <thead>
+            <tr>
+              <th style="width: 35px;">NO</th>
+              <th style="text-align: left;">CUSTOMER</th>
+              <th style="text-align: left;">TIPE ALAT</th>
+              <th>TOTAL KONTRAK (RP)</th>
+              <th>PU (RP)</th>
+              <th>SISA KONTRAK (RP)</th>
+              <th style="width: 70px;">AKSI</th>
+            </tr>
+          </thead>
+          <tbody id="master-table-body">
+            <!-- Data master admin dimuat dinamis -->
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 
+  <!-- FILTER BAR -->
+  <div class="filter-row">
+    <div class="filter-box">
+      <span><i class="fa-solid fa-filter"></i> Tipe Alat:</span>
+      <select id="tipeAlatFilter">
+        <option>All</option>
+        <option>Truck Mixer</option>
+        <option>Stone Crusher</option>
+        <option>Truck Trailer</option>
+        <option>Mobile Crane+Bucket Cor</option>
+        <option>Dump Truck</option>
+        <option>Silo</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- MAIN AREA DASHBOARD -->
   <main class="main-area">
 
     <!-- KPI -->
@@ -651,6 +716,7 @@
   let chartBarInstance = null;
   let chartDonutInstance = null;
   let chartRealisasiInstance = null;
+  let cachedCustomers = [];
 
   const defaultCustomers = [
     { customer: "PT Baja Cilegon Energi", tipe: "Truck Mixer", kontrak: 276000000, pu: 103500000, tdkTerserap: 172500000, sisa: 0 },
@@ -675,11 +741,20 @@
     p.classList.toggle("active");
   }
 
-  window.addNewCustomerData = async function() {
+  window.resetForm = function() {
+    document.getElementById("inCustomer").value = "";
+    document.getElementById("inTotalKontrak").value = "";
+    document.getElementById("inPU").value = "";
+    document.getElementById("editIndex").value = "-1";
+    document.getElementById("formDescTitle.textContent") = "Tambahkan atau ubah data kontrak proyek pada form di bawah ini.";
+  }
+
+  window.saveCustomerData = async function() {
     const cust = document.getElementById("inCustomer").value.trim();
     const tipe = document.getElementById("inTipeAlat").value;
     const kont = Number(document.getElementById("inTotalKontrak").value) || 0;
     const pu = Number(document.getElementById("inPU").value) || 0;
+    const editIdx = Number(document.getElementById("editIndex").value);
 
     if (!cust) {
       alert("Nama customer harus diisi!");
@@ -695,16 +770,51 @@
       try {
         const snap = await getDoc(ref);
         let currentList = snap.exists() ? (snap.data().customers || defaultCustomers) : defaultCustomers;
-        currentList.push(newEntry);
+        
+        if (editIdx >= 0 && editIdx < currentList.length) {
+          currentList[editIdx] = newEntry;
+        } else {
+          currentList.push(newEntry);
+        }
+
         await setDoc(ref, { customers: currentList });
         alert("Data berhasil disimpan ke database realtime!");
-        document.getElementById("inCustomer").value = "";
-        document.getElementById("inTotalKontrak").value = "";
-        document.getElementById("inPU").value = "";
-        toggleInputPanel();
+        resetForm();
       } catch (err) {
         console.error("Gagal menyimpan:", err);
         alert("Gagal menyimpan data.");
+      }
+    }
+  }
+
+  window.editCustomerData = function(idx) {
+    const c = cachedCustomers[idx];
+    if (!c) return;
+    document.getElementById("inCustomer").value = c.customer;
+    document.getElementById("inTipeAlat").value = c.tipe;
+    document.getElementById("inTotalKontrak").value = c.kontrak;
+    document.getElementById("inPU").value = c.pu;
+    document.getElementById("editIndex").value = idx;
+    
+    // Buka panel jika tertutup
+    const p = document.getElementById("inputPanel");
+    if(!p.classList.contains("active")) p.classList.add("active");
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  window.deleteCustomerData = async function(idx) {
+    if (!confirm("Apakah Anda yakin ingin menghapus data kontrak ini?")) return;
+    if (window.firebaseDB && window.firebaseFns) {
+      const { doc, setDoc } = window.firebaseFns;
+      const ref = doc(window.firebaseDB, "dashboardNKD", "data_2026");
+      try {
+        let currentList = [...cachedCustomers];
+        currentList.splice(idx, 1);
+        await setDoc(ref, { customers: currentList });
+        alert("Data berhasil dihapus.");
+      } catch (err) {
+        console.error("Gagal menghapus:", err);
+        alert("Gagal menghapus data.");
       }
     }
   }
@@ -730,9 +840,11 @@
             } else {
               await setDoc(ref, { customers: defaultCustomers });
             }
+            cachedCustomers = customers;
             renderDashboard(customers);
           }, (err) => {
             console.error("Sync error:", err);
+            cachedCustomers = defaultCustomers;
             renderDashboard(defaultCustomers);
           });
         }
@@ -740,8 +852,28 @@
     }
 
     function renderDashboard(customers) {
+      document.getElementById("totalContractCount").textContent = customers.length;
+
+      // Render Master Table di Panel Admin
+      const masterTbody = document.getElementById("master-table-body");
+      let masterHtml = "";
+      customers.forEach((c, idx) => {
+        masterHtml += `<tr>
+          <td class="center">${idx + 1}</td>
+          <td class="left">${c.customer}</td>
+          <td class="left">${c.tipe}</td>
+          <td>${fmt(c.kontrak)}</td>
+          <td>${fmt(c.pu)}</td>
+          <td>${fmt(c.sisa)}</td>
+          <td class="center">
+            <button class="btn-table-action btn-edit" onclick="editCustomerData(${idx})"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn-table-action btn-delete" onclick="deleteCustomerData(${idx})"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`;
+      });
+      masterTbody.innerHTML = masterHtml;
+
       const selectedFilter = document.getElementById("tipeAlatFilter").value.toLowerCase();
-      
       let filtered = customers;
       if (selectedFilter && selectedFilter !== "all") {
         filtered = customers.filter(c => c.tipe.toLowerCase() === selectedFilter);
@@ -764,14 +896,13 @@
       const tingkatPenyerapan = totKontrak > 0 ? (totPU / totKontrak * 100) : 0;
       document.getElementById("kpi-tingkat-penyerapan").textContent = tingkatPenyerapan.toFixed(2) + "%";
 
-      // Update Gauge Arc
       const deg = (tingkatPenyerapan / 100) * 180;
       const arc = document.getElementById("gaugeArc");
       if(arc) {
-        arc.style.background = `conic-gradient(from 270deg, #123b73 0deg ${deg}deg, #e8e8e8 ${deg}deg 360deg)`;
+        arc.style.background = `conic-gradient(from 270deg, #0b3267 0deg ${deg}deg, #e2e8f0 ${deg}deg 360deg)`;
       }
 
-      // Render Tabel Customer
+      // Render Tabel Customer Utama
       const custTbody = document.getElementById("table-customer-body");
       let custHtml = "";
       filtered.forEach((c, idx) => {
@@ -831,21 +962,18 @@
       document.getElementById("foot-alat-tidakterserap").textContent = fmt(totTdkTerserap);
       document.getElementById("foot-alat-sisakontrak").textContent = fmt(totSisa);
 
-      // Hitung persentase untuk Donut Chart
       const donutData = alatKontrakArr.map(val => totKontrak > 0 ? Number((val / totKontrak * 100).toFixed(2)) : 0);
 
-      // Update Charts
       updateCharts(alatLabelsArr, alatKontrakArr, donutData, [totPU, totTdkTerserap, totSisa]);
     }
 
     function updateCharts(labels, barData, donutData, realisasiData) {
-      // Chart 1
       if (chartBarInstance) chartBarInstance.destroy();
       chartBarInstance = new Chart(document.getElementById("chartTipeAlatBar").getContext("2d"), {
         type: "bar",
         data: {
           labels: labels,
-          datasets: [{ data: barData, backgroundColor: "#123f79", borderRadius: 1, barThickness: 21 }]
+          datasets: [{ data: barData, backgroundColor: "#0b3267", borderRadius: 1, barThickness: 18 }]
         },
         options: {
           responsive: true, maintainAspectRatio: false, indexAxis: "y", animation: false,
@@ -858,16 +986,14 @@
             x: {
               beginAtZero: true,
               grid: { color: "#e6e8eb", borderDash: [2, 3] },
-              ticks: { color: "#222", font: { size: 9 }, callback: (v) => v >= 1000000 ? (v / 1000000).toFixed(0) + " M" : v },
-              title: { display: true, text: "Total Kontrak (Rp)", color: "#333", font: { size: 9, weight: "700" } }
+              ticks: { color: "#222", font: { size: 8.5 }, callback: (v) => v >= 1000000 ? (v / 1000000).toFixed(0) + " M" : v }
             },
-            y: { grid: { display: false }, ticks: { color: "#222", font: { size: 9 } } }
+            y: { grid: { display: false }, ticks: { color: "#222", font: { size: 8.5 } } }
           }
         },
         plugins: [ChartDataLabels]
       });
 
-      // Chart 2
       if (chartDonutInstance) chartDonutInstance.destroy();
       chartDonutInstance = new Chart(document.getElementById("chartTipeAlatDonut").getContext("2d"), {
         type: "doughnut",
@@ -880,22 +1006,21 @@
           }]
         },
         options: {
-          responsive: true, maintainAspectRatio: false, cutout: "58%", animation: false,
+          responsive: true, maintainAspectRatio: false, cutout: "55%", animation: false,
           plugins: {
-            legend: { position: "right", labels: { color: "#222", boxWidth: 9, boxHeight: 9, padding: 8, font: { size: 9 } } },
+            legend: { position: "right", labels: { color: "#222", boxWidth: 8, boxHeight: 8, padding: 6, font: { size: 8.5 } } },
             tooltip: { callbacks: { label: (ctx) => " " + ctx.label + ": " + ctx.raw + "%" } },
             datalabels: { display: false }
           }
         }
       });
 
-      // Chart 3
       if (chartRealisasiInstance) chartRealisasiInstance.destroy();
       chartRealisasiInstance = new Chart(document.getElementById("chartRealisasiSisa").getContext("2d"), {
         type: "bar",
         data: {
           labels: ["PU Terealisasi", "PU Tidak Terserap", "Sisa Kontrak"],
-          datasets: [{ data: realisasiData, backgroundColor: ["#198d25", "#efb000", "#1266c4"], borderRadius: 0, barPercentage: .48, categoryPercentage: .75 }]
+          datasets: [{ data: realisasiData, backgroundColor: ["#188b24", "#f0b000", "#1266c4"], borderRadius: 0, barPercentage: .45 }]
         },
         options: {
           responsive: true, maintainAspectRatio: false, animation: false,
@@ -904,11 +1029,11 @@
             datalabels: { color: "#222", anchor: "end", align: "top", offset: 2, font: { size: 9, weight: "700" }, formatter: (v) => fmt(v) }
           },
           scales: {
-            x: { grid: { display: false }, ticks: { color: "#222", font: { size: 9 } } },
+            x: { grid: { display: false }, ticks: { color: "#222", font: { size: 8.5 } } },
             y: {
               beginAtZero: true,
               grid: { color: "#e5e7eb", borderDash: [2, 3] },
-              ticks: { color: "#222", font: { size: 9 }, callback: (v) => (v / 1000000) + " M" }
+              ticks: { color: "#222", font: { size: 8.5 }, callback: (v) => (v / 1000000) + " M" }
             }
           }
         },
