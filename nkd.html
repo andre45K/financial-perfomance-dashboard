@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard NKD - Nilai Kontrak yang Dikelola</title>
+  <!-- FontAwesome Icons & Chart.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- FIREBASE SDK (Modular v10) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
+      authDomain: "financial-perfomance-dashboard.firebaseapp.com",
+      projectId: "financial-perfomance-dashboard",
+      storageBucket: "financial-perfomance-dashboard.firebasestorage.app",
+      messagingSenderId: "136866453174",
+      appId: "1:136866453174:web:b69a3e14672eb96cc53817"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.firebaseDB = db;
+    window.firebaseFns = { doc, getDoc, onSnapshot };
+  </script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+    body { background-color: #060d1a; color: #ffffff; padding: 15px; font-size: 13px; }
+    
+    .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #1a2a40; padding-bottom: 12px; }
+    .title-area h1 { font-size: 20px; letter-spacing: 1px; color: #ffffff; text-transform: uppercase; font-weight: 800; }
+    .title-area p { color: #8ba0b8; font-size: 12px; margin-top: 2px; }
+    
+    .header-info { display: flex; gap: 12px; align-items: center; }
+    .period-box { background: #111d2e; border: 1px solid #2a3d54; padding: 6px 12px; border-radius: 4px; display: flex; align-items: center; gap: 8px; font-size: 12px; }
+    .admin-link { color: #3b82f6; text-decoration: none; font-size: 12px; font-weight: bold; border: 1px solid #3b82f6; padding: 6px 10px; border-radius: 4px; }
+    .admin-link:hover { background: #3b82f6; color: white; }
+
+    /* Kpi Grid NKD */
+    .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+    .kpi-card { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; padding: 12px; position: relative; }
+    .kpi-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .kpi-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; background: #0b63ce; color: white; }
+    .kpi-title { font-size: 10.5px; font-weight: bold; color: #94a3b8; text-transform: uppercase; }
+    .kpi-val { font-size: 16px; font-weight: 900; color: #ffffff; margin-bottom: 4px; }
+    .kpi-sub { font-size: 9px; color: #22c55e; font-weight: bold; display: flex; align-items: center; gap: 4px; }
+
+    /* Charts & Content Grid */
+    .charts-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+    .chart-card { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; padding: 15px; height: 320px; display: flex; flex-direction: column; }
+    .chart-title { font-size: 11px; font-weight: bold; text-align: center; margin-bottom: 12px; color: #cbd5e1; text-transform: uppercase; }
+    .chart-container { position: relative; flex-grow: 1; width: 100%; height: 250px; }
+
+    /* Tables */
+    .tables-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+    .table-container { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; overflow-x: auto; padding: 12px; }
+    .table-title { font-size: 11px; font-weight: bold; color: #cbd5e1; margin-bottom: 10px; text-transform: uppercase; }
+    table { width: 100%; border-collapse: collapse; text-align: center; font-size: 10.5px; }
+    th, td { border: 1px solid #1e2d42; padding: 6px 4px; }
+    th { background: #09121d; color: #ffffff; font-weight: bold; }
+    tr:nth-child(even) { background-color: #0b1420; }
+    td.row-left { text-align: left; padding-left: 8px; }
+
+    @media (max-width: 1200px) {
+      .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+      .charts-grid-3 { grid-template-columns: 1fr; }
+      .tables-grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header-container">
+    <div class="title-area">
+      <h1>NILAI KONTRAK YANG DIKELOLA (NKD)</h1>
+      <p>Monitoring Kinerja Kontrak & Komposisi Tipe Alat | Tahun 2026</p>
+    </div>
+
+    <div class="header-info">
+      <div class="period-box">
+        <span>📅 Periode: <strong>s.d. Juli 2026</strong></span>
+      </div>
+      <!-- Tombol Navigasi Menu Samping -->
+      <a href="index.html" class="admin-link"><i class="fa-solid fa-house"></i> Dashboard Utama</a>
+      <a href="nkb.html" class="admin-link">Dashboard NKB</a>
+      <a href="nkd.html" class="admin-link" style="background: #0b63ce; color: white;">Dashboard NKD</a>
+      <a href="login.html" class="admin-link"><i class="fa-solid fa-lock"></i> Admin Input</a>
+    </div>
+  </div>
+
+  <!-- KPI CARDS NKD -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-header"><div class="kpi-icon">Rp</div><div class="kpi-title">Total Kontrak</div></div>
+      <div class="kpi-val" id="kpi-total-kontrak">10.956.633.326</div>
+      <div class="kpi-sub" style="color: #60a5fa;"><i class="fa-solid fa-circle-check"></i> 100,00% dari Total Kontrak</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-header"><div class="kpi-icon" style="background:#008767;">Rp</div><div class="kpi-title">PU Terealisasi</div></div>
+      <div class="kpi-val" id="kpi-pu-terealisasi">5.963.602.686</div>
+      <div class="kpi-sub" style="color: #22c55e;"><i class="fa-solid fa-arrow-up"></i> 54,40% dari Total Kontrak</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-header"><div class="kpi-icon" style="background:#d97706;">Rp</div><div class="kpi-title">PU Tidak Terserap</div></div>
+      <div class="kpi-val" id="kpi-pu-terserap">1.173.913.978</div>
+      <div class="kpi-sub" style="color: #f59e0b;"><i class="fa-solid fa-triangle-exclamation"></i> 10,72% dari Total Kontrak</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-header"><div class="kpi-icon" style="background:#1d4ed8;">Rp</div><div class="kpi-title">Sisa Kontrak</div></div>
+      <div class="kpi-val" id="kpi-sisa-kontrak">3.819.116.662</div>
+      <div class="kpi-sub" style="color: #38bdf8;"><i class="fa-solid fa-chart-pie"></i> 34,87% dari Total Kontrak</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-header"><div class="kpi-icon" style="background:#6b21a8;">%</div><div class="kpi-title">Tingkat Penyerapan (PU)</div></div>
+      <div class="kpi-val" id="kpi-tingkat-penyerapan">54,40%</div>
+      <div class="kpi-sub" style="color: #c084fc;"><i class="fa-solid fa-gauge"></i> Efisiensi Penyerapan</div>
+    </div>
+  </div>
+
+  <!-- CHARTS SECTION -->
+  <div class="charts-grid-3">
+    <div class="chart-card">
+      <div class="chart-title">Total Kontrak per Tipe Alat</div>
+      <div class="chart-container"><canvas id="chartTipeAlatBar"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Komposisi Kontrak per Tipe Alat</div>
+      <div class="chart-container"><canvas id="chartTipeAlatDonut"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Realisasi PU vs Sisa Kontrak</div>
+      <div class="chart-container"><canvas id="chartRealisasiSisa"></canvas></div>
+    </div>
+  </div>
+
+  <!-- TABLES SECTION -->
+  <div class="tables-grid-2">
+    <div class="table-container">
+      <div class="table-title">Rincian Nilai Kontrak per Customer</div>
+      <table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Customer</th>
+            <th>Tipe Alat</th>
+            <th>Total Kontrak</th>
+            <th>PU</th>
+          </tr>
+        </thead>
+        <tbody id="table-customer-body">
+          <tr>
+            <td>1</td>
+            <td class="row-left">PT Baja Cilegon Energi</td>
+            <td>Truck Mixer</td>
+            <td>276.000.000</td>
+            <td>103.500.000</td>
+          </tr>
+          <!-- Data dinamis bisa dimuat dari Firebase -->
+        </tbody>
+      </table>
+    </div>
+    <div class="table-container">
+      <div class="table-title">Rincian Nilai Kontrak per Tipe Alat</div>
+      <table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Tipe Alat</th>
+            <th>Total Kontrak</th>
+            <th>PU</th>
+            <th>Sisa Kontrak</th>
+          </tr>
+        </thead>
+        <tbody id="table-alat-body">
+          <tr>
+            <td>1</td>
+            <td class="row-left">Truck Mixer</td>
+            <td>8.248.633.326</td>
+            <td>4.943.600.000</td>
+            <td>2.204.033.326</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SCRIPT INISIALISASI & REALTIME FIREBASE -->
+  <script type="module">
+    document.addEventListener("DOMContentLoaded", () => {
+      // Grafik 1: Total Kontrak per Tipe Alat (Bar)
+      const ctxBar = document.getElementById("chartTipeAlatBar").getContext("2d");
+      new Chart(ctxBar, {
+        type: "bar",
+        data: {
+          labels: ["Truck Mixer", "Stone Crusher", "Truck Trailer", "Mobile Crane", "Dump Truck", "Silo"],
+          datasets: [{
+            data: [8248633326, 1140000000, 1075000000, 220000000, 138000000, 135000000],
+            backgroundColor: ["#0b63ce", "#008767", "#d97706", "#7c3aed", "#e67e22", "#3b82f6"],
+            borderRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          indexAxis: 'y',
+          plugins: { legend: { display: false } },
+          scales: { x: { ticks: { color: "#94a3b8", font: { size: 9 } } }, y: { ticks: { color: "#94a3b8", font: { size: 9 } }, grid: { display: false } } }
+        }
+      });
+
+      // Grafik 2: Komposisi Kontrak per Tipe Alat (Donut)
+      const ctxDonut = document.getElementById("chartTipeAlatDonut").getContext("2d");
+      new Chart(ctxDonut, {
+        type: "doughnut",
+        data: {
+          labels: ["Truck Mixer", "Stone Crusher", "Truck Trailer", "Mobile Crane", "Dump Truck", "Silo"],
+          datasets: [{
+            data: [75.26, 10.41, 9.81, 2.01, 1.26, 1.23],
+            backgroundColor: ["#0b63ce", "#008767", "#d97706", "#7c3aed", "#e67e22", "#3b82f6"]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'right', labels: { color: '#cbd5e1', font: { size: 9 } } } }
+        }
+      });
+
+      // Grafik 3: Realisasi PU vs Sisa Kontrak (Bar)
+      const ctxRealisasi = document.getElementById("chartRealisasiSisa").getContext("2d");
+      new Chart(ctxRealisasi, {
+        type: "bar",
+        data: {
+          labels: ["PU Terealisasi", "PU Tidak Terserap", "Sisa Kontrak"],
+          datasets: [{
+            data: [5963602686, 1173913978, 3819116662],
+            backgroundColor: ["#008767", "#d97706", "#0b63ce"],
+            borderRadius: 4,
+            barPercentage: 0.5
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { ticks: { color: "#94a3b8", font: { size: 9 } }, grid: { display: false } }, y: { ticks: { color: "#94a3b8", font: { size: 9 } } } }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
