@@ -561,7 +561,7 @@
       <div class="header-logo-icon"><i class="fa-solid fa-file-signature"></i></div>
       <div class="header-title-area">
         <h1>DASHBOARD NKB - PT WASKITA BETON PRECAST, TBK</h1>
-        <p>Sistem Informasi Manajemen Kontrak & Perencanaan 2026</p>
+        <p>Sistem Informasi Manajemen Kontrak & Perencanaan</p>
       </div>
     </div>
     <div class="nav-actions-wrap">
@@ -612,7 +612,7 @@
         </div>
       </div>
 
-      <div class="master-table-title">DAFTAR MASTER KONTRAK 2026 (<span id="totalContractCount">15</span> KONTRAK)</div>
+      <div class="master-table-title">DAFTAR MASTER KONTRAK (<span id="totalContractCount">15</span> KONTRAK)</div>
       <div class="master-table-scroll">
         <table class="customer-table" style="margin-bottom: 0;">
           <thead>
@@ -634,13 +634,13 @@
     </div>
   </div>
 
-  <!-- BAGIAN KETERANGAN "NILAI KONTRAK YANG DIKELOLA" DAN FILTER -->
+  <!-- BAGIAN KETERANGAN "NILAI KONTRAK YANG DIKELOLA" DAN FILTER DINAMIS -->
   <div class="top-section-layout">
     <div class="dashboard-main-title-box">
       <div class="title-box-icon"><i class="fa-solid fa-file-signature"></i></div>
       <div class="title-box-text">
         <h2>NILAI KONTRAK YANG DIKELOLA</h2>
-        <p id="subPeriodeText">s.d. JULI 2026</p>
+        <p id="labelPeriodeDisplay">s.d. JULI 2026</p>
       </div>
     </div>
 
@@ -649,7 +649,7 @@
         <div class="filter-card-header">PERIODE DATA</div>
         <div class="filter-card-body">
           <select id="periodeFilter">
-            <!-- Dinamis Bulan & Tahun 2026 - 2030 -->
+            <!-- Opsi Bulan Januari - Desember & Tahun 2026 - 2030 akan di-generate otomatis via JS -->
           </select>
         </div>
       </div>
@@ -831,11 +831,13 @@
     { customer: "Waskita WKI KSO", tipe: "Silo", kontrak: 135000000, pu: 45000000, tdkTerserap: 0, sisa: 90000000 }
   ];
 
-  // Inisialisasi Pilihan Periode Data (Januari - Desember, Tahun 2026 - 2030)
-  function populatePeriodeOptions() {
+  const months = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+  ];
+
+  function generatePeriodeOptions() {
     const select = document.getElementById("periodeFilter");
-    const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-    
     select.innerHTML = "";
     for (let year = 2026; year <= 2030; year++) {
       for (let m = 0; m < months.length; m++) {
@@ -846,20 +848,6 @@
         select.appendChild(opt);
       }
     }
-
-    // Ambil dari localStorage jika ada, jika tidak default ke "s.d. Juli 2026"
-    const savedPeriode = localStorage.getItem("nkd_selected_periode");
-    if (savedPeriode) {
-      select.value = savedPeriode;
-    } else {
-      select.value = "s.d. Juli 2026";
-    }
-
-    updateSubPeriodeText(select.value);
-  }
-
-  function updateSubPeriodeText(val) {
-    document.getElementById("subPeriodeText").textContent = val.toUpperCase();
   }
 
   window.toggleInputPanel = function() {
@@ -902,7 +890,7 @@
           currentList.push(newEntry);
         }
 
-        await setDoc(ref, { customers: currentList });
+        await setDoc(ref, { customers: currentList }, { merge: true });
         alert("Data berhasil disimpan ke database realtime!");
         resetForm();
       } catch (err) {
@@ -934,7 +922,7 @@
       try {
         let currentList = [...cachedCustomers];
         currentList.splice(idx, 1);
-        await setDoc(ref, { customers: currentList });
+        await setDoc(ref, { customers: currentList }, { merge: true });
         alert("Data berhasil dihapus.");
       } catch (err) {
         console.error("Gagal menghapus:", err);
@@ -944,14 +932,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    populatePeriodeOptions();
-
-    // Event listener untuk penguncian periode data ke localStorage
-    document.getElementById("periodeFilter").addEventListener("change", (e) => {
-      const val = e.target.value;
-      localStorage.setItem("nkd_selected_periode", val);
-      updateSubPeriodeText(val);
-    });
+    generatePeriodeOptions();
 
     if (typeof ChartDataLabels !== 'undefined') {
       Chart.register(ChartDataLabels);
@@ -968,12 +949,22 @@
 
           onSnapshot(ref, async (snap) => {
             let customers = defaultCustomers;
-            if (snap.exists() && snap.data().customers) {
-              customers = snap.data().customers;
+            let savedPeriode = "s.d. Juli 2026";
+
+            if (snap.exists()) {
+              const data = snap.data();
+              if (data.customers) customers = data.customers;
+              if (data.periode) savedPeriode = data.periode;
             } else {
-              await setDoc(ref, { customers: defaultCustomers });
+              await setDoc(ref, { customers: defaultCustomers, periode: savedPeriode });
             }
+
             cachedCustomers = customers;
+            const periodeEl = document.getElementById("periodeFilter");
+            if (periodeEl) {
+              periodeEl.value = savedPeriode;
+            }
+            updatePeriodeLabel(savedPeriode);
             renderDashboard(customers);
           }, (err) => {
             console.error("Sync error:", err);
@@ -983,6 +974,29 @@
         }
       }, 100);
     }
+
+    function updatePeriodeLabel(val) {
+      const labelEl = document.getElementById("labelPeriodeDisplay");
+      if (labelEl) {
+        labelEl.textContent = val.toUpperCase();
+      }
+    }
+
+    const periodeSelect = document.getElementById("periodeFilter");
+    periodeSelect.addEventListener("change", async () => {
+      const selectedVal = periodeSelect.value;
+      updatePeriodeLabel(selectedVal);
+
+      if (window.firebaseDB && window.firebaseFns) {
+        const { doc, setDoc } = window.firebaseFns;
+        const ref = doc(window.firebaseDB, "dashboardNKD", "data_2026");
+        try {
+          await setDoc(ref, { periode: selectedVal }, { merge: true });
+        } catch (e) {
+          console.error("Gagal menyimpan periode:", e);
+        }
+      }
+    });
 
     function renderDashboard(customers) {
       document.getElementById("totalContractCount").textContent = customers.length;
