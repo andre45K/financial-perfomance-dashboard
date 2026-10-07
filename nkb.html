@@ -116,9 +116,9 @@
     .d2-target-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 10px; }
 
     /* D2 MIDDLE SECTION */
-    .d2-middle-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 15px; }
+    .d2-middle-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 15px; margin-bottom: 15px; }
     
-    .d2-map-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; position: relative; height: 560px; overflow: hidden; }
+    .d2-map-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; position: relative; height: 460px; overflow: hidden; }
     .d2-map-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
     .d2-map-title { font-size: 10.5px; font-weight: 800; color: #0b2246; text-transform: uppercase; }
     .d2-map-legend { display: flex; align-items: center; gap: 10px; font-size: 9.5px; color: #334155; font-weight: 700; }
@@ -127,7 +127,7 @@
     /* PETA INDONESIA - SILUET ABU-ABU SESUAI REFERENSI */
     .d2-map-canvas { 
       width: 100%; 
-      height: 495px;
+      height: 395px;
       background-color: #3b5247;
       border-radius: 6px;
       position: relative;
@@ -165,7 +165,7 @@
     .d2-table tr:hover { background: #f1f5f9; }
     .d2-table-total { background: #0b2246 !important; color: white !important; font-weight: 800; }
 
-    .d2-bottom-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+    .d2-bottom-grid { display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 15px; }
     .d2-bottom-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; flex-direction: column; }
     .d2-bottom-title { font-size: 10.5px; font-weight: 800; color: #0b2246; text-transform: uppercase; margin-bottom: 8px; }
     .d2-bottom-chart-container { position: relative; height: 210px; width: 100%; display: flex; align-items: center; justify-content: center; }
@@ -968,25 +968,58 @@
             </div>
           </div>
 
-
+          <!-- CUSTOMER TABLE -->
+          <div class="d2-table-card">
+            <div class="d2-bottom-title">TOTAL NILAI KONTRAK BARU BERDASARKAN CUSTOMER</div>
+            <div class="d2-table-container">
+              <table class="d2-table" id="d2CustomerSummaryTable">
+                <thead>
+                  <tr>
+                    <th style="width: 30px;">No</th>
+                    <th>Customer</th>
+                    <th>Lokasi Detail</th>
+                    <th class="text-right">Total Nilai Kontrak Baru (Rp)</th>
+                    <th class="text-center" style="width: 50px;">%</th>
+                  </tr>
+                </thead>
+                <tbody id="d2CustomerSummaryBody"></tbody>
+                <tfoot>
+                  <tr class="d2-table-total">
+                    <td colspan="3" class="font-bold">TOTAL</td>
+                    <td id="d2TableTotalNilai" class="text-right font-bold">Rp 8.416.583.326</td>
+                    <td class="text-center font-bold">100%</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
 
         </div>
 
-        <!-- D2 BOTTOM SECTION: 1 CHART -->
+        <!-- D2 BOTTOM SECTION: 2 CHARTS -->
         <div class="d2-bottom-grid" style="margin-top: 15px;">
           
           <!-- Chart Alat -->
           <div class="d2-bottom-card">
             <div class="d2-bottom-title">PROPORSI NILAI KONTRAK BARU BERDASARKAN TIPE ALAT</div>
-            <div style="display: grid; grid-template-columns: 1fr 130px; gap: 5px; align-items: center; width: 100%; height: 300px;">
+            <div style="display: grid; grid-template-columns: 1fr 130px; gap: 5px; align-items: center; width: 100%; height: 210px;">
               <div style="position: relative; height: 100%; width: 100%;">
                 <canvas id="chartD2Equipment"></canvas>
               </div>
-              <div id="d2EqLegendCustom" style="display: flex; flex-direction: column; gap: 4px; font-size: 9px; overflow-y: auto; max-height: 290px; padding-right: 2px;"></div>
+              <div id="d2EqLegendCustom" style="display: flex; flex-direction: column; gap: 4px; font-size: 9px; overflow-y: auto; max-height: 200px; padding-right: 2px;"></div>
             </div>
           </div>
 
-
+          <!-- Chart Lokasi Detail -->
+          <div class="d2-bottom-card">
+            <div class="d2-bottom-title">PROPORSI NILAI KONTRAK BARU BERDASARKAN LOKASI</div>
+            <div style="display: grid; grid-template-columns: 1fr 130px; gap: 5px; align-items: center; width: 100%; height: 210px;">
+              <div style="position: relative; height: 100%; width: 100%;">
+                <canvas id="chartD2Location"></canvas>
+              </div>
+              <div id="d2LocLegendCustom" style="display: flex; flex-direction: column; gap: 3px; font-size: 8.5px; overflow-y: auto; max-height: 200px; padding-right: 2px;"></div>
+            </div>
+          </div>
 
         </div>
 
@@ -1282,6 +1315,7 @@
     });
 
     let chartD2EqObj = null;
+    let chartD2LocObj = null;
     let chartD2TargetGaugeObj = null;
 
     const chartColorsPalette = ['#0b63ce', '#008767', '#d97706', '#5c165c', '#e65c00', '#7c3aed', '#10b981', '#f59e0b', '#3b82f6', '#1d4ed8', '#0b2246', '#64748b'];
@@ -1317,6 +1351,13 @@
         type: 'doughnut',
         data: { labels: [], datasets: [{ data: [], backgroundColor: chartColorsPalette, borderWidth: 1, borderColor: '#ffffff' }] },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: false } }, cutout: '50%' }
+      });
+
+      const ctxD2Loc = document.getElementById('chartD2Location').getContext('2d');
+      chartD2LocObj = new Chart(ctxD2Loc, {
+        type: 'doughnut',
+        data: { labels: [], datasets: [{ data: [], backgroundColor: chartColorsPalette, borderWidth: 1, borderColor: '#ffffff' }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: false } }, cutout: '45%' }
       });
 
     }
@@ -1800,6 +1841,31 @@
         chartD2TargetGaugeObj.update();
       }
 
+      let custSummaryArr = [];
+      for (let cName in custMap) {
+        custSummaryArr.push({
+          customer: cName,
+          lokasi: Array.from(custMap[cName].lokasiSet).join(', '),
+          nilai: custMap[cName].nilai
+        });
+      }
+      custSummaryArr.sort((a, b) => b.nilai - a.nilai);
+
+      const custBody = document.getElementById('d2CustomerSummaryBody');
+      let custHtml = '';
+      custSummaryArr.forEach((cs, i) => {
+        const pct = totalNilai > 0 ? (cs.nilai / totalNilai) * 100 : 0;
+        custHtml += `<tr>
+          <td>${i + 1}</td>
+          <td>${cs.customer}</td>
+          <td>${cs.lokasi}</td>
+          <td class="text-right">Rp ${formatRupiah(cs.nilai)}</td>
+          <td class="text-center">${pct.toFixed(2).replace('.', ',')}%</td>
+        </tr>`;
+      });
+      custBody.innerHTML = custHtml;
+      document.getElementById('d2TableTotalNilai').innerText = 'Rp ' + formatRupiah(totalNilai);
+
       renderDynamicMapPins(provMap);
 
       if (chartD2EqObj) {
@@ -1826,6 +1892,29 @@
         document.getElementById('d2EqLegendCustom').innerHTML = eqLegendHtml;
       }
 
+      if (chartD2LocObj) {
+        const sortedLokasi = Object.keys(lokasiDetailMap).sort((a, b) => lokasiDetailMap[b] - lokasiDetailMap[a]);
+        chartD2LocObj.data.labels = sortedLokasi;
+        chartD2LocObj.data.datasets[0].data = sortedLokasi.map(k => lokasiDetailMap[k]);
+        chartD2LocObj.update();
+
+        let locLegendHtml = '';
+        sortedLokasi.forEach((lokName, i) => {
+          const val = lokasiDetailMap[lokName];
+          const pct = totalNilai > 0 ? (val / totalNilai) * 100 : 0;
+          const color = chartColorsPalette[i % chartColorsPalette.length];
+          locLegendHtml += `
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
+              <div style="display: flex; align-items: center; gap: 4px; overflow: hidden;">
+                <div style="width: 7px; height: 7px; border-radius: 50%; background: ${color}; flex-shrink: 0;"></div>
+                <span style="color: #334155; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${lokName}">${lokName}</span>
+              </div>
+              <span style="color: #0b2246; font-weight: 800; flex-shrink: 0;">${pct.toFixed(1).replace('.', ',')}%</span>
+            </div>
+          `;
+        });
+        document.getElementById('d2LocLegendCustom').innerHTML = locLegendHtml;
+      }
 
       renderD2AdminTable();
     }
