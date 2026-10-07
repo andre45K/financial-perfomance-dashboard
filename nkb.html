@@ -996,7 +996,7 @@
 
         </div>
 
-        <!-- D2 BOTTOM SECTION: 3 CHARTS -->
+        <!-- D2 BOTTOM SECTION: 2 CHARTS -->
         <div class="d2-bottom-grid" style="margin-top: 15px;">
           
           <!-- Chart Alat -->
@@ -1018,14 +1018,6 @@
                 <canvas id="chartD2Location"></canvas>
               </div>
               <div id="d2LocLegendCustom" style="display: flex; flex-direction: column; gap: 3px; font-size: 8.5px; overflow-y: auto; max-height: 200px; padding-right: 2px;"></div>
-            </div>
-          </div>
-
-          <!-- Chart Tren Kumulatif -->
-          <div class="d2-bottom-card">
-            <div class="d2-bottom-title">TREN NILAI KONTRAK BARU (KUMULATIF)</div>
-            <div class="d2-bottom-chart-container">
-              <canvas id="chartD2Trend"></canvas>
             </div>
           </div>
 
@@ -1324,7 +1316,6 @@
 
     let chartD2EqObj = null;
     let chartD2LocObj = null;
-    let chartD2TrendObj = null;
     let chartD2TargetGaugeObj = null;
 
     const chartColorsPalette = ['#0b63ce', '#008767', '#d97706', '#5c165c', '#e65c00', '#7c3aed', '#10b981', '#f59e0b', '#3b82f6', '#1d4ed8', '#0b2246', '#64748b'];
@@ -1369,65 +1360,6 @@
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: false } }, cutout: '45%' }
       });
 
-      const ctxD2Trend = document.getElementById('chartD2Trend').getContext('2d');
-      chartD2TrendObj = new Chart(ctxD2Trend, {
-        type: 'line',
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
-          datasets: [
-            {
-              label: 'Nilai Kontrak Baru (Kumulatif)',
-              data: [0.05, 0.92, 1.56, 2.29, 2.92, 4.09, 8.79, 8.42, null, null, null, null],
-              borderColor: '#0b63ce',
-              backgroundColor: '#0b63ce',
-              borderWidth: 2,
-              pointRadius: 4,
-              pointBackgroundColor: '#0b63ce',
-              tension: 0.1,
-              spanGaps: false
-            },
-            {
-              label: 'Target (Kumulatif)',
-              data: [1.096, 2.193, 3.289, 4.385, 5.481, 6.578, 7.674, 8.770, 9.866, 10.963, 12.059, 13.16],
-              borderColor: '#008767',
-              backgroundColor: '#008767',
-              borderDash: [4, 4],
-              borderWidth: 1.5,
-              pointRadius: 2.5,
-              pointBackgroundColor: '#008767',
-              tension: 0.1
-            }
-          ]
-        },
-        options: {
-          responsive: true, 
-          maintainAspectRatio: false,
-          layout: { padding: { top: 22, right: 10, bottom: 0, left: 0 } },
-          plugins: {
-            legend: { position: 'top', labels: { boxWidth: 10, font: { size: 9, weight: 'bold' } } },
-            datalabels: {
-              align: 'top', anchor: 'end', color: '#0b2246', font: { size: 8.5, weight: 'bold' },
-              formatter: function(value, context) {
-                if (context.datasetIndex === 0 && value !== null) {
-                  return 'Rp ' + value.toFixed(2).replace('.', ',') + ' M';
-                }
-                if (context.datasetIndex === 1 && context.dataIndex === 11) {
-                  return 'Rp 13,16 M';
-                }
-                return '';
-              }
-            }
-          },
-          scales: {
-            x: { ticks: { font: { size: 9, weight: 'bold' } }, grid: { display: false } },
-            y: { 
-              min: 0, max: 16, 
-              ticks: { stepSize: 5, font: { size: 9 }, callback: val => val === 0 ? 'Rp 0' : 'Rp ' + val + ' Miliar' }, 
-              grid: { color: '#f1f5f9' } 
-            }
-          }
-        }
-      });
     }
   </script>
 
