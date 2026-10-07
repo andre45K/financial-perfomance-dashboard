@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard NKD - Nilai Kontrak yang Dikelola</title>
-  <!-- FontAwesome Icons & Chart.js -->
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-  <!-- FIREBASE SDK (Modular v10) -->
+  <!-- FIREBASE SDK - TETAP DIPERTAHANKAN -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -32,230 +32,793 @@
   </script>
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
-    body { background-color: #060d1a; color: #ffffff; padding: 15px; font-size: 13px; }
-    
-    .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #1a2a40; padding-bottom: 12px; }
-    .title-area h1 { font-size: 20px; letter-spacing: 1px; color: #ffffff; text-transform: uppercase; font-weight: 800; }
-    .title-area p { color: #8ba0b8; font-size: 12px; margin-top: 2px; }
-    
-    .header-info { display: flex; gap: 12px; align-items: center; }
-    .period-box { background: #111d2e; border: 1px solid #2a3d54; padding: 6px 12px; border-radius: 4px; display: flex; align-items: center; gap: 8px; font-size: 12px; }
-    .admin-link { color: #3b82f6; text-decoration: none; font-size: 12px; font-weight: bold; border: 1px solid #3b82f6; padding: 6px 10px; border-radius: 4px; }
-    .admin-link:hover { background: #3b82f6; color: white; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Kpi Grid NKD */
-    .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
-    .kpi-card { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; padding: 12px; position: relative; }
-    .kpi-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-    .kpi-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; background: #0b63ce; color: white; }
-    .kpi-title { font-size: 10.5px; font-weight: bold; color: #94a3b8; text-transform: uppercase; }
-    .kpi-val { font-size: 16px; font-weight: 900; color: #ffffff; margin-bottom: 4px; }
-    .kpi-sub { font-size: 9px; color: #22c55e; font-weight: bold; display: flex; align-items: center; gap: 4px; }
+    :root {
+      --navy: #123b73;
+      --navy-dark: #0b3267;
+      --blue: #1266c4;
+      --green: #188b24;
+      --orange: #f0b000;
+      --purple: #6d43b6;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e2e5e9;
+      --card: #ffffff;
+      --bg: #f7f8fa;
+    }
 
-    /* Charts & Content Grid */
-    .charts-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-    .chart-card { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; padding: 15px; height: 320px; display: flex; flex-direction: column; }
-    .chart-title { font-size: 11px; font-weight: bold; text-align: center; margin-bottom: 12px; color: #cbd5e1; text-transform: uppercase; }
-    .chart-container { position: relative; flex-grow: 1; width: 100%; height: 250px; }
+    body {
+      background: #fff;
+      color: var(--text);
+      font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      min-width: 1120px;
+      padding: 0 16px 22px;
+    }
 
-    /* Tables */
-    .tables-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-    .table-container { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; overflow-x: auto; padding: 12px; }
-    .table-title { font-size: 11px; font-weight: bold; color: #cbd5e1; margin-bottom: 10px; text-transform: uppercase; }
-    table { width: 100%; border-collapse: collapse; text-align: center; font-size: 10.5px; }
-    th, td { border: 1px solid #1e2d42; padding: 6px 4px; }
-    th { background: #09121d; color: #ffffff; font-weight: bold; }
-    tr:nth-child(even) { background-color: #0b1420; }
-    td.row-left { text-align: left; padding-left: 8px; }
+    .dashboard {
+      width: 100%;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
 
-    @media (max-width: 1200px) {
-      .kpi-grid { grid-template-columns: repeat(3, 1fr); }
-      .charts-grid-3 { grid-template-columns: 1fr; }
-      .tables-grid-2 { grid-template-columns: 1fr; }
+    /* ================= HEADER ================= */
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr 175px;
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 10px;
+    }
+
+    .brand {
+      min-height: 86px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding-left: 5px;
+    }
+
+    .brand-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 29px;
+      flex: 0 0 auto;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
+    }
+
+    .brand h1 {
+      color: var(--navy-dark);
+      font-size: 26px;
+      line-height: 1.03;
+      font-weight: 800;
+      letter-spacing: -.5px;
+      text-transform: uppercase;
+    }
+
+    .brand p {
+      color: var(--navy);
+      font-size: 17px;
+      line-height: 1.1;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+
+    .filters {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 175px;
+    }
+
+    .filter-card {
+      border: 1px solid #dfe3e8;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+
+    .filter-title {
+      background: var(--navy-dark);
+      color: #fff;
+      font-weight: 800;
+      font-size: 11px;
+      padding: 9px 10px;
+      text-transform: uppercase;
+    }
+
+    .filter-select {
+      margin: 9px;
+      width: calc(100% - 18px);
+      height: 35px;
+      border: 1px solid #d7dbe0;
+      border-radius: 6px;
+      padding: 0 9px;
+      color: #444;
+      background: #fff;
+      font-size: 12px;
+      outline: none;
+    }
+
+    /* ================= KPI ================= */
+    .main-area {
+      margin-right: 193px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .kpi-card {
+      min-height: 160px;
+      background: #fff;
+      border: 1px solid #e2e5e9;
+      border-radius: 10px;
+      box-shadow: 0 2px 9px rgba(0,0,0,.08);
+      padding: 17px 18px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-title {
+      color: var(--navy-dark);
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
+      text-transform: uppercase;
+      white-space: nowrap;
+      margin-bottom: 11px;
+    }
+
+    .kpi-card.green .kpi-title { color: #247a24; }
+    .kpi-card.orange .kpi-title { color: #e0a000; }
+
+    .kpi-value {
+      text-align: center;
+      color: #101827;
+      font-size: 22px;
+      line-height: 1.1;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .kpi-value .rp {
+      font-size: 10px;
+      font-weight: 700;
+      margin-left: 3px;
+      color: #343a40;
+    }
+
+    .kpi-footer {
+      position: absolute;
+      left: 18px;
+      bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--navy-dark);
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .kpi-card.green .kpi-footer { color: #188b24; }
+    .kpi-card.orange .kpi-footer { color: #e4a400; }
+    .kpi-card.blue .kpi-footer { color: #1266c4; }
+
+    .circle-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      background: var(--navy);
+      font-size: 18px;
+    }
+
+    .green .circle-icon { background: #188b24; }
+    .orange .circle-icon { background: #f1b000; }
+    .blue .circle-icon { background: #1266c4; }
+
+    .kpi-foot-text {
+      line-height: 1.2;
+    }
+
+    .kpi-foot-text small {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* ================= GAUGE ================= */
+    .gauge-card {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+
+    .gauge-card .kpi-value {
+      font-size: 21px;
+      margin-top: -2px;
+    }
+
+    .gauge-wrap {
+      width: 118px;
+      height: 61px;
+      margin: 6px auto 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gauge-arc {
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+      background: conic-gradient(from 270deg, #123b73 0deg 195.84deg, #e8e8e8 195.84deg 360deg);
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .gauge-arc::after {
+      content: "";
+      position: absolute;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: #fff;
+      left: 21px;
+      top: 21px;
+    }
+
+    .gauge-scale {
+      display: flex;
+      justify-content: space-between;
+      width: 125px;
+      margin: 1px auto 0;
+      font-size: 9px;
+      color: #555;
+    }
+
+    .gauge-card .kpi-footer {
+      bottom: 11px;
+      left: 15px;
+      right: 15px;
+      justify-content: center;
+      color: #123b73;
+    }
+
+    /* ================= PANELS / CHARTS ================= */
+    .panel-grid {
+      display: grid;
+      grid-template-columns: 1.08fr .96fr 1.08fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid #e0e4e8;
+      border-radius: 9px;
+      box-shadow: 0 1px 6px rgba(0,0,0,.06);
+      overflow: hidden;
+    }
+
+    .chart-panel {
+      height: 280px;
+      padding: 11px 13px 10px;
+    }
+
+    .panel-title {
+      color: var(--navy-dark);
+      font-size: 13px;
+      font-weight: 850;
+      text-transform: uppercase;
+      margin: 0 0 7px;
+      padding-left: 1px;
+    }
+
+    .chart-box {
+      height: 235px;
+      position: relative;
+    }
+
+    /* ================= TABLES ================= */
+    .table-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .table-panel {
+      min-height: 390px;
+      padding: 10px 8px 7px;
+    }
+
+    .table-panel .panel-title {
+      padding-left: 5px;
+      margin-bottom: 7px;
+    }
+
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 10px;
+      color: #111827;
+    }
+
+    th {
+      background: var(--navy);
+      color: #fff;
+      border: 1px solid #d8dde4;
+      height: 25px;
+      padding: 4px 3px;
+      font-weight: 800;
+      line-height: 1.05;
+      white-space: nowrap;
+    }
+
+    td {
+      border: 1px solid #d9dde2;
+      height: 24px;
+      padding: 3px 4px;
+      text-align: right;
+      background: #fff;
+      white-space: nowrap;
+    }
+
+    td.left { text-align: left; }
+    td.center { text-align: center; }
+
+    tbody tr:nth-child(even) td {
+      background: #fbfcfd;
+    }
+
+    tfoot td {
+      background: #fff;
+      border-top: 1px solid #d0d5dc;
+      font-weight: 800;
+      height: 31px;
+    }
+
+    .customer-table th:nth-child(1) { width: 30px; }
+    .customer-table th:nth-child(2) { width: 25%; }
+    .customer-table th:nth-child(3) { width: 22%; }
+    .customer-table th:nth-child(4) { width: 15%; }
+    .customer-table th:nth-child(5) { width: 12%; }
+    .customer-table th:nth-child(6) { width: 15%; }
+    .customer-table th:nth-child(7) { width: 15%; }
+
+    .alat-table th:nth-child(1) { width: 31px; }
+    .alat-table th:nth-child(2) { width: 31%; }
+    .alat-table th:nth-child(3) { width: 19%; }
+    .alat-table th:nth-child(4) { width: 15%; }
+    .alat-table th:nth-child(5) { width: 18%; }
+    .alat-table th:nth-child(6) { width: 17%; }
+
+    .note {
+      font-size: 10px;
+      color: #333;
+      font-style: italic;
+      margin-top: 20px;
+      padding-left: 2px;
+    }
+
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 1250px) {
+      body { min-width: 0; }
+      .topbar { grid-template-columns: 1fr 175px; }
+      .main-area { margin-right: 193px; }
+      .brand h1 { font-size: 21px; }
+      .brand p { font-size: 14px; }
+      .kpi-grid { gap: 10px; }
+      .kpi-value { font-size: 18px; }
+      .panel-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    @media (max-width: 900px) {
+      .topbar { grid-template-columns: 1fr; }
+      .filters { width: 100%; flex-direction: row; }
+      .filter-card { flex: 1; }
+      .main-area { margin-right: 0; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .panel-grid, .table-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
+
 <body>
+<div class="dashboard">
 
-  <!-- HEADER -->
-  <div class="header-container">
-    <div class="title-area">
-      <h1>NILAI KONTRAK YANG DIKELOLA (NKD)</h1>
-      <p>Monitoring Kinerja Kontrak & Komposisi Tipe Alat | Tahun 2026</p>
-    </div>
-
-    <div class="header-info">
-      <div class="period-box">
-        <span>📅 Periode: <strong>s.d. Juli 2026</strong></span>
+  <!-- HEADER + FILTER -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-file-signature"></i></div>
+      <div>
+        <h1>NILAI KONTRAK YANG DIKELOLA</h1>
+        <p>s.d. JULI 2026</p>
       </div>
-      <!-- Tombol Navigasi Menu Samping -->
-      <a href="index.html" class="admin-link"><i class="fa-solid fa-house"></i> Dashboard Utama</a>
-      <a href="nkb.html" class="admin-link">Dashboard NKB</a>
-      <a href="nkd.html" class="admin-link" style="background: #0b63ce; color: white;">Dashboard NKD</a>
-      <a href="login.html" class="admin-link"><i class="fa-solid fa-lock"></i> Admin Input</a>
     </div>
+
+    <aside class="filters">
+      <div class="filter-card">
+        <div class="filter-title">PERIODE DATA</div>
+        <select class="filter-select" id="periodeFilter">
+          <option>s.d. Juli 2026</option>
+        </select>
+      </div>
+      <div class="filter-card">
+        <div class="filter-title">TIPE ALAT</div>
+        <select class="filter-select" id="tipeAlatFilter">
+          <option>All</option>
+          <option>Truck Mixer</option>
+          <option>Stone Crusher</option>
+          <option>Truck Trailer</option>
+          <option>Mobile Crane+Bucket Cor</option>
+          <option>Dump Truck</option>
+          <option>Silo</option>
+        </select>
+      </div>
+    </aside>
   </div>
 
-  <!-- KPI CARDS NKD -->
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="kpi-header"><div class="kpi-icon">Rp</div><div class="kpi-title">Total Kontrak</div></div>
-      <div class="kpi-val" id="kpi-total-kontrak">10.956.633.326</div>
-      <div class="kpi-sub" style="color: #60a5fa;"><i class="fa-solid fa-circle-check"></i> 100,00% dari Total Kontrak</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-header"><div class="kpi-icon" style="background:#008767;">Rp</div><div class="kpi-title">PU Terealisasi</div></div>
-      <div class="kpi-val" id="kpi-pu-terealisasi">5.963.602.686</div>
-      <div class="kpi-sub" style="color: #22c55e;"><i class="fa-solid fa-arrow-up"></i> 54,40% dari Total Kontrak</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-header"><div class="kpi-icon" style="background:#d97706;">Rp</div><div class="kpi-title">PU Tidak Terserap</div></div>
-      <div class="kpi-val" id="kpi-pu-terserap">1.173.913.978</div>
-      <div class="kpi-sub" style="color: #f59e0b;"><i class="fa-solid fa-triangle-exclamation"></i> 10,72% dari Total Kontrak</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-header"><div class="kpi-icon" style="background:#1d4ed8;">Rp</div><div class="kpi-title">Sisa Kontrak</div></div>
-      <div class="kpi-val" id="kpi-sisa-kontrak">3.819.116.662</div>
-      <div class="kpi-sub" style="color: #38bdf8;"><i class="fa-solid fa-chart-pie"></i> 34,87% dari Total Kontrak</div>
-    </div>
-    <div class="kpi-card">
-      <div class="kpi-header"><div class="kpi-icon" style="background:#6b21a8;">%</div><div class="kpi-title">Tingkat Penyerapan (PU)</div></div>
-      <div class="kpi-val" id="kpi-tingkat-penyerapan">54,40%</div>
-      <div class="kpi-sub" style="color: #c084fc;"><i class="fa-solid fa-gauge"></i> Efisiensi Penyerapan</div>
-    </div>
-  </div>
+  <main class="main-area">
 
-  <!-- CHARTS SECTION -->
-  <div class="charts-grid-3">
-    <div class="chart-card">
-      <div class="chart-title">Total Kontrak per Tipe Alat</div>
-      <div class="chart-container"><canvas id="chartTipeAlatBar"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Komposisi Kontrak per Tipe Alat</div>
-      <div class="chart-container"><canvas id="chartTipeAlatDonut"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Realisasi PU vs Sisa Kontrak</div>
-      <div class="chart-container"><canvas id="chartRealisasiSisa"></canvas></div>
-    </div>
-  </div>
+    <!-- KPI -->
+    <section class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">TOTAL KONTRAK</div>
+        <div class="kpi-value" id="kpi-total-kontrak">10.956.633.326 <span class="rp">Rp</span></div>
+        <div class="kpi-footer">
+          <div class="circle-icon"><i class="fa-solid fa-coins"></i></div>
+          <div class="kpi-foot-text">100,00%<small>dari Total Kontrak</small></div>
+        </div>
+      </div>
 
-  <!-- TABLES SECTION -->
-  <div class="tables-grid-2">
-    <div class="table-container">
-      <div class="table-title">Rincian Nilai Kontrak per Customer</div>
-      <table>
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Customer</th>
-            <th>Tipe Alat</th>
-            <th>Total Kontrak</th>
-            <th>PU</th>
-          </tr>
-        </thead>
-        <tbody id="table-customer-body">
-          <tr>
-            <td>1</td>
-            <td class="row-left">PT Baja Cilegon Energi</td>
-            <td>Truck Mixer</td>
-            <td>276.000.000</td>
-            <td>103.500.000</td>
-          </tr>
-          <!-- Data dinamis bisa dimuat dari Firebase -->
-        </tbody>
-      </table>
-    </div>
-    <div class="table-container">
-      <div class="table-title">Rincian Nilai Kontrak per Tipe Alat</div>
-      <table>
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Tipe Alat</th>
-            <th>Total Kontrak</th>
-            <th>PU</th>
-            <th>Sisa Kontrak</th>
-          </tr>
-        </thead>
-        <tbody id="table-alat-body">
-          <tr>
-            <td>1</td>
-            <td class="row-left">Truck Mixer</td>
-            <td>8.248.633.326</td>
-            <td>4.943.600.000</td>
-            <td>2.204.033.326</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+      <div class="kpi-card green">
+        <div class="kpi-title">PU TEREALISASI</div>
+        <div class="kpi-value" id="kpi-pu-terealisasi">5.963.602.686 <span class="rp">Rp</span></div>
+        <div class="kpi-footer">
+          <div class="circle-icon"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="kpi-foot-text">54,40%<small>dari Total Kontrak</small></div>
+        </div>
+      </div>
 
-  <!-- SCRIPT INISIALISASI & REALTIME FIREBASE -->
-  <script type="module">
-    document.addEventListener("DOMContentLoaded", () => {
-      // Grafik 1: Total Kontrak per Tipe Alat (Bar)
-      const ctxBar = document.getElementById("chartTipeAlatBar").getContext("2d");
-      new Chart(ctxBar, {
-        type: "bar",
-        data: {
-          labels: ["Truck Mixer", "Stone Crusher", "Truck Trailer", "Mobile Crane", "Dump Truck", "Silo"],
-          datasets: [{
-            data: [8248633326, 1140000000, 1075000000, 220000000, 138000000, 135000000],
-            backgroundColor: ["#0b63ce", "#008767", "#d97706", "#7c3aed", "#e67e22", "#3b82f6"],
-            borderRadius: 4
-          }]
+      <div class="kpi-card orange">
+        <div class="kpi-title">PU TIDAK TERSERAP</div>
+        <div class="kpi-value" id="kpi-pu-terserap">1.173.913.978 <span class="rp">Rp</span></div>
+        <div class="kpi-footer">
+          <div class="circle-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="kpi-foot-text">10,72%<small>dari Total Kontrak</small></div>
+        </div>
+      </div>
+
+      <div class="kpi-card blue">
+        <div class="kpi-title">SISA KONTRAK</div>
+        <div class="kpi-value" id="kpi-sisa-kontrak">3.819.116.662 <span class="rp">Rp</span></div>
+        <div class="kpi-footer">
+          <div class="circle-icon"><i class="fa-solid fa-layer-group"></i></div>
+          <div class="kpi-foot-text">34,87%<small>dari Total Kontrak</small></div>
+        </div>
+      </div>
+
+      <div class="kpi-card gauge-card">
+        <div class="kpi-title">TINGKAT PENYERAPAN (PU)</div>
+        <div class="kpi-value" id="kpi-tingkat-penyerapan">54,40%</div>
+        <div class="gauge-wrap">
+          <div class="gauge-arc"></div>
+        </div>
+        <div class="gauge-scale"><span>0%</span><span>100%</span></div>
+      </div>
+    </section>
+
+    <!-- CHARTS -->
+    <section class="panel-grid">
+      <div class="panel chart-panel">
+        <div class="panel-title">TOTAL KONTRAK PER TIPE ALAT</div>
+        <div class="chart-box"><canvas id="chartTipeAlatBar"></canvas></div>
+      </div>
+
+      <div class="panel chart-panel">
+        <div class="panel-title">KOMPOSISI KONTRAK PER TIPE ALAT</div>
+        <div class="chart-box"><canvas id="chartTipeAlatDonut"></canvas></div>
+      </div>
+
+      <div class="panel chart-panel">
+        <div class="panel-title">REALISASI PU VS SISA KONTRAK</div>
+        <div class="chart-box"><canvas id="chartRealisasiSisa"></canvas></div>
+      </div>
+    </section>
+
+    <!-- TABLES -->
+    <section class="table-grid">
+      <div class="panel table-panel">
+        <div class="panel-title">RINCIAN NILAI KONTRAK PER CUSTOMER</div>
+        <div class="table-scroll">
+          <table class="customer-table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Customer</th>
+                <th>Tipe Alat</th>
+                <th>Total Kontrak</th>
+                <th>PU</th>
+                <th>PU Tidak Terserap</th>
+                <th>Sisa Kontrak</th>
+              </tr>
+            </thead>
+            <tbody id="table-customer-body">
+              <tr><td class="center">1</td><td class="left">PT Baja Cilegon Energi</td><td class="left">Truck Mixer</td><td>276.000.000</td><td>103.500.000</td><td>172.500.000</td><td>-</td></tr>
+              <tr><td class="center">2</td><td class="left">PT Baja Comoso Energi</td><td class="left">Truck Mixer</td><td>376.000.000</td><td>124.000.000</td><td>-</td><td>252.000.000</td></tr>
+              <tr><td class="center">3</td><td class="left">PT Hamori Medical Center</td><td class="left">Mobile Crane+Bucket Cor</td><td>220.000.000</td><td>220.000.000</td><td>-</td><td>-</td></tr>
+              <tr><td class="center">4</td><td class="left">PT Indosarana Jaya Perkasa</td><td class="left">Dump Truck</td><td>138.000.000</td><td>46.000.000</td><td>-</td><td>92.000.000</td></tr>
+              <tr><td class="center">5</td><td class="left">PT Indosarana Jaya Perkasa</td><td class="left">Truck Trailer</td><td>1.075.000.000</td><td>701.586.022</td><td>73.413.978</td><td>300.000.000</td></tr>
+              <tr><td class="center">6</td><td class="left">PT Indosarana Nusapersada</td><td class="left">Truck Mixer</td><td>1.392.000.000</td><td>464.000.000</td><td>928.000.000</td><td>-</td></tr>
+              <tr><td class="center">7</td><td class="left">PT Liga Adhi Buana</td><td class="left">Truck Mixer</td><td>459.000.000</td><td>459.000.000</td><td>-</td><td>-</td></tr>
+              <tr><td class="center">8</td><td class="left">PT Sraya Artha Gemilang</td><td class="left">Truck Mixer</td><td>899.833.326</td><td>433.166.664</td><td>-</td><td>466.666.662</td></tr>
+              <tr><td class="center">9</td><td class="left">PT Sumber Urip Sejati</td><td class="left">Truck Mixer</td><td>2.416.430.000</td><td>2.114.350.000</td><td>-</td><td>302.050.000</td></tr>
+              <tr><td class="center">10</td><td class="left">PT Tirta Dan Mitra Pertiwi</td><td class="left">Stone Crusher</td><td>1.140.000.000</td><td>285.000.000</td><td>-</td><td>855.000.000</td></tr>
+              <tr><td class="center">11</td><td class="left">PT Trans Ringo Group</td><td class="left">Truck Mixer</td><td>372.000.000</td><td>372.000.000</td><td>-</td><td>-</td></tr>
+              <tr><td class="center">12</td><td class="left">PT Trimitz Sinergy Mandala</td><td class="left">Truck Mixer</td><td>348.000.000</td><td>116.000.000</td><td>-</td><td>232.000.000</td></tr>
+              <tr><td class="center">13</td><td class="left">PT Waskita Karya (Persero) Tbk</td><td class="left">Truck Mixer</td><td>1.369.400.000</td><td>140.000.000</td><td>-</td><td>1.229.400.000</td></tr>
+              <tr><td class="center">14</td><td class="left">Waskita CAG KSO</td><td class="left">Truck Mixer</td><td>340.000.000</td><td>340.000.000</td><td>-</td><td>-</td></tr>
+              <tr><td class="center">15</td><td class="left">Waskita WKI KSO</td><td class="left">Silo</td><td>135.000.000</td><td>45.000.000</td><td>-</td><td>90.000.000</td></tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" class="left">Total</td>
+                <td>10.956.633.326</td>
+                <td>5.963.602.686</td>
+                <td>1.173.913.978</td>
+                <td>3.819.116.662</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel table-panel">
+        <div class="panel-title">RINCIAN NILAI KONTRAK PER TIPE ALAT</div>
+        <div class="table-scroll">
+          <table class="alat-table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Tipe Alat</th>
+                <th>Total Kontrak</th>
+                <th>PU</th>
+                <th>PU Tidak Terserap</th>
+                <th>Sisa Kontrak</th>
+              </tr>
+            </thead>
+            <tbody id="table-alat-body">
+              <tr><td class="center">1</td><td class="left">Truck Mixer</td><td>8.248.633.326</td><td>4.943.600.000</td><td>1.101.000.000</td><td>2.204.033.326</td></tr>
+              <tr><td class="center">2</td><td class="left">Stone Crusher</td><td>1.140.000.000</td><td>285.000.000</td><td>-</td><td>855.000.000</td></tr>
+              <tr><td class="center">3</td><td class="left">Truck Trailer</td><td>1.075.000.000</td><td>701.586.022</td><td>73.413.978</td><td>300.000.000</td></tr>
+              <tr><td class="center">4</td><td class="left">Mobile Crane+Bucket Cor</td><td>220.000.000</td><td>220.000.000</td><td>-</td><td>-</td></tr>
+              <tr><td class="center">5</td><td class="left">Dump Truck</td><td>138.000.000</td><td>46.000.000</td><td>-</td><td>92.000.000</td></tr>
+              <tr><td class="center">6</td><td class="left">Silo</td><td>135.000.000</td><td>45.000.000</td><td>-</td><td>90.000.000</td></tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="2" class="left">Total</td>
+                <td>10.956.633.326</td>
+                <td>5.963.602.686</td>
+                <td>1.173.913.978</td>
+                <td>3.819.116.662</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <div class="note">Catatan: Seluruh angka dalam Rupiah</div>
+  </main>
+</div>
+
+<script type="module">
+  document.addEventListener("DOMContentLoaded", () => {
+    const fmt = (value) => Number(value).toLocaleString("id-ID");
+
+    // Chart 1: Total Kontrak per Tipe Alat
+    const ctxBar = document.getElementById("chartTipeAlatBar").getContext("2d");
+    new Chart(ctxBar, {
+      type: "bar",
+      data: {
+        labels: [
+          "Truck Mixer",
+          "Stone Crusher",
+          "Truck Trailer",
+          "Mobile Crane+Bucket Cor",
+          "Dump Truck",
+          "Silo"
+        ],
+        datasets: [{
+          data: [8248633326, 1140000000, 1075000000, 220000000, 138000000, 135000000],
+          backgroundColor: "#123f79",
+          borderRadius: 1,
+          barThickness: 21
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: "y",
+        animation: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => " " + fmt(ctx.raw) + " Rp"
+            }
+          },
+          datalabels: {
+            color: "#222",
+            anchor: "end",
+            align: "right",
+            offset: 4,
+            font: { size: 9, weight: "600" },
+            formatter: (v) => fmt(v)
+          }
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          indexAxis: 'y',
-          plugins: { legend: { display: false } },
-          scales: { x: { ticks: { color: "#94a3b8", font: { size: 9 } } }, y: { ticks: { color: "#94a3b8", font: { size: 9 } }, grid: { display: false } } }
+        scales: {
+          x: {
+            beginAtZero: true,
+            grid: { color: "#e6e8eb", borderDash: [2, 3] },
+            ticks: {
+              color: "#222",
+              font: { size: 9 },
+              callback: (v) => v >= 1000000 ? (v / 1000000).toFixed(0) + " M" : v
+            },
+            title: {
+              display: true,
+              text: "Total Kontrak (Rp)",
+              color: "#333",
+              font: { size: 9, weight: "700" }
+            }
+          },
+          y: {
+            grid: { display: false },
+            ticks: { color: "#222", font: { size: 9 } }
+          }
         }
+      },
+      plugins: [ChartDataLabels]
+    });
+
+    // Chart 2: Donut
+    const ctxDonut = document.getElementById("chartTipeAlatDonut").getContext("2d");
+    new Chart(ctxDonut, {
+      type: "doughnut",
+      data: {
+        labels: [
+          "Truck Mixer",
+          "Stone Crusher",
+          "Truck Trailer",
+          "Mobile Crane+Bucket Cor",
+          "Dump Truck",
+          "Silo"
+        ],
+        datasets: [{
+          data: [75.26, 10.41, 9.81, 2.01, 1.26, 1.23],
+          backgroundColor: [
+            "#1266c4", "#f28b2c", "#5d5d5d",
+            "#66a43a", "#7a4db0", "#e4ad00"
+          ],
+          borderColor: "#fff",
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "58%",
+        animation: false,
+        plugins: {
+          legend: {
+            position: "right",
+            labels: {
+              color: "#222",
+              boxWidth: 9,
+              boxHeight: 9,
+              padding: 8,
+              font: { size: 9 }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => " " + ctx.label + ": " + ctx.raw + "%"
+            }
+          },
+          datalabels: { display: false }
+        }
+      }
+    });
+
+    // Chart 3: Realisasi PU vs Sisa Kontrak
+    const ctxRealisasi = document.getElementById("chartRealisasiSisa").getContext("2d");
+    new Chart(ctxRealisasi, {
+      type: "bar",
+      data: {
+        labels: ["PU Terealisasi", "PU Tidak Terserap", "Sisa Kontrak"],
+        datasets: [{
+          data: [5963602686, 1173913978, 3819116662],
+          backgroundColor: ["#198d25", "#efb000", "#1266c4"],
+          borderRadius: 0,
+          barPercentage: .48,
+          categoryPercentage: .75
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        plugins: {
+          legend: { display: false },
+          datalabels: {
+            color: "#222",
+            anchor: "end",
+            align: "top",
+            offset: 2,
+            font: { size: 9, weight: "700" },
+            formatter: (v) => fmt(v)
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { color: "#222", font: { size: 9 } }
+          },
+          y: {
+            beginAtZero: true,
+            grid: { color: "#e5e7eb", borderDash: [2, 3] },
+            ticks: {
+              color: "#222",
+              font: { size: 9 },
+              callback: (v) => (v / 1000000) + " M"
+            }
+          }
+        }
+      },
+      plugins: [ChartDataLabels]
+    });
+
+    // Filter tipe alat: mempertahankan fungsi filter dasar tanpa mengubah layout.
+    const typeFilter = document.getElementById("tipeAlatFilter");
+    const customerRows = Array.from(document.querySelectorAll("#table-customer-body tr"));
+    const alatRows = Array.from(document.querySelectorAll("#table-alat-body tr"));
+
+    typeFilter.addEventListener("change", () => {
+      const value = typeFilter.value.toLowerCase();
+      customerRows.forEach(row => {
+        const typeCell = row.children[2];
+        row.style.display = !value || value === "all" || (typeCell && typeCell.textContent.toLowerCase() === value) ? "" : "none";
       });
-
-      // Grafik 2: Komposisi Kontrak per Tipe Alat (Donut)
-      const ctxDonut = document.getElementById("chartTipeAlatDonut").getContext("2d");
-      new Chart(ctxDonut, {
-        type: "doughnut",
-        data: {
-          labels: ["Truck Mixer", "Stone Crusher", "Truck Trailer", "Mobile Crane", "Dump Truck", "Silo"],
-          datasets: [{
-            data: [75.26, 10.41, 9.81, 2.01, 1.26, 1.23],
-            backgroundColor: ["#0b63ce", "#008767", "#d97706", "#7c3aed", "#e67e22", "#3b82f6"]
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { position: 'right', labels: { color: '#cbd5e1', font: { size: 9 } } } }
-        }
-      });
-
-      // Grafik 3: Realisasi PU vs Sisa Kontrak (Bar)
-      const ctxRealisasi = document.getElementById("chartRealisasiSisa").getContext("2d");
-      new Chart(ctxRealisasi, {
-        type: "bar",
-        data: {
-          labels: ["PU Terealisasi", "PU Tidak Terserap", "Sisa Kontrak"],
-          datasets: [{
-            data: [5963602686, 1173913978, 3819116662],
-            backgroundColor: ["#008767", "#d97706", "#0b63ce"],
-            borderRadius: 4,
-            barPercentage: 0.5
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { x: { ticks: { color: "#94a3b8", font: { size: 9 } }, grid: { display: false } }, y: { ticks: { color: "#94a3b8", font: { size: 9 } } } }
-        }
+      alatRows.forEach(row => {
+        const typeCell = row.children[1];
+        row.style.display = !value || value === "all" || (typeCell && typeCell.textContent.toLowerCase() === value) ? "" : "none";
       });
     });
-  </script>
+  });
+</script>
 </body>
 </html>
