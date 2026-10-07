@@ -157,7 +157,7 @@
     .d2-summary-box-title { font-size: 10px; font-weight: 800; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; margin-bottom: 4px; color: #0b2246; text-transform: uppercase; }
     .d2-summary-row { display: flex; justify-content: space-between; margin-bottom: 3px; font-weight: 700; color: #334155; }
 
-    .d2-table-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; flex-direction: column; height: 620px; }
+    .d2-table-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; flex-direction: column; height: 520px; }
     .d2-table-container { overflow-y: auto; flex-grow: 1; margin-top: 6px; border: 1px solid #e2e8f0; border-radius: 4px; }
     .d2-table { width: 100%; border-collapse: collapse; font-size: 10.5px; text-align: left; }
     .d2-table th { background: #0b2246; color: white; padding: 6px 8px; font-weight: 700; position: sticky; top: 0; z-index: 2; font-size: 10px; }
@@ -165,8 +165,8 @@
     .d2-table tr:hover { background: #f1f5f9; }
     .d2-table-total { background: #0b2246 !important; color: white !important; font-weight: 800; }
 
-    .d2-bottom-grid { display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 15px; }
-    .d2-bottom-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; flex-direction: column; }
+    .d2-bottom-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 15px; margin-top: 8px; }
+    .d2-bottom-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; flex-direction: column; height: 460px; }
     .d2-bottom-title { font-size: 10.5px; font-weight: 800; color: #0b2246; text-transform: uppercase; margin-bottom: 8px; }
     .d2-bottom-chart-container { position: relative; height: 210px; width: 100%; display: flex; align-items: center; justify-content: center; }
 
@@ -997,7 +997,7 @@
         </div>
 
         <!-- D2 BOTTOM SECTION: 2 CHARTS -->
-        <div class="d2-bottom-grid" style="margin-top: 15px;">
+        <div class="d2-bottom-grid">
           
           <!-- Chart Alat -->
           <div class="d2-bottom-card">
@@ -1771,7 +1771,6 @@
       let custMap = {};
       let alatMap = {};
       let provMap = {};
-      let lokasiDetailMap = {};
 
       d2MasterData.forEach(item => {
         totalNilai += item.nilai;
@@ -1796,8 +1795,6 @@
         provMap[prov].nilai += item.nilai;
         provMap[prov].count += 1;
 
-        if (!lokasiDetailMap[lok]) lokasiDetailMap[lok] = 0;
-        lokasiDetailMap[lok] += item.nilai;
       });
 
       const uniqueCustomersCount = Object.keys(custMap).length;
@@ -1872,8 +1869,6 @@
         });
         document.getElementById('d2EqLegendCustom').innerHTML = eqLegendHtml;
       }
-
-
       renderD2AdminTable();
     }
 
