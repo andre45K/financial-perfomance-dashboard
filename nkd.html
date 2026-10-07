@@ -402,7 +402,7 @@
       width: 100%;
       border-collapse: collapse;
       table-layout: fixed;
-      font-size: 10px;
+      font-size: 9.5px;
       color: #111827;
     }
     th {
@@ -410,7 +410,7 @@
       color: #fff;
       border: 1px solid #cbd5e1;
       height: 26px;
-      padding: 4px 6px;
+      padding: 4px 4px;
       font-weight: 800;
       line-height: 1.1;
       text-align: center;
@@ -421,7 +421,7 @@
     td {
       border: 1px solid #e2e8f0;
       height: 25px;
-      padding: 4px 6px;
+      padding: 4px 5px;
       text-align: right;
       background: #fff;
       white-space: nowrap;
@@ -436,20 +436,22 @@
       border-top: 1.5px solid #cbd5e1;
       font-weight: 800;
       height: 28px;
+      text-align: right;
     }
+    tfoot td.left { text-align: left; }
 
-    /* Lebar Kolom Tabel Customer agar tidak menumpuk */
-    .customer-table th:nth-child(1), .customer-table td:nth-child(1) { width: 35px; }
-    .customer-table th:nth-child(2), .customer-table td:nth-child(2) { width: 26%; text-align: left; }
-    .customer-table th:nth-child(3), .customer-table td:nth-child(3) { width: 20%; text-align: left; }
+    /* Pengaturan Lebar Kolom Tabel Customer agar tidak terpotong dan seimbang */
+    .customer-table th:nth-child(1), .customer-table td:nth-child(1) { width: 30px; }
+    .customer-table th:nth-child(2), .customer-table td:nth-child(2) { width: 24%; text-align: left; }
+    .customer-table th:nth-child(3), .customer-table td:nth-child(3) { width: 18%; text-align: left; }
     .customer-table th:nth-child(4), .customer-table td:nth-child(4) { width: 14%; }
     .customer-table th:nth-child(5), .customer-table td:nth-child(5) { width: 13%; }
-    .customer-table th:nth-child(6), .customer-table td:nth-child(6) { width: 14%; }
-    .customer-table th:nth-child(7), .customer-table td:nth-child(7) { width: 14%; }
+    .customer-table th:nth-child(6), .customer-table td:nth-child(6) { width: 15%; }
+    .customer-table th:nth-child(7), .customer-table td:nth-child(7) { width: 16%; }
 
     /* Lebar Kolom Tabel Alat */
-    .alat-table th:nth-child(1), .alat-table td:nth-child(1) { width: 35px; }
-    .alat-table th:nth-child(2), .alat-table td:nth-child(2) { width: 35%; text-align: left; }
+    .alat-table th:nth-child(1), .alat-table td:nth-child(1) { width: 30px; }
+    .alat-table th:nth-child(2), .alat-table td:nth-child(2) { width: 31%; text-align: left; }
     .alat-table th:nth-child(3), .alat-table td:nth-child(3) { width: 16%; }
     .alat-table th:nth-child(4), .alat-table td:nth-child(4) { width: 15%; }
     .alat-table th:nth-child(5), .alat-table td:nth-child(5) { width: 17%; }
@@ -542,7 +544,7 @@
         <table class="customer-table" style="margin-bottom: 0;">
           <thead>
             <tr>
-              <th style="width: 35px;">NO</th>
+              <th style="width: 30px;">NO</th>
               <th style="text-align: left;">CUSTOMER</th>
               <th style="text-align: left;">TIPE ALAT</th>
               <th>TOTAL KONTRAK (RP)</th>
@@ -657,7 +659,7 @@
                 <th>Tipe Alat</th>
                 <th>Total Kontrak</th>
                 <th>PU</th>
-                <th>PU Tidak Terserap</th>
+                <th>PU Tdk Terserap</th>
                 <th>Sisa Kontrak</th>
               </tr>
             </thead>
@@ -687,7 +689,7 @@
                 <th>Tipe Alat</th>
                 <th>Total Kontrak</th>
                 <th>PU</th>
-                <th>PU Tidak Terserap</th>
+                <th>PU Tdk Terserap</th>
                 <th>Sisa Kontrak</th>
               </tr>
             </thead>
@@ -746,7 +748,6 @@
     document.getElementById("inTotalKontrak").value = "";
     document.getElementById("inPU").value = "";
     document.getElementById("editIndex").value = "-1";
-    document.getElementById("formDescTitle.textContent") = "Tambahkan atau ubah data kontrak proyek pada form di bawah ini.";
   }
 
   window.saveCustomerData = async function() {
@@ -796,7 +797,6 @@
     document.getElementById("inPU").value = c.pu;
     document.getElementById("editIndex").value = idx;
     
-    // Buka panel jika tertutup
     const p = document.getElementById("inputPanel");
     if(!p.classList.contains("active")) p.classList.add("active");
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -854,7 +854,6 @@
     function renderDashboard(customers) {
       document.getElementById("totalContractCount").textContent = customers.length;
 
-      // Render Master Table di Panel Admin
       const masterTbody = document.getElementById("master-table-body");
       let masterHtml = "";
       customers.forEach((c, idx) => {
@@ -879,7 +878,6 @@
         filtered = customers.filter(c => c.tipe.toLowerCase() === selectedFilter);
       }
 
-      // Hitung Total KPI
       let totKontrak = 0, totPU = 0, totTdkTerserap = 0, totSisa = 0;
       filtered.forEach(c => {
         totKontrak += Number(c.kontrak) || 0;
@@ -902,7 +900,6 @@
         arc.style.background = `conic-gradient(from 270deg, #0b3267 0deg ${deg}deg, #e2e8f0 ${deg}deg 360deg)`;
       }
 
-      // Render Tabel Customer Utama
       const custTbody = document.getElementById("table-customer-body");
       let custHtml = "";
       filtered.forEach((c, idx) => {
@@ -923,7 +920,6 @@
       document.getElementById("foot-tot-tidakterserap").textContent = fmt(totTdkTerserap);
       document.getElementById("foot-tot-sisakontrak").textContent = fmt(totSisa);
 
-      // Agregasi per Tipe Alat
       const alatMap = {};
       customers.forEach(c => {
         if (!alatMap[c.tipe]) {
