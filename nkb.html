@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+  <!-- FontAwesome Icons & Chart.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+  <!-- TAMBAHKAN LIBRARY HTML2CANVAS DI SINI -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard NKB - PT Waskita Beton Precast, Tbk</title>
@@ -501,7 +507,25 @@
         <h1><i class="fa-solid fa-chart-pie"></i> DASHBOARD NKB - PT WASKITA BETON PRECAST, TBK</h1>
         <p>Sistem Informasi Manajemen Kontrak & Perencanaan 2026</p>
       </div>
-      <div class="header-right-area">
+<div class="header-right-area" style="display: flex; gap: 10px; align-items: center;">
+        <!-- TOMBOL DOWNLOAD 3 DASHBOARD FORMAT JPG -->
+        <div style="position: relative; display: inline-block;">
+          <button onclick="toggleDownloadMenu()" class="back-btn" style="cursor: pointer; border: none;">
+            <i class="fa-solid fa-download"></i> Download JPG <i class="fa-solid fa-caret-down"></i>
+          </button>
+          <div id="downloadDropdown" style="display: none; position: absolute; right: 0; top: 110%; background: #0f172a; border: 1px solid #334155; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 999; min-width: 220px; overflow: hidden;">
+            <button onclick="downloadDashboardJPG(1)" style="width: 100%; text-align: left; background: none; border: none; color: #ffffff; padding: 10px 14px; font-size: 11.5px; font-weight: bold; cursor: pointer; border-bottom: 1px solid #1e293b;" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='none'">
+              <i class="fa-solid fa-image" style="color: #3b82f6; margin-right: 6px;"></i> Download Dashboard 1 (JPG)
+            </button>
+            <button onclick="downloadDashboardJPG(2)" style="width: 100%; text-align: left; background: none; border: none; color: #ffffff; padding: 10px 14px; font-size: 11.5px; font-weight: bold; cursor: pointer; border-bottom: 1px solid #1e293b;" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='none'">
+              <i class="fa-solid fa-image" style="color: #10b981; margin-right: 6px;"></i> Download Dashboard 2 (JPG)
+            </button>
+            <button onclick="downloadDashboardJPG(3)" style="width: 100%; text-align: left; background: none; border: none; color: #ffffff; padding: 10px 14px; font-size: 11.5px; font-weight: bold; cursor: pointer;" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='none'">
+              <i class="fa-solid fa-image" style="color: #f59e0b; margin-right: 6px;"></i> Download Dashboard 3 (JPG)
+            </button>
+          </div>
+        </div>
+
         <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard Utama</a>
       </div>
     </div>
@@ -1239,6 +1263,55 @@
       evt.currentTarget.classList.add('active');
     }
 
+    // --- FUNGSI DOWNLOAD DASHBOARD KE JPG ---
+    function toggleDownloadMenu() {
+      const menu = document.getElementById('downloadDropdown');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('#downloadDropdown') && !e.target.closest('button[onclick="toggleDownloadMenu()"]')) {
+        const menu = document.getElementById('downloadDropdown');
+        if (menu) menu.style.display = 'none';
+      }
+    });
+
+    function downloadDashboardJPG(dashboardNum) {
+      document.getElementById('downloadDropdown').style.display = 'none';
+
+      const targetId = dashboardNum === 1 ? 'tab-nkb-1' : (dashboardNum === 2 ? 'tab-nkb-2' : 'tab-nkb-3');
+      const element = document.getElementById(targetId);
+      
+      if (!element) return;
+
+      const wasActive = element.classList.contains('active');
+      const activeTabs = document.querySelectorAll('.tab-content');
+
+      activeTabs.forEach(t => t.classList.remove('active'));
+      element.classList.add('active');
+
+      setTimeout(() => {
+        html2canvas(element, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#060d1a',
+          logging: false
+        }).then(canvas => {
+          if (!wasActive) {
+            element.classList.remove('active');
+          }
+
+          const link = document.createElement('a');
+          link.download = `Dashboard_${dashboardNum}_Waskita_2026.jpg`;
+          link.href = canvas.toDataURL('image/jpeg', 1.0);
+          link.click();
+        }).catch(err => {
+          console.error('Gagal mendownload dashboard:', err);
+          alert('Terjadi kesalahan saat memproses gambar.');
+        });
+      }, 300);
+    }
+    
     // --- CHART 1: Rencana Bulanan ---
     const ctxMonthly = document.getElementById('chartMonthly').getContext('2d');
     window.chartMonthlyObj = new Chart(ctxMonthly, {
