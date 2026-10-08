@@ -98,6 +98,89 @@
     .btn-download-jpg { background: var(--green); border-color: #146e1c; }
     .btn-download-jpg:hover { background: #146e1c; }
 
+    /* ================= PANEL ADMIN / EDIT DATA ================= */
+    .admin-panel-card {
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .admin-panel-header {
+      background: var(--navy);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 800;
+      font-size: 12px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .admin-form-grid {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr 1.5fr 1.5fr 1fr auto auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .form-group label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #4b5563;
+      text-transform: uppercase;
+    }
+
+    .form-control {
+      padding: 7px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 5px;
+      font-size: 11px;
+      color: #111827;
+      outline: none;
+    }
+    .form-control:focus { border-color: var(--blue); }
+
+    .btn-action {
+      padding: 7px 14px;
+      border-radius: 5px;
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-save { background: var(--blue); color: #fff; }
+    .btn-save:hover { background: #0b51a0; }
+    .btn-reset { background: #6b7280; color: #fff; }
+    .btn-reset:hover { background: #4b5563; }
+
+    .action-icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      padding: 4px 6px;
+      border-radius: 4px;
+    }
+    .btn-edit-item { color: #d97706; }
+    .btn-edit-item:hover { background: #fef3c7; }
+    .btn-del-item { color: #dc2626; }
+    .btn-del-item:hover { background: #fee2e2; }
+
     /* ================= TOP BANNER / MONITORING PIUTANG HEADER ================= */
     .top-banner {
       background: var(--navy);
@@ -141,18 +224,23 @@
     }
 
     .top-banner-right span {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
       display: block;
       color: #93c5fd;
     }
 
-    .top-banner-right strong {
+    .period-select {
+      background: transparent;
+      border: none;
+      color: #fff;
       font-size: 12.5px;
       font-weight: 850;
-      color: #fff;
+      outline: none;
+      cursor: pointer;
     }
+    .period-select option { background: var(--navy-dark); color: #fff; }
 
     /* ================= LAYOUT UTAMA: 2 KOLOM ================= */
     .monitoring-grid {
@@ -236,11 +324,12 @@
 
     /* Lebar Kolom Tabel Customer Piutang */
     .piutang-customer-table th:nth-child(1), .piutang-customer-table td:nth-child(1) { width: 32px; }
-    .piutang-customer-table th:nth-child(2), .piutang-customer-table td:nth-child(2) { text-align: left; width: 32%; }
-    .piutang-customer-table th:nth-child(3), .piutang-customer-table td:nth-child(3) { width: 16%; }
-    .piutang-customer-table th:nth-child(4), .piutang-customer-table td:nth-child(4) { width: 16%; }
-    .piutang-customer-table th:nth-child(5), .piutang-customer-table td:nth-child(5) { width: 16%; }
-    .piutang-customer-table th:nth-child(6), .piutang-customer-table td:nth-child(6) { width: 16%; }
+    .piutang-customer-table th:nth-child(2), .piutang-customer-table td:nth-child(2) { text-align: left; width: 28%; }
+    .piutang-customer-table th:nth-child(3), .piutang-customer-table td:nth-child(3) { width: 15%; }
+    .piutang-customer-table th:nth-child(4), .piutang-customer-table td:nth-child(4) { width: 15%; }
+    .piutang-customer-table th:nth-child(5), .piutang-customer-table td:nth-child(5) { width: 15%; }
+    .piutang-customer-table th:nth-child(6), .piutang-customer-table td:nth-child(6) { width: 15%; }
+    .piutang-customer-table th:nth-child(7), .piutang-customer-table td:nth-child(7) { width: 45px; }
 
     /* Lebar Kolom Tabel Tipe Alat Piutang */
     .piutang-alat-table th:nth-child(1), .piutang-alat-table td:nth-child(1) { text-align: left; width: 34%; }
@@ -284,6 +373,7 @@
 
     @media (max-width: 1200px) {
       .monitoring-grid { grid-template-columns: 1fr; }
+      .admin-form-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -306,20 +396,66 @@
     </div>
   </div>
 
+  <!-- PANEL ADMIN: INPUT & EDIT DATA PIUTANG -->
+  <div class="admin-panel-card">
+    <div class="admin-panel-header">
+      <span><i class="fa-solid fa-pen-to-square"></i> Panel Admin: Input & Edit Data Piutang Customer</span>
+      <button type="button" class="nav-back-btn" onclick="toggleAdminForm()" style="padding: 3px 8px; font-size: 10px;"><i class="fa-solid fa-angles-up" id="toggleIcon"></i></button>
+    </div>
+    <div id="adminFormContainer">
+      <form id="piutangForm" onsubmit="handleFormSubmit(event)">
+        <input type="hidden" id="editIndex" value="-1">
+        <div class="admin-form-grid">
+          <div class="form-group">
+            <label>Customer / Proyek</label>
+            <input type="text" id="inputCustomer" class="form-control" placeholder="Nama Customer" required>
+          </div>
+          <div class="form-group">
+            <label>Tipe Alat</label>
+            <select id="inputAlat" class="form-control" required>
+              <option value="Truck Mixer">Truck Mixer</option>
+              <option value="Mobile Crane+Bucket Cor">Mobile Crane+Bucket Cor</option>
+              <option value="Dump Truck">Dump Truck</option>
+              <option value="Truck Trailer">Truck Trailer</option>
+              <option value="Stone Crusher">Stone Crusher</option>
+              <option value="Silo">Silo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Nilai PU (Rp)</label>
+            <input type="number" id="inputPu" class="form-control" placeholder="0" required>
+          </div>
+          <div class="form-group">
+            <label>Tagihan (Rp)</label>
+            <input type="number" id="inputTagihan" class="form-control" placeholder="0" required>
+          </div>
+          <div class="form-group">
+            <label>Terbayar (Rp)</label>
+            <input type="number" id="inputTerbayar" class="form-control" placeholder="0" required>
+          </div>
+          <button type="submit" class="btn-action btn-save"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
+          <button type="button" class="btn-action btn-reset" onclick="resetForm()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- AREA YANG AKAN DI-DOWNLOAD -->
   <div id="captureArea">
 
-    <!-- TOP BANNER SESUAI GAMBAR -->
+    <!-- TOP BANNER DENGAN DROPDOWN BULAN & TAHUN -->
     <div class="top-banner">
       <div class="top-banner-left">
         <h2>MONITORING PIUTANG</h2>
-        <p>s.d Juli 2026</p>
+        <p id="bannerSubText">s.d Juli 2026</p>
       </div>
       <div class="top-banner-right">
         <i class="fa-solid fa-calendar-days"></i>
         <div>
-          <span>Data per</span>
-          <strong>31 Juli 2026</strong>
+          <span>Data per Periode</span>
+          <select id="periodDropdown" class="period-select" onchange="updatePeriodLabel()">
+            <!-- Dropdown di-generate otomatis Januari 2026 s.d. Desember 2030 -->
+          </select>
         </div>
       </div>
     </div>
@@ -340,6 +476,7 @@
                 <th>Tagihan</th>
                 <th>Terbayar</th>
                 <th>Sisa Piutang</th>
+                <th>Aksi</th>
               </tr>
             </thead>
             <tbody id="table-customer-body">
@@ -348,10 +485,11 @@
             <tfoot>
               <tr>
                 <td colspan="2" class="left">TOTAL</td>
-                <td id="foot-cust-pu">5.963.602.686</td>
-                <td id="foot-cust-tagihan">5.963.602.687</td>
-                <td id="foot-cust-terbayar">2.555.752.688</td>
-                <td id="foot-cust-sisa">3.407.849.999</td>
+                <td id="foot-cust-pu">0</td>
+                <td id="foot-cust-tagihan">0</td>
+                <td id="foot-cust-terbayar">0</td>
+                <td id="foot-cust-sisa">0</td>
+                <td></td>
               </tr>
             </tfoot>
           </table>
@@ -382,10 +520,10 @@
               <tfoot>
                 <tr>
                   <td class="left">TOTAL</td>
-                  <td id="foot-alat-pu">5.963.602.686</td>
-                  <td id="foot-alat-tagihan">5.963.602.687</td>
-                  <td id="foot-alat-terbayar">2.555.752.688</td>
-                  <td id="foot-alat-sisa">3.407.849.999</td>
+                  <td id="foot-alat-pu">0</td>
+                  <td id="foot-alat-tagihan">0</td>
+                  <td id="foot-alat-terbayar">0</td>
+                  <td id="foot-alat-sisa">0</td>
                 </tr>
               </tfoot>
             </table>
@@ -411,7 +549,7 @@
               <tfoot>
                 <tr>
                   <td colspan="2" class="left">TOTAL</td>
-                  <td id="foot-top-sisa">3.407.849.999</td>
+                  <td id="foot-top-sisa">0</td>
                   <td id="foot-top-pct">100,00%</td>
                 </tr>
               </tfoot>
@@ -426,75 +564,121 @@
     <!-- FOOTER INFO BAR -->
     <div class="footer-info-bar">
       <i class="fa-solid fa-circle-info"></i>
-      <div>Seluruh nilai dalam Rupiah (Rp) &nbsp;|&nbsp; Data per 31 Juli 2026</div>
+      <div id="footerInfoText">Seluruh nilai dalam Rupiah (Rp) &nbsp;|&nbsp; Data per 31 Juli 2026</div>
     </div>
 
   </div>
 </div>
 
 <script>
-  // Data dummy yang disesuaikan presisi persis dengan gambar referensi
-  const customerData = [
-    { customer: "PT Baja Cilegon Energi", pu: 103500000, tagihan: 103500000, terbayar: 69000000, sisa: 34500000 },
-    { customer: "PT Baja Cosmo Energi", pu: 124000000, tagihan: 124000000, terbayar: 0, sisa: 124000000 },
-    { customer: "PT Hanroni Medical Center", pu: 220000000, tagihan: 220000000, terbayar: 220000000, sisa: 0 },
-    { customer: "PT Indosarana Jaya Perkasa", pu: 747586022, tagihan: 747586022, terbayar: 622586022, sisa: 125000000 },
-    { customer: "PT Kreasibeton Nuasapersada", pu: 701586022, tagihan: 701586022, terbayar: 576586022, sisa: 125000000 },
-    { customer: "PT Liga Adhi Buana", pu: 459000000, tagihan: 459000000, terbayar: 459000000, sisa: 0 },
-    { customer: "PT Sraya Artha Gemilang", pu: 433166664, tagihan: 433166665, terbayar: 283166666, sisa: 149999999 },
-    { customer: "PT Sumber Urip Sejati", pu: 2114350000, tagihan: 2114350000, terbayar: 0, sisa: 2114350000 },
-    { customer: "PT Tirta Dan Mitra Pertiwi", pu: 285000000, tagihan: 285000000, terbayar: 190000000, sisa: 95000000 },
-    { customer: "PT Trans Ringo Group", pu: 372000000, tagihan: 372000000, terbayar: 248000000, sisa: 124000000 },
-    { customer: "PT Trimitz Sinergy Mandala", pu: 116000000, tagihan: 116000000, terbayar: 0, sisa: 116000000 },
-    { customer: "PT Waskita Karya (Persero) Tbk", pu: 140000000, tagihan: 140000000, terbayar: 0, sisa: 140000000 },
-    { customer: "Waskita WKI KSO", pu: 45000000, tagihan: 45000000, terbayar: 0, sisa: 45000000 }
+  // Data Master Piutang Customer (Dapat ditambah/edit/hapus dari Panel Admin)
+  let customerData = [
+    { customer: "PT Baja Cilegon Energi", alat: "Truck Mixer", pu: 103500000, tagihan: 103500000, terbayar: 69000000 },
+    { customer: "PT Baja Cosmo Energi", alat: "Truck Mixer", pu: 124000000, tagihan: 124000000, terbayar: 0 },
+    { customer: "PT Hanroni Medical Center", alat: "Mobile Crane+Bucket Cor", pu: 220000000, tagihan: 220000000, terbayar: 220000000 },
+    { customer: "PT Indosarana Jaya Perkasa", alat: "Truck Trailer", pu: 747586022, tagihan: 747586022, terbayar: 622586022 },
+    { customer: "PT Kreasibeton Nuasapersada", alat: "Truck Trailer", pu: 701586022, tagihan: 701586022, terbayar: 576586022 },
+    { customer: "PT Liga Adhi Buana", alat: "Truck Mixer", pu: 459000000, tagihan: 459000000, terbayar: 459000000 },
+    { customer: "PT Sraya Artha Gemilang", alat: "Truck Mixer", pu: 433166664, tagihan: 433166665, terbayar: 283166666 },
+    { customer: "PT Sumber Urip Sejati", alat: "Truck Mixer", pu: 2114350000, tagihan: 2114350000, terbayar: 0 },
+    { customer: "PT Tirta Dan Mitra Pertiwi", alat: "Stone Crusher", pu: 285000000, tagihan: 285000000, terbayar: 190000000 },
+    { customer: "PT Trans Ringo Group", alat: "Truck Mixer", pu: 372000000, tagihan: 372000000, terbayar: 248000000 },
+    { customer: "PT Trimitz Sinergy Mandala", alat: "Truck Mixer", pu: 116000000, tagihan: 116000000, terbayar: 0 },
+    { customer: "PT Waskita Karya (Persero) Tbk", alat: "Truck Mixer", pu: 140000000, tagihan: 140000000, terbayar: 0 },
+    { customer: "Waskita WKI KSO", alat: "Silo", pu: 45000000, tagihan: 45000000, terbayar: 0 }
   ];
 
-  const alatData = [
-    { tipe: "Truck Mixer", pu: 4666016664, tagihan: 4666016665, terbayar: 1523166666, sisa: 3142849999 },
-    { tipe: "Mobile Crane+Bucket Cor", pu: 220000000, tagihan: 220000000, terbayar: 220000000, sisa: 0 },
-    { tipe: "Dump Truck", pu: 46000000, tagihan: 46000000, terbayar: 46000000, sisa: 0 },
-    { tipe: "Truck Trailer", pu: 701586022, tagihan: 701586022, terbayar: 576586022, sisa: 125000000 },
-    { tipe: "Stone Crusher", pu: 285000000, tagihan: 285000000, terbayar: 190000000, sisa: 95000000 },
-    { tipe: "Silo", pu: 45000000, tagihan: 45000000, terbayar: 0, sisa: 45000000 }
+  const monthsList = [
+    { val: "01", name: "Januari" }, { val: "02", name: "Februari" },
+    { val: "03", name: "Maret" }, { val: "04", name: "April" },
+    { val: "05", name: "Mei" }, { val: "06", name: "Juni" },
+    { val: "07", name: "Juli" }, { val: "08", name: "Agustus" },
+    { val: "09", name: "September" }, { val: "10", name: "Oktober" },
+    { val: "11", name: "November" }, { val: "12", name: "Desember" }
   ];
 
-  const topCustomerData = [
-    { customer: "PT Sumber Urip Sejati", sisa: 2114350000, pct: "62,07%" },
-    { customer: "Waskita CAG KSO", sisa: 340000000, pct: "9,98%" },
-    { customer: "PT Waskita Karya (Persero) Tbk", sisa: 140000000, pct: "4,11%" },
-    { customer: "PT Trimitz Sinergy Mandala", sisa: 116000000, pct: "3,41%" },
-    { customer: "PT Baja Cosmo Energi", sisa: 124000000, pct: "3,64%" },
-    { customer: "PT Trans Ringo Group", sisa: 124000000, pct: "3,64%" },
-    { customer: "PT Indosarana Jaya Perkasa", sisa: 125000000, pct: "3,67%" },
-    { customer: "PT Kreasibeton Nuasapersada", sisa: 125000000, pct: "3,67%" },
-    { customer: "PT Sraya Artha Gemilang", sisa: 149999999, pct: "4,40%" },
-    { customer: "PT Tirta Dan Mitra Pertiwi", sisa: 95000000, pct: "2,79%" },
-    { customer: "Waskita WKI KSO", sisa: 45000000, pct: "1,32%" }
-  ];
+  // Inisialisasi Dropdown Periode (Jan 2026 - Des 2030)
+  function initPeriodDropdown() {
+    const select = document.getElementById("periodDropdown");
+    let optionsHtml = "";
+    for (let year = 2026; year <= 2030; year++) {
+      monthsList.forEach(m => {
+        const selected = (year === 2026 && m.val === "07") ? "selected" : "";
+        optionsHtml += `<option value="${m.name} ${year}" ${selected}>31 ${m.name} ${year}</option>`;
+      });
+    }
+    select.innerHTML = optionsHtml;
+    updatePeriodLabel();
+  }
+
+  // Update Label Banner & Footer Berdasarkan Dropdown Periode
+  window.updatePeriodLabel = function() {
+    const select = document.getElementById("periodDropdown");
+    const val = select.value; // Contoh: "Juli 2026"
+    document.getElementById("bannerSubText").textContent = "s.d " + val;
+    document.getElementById("footerInfoText").innerHTML = `Seluruh nilai dalam Rupiah (Rp) &nbsp;|&nbsp; Data per 31 ${val}`;
+  }
 
   const fmt = (val) => val ? Number(val).toLocaleString("id-ID") : "-";
 
   function renderPiutangDashboard() {
-    // Render Tabel Customer
+    let totalPu = 0, totalTagihan = 0, totalTerbayar = 0, totalSisa = 0;
     let custHtml = "";
+
+    // 1. Render Tabel Customer & Hitung Total
     customerData.forEach((c, idx) => {
+      const sisa = Number(c.tagihan) - Number(c.terbayar);
+      totalPu += Number(c.pu);
+      totalTagihan += Number(c.tagihan);
+      totalTerbayar += Number(c.terbayar);
+      totalSisa += sisa;
+
       custHtml += `<tr>
         <td class="center">${idx + 1}</td>
         <td class="left">${c.customer}</td>
         <td>${fmt(c.pu)}</td>
         <td>${fmt(c.tagihan)}</td>
         <td>${c.terbayar ? fmt(c.terbayar) : "-"}</td>
-        <td>${c.sisa ? fmt(c.sisa) : "-"}</td>
+        <td>${sisa ? fmt(sisa) : "-"}</td>
+        <td class="center">
+          <button type="button" class="action-icon-btn btn-edit-item" onclick="editCustomer(${idx})" title="Edit"><i class="fa-solid fa-pen"></i></button>
+          <button type="button" class="action-icon-btn btn-del-item" onclick="deleteCustomer(${idx})" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+        </td>
       </tr>`;
     });
     document.getElementById("table-customer-body").innerHTML = custHtml;
 
-    // Render Tabel Tipe Alat
+    // Update Footer Tabel Customer
+    document.getElementById("foot-cust-pu").textContent = fmt(totalPu);
+    document.getElementById("foot-cust-tagihan").textContent = fmt(totalTagihan);
+    document.getElementById("foot-cust-terbayar").textContent = fmt(totalTerbayar);
+    document.getElementById("foot-cust-sisa").textContent = fmt(totalSisa);
+
+    // 2. Kalkulasi Otomatis Berdasarkan Tipe Alat
+    const alatMap = {};
+    customerData.forEach(c => {
+      const alat = c.alat || "Truck Mixer";
+      if (!alatMap[alat]) {
+        alatMap[alat] = { pu: 0, tagihan: 0, terbayar: 0, sisa: 0 };
+      }
+      alatMap[alat].pu += Number(c.pu);
+      alatMap[alat].tagihan += Number(c.tagihan);
+      alatMap[alat].terbayar += Number(c.terbayar);
+      alatMap[alat].sisa += (Number(c.tagihan) - Number(c.terbayar));
+    });
+
     let alatHtml = "";
-    alatData.forEach((a) => {
+    let alatTotPu = 0, alatTotTagihan = 0, alatTotTerbayar = 0, alatTotSisa = 0;
+    
+    Object.keys(alatMap).forEach(tipe => {
+      const a = alatMap[tipe];
+      alatTotPu += a.pu;
+      alatTotTagihan += a.tagihan;
+      alatTotTerbayar += a.terbayar;
+      alatTotSisa += a.sisa;
+
       alatHtml += `<tr>
-        <td class="left">${a.tipe}</td>
+        <td class="left">${tipe}</td>
         <td>${fmt(a.pu)}</td>
         <td>${fmt(a.tagihan)}</td>
         <td>${fmt(a.terbayar)}</td>
@@ -502,18 +686,90 @@
       </tr>`;
     });
     document.getElementById("table-alat-body").innerHTML = alatHtml;
+    document.getElementById("foot-alat-pu").textContent = fmt(alatTotPu);
+    document.getElementById("foot-alat-tagihan").textContent = fmt(alatTotTagihan);
+    document.getElementById("foot-alat-terbayar").textContent = fmt(alatTotTerbayar);
+    document.getElementById("foot-alat-sisa").textContent = fmt(alatTotSisa);
 
-    // Render Tabel Top Customer Sisa Piutang
+    // 3. Kalkulasi Top Customer Sisa Piutang (Diurutkan dari sisa terbesar)
+    let topList = customerData.map(c => {
+      const sisa = Number(c.tagihan) - Number(c.terbayar);
+      return { customer: c.customer, sisa: sisa };
+    }).filter(item => item.sisa > 0);
+
+    topList.sort((a, b) => b.sisa - a.sisa);
+
     let topHtml = "";
-    topCustomerData.forEach((t, idx) => {
+    let topTotSisa = 0;
+    topList.forEach(t => topTotSisa += t.sisa);
+
+    topList.forEach((t, idx) => {
+      const pct = topTotSisa > 0 ? ((t.sisa / topTotSisa) * 100).toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%" : "0,00%";
       topHtml += `<tr>
         <td class="center">${idx + 1}</td>
         <td class="left">${t.customer}</td>
         <td>${fmt(t.sisa)}</td>
-        <td class="center">${t.pct}</td>
+        <td class="center">${pct}</td>
       </tr>`;
     });
     document.getElementById("table-top-customer-body").innerHTML = topHtml;
+    document.getElementById("foot-top-sisa").textContent = fmt(topTotSisa);
+    document.getElementById("foot-top-pct").textContent = "100,00%";
+  }
+
+  // Handle Form Submit (Tambah / Update Data)
+  window.handleFormSubmit = function(event) {
+    event.preventDefault();
+    const idx = parseInt(document.getElementById("editIndex").value);
+    const customer = document.getElementById("inputCustomer").value.trim();
+    const alat = document.getElementById("inputAlat").value;
+    const pu = Number(document.getElementById("inputPu").value);
+    const tagihan = Number(document.getElementById("inputTagihan").value);
+    const terbayar = Number(document.getElementById("inputTerbayar").value);
+
+    if (idx === -1) {
+      customerData.push({ customer, alat, pu, tagihan, terbayar });
+    } else {
+      customerData[idx] = { customer, alat, pu, tagihan, terbayar };
+    }
+
+    resetForm();
+    renderPiutangDashboard();
+  }
+
+  window.editCustomer = function(idx) {
+    const c = customerData[idx];
+    document.getElementById("editIndex").value = idx;
+    document.getElementById("inputCustomer").value = c.customer;
+    document.getElementById("inputAlat").value = c.alat || "Truck Mixer";
+    document.getElementById("inputPu").value = c.pu;
+    document.getElementById("inputTagihan").value = c.tagihan;
+    document.getElementById("inputTerbayar").value = c.terbayar;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  window.deleteCustomer = function(idx) {
+    if (confirm("Apakah Anda yakin ingin menghapus data customer ini?")) {
+      customerData.splice(idx, 1);
+      renderPiutangDashboard();
+    }
+  }
+
+  window.resetForm = function() {
+    document.getElementById("editIndex").value = -1;
+    document.getElementById("piutangForm").reset();
+  }
+
+  window.toggleAdminForm = function() {
+    const container = document.getElementById("adminFormContainer");
+    const icon = document.getElementById("toggleIcon");
+    if (container.style.display === "none") {
+      container.style.display = "block";
+      icon.className = "fa-solid fa-angles-up";
+    } else {
+      container.style.display = "none";
+      icon.className = "fa-solid fa-angles-down";
+    }
   }
 
   window.downloadDashboardJPG = function() {
@@ -531,7 +787,10 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", renderPiutangDashboard);
+  document.addEventListener("DOMContentLoaded", () => {
+    initPeriodDropdown();
+    renderPiutangDashboard();
+  });
 </script>
 </body>
 </html>
