@@ -119,8 +119,11 @@
       align-items: center;
       gap: 6px;
       transition: background 0.2s;
+      cursor: pointer;
     }
     .nav-back-btn:hover { background: rgba(255, 255, 255, 0.25); }
+    .nav-back-btn.btn-download-jpg { background: var(--green); border-color: #146e1c; }
+    .nav-back-btn.btn-download-jpg:hover { background: #146e1c; }
 
     /* ================= PANEL ADMIN / INPUT & EDIT ================= */
     .admin-panel-container {
@@ -551,7 +554,7 @@
 </head>
 
 <body>
-<div class="dashboard">
+<div class="dashboard" id="dashboardContent">
 
   <!-- HEADER UTAMA & NAVIGASI -->
   <div class="header-main-box">
@@ -564,6 +567,7 @@
     </div>
     <div class="nav-actions-wrap">
       <a href="index.html" class="nav-back-btn"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard Utama</a>
+      <button class="nav-back-btn btn-download-jpg" onclick="downloadDashboardJPG()"><i class="fa-solid fa-download"></i> Download JPG</button>
     </div>
   </div>
 
@@ -926,6 +930,29 @@
         alert("Gagal menghapus data.");
       }
     }
+  }
+
+  window.downloadDashboardJPG = function() {
+    const element = document.getElementById("dashboardContent");
+    const adminPanel = document.getElementById("inputPanel");
+    const wasActive = adminPanel.classList.contains("active");
+    if (wasActive) adminPanel.classList.remove("active");
+
+    html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: "#f4f6f9"
+    }).then(canvas => {
+      if (wasActive) adminPanel.classList.add("active");
+      const link = document.createElement("a");
+      link.download = "Dashboard_NKD_2026.jpg";
+      link.href = canvas.toDataURL("image/jpeg", 1.0);
+      link.click();
+    }).catch(err => {
+      if (wasActive) adminPanel.classList.add("active");
+      console.error("Gagal mendownload gambar:", err);
+      alert("Terjadi kesalahan saat mengunduh dashboard.");
+    });
   }
 
   document.addEventListener("DOMContentLoaded", () => {
