@@ -514,12 +514,13 @@
     tfoot td.left { text-align: left; }
 
     .customer-table th:nth-child(1), .customer-table td:nth-child(1) { width: 30px; }
-    .customer-table th:nth-child(2), .customer-table td:nth-child(2) { width: 24%; text-align: left; }
-    .customer-table th:nth-child(3), .customer-table td:nth-child(3) { width: 18%; text-align: left; }
-    .customer-table th:nth-child(4), .customer-table td:nth-child(4) { width: 14%; }
-    .customer-table th:nth-child(5), .customer-table td:nth-child(5) { width: 13%; }
-    .customer-table th:nth-child(6), .customer-table td:nth-child(6) { width: 15%; }
-    .customer-table th:nth-child(7), .customer-table td:nth-child(7) { width: 16%; }
+    .customer-table th:nth-child(2), .customer-table td:nth-child(2) { width: 22%; text-align: left; }
+    .customer-table th:nth-child(3), .customer-table td:nth-child(3) { width: 16%; text-align: left; }
+    .customer-table th:nth-child(4), .customer-table td:nth-child(4) { width: 13%; }
+    .customer-table th:nth-child(5), .customer-table td:nth-child(5) { width: 12%; }
+    .customer-table th:nth-child(6), .customer-table td:nth-child(6) { width: 13%; }
+    .customer-table th:nth-child(7), .customer-table td:nth-child(7) { width: 13%; }
+    .customer-table th:nth-child(8), .customer-table td:nth-child(8) { width: 60px; }
 
     .alat-table th:nth-child(1), .alat-table td:nth-child(1) { width: 30px; }
     .alat-table th:nth-child(2), .alat-table td:nth-child(2) { width: 31%; text-align: left; }
@@ -627,6 +628,7 @@
               <th style="text-align: left;">TIPE ALAT</th>
               <th>TOTAL KONTRAK (RP)</th>
               <th>PU (RP)</th>
+              <th>PU TDK TERSERAP (RP)</th>
               <th>SISA KONTRAK (RP)</th>
               <th style="width: 70px;">AKSI</th>
             </tr>
@@ -1037,6 +1039,7 @@
           <td class="left">${c.tipe}</td>
           <td>${fmt(c.kontrak)}</td>
           <td>${fmt(c.pu)}</td>
+          <td>${fmt(c.tdkTerserap)}</td>
           <td>${fmt(c.sisa)}</td>
           <td class="center">
             <button class="btn-table-action btn-edit" onclick="editCustomerData(${idx})"><i class="fa-solid fa-pen"></i></button>
