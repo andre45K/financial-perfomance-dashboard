@@ -475,7 +475,7 @@
       width: 100%;
       border-collapse: collapse;
       table-layout: fixed;
-      font-size: 9.5px;
+      font-size: 9px;
       color: #111827;
     }
     th {
@@ -483,7 +483,7 @@
       color: #fff;
       border: 1px solid #cbd5e1;
       height: 26px;
-      padding: 4px 4px;
+      padding: 4px 3px;
       font-weight: 800;
       line-height: 1.1;
       text-align: center;
@@ -494,12 +494,10 @@
     td {
       border: 1px solid #e2e8f0;
       height: 25px;
-      padding: 4px 5px;
+      padding: 4px 4px;
       text-align: right;
       background: #fff;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
     td.left { text-align: left; }
     td.center { text-align: center; }
@@ -513,21 +511,21 @@
     }
     tfoot td.left { text-align: left; }
 
-    .customer-table th:nth-child(1), .customer-table td:nth-child(1) { width: 30px; }
-    .customer-table th:nth-child(2), .customer-table td:nth-child(2) { width: 22%; text-align: left; }
-    .customer-table th:nth-child(3), .customer-table td:nth-child(3) { width: 16%; text-align: left; }
-    .customer-table th:nth-child(4), .customer-table td:nth-child(4) { width: 13%; }
-    .customer-table th:nth-child(5), .customer-table td:nth-child(5) { width: 12%; }
-    .customer-table th:nth-child(6), .customer-table td:nth-child(6) { width: 13%; }
-    .customer-table th:nth-child(7), .customer-table td:nth-child(7) { width: 13%; }
+    .customer-table th:nth-child(1), .customer-table td:nth-child(1) { width: 28px; }
+    .customer-table th:nth-child(2), .customer-table td:nth-child(2) { width: 20%; text-align: left; }
+    .customer-table th:nth-child(3), .customer-table td:nth-child(3) { width: 17%; text-align: left; }
+    .customer-table th:nth-child(4), .customer-table td:nth-child(4) { width: 14.5%; }
+    .customer-table th:nth-child(5), .customer-table td:nth-child(5) { width: 14.5%; }
+    .customer-table th:nth-child(6), .customer-table td:nth-child(6) { width: 14.5%; }
+    .customer-table th:nth-child(7), .customer-table td:nth-child(7) { width: 14.5%; }
     .customer-table th:nth-child(8), .customer-table td:nth-child(8) { width: 60px; }
 
-    .alat-table th:nth-child(1), .alat-table td:nth-child(1) { width: 30px; }
-    .alat-table th:nth-child(2), .alat-table td:nth-child(2) { width: 31%; text-align: left; }
-    .alat-table th:nth-child(3), .alat-table td:nth-child(3) { width: 16%; }
-    .alat-table th:nth-child(4), .alat-table td:nth-child(4) { width: 15%; }
-    .alat-table th:nth-child(5), .alat-table td:nth-child(5) { width: 17%; }
-    .alat-table th:nth-child(6), .alat-table td:nth-child(6) { width: 17%; }
+    .alat-table th:nth-child(1), .alat-table td:nth-child(1) { width: 28px; }
+    .alat-table th:nth-child(2), .alat-table td:nth-child(2) { width: 26%; text-align: left; }
+    .alat-table th:nth-child(3), .alat-table td:nth-child(3) { width: 18.5%; }
+    .alat-table th:nth-child(4), .alat-table td:nth-child(4) { width: 18.5%; }
+    .alat-table th:nth-child(5), .alat-table td:nth-child(5) { width: 18.5%; }
+    .alat-table th:nth-child(6), .alat-table td:nth-child(6) { width: 18.5%; }
 
     .btn-table-action {
       padding: 2px 6px;
@@ -623,14 +621,14 @@
         <table class="customer-table" style="margin-bottom: 0;">
           <thead>
             <tr>
-              <th style="width: 30px;">NO</th>
+              <th style="width: 28px;">NO</th>
               <th style="text-align: left;">CUSTOMER</th>
               <th style="text-align: left;">TIPE ALAT</th>
               <th>TOTAL KONTRAK (RP)</th>
               <th>PU TEREALISASI (RP)</th>
               <th>PU TDK TERSERAP (RP)</th>
               <th>SISA KONTRAK (RP)</th>
-              <th style="width: 70px;">AKSI</th>
+              <th style="width: 60px;">AKSI</th>
             </tr>
           </thead>
           <tbody id="master-table-body">
@@ -1068,7 +1066,6 @@
       document.getElementById("kpi-pu-terserap").innerHTML = fmt(totTdkTerserap) + ' <span class="rp">Rp</span>';
       document.getElementById("kpi-sisa-kontrak").innerHTML = fmt(totSisa) + ' <span class="rp">Rp</span>';
 
-      // Hitung persentase aktual berdasarkan total kontrak
       const pctTotal = totKontrak > 0 ? 100 : 0;
       const pctPU = totKontrak > 0 ? (totPU / totKontrak * 100) : 0;
       const pctTdkTerserap = totKontrak > 0 ? (totTdkTerserap / totKontrak * 100) : 0;
