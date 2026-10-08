@@ -175,7 +175,7 @@
 
     .form-grid {
       display: grid;
-      grid-template-columns: 2fr 1.2fr 1fr 1fr auto auto;
+      grid-template-columns: 2fr 1.2fr 1fr 1fr 1fr auto auto;
       gap: 10px;
       align-items: end;
       margin-bottom: 16px;
@@ -605,6 +605,10 @@
           <label>PU Terealisasi (IDR)</label>
           <input type="number" id="inPU" class="form-control" placeholder="Contoh: 250000000">
         </div>
+        <div class="form-group">
+          <label>PU Tidak Terserap (IDR)</label>
+          <input type="number" id="inTdkTerserap" class="form-control" placeholder="Contoh: 50000000">
+        </div>
         <div>
           <button class="btn-action-form btn-save" onclick="saveCustomerData()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
         </div>
@@ -864,6 +868,7 @@
     document.getElementById("inCustomer").value = "";
     document.getElementById("inTotalKontrak").value = "";
     document.getElementById("inPU").value = "";
+    document.getElementById("inTdkTerserap").value = "";
     document.getElementById("editIndex").value = "-1";
   }
 
@@ -872,6 +877,7 @@
     const tipe = document.getElementById("inTipeAlat").value;
     const kont = Number(document.getElementById("inTotalKontrak").value) || 0;
     const pu = Number(document.getElementById("inPU").value) || 0;
+    const tdkTerserap = Number(document.getElementById("inTdkTerserap").value) || 0;
     const editIdx = Number(document.getElementById("editIndex").value);
 
     if (!cust) {
@@ -879,8 +885,8 @@
       return;
     }
 
-    const sisa = Math.max(0, kont - pu);
-    const newEntry = { customer: cust, tipe: tipe, kontrak: kont, pu: pu, tdkTerserap: 0, sisa: sisa };
+    const sisa = Math.max(0, kont - pu - tdkTerserap);
+    const newEntry = { customer: cust, tipe: tipe, kontrak: kont, pu: pu, tdkTerserap: tdkTerserap, sisa: sisa };
 
     if (window.firebaseDB && window.firebaseFns) {
       const { doc, getDoc, setDoc } = window.firebaseFns;
@@ -912,6 +918,7 @@
     document.getElementById("inTipeAlat").value = c.tipe;
     document.getElementById("inTotalKontrak").value = c.kontrak;
     document.getElementById("inPU").value = c.pu;
+    document.getElementById("inTdkTerserap").value = c.tdkTerserap || 0;
     document.getElementById("editIndex").value = idx;
     
     const p = document.getElementById("inputPanel");
@@ -1115,7 +1122,7 @@
           <td>${fmt(item.kontrak)}</td>
           <td>${fmt(item.pu)}</td>
           <td>${item.tdkTerserap ? fmt(item.tdkTerserap) : "-"}</td>
-          <td>${item.sisa ? fmt(item.sisa) : "-"}</td>
+          <td>${fmt(item.sisa)}</td>
         </tr>`;
       });
       alatTbody.innerHTML = alatHtml;
