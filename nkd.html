@@ -121,8 +121,6 @@
       transition: background 0.2s;
     }
     .nav-back-btn:hover { background: rgba(255, 255, 255, 0.25); }
-    .nav-back-btn.btn-input-toggle { background: var(--green); border-color: #146e1c; }
-    .nav-back-btn.btn-input-toggle:hover { background: #146e1c; }
 
     /* ================= PANEL ADMIN / INPUT & EDIT ================= */
     .admin-panel-container {
@@ -566,7 +564,6 @@
     </div>
     <div class="nav-actions-wrap">
       <a href="index.html" class="nav-back-btn"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard Utama</a>
-      <button class="nav-back-btn btn-input-toggle" onclick="toggleInputPanel()"><i class="fa-solid fa-plus"></i> Input/Edit Data</button>
     </div>
   </div>
 
@@ -1167,6 +1164,9 @@
         },
         options: {
           responsive: true, maintainAspectRatio: false, animation: false,
+          layout: {
+            padding: { top: 16 }
+          },
           plugins: {
             legend: { display: false },
             datalabels: { color: "#222", anchor: "end", align: "top", offset: 2, font: { size: 9, weight: "700" }, formatter: (v) => fmt(v) }
