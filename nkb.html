@@ -549,7 +549,7 @@
     <div id="tab-nkb-1" class="tab-content active">
       
       <!-- ADMIN INPUT PANEL BERDASARKAN TABEL EXCEL 2026 -->
-      <div id="d1AdminPanel" class="d1-table-card" style="margin-bottom: 20px; border-top: 4px solid #0b63ce; background: #f8fafc; color: #1e293b;">
+      <div class="d1-table-card" style="margin-bottom: 20px; border-top: 4px solid #0b63ce; background: #f8fafc; color: #1e293b;">
         <div class="d1-table-header" style="display: flex; justify-content: space-between; align-items: center; background: #0b2246;">
           <span><i class="fa-solid fa-gear"></i> Panel Admin: Input, Edit & Perbarui Data Rencana Kontrak 2026</span>
           <button onclick="toggleAdminPanel()" style="background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 2px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold;">Tutup/Buka Panel</button>
@@ -1276,18 +1276,13 @@
       }
     });
 
-function downloadDashboardJPG(dashboardNum) {
+    function downloadDashboardJPG(dashboardNum) {
       document.getElementById('downloadDropdown').style.display = 'none';
 
       const targetId = dashboardNum === 1 ? 'tab-nkb-1' : (dashboardNum === 2 ? 'tab-nkb-2' : 'tab-nkb-3');
       const element = document.getElementById(targetId);
       
       if (!element) return;
-
-      // === TAMBAHKAN KODE INI: Sembunyikan panel admin di dalam tab agar tidak ikut ter-download ===
-      const adminPanels = element.querySelectorAll('#d1AdminPanel, .d3-admin-card');
-      adminPanels.forEach(panel => panel.style.display = 'none');
-      // ======================================================================================
 
       const wasActive = element.classList.contains('active');
       const activeTabs = document.querySelectorAll('.tab-content');
@@ -1302,10 +1297,6 @@ function downloadDashboardJPG(dashboardNum) {
           backgroundColor: '#060d1a',
           logging: false
         }).then(canvas => {
-          // === KEMBALIKAN TAMPILAN PANEL ADMIN SEPERTI SEMULA ===
-          adminPanels.forEach(panel => panel.style.display = '');
-          // ===================================================
-
           if (!wasActive) {
             element.classList.remove('active');
           }
@@ -1315,8 +1306,6 @@ function downloadDashboardJPG(dashboardNum) {
           link.href = canvas.toDataURL('image/jpeg', 1.0);
           link.click();
         }).catch(err => {
-          // Pastikan panel admin dimunculkan kembali jika terjadi error
-          adminPanels.forEach(panel => panel.style.display = '');
           console.error('Gagal mendownload dashboard:', err);
           alert('Terjadi kesalahan saat memproses gambar.');
         });
