@@ -162,7 +162,7 @@
       cursor: pointer;
     }
 
-    /* ================= PANEL ADMIN INTERAKTIF (GAMBAR 2) ================= */
+    /* ================= PANEL ADMIN INTERAKTIF ================= */
     .admin-panel-container {
       background: #fff;
       border: 1px solid var(--border);
@@ -279,7 +279,8 @@
       letter-spacing: 0.3px;
     }
 
-    .table-scroll { width: 100%; overflow-x: auto; max-height: 450px; }
+    /* Tanpa batasan scroll agar tampil utuh ke bawah */
+    .table-scroll { width: 100%; overflow-x: auto; }
 
     table {
       width: 100%;
@@ -458,7 +459,7 @@
                 <th>Tagihan</th>
                 <th>Terbayar</th>
                 <th>Sisa Piutang</th>
-                <th style="width: 50px;">Aksi</th>
+                <th class="col-aksi" style="width: 50px;">Aksi</th>
               </tr>
             </thead>
             <tbody id="table-customer-body">
@@ -471,7 +472,7 @@
                 <td id="foot-cust-tagihan">0</td>
                 <td id="foot-cust-terbayar">0</td>
                 <td id="foot-cust-sisa">0</td>
-                <td></td>
+                <td class="col-aksi"></td>
               </tr>
             </tfoot>
           </table>
@@ -553,7 +554,6 @@
 </div>
 
 <script>
-  // Inisialisasi Data Default
   let customerData = [
     { customer: "PT Baja Cilegon Energi", alat: "Truck Mixer", pu: 103500000, tagihan: 103500000, terbayar: 69000000 },
     { customer: "PT Baja Cosmo Energi", alat: "Truck Mixer", pu: 124000000, tagihan: 124000000, terbayar: 0 },
@@ -572,7 +572,6 @@
 
   const fmt = (val) => val ? Number(val).toLocaleString("id-ID") : "-";
 
-  // Generate Dropdown Bulan & Tahun (Januari 2026 - Desember 2030)
   function initPeriodDropdown() {
     const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
     const select = document.getElementById("periodDropdown");
@@ -584,7 +583,7 @@
         const opt = document.createElement("option");
         opt.value = optVal;
         opt.textContent = optVal;
-        if (year === 2026 && m === 6) { // Default Juli 2026
+        if (year === 2026 && m === 6) { 
           opt.selected = true;
         }
         select.appendChild(opt);
@@ -616,7 +615,7 @@
         <td>${fmt(c.tagihan)}</td>
         <td>${fmt(c.terbayar)}</td>
         <td>${fmt(sisa)}</td>
-        <td class="center">
+        <td class="center col-aksi">
           <button class="btn-icon-edit" onclick="editData(${idx})" title="Edit"><i class="fa-solid fa-pen"></i></button>
           <button class="btn-icon-del" onclick="deleteData(${idx})" title="Hapus"><i class="fa-solid fa-trash"></i></button>
         </td>
@@ -629,7 +628,6 @@
     document.getElementById("foot-cust-terbayar").textContent = fmt(totTerbayar);
     document.getElementById("foot-cust-sisa").textContent = fmt(totSisa);
 
-    // Kalkulasi Berdasarkan Tipe Alat
     let alatMap = {};
     customerData.forEach(c => {
       let alat = c.alat || "Truck Mixer";
@@ -666,7 +664,6 @@
     document.getElementById("foot-alat-terbayar").textContent = fmt(alatTotTerbayar);
     document.getElementById("foot-alat-sisa").textContent = fmt(alatTotSisa);
 
-    // Kalkulasi Top Customer Sisa Piutang
     let topList = customerData.map(c => ({
       customer: c.customer,
       sisa: c.tagihan - c.terbayar
@@ -689,7 +686,6 @@
     document.getElementById("foot-top-sisa").textContent = fmt(topTotSisa);
   }
 
-  // Fungsi Form Admin
   function handleFormSubmit(event) {
     event.preventDefault();
     const idx = parseInt(document.getElementById("editIndex").value);
@@ -741,14 +737,28 @@
     const element = document.getElementById("captureArea");
     if (!element) return;
     
+    const btn = event.currentTarget;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+
+    // Sembunyikan kolom aksi sebelum dicapture ke gambar
+    const aksiElements = document.querySelectorAll(".col-aksi");
+    aksiElements.forEach(el => el.style.display = "none");
+    
     html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
+      // Munculkan kembali kolom aksi setelah selesai
+      aksiElements.forEach(el => el.style.display = "");
+
       const link = document.createElement("a");
       link.download = "monitoring-piutang.jpg";
       link.href = canvas.toDataURL("image/jpeg", 1.0);
       link.click();
+      btn.innerHTML = originalText;
     }).catch(err => {
+      aksiElements.forEach(el => el.style.display = "");
       console.error("Gagal mengunduh gambar:", err);
       alert("Gagal menghasilkan file gambar.");
+      btn.innerHTML = originalText;
     });
   }
 
