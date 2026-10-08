@@ -1277,48 +1277,51 @@
     });
 
 function downloadDashboardJPG(dashboardNum) {
-  document.getElementById('downloadDropdown').style.display = 'none';
+      document.getElementById('downloadDropdown').style.display = 'none';
 
-  const targetId = dashboardNum === 1 ? 'tab-nkb-1' : (dashboardNum === 2 ? 'tab-nkb-2' : 'tab-nkb-3');
-  const element = document.getElementById(targetId);
-  
-  if (!element) return;
+      const targetId = dashboardNum === 1 ? 'tab-nkb-1' : (dashboardNum === 2 ? 'tab-nkb-2' : 'tab-nkb-3');
+      const element = document.getElementById(targetId);
+      
+      if (!element) return;
 
-  const adminPanels = element.querySelectorAll('.d1-table-card, .d3-admin-card');
-  adminPanels.forEach(panel => panel.style.display = 'none');
+      // === TAMBAHKAN KODE INI: Sembunyikan panel admin di dalam tab agar tidak ikut ter-download ===
+      const adminPanels = element.querySelectorAll('.d1-table-card, .d3-admin-card');
+      adminPanels.forEach(panel => panel.style.display = 'none');
+      // ======================================================================================
 
-  const wasActive = element.classList.contains('active');
-  const activeTabs = document.querySelectorAll('.tab-content');
+      const wasActive = element.classList.contains('active');
+      const activeTabs = document.querySelectorAll('.tab-content');
 
-  activeTabs.forEach(t => t.classList.remove('active'));
-  element.classList.add('active');
+      activeTabs.forEach(t => t.classList.remove('active'));
+      element.classList.add('active');
 
-  // Tingkatkan jeda waktu dari 300ms menjadi 600ms agar browser selesai merender tinggi elemen secara penuh ke bawah
-  setTimeout(() => {
-    html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: '#060d1a',
-      logging: false,
-      windowHeight: element.scrollHeight // Memastikan tinggi tangkapan layar mencakup seluruh isi ke bawah
-    }).then(canvas => {
-      adminPanels.forEach(panel => panel.style.display = '');
+      setTimeout(() => {
+        html2canvas(element, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#060d1a',
+          logging: false
+        }).then(canvas => {
+          // === KEMBALIKAN TAMPILAN PANEL ADMIN SEPERTI SEMULA ===
+          adminPanels.forEach(panel => panel.style.display = '');
+          // ===================================================
 
-      if (!wasActive) {
-        element.classList.remove('active');
-      }
+          if (!wasActive) {
+            element.classList.remove('active');
+          }
 
-      const link = document.createElement('a');
-      link.download = `Dashboard_${dashboardNum}_Waskita_2026.jpg`;
-      link.href = canvas.toDataURL('image/jpeg', 1.0);
-      link.click();
-    }).catch(err => {
-      adminPanels.forEach(panel => panel.style.display = '');
-      console.error('Gagal mendownload dashboard:', err);
-      alert('Terjadi kesalahan saat memproses gambar.');
-    });
-  }, 600); // Diubah ke 600ms
-}
+          const link = document.createElement('a');
+          link.download = `Dashboard_${dashboardNum}_Waskita_2026.jpg`;
+          link.href = canvas.toDataURL('image/jpeg', 1.0);
+          link.click();
+        }).catch(err => {
+          // Pastikan panel admin dimunculkan kembali jika terjadi error
+          adminPanels.forEach(panel => panel.style.display = '');
+          console.error('Gagal mendownload dashboard:', err);
+          alert('Terjadi kesalahan saat memproses gambar.');
+        });
+      }, 300);
+    }
     
     // --- CHART 1: Rencana Bulanan ---
     const ctxMonthly = document.getElementById('chartMonthly').getContext('2d');
