@@ -8,6 +8,27 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
+  <!-- FIREBASE SDK (Modular v10) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
+      authDomain: "financial-perfomance-dashboard.firebaseapp.com",
+      projectId: "financial-perfomance-dashboard",
+      storageBucket: "financial-perfomance-dashboard.firebasestorage.app",
+      messagingSenderId: "136866453174",
+      appId: "1:136866453174:web:b69a3e14672eb96cc53817"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.firebaseDB = db;
+    window.firebaseFns = { doc, getDoc, setDoc, onSnapshot };
+  </script>
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -279,7 +300,6 @@
       letter-spacing: 0.3px;
     }
 
-    /* Tanpa batasan scroll agar tampil utuh ke bawah */
     .table-scroll { width: 100%; overflow-x: auto; }
 
     table {
@@ -327,7 +347,6 @@
     }
     tfoot td.left { text-align: left; }
 
-    /* Footer Info Box */
     .footer-info-bar {
       background: #fff;
       border: 1px solid #e0e4e8;
@@ -379,7 +398,7 @@
     </div>
   </div>
 
-  <!-- PANEL ADMIN INTERAKTIF (TAMBAH / EDIT DATA) -->
+  <!-- PANEL ADMIN INTERAKTIF -->
   <div class="admin-panel-container">
     <div class="admin-panel-header">
       <span><i class="fa-solid fa-gear"></i> Panel Admin: Input & Kelola Data Piutang Customer</span>
@@ -436,8 +455,8 @@
         <i class="fa-solid fa-calendar-days"></i>
         <div>
           <span>Periode Data</span>
-          <select id="periodDropdown" class="period-select" onchange="updatePeriodLabel()">
-            <!-- Dropdown di-generate otomatis via script Jan 2026 - Des 2030 -->
+          <select id="periodDropdown" class="period-select" onchange="onPeriodChange()">
+            <!-- Diisi dinamis via script -->
           </select>
         </div>
       </div>
@@ -462,9 +481,7 @@
                 <th class="col-aksi" style="width: 50px;">Aksi</th>
               </tr>
             </thead>
-            <tbody id="table-customer-body">
-              <!-- Data dimuat dinamis via JavaScript -->
-            </tbody>
+            <tbody id="table-customer-body"></tbody>
             <tfoot>
               <tr>
                 <td colspan="2" class="left">TOTAL</td>
@@ -497,9 +514,7 @@
                   <th>Sisa Piutang</th>
                 </tr>
               </thead>
-              <tbody id="table-alat-body">
-                <!-- Data dimuat dinamis via JavaScript -->
-              </tbody>
+              <tbody id="table-alat-body"></tbody>
               <tfoot>
                 <tr>
                   <td class="left">TOTAL</td>
@@ -526,9 +541,7 @@
                   <th>% terhadap Total</th>
                 </tr>
               </thead>
-              <tbody id="table-top-customer-body">
-                <!-- Data dimuat dinamis via JavaScript -->
-              </tbody>
+              <tbody id="table-top-customer-body"></tbody>
               <tfoot>
                 <tr>
                   <td colspan="2" class="left">TOTAL</td>
@@ -553,8 +566,8 @@
   </div>
 </div>
 
-<script>
-  let customerData = [
+<script type="module">
+  let defaultCustomerData = [
     { customer: "PT Baja Cilegon Energi", alat: "Truck Mixer", pu: 103500000, tagihan: 103500000, terbayar: 69000000 },
     { customer: "PT Baja Cosmo Energi", alat: "Truck Mixer", pu: 124000000, tagihan: 124000000, terbayar: 0 },
     { customer: "PT Hanroni Medical Center", alat: "Mobile Crane+Bucket Cor", pu: 220000000, tagihan: 220000000, terbayar: 220000000 },
@@ -570,6 +583,9 @@
     { customer: "Waskita WKI KSO", alat: "Silo", pu: 45000000, tagihan: 45000000, terbayar: 0 }
   ];
 
+  let customerData = [...defaultCustomerData];
+  let currentPeriod = "Juli 2026";
+
   const fmt = (val) => val ? Number(val).toLocaleString("id-ID") : "-";
 
   function initPeriodDropdown() {
@@ -583,18 +599,22 @@
         const opt = document.createElement("option");
         opt.value = optVal;
         opt.textContent = optVal;
-        if (year === 2026 && m === 6) { 
-          opt.selected = true;
-        }
         select.appendChild(opt);
       }
     }
+    select.value = currentPeriod;
   }
 
-  function updatePeriodLabel() {
+  window.updatePeriodLabel = function() {
     const val = document.getElementById("periodDropdown").value;
+    currentPeriod = val;
     document.getElementById("bannerSubText").textContent = "s.d " + val;
     document.getElementById("footerInfoText").innerHTML = `Seluruh nilai dalam Rupiah (Rp) &nbsp;|&nbsp; Data periode ${val}`;
+    saveDataToFirebase();
+  }
+
+  window.onPeriodChange = function() {
+    updatePeriodLabel();
   }
 
   function renderPiutangDashboard() {
@@ -686,7 +706,7 @@
     document.getElementById("foot-top-sisa").textContent = fmt(topTotSisa);
   }
 
-  function handleFormSubmit(event) {
+  window.handleFormSubmit = function(event) {
     event.preventDefault();
     const idx = parseInt(document.getElementById("editIndex").value);
     const customer = document.getElementById("inputCustomer").value;
@@ -703,9 +723,10 @@
 
     resetForm();
     renderPiutangDashboard();
+    saveDataToFirebase();
   }
 
-  function editData(idx) {
+  window.editData = function(idx) {
     const c = customerData[idx];
     document.getElementById("editIndex").value = idx;
     document.getElementById("inputCustomer").value = c.customer;
@@ -716,19 +737,20 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function deleteData(idx) {
+  window.deleteData = function(idx) {
     if (confirm("Yakin ingin menghapus data customer ini?")) {
       customerData.splice(idx, 1);
       renderPiutangDashboard();
+      saveDataToFirebase();
     }
   }
 
-  function resetForm() {
+  window.resetForm = function() {
     document.getElementById("piutangForm").reset();
     document.getElementById("editIndex").value = -1;
   }
 
-  function toggleAdminPanel() {
+  window.toggleAdminPanel = function() {
     const body = document.getElementById("adminPanelBody");
     body.style.display = body.style.display === "none" ? "block" : "none";
   }
@@ -741,12 +763,10 @@
     const originalText = btn.innerHTML;
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
 
-    // Sembunyikan kolom aksi sebelum dicapture ke gambar
     const aksiElements = document.querySelectorAll(".col-aksi");
     aksiElements.forEach(el => el.style.display = "none");
     
     html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
-      // Munculkan kembali kolom aksi setelah selesai
       aksiElements.forEach(el => el.style.display = "");
 
       const link = document.createElement("a");
@@ -762,10 +782,56 @@
     });
   }
 
+  function saveDataToFirebase() {
+    if (window.firebaseDB && window.firebaseFns) {
+      const { doc, setDoc } = window.firebaseFns;
+      const docRef = doc(window.firebaseDB, "monitoringPiutang", "data_2026");
+      setDoc(docRef, {
+        period: currentPeriod,
+        customers: customerData
+      }).catch(err => {
+        console.error("Gagal menyimpan ke Firebase:", err);
+      });
+    }
+  }
+
+  function initFirebaseListener() {
+    const checkInterval = setInterval(() => {
+      if (window.firebaseDB && window.firebaseFns) {
+        clearInterval(checkInterval);
+        const { doc, onSnapshot, setDoc } = window.firebaseFns;
+        const docRef = doc(window.firebaseDB, "monitoringPiutang", "data_2026");
+
+        onSnapshot(docRef, (docSnap) => {
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            if (data.period) {
+              currentPeriod = data.period;
+              document.getElementById("periodDropdown").value = currentPeriod;
+              updatePeriodLabel();
+            }
+            if (data.customers && Array.isArray(data.customers)) {
+              customerData = data.customers;
+              renderPiutangDashboard();
+            }
+          } else {
+            setDoc(docRef, {
+              period: currentPeriod,
+              customers: defaultCustomerData
+            });
+          }
+        }, (error) => {
+          console.error("Gagal menyinkronkan data Firestore:", error);
+        });
+      }
+    }, 100);
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     initPeriodDropdown();
     updatePeriodLabel();
     renderPiutangDashboard();
+    initFirebaseListener();
   });
 </script>
 </body>
