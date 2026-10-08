@@ -122,8 +122,8 @@
       cursor: pointer;
     }
     .nav-back-btn:hover { background: rgba(255, 255, 255, 0.25); }
-    .nav-back-btn.btn-download-jpg { background: var(--green); border-color: #146e1c; }
-    .nav-back-btn.btn-download-jpg:hover { background: #146e1c; }
+    .btn-download-jpg { background: var(--green); border-color: #146e1c; }
+    .btn-download-jpg:hover { background: #146e1c; }
 
     /* ================= PANEL ADMIN / INPUT & EDIT ================= */
     .admin-panel-container {
@@ -554,7 +554,7 @@
 </head>
 
 <body>
-<div class="dashboard" id="dashboardContent">
+<div class="dashboard">
 
   <!-- HEADER UTAMA & NAVIGASI -->
   <div class="header-main-box">
@@ -566,8 +566,8 @@
       </div>
     </div>
     <div class="nav-actions-wrap">
-      <a href="index.html" class="nav-back-btn"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard Utama</a>
       <button class="nav-back-btn btn-download-jpg" onclick="downloadDashboardJPG()"><i class="fa-solid fa-download"></i> Download JPG</button>
+      <a href="index.html" class="nav-back-btn"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard Utama</a>
     </div>
   </div>
 
@@ -635,177 +635,181 @@
     </div>
   </div>
 
-  <!-- BAGIAN KETERANGAN "NILAI KONTRAK YANG DIKELOLA" DAN FILTER DINAMIS -->
-  <div class="top-section-layout">
-    <div class="dashboard-main-title-box">
-      <div class="title-box-icon"><i class="fa-solid fa-file-signature"></i></div>
-      <div class="title-box-text">
-        <h2>NILAI KONTRAK YANG DIKELOLA</h2>
-        <p id="labelPeriodeDisplay">s.d. JULI 2026</p>
+  <!-- AREA YANG AKAN DI-DOWNLOAD MULAI DARI SINI -->
+  <div id="captureArea">
+
+    <!-- BAGIAN KETERANGAN "NILAI KONTRAK YANG DIKELOLA" DAN FILTER DINAMIS -->
+    <div class="top-section-layout">
+      <div class="dashboard-main-title-box">
+        <div class="title-box-icon"><i class="fa-solid fa-file-signature"></i></div>
+        <div class="title-box-text">
+          <h2>NILAI KONTRAK YANG DIKELOLA</h2>
+          <p id="labelPeriodeDisplay">s.d. JULI 2026</p>
+        </div>
+      </div>
+
+      <div class="filter-column">
+        <div class="filter-card-custom">
+          <div class="filter-card-header">PERIODE DATA</div>
+          <div class="filter-card-body">
+            <select id="periodeFilter">
+              <!-- Opsi Bulan Januari - Desember & Tahun 2026 - 2030 akan di-generate otomatis via JS -->
+            </select>
+          </div>
+        </div>
+        <div class="filter-card-custom">
+          <div class="filter-card-header">TIPE ALAT</div>
+          <div class="filter-card-body">
+            <select id="tipeAlatFilter">
+              <option>All</option>
+              <option>Truck Mixer</option>
+              <option>Stone Crusher</option>
+              <option>Truck Trailer</option>
+              <option>Mobile Crane+Bucket Cor</option>
+              <option>Dump Truck</option>
+              <option>Silo</option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="filter-column">
-      <div class="filter-card-custom">
-        <div class="filter-card-header">PERIODE DATA</div>
-        <div class="filter-card-body">
-          <select id="periodeFilter">
-            <!-- Opsi Bulan Januari - Desember & Tahun 2026 - 2030 akan di-generate otomatis via JS -->
-          </select>
+    <!-- MAIN AREA DASHBOARD -->
+    <main class="main-area">
+
+      <!-- KPI -->
+      <section class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-title">TOTAL KONTRAK</div>
+          <div class="kpi-value" id="kpi-total-kontrak">10.956.633.326 <span class="rp">Rp</span></div>
+          <div class="kpi-footer">
+            <div class="circle-icon"><i class="fa-solid fa-coins"></i></div>
+            <div class="kpi-foot-text">100,00%<small>dari Total Kontrak</small></div>
+          </div>
         </div>
-      </div>
-      <div class="filter-card-custom">
-        <div class="filter-card-header">TIPE ALAT</div>
-        <div class="filter-card-body">
-          <select id="tipeAlatFilter">
-            <option>All</option>
-            <option>Truck Mixer</option>
-            <option>Stone Crusher</option>
-            <option>Truck Trailer</option>
-            <option>Mobile Crane+Bucket Cor</option>
-            <option>Dump Truck</option>
-            <option>Silo</option>
-          </select>
+
+        <div class="kpi-card green">
+          <div class="kpi-title">PU TEREALISASI</div>
+          <div class="kpi-value" id="kpi-pu-terealisasi">5.963.602.686 <span class="rp">Rp</span></div>
+          <div class="kpi-footer">
+            <div class="circle-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="kpi-foot-text">54,40%<small>dari Total Kontrak</small></div>
+          </div>
         </div>
-      </div>
-    </div>
+
+        <div class="kpi-card orange">
+          <div class="kpi-title">PU TIDAK TERSERAP</div>
+          <div class="kpi-value" id="kpi-pu-terserap">1.173.913.978 <span class="rp">Rp</span></div>
+          <div class="kpi-footer">
+            <div class="circle-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="kpi-foot-text">10,72%<small>dari Total Kontrak</small></div>
+          </div>
+        </div>
+
+        <div class="kpi-card blue">
+          <div class="kpi-title">SISA KONTRAK</div>
+          <div class="kpi-value" id="kpi-sisa-kontrak">3.819.116.662 <span class="rp">Rp</span></div>
+          <div class="kpi-footer">
+            <div class="circle-icon"><i class="fa-solid fa-layer-group"></i></div>
+            <div class="kpi-foot-text">34,87%<small>dari Total Kontrak</small></div>
+          </div>
+        </div>
+
+        <div class="kpi-card gauge-card">
+          <div class="kpi-title">TINGKAT PENYERAPAN (PU)</div>
+          <div class="kpi-value" id="kpi-tingkat-penyerapan">54,40%</div>
+          <div class="gauge-wrap">
+            <div class="gauge-arc" id="gaugeArc"></div>
+          </div>
+          <div class="gauge-scale"><span>0%</span><span>100%</span></div>
+        </div>
+      </section>
+
+      <!-- CHARTS -->
+      <section class="panel-grid">
+        <div class="panel chart-panel">
+          <div class="panel-title">TOTAL KONTRAK PER TIPE ALAT</div>
+          <div class="chart-box"><canvas id="chartTipeAlatBar"></canvas></div>
+        </div>
+
+        <div class="panel chart-panel">
+          <div class="panel-title">KOMPOSISI KONTRAK PER TIPE ALAT</div>
+          <div class="chart-box"><canvas id="chartTipeAlatDonut"></canvas></div>
+        </div>
+
+        <div class="panel chart-panel">
+          <div class="panel-title">REALISASI PU VS SISA KONTRAK</div>
+          <div class="chart-box"><canvas id="chartRealisasiSisa"></canvas></div>
+        </div>
+      </section>
+
+      <!-- TABLES -->
+      <section class="table-grid">
+        <div class="panel table-panel">
+          <div class="panel-title">RINCIAN NILAI KONTRAK PER CUSTOMER</div>
+          <div class="table-scroll">
+            <table class="customer-table">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Customer</th>
+                  <th>Tipe Alat</th>
+                  <th>Total Kontrak</th>
+                  <th>PU</th>
+                  <th>PU Tdk Terserap</th>
+                  <th>Sisa Kontrak</th>
+                </tr>
+              </thead>
+              <tbody id="table-customer-body">
+                <!-- Data dimuat dinamis -->
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" class="left">Total</td>
+                  <td id="foot-tot-kontrak">10.956.633.326</td>
+                  <td id="foot-tot-pu">5.963.602.686</td>
+                  <td id="foot-tot-tidakterserap">1.173.913.978</td>
+                  <td id="foot-tot-sisakontrak">3.819.116.662</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel table-panel">
+          <div class="panel-title">RINCIAN NILAI KONTRAK PER TIPE ALAT</div>
+          <div class="table-scroll">
+            <table class="alat-table">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Tipe Alat</th>
+                  <th>Total Kontrak</th>
+                  <th>PU</th>
+                  <th>PU Tdk Terserap</th>
+                  <th>Sisa Kontrak</th>
+                </tr>
+              </thead>
+              <tbody id="table-alat-body">
+                <!-- Data dimuat dinamis -->
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2" class="left">Total</td>
+                  <td id="foot-alat-kontrak">10.956.633.326</td>
+                  <td id="foot-alat-pu">5.963.602.686</td>
+                  <td id="foot-alat-tidakterserap">1.173.913.978</td>
+                  <td id="foot-alat-sisakontrak">3.819.116.662</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <div class="note">Catatan: Seluruh angka dalam Rupiah</div>
+    </main>
   </div>
-
-  <!-- MAIN AREA DASHBOARD -->
-  <main class="main-area">
-
-    <!-- KPI -->
-    <section class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-title">TOTAL KONTRAK</div>
-        <div class="kpi-value" id="kpi-total-kontrak">10.956.633.326 <span class="rp">Rp</span></div>
-        <div class="kpi-footer">
-          <div class="circle-icon"><i class="fa-solid fa-coins"></i></div>
-          <div class="kpi-foot-text">100,00%<small>dari Total Kontrak</small></div>
-        </div>
-      </div>
-
-      <div class="kpi-card green">
-        <div class="kpi-title">PU TEREALISASI</div>
-        <div class="kpi-value" id="kpi-pu-terealisasi">5.963.602.686 <span class="rp">Rp</span></div>
-        <div class="kpi-footer">
-          <div class="circle-icon"><i class="fa-solid fa-circle-check"></i></div>
-          <div class="kpi-foot-text">54,40%<small>dari Total Kontrak</small></div>
-        </div>
-      </div>
-
-      <div class="kpi-card orange">
-        <div class="kpi-title">PU TIDAK TERSERAP</div>
-        <div class="kpi-value" id="kpi-pu-terserap">1.173.913.978 <span class="rp">Rp</span></div>
-        <div class="kpi-footer">
-          <div class="circle-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-          <div class="kpi-foot-text">10,72%<small>dari Total Kontrak</small></div>
-        </div>
-      </div>
-
-      <div class="kpi-card blue">
-        <div class="kpi-title">SISA KONTRAK</div>
-        <div class="kpi-value" id="kpi-sisa-kontrak">3.819.116.662 <span class="rp">Rp</span></div>
-        <div class="kpi-footer">
-          <div class="circle-icon"><i class="fa-solid fa-layer-group"></i></div>
-          <div class="kpi-foot-text">34,87%<small>dari Total Kontrak</small></div>
-        </div>
-      </div>
-
-      <div class="kpi-card gauge-card">
-        <div class="kpi-title">TINGKAT PENYERAPAN (PU)</div>
-        <div class="kpi-value" id="kpi-tingkat-penyerapan">54,40%</div>
-        <div class="gauge-wrap">
-          <div class="gauge-arc" id="gaugeArc"></div>
-        </div>
-        <div class="gauge-scale"><span>0%</span><span>100%</span></div>
-      </div>
-    </section>
-
-    <!-- CHARTS -->
-    <section class="panel-grid">
-      <div class="panel chart-panel">
-        <div class="panel-title">TOTAL KONTRAK PER TIPE ALAT</div>
-        <div class="chart-box"><canvas id="chartTipeAlatBar"></canvas></div>
-      </div>
-
-      <div class="panel chart-panel">
-        <div class="panel-title">KOMPOSISI KONTRAK PER TIPE ALAT</div>
-        <div class="chart-box"><canvas id="chartTipeAlatDonut"></canvas></div>
-      </div>
-
-      <div class="panel chart-panel">
-        <div class="panel-title">REALISASI PU VS SISA KONTRAK</div>
-        <div class="chart-box"><canvas id="chartRealisasiSisa"></canvas></div>
-      </div>
-    </section>
-
-    <!-- TABLES -->
-    <section class="table-grid">
-      <div class="panel table-panel">
-        <div class="panel-title">RINCIAN NILAI KONTRAK PER CUSTOMER</div>
-        <div class="table-scroll">
-          <table class="customer-table">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Customer</th>
-                <th>Tipe Alat</th>
-                <th>Total Kontrak</th>
-                <th>PU</th>
-                <th>PU Tdk Terserap</th>
-                <th>Sisa Kontrak</th>
-              </tr>
-            </thead>
-            <tbody id="table-customer-body">
-              <!-- Data dimuat dinamis -->
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="3" class="left">Total</td>
-                <td id="foot-tot-kontrak">10.956.633.326</td>
-                <td id="foot-tot-pu">5.963.602.686</td>
-                <td id="foot-tot-tidakterserap">1.173.913.978</td>
-                <td id="foot-tot-sisakontrak">3.819.116.662</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
-
-      <div class="panel table-panel">
-        <div class="panel-title">RINCIAN NILAI KONTRAK PER TIPE ALAT</div>
-        <div class="table-scroll">
-          <table class="alat-table">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Tipe Alat</th>
-                <th>Total Kontrak</th>
-                <th>PU</th>
-                <th>PU Tdk Terserap</th>
-                <th>Sisa Kontrak</th>
-              </tr>
-            </thead>
-            <tbody id="table-alat-body">
-              <!-- Data dimuat dinamis -->
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="2" class="left">Total</td>
-                <td id="foot-alat-kontrak">10.956.633.326</td>
-                <td id="foot-alat-pu">5.963.602.686</td>
-                <td id="foot-alat-tidakterserap">1.173.913.978</td>
-                <td id="foot-alat-sisakontrak">3.819.116.662</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <div class="note">Catatan: Seluruh angka dalam Rupiah</div>
-  </main>
 </div>
 
 <script type="module">
@@ -933,25 +937,17 @@
   }
 
   window.downloadDashboardJPG = function() {
-    const element = document.getElementById("dashboardContent");
-    const adminPanel = document.getElementById("inputPanel");
-    const wasActive = adminPanel.classList.contains("active");
-    if (wasActive) adminPanel.classList.remove("active");
-
-    html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: "#f4f6f9"
-    }).then(canvas => {
-      if (wasActive) adminPanel.classList.add("active");
+    const element = document.getElementById("captureArea");
+    if (!element) return;
+    
+    html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
       const link = document.createElement("a");
-      link.download = "Dashboard_NKD_2026.jpg";
+      link.download = "dashboard-nkd.jpg";
       link.href = canvas.toDataURL("image/jpeg", 1.0);
       link.click();
     }).catch(err => {
-      if (wasActive) adminPanel.classList.add("active");
-      console.error("Gagal mendownload gambar:", err);
-      alert("Terjadi kesalahan saat mengunduh dashboard.");
+      console.error("Gagal mengunduh gambar:", err);
+      alert("Gagal menghasilkan file gambar.");
     });
   }
 
