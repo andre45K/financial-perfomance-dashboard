@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <!-- FontAwesome Icons & Chart.js -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-  <!-- TAMBAHKAN LIBRARY HTML2CANVAS DI SINI -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard NKB - PT Waskita Beton Precast, Tbk</title>
@@ -163,16 +157,16 @@
     .d2-summary-box-title { font-size: 10px; font-weight: 800; border-bottom: 1px solid #cbd5e1; padding-bottom: 3px; margin-bottom: 4px; color: #0b2246; text-transform: uppercase; }
     .d2-summary-row { display: flex; justify-content: space-between; margin-bottom: 3px; font-weight: 700; color: #334155; }
 
-    .d2-table-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; flex-direction: column; height: auto; }
-    .d2-table-container { overflow-y: visible; flex-grow: unset; margin-top: 6px; border: 1px solid #e2e8f0; border-radius: 4px; }
+    .d2-table-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; flex-direction: column; height: 460px; }
+    .d2-table-container { overflow-y: auto; flex-grow: 1; margin-top: 6px; border: 1px solid #e2e8f0; border-radius: 4px; }
     .d2-table { width: 100%; border-collapse: collapse; font-size: 10.5px; text-align: left; }
     .d2-table th { background: #0b2246; color: white; padding: 6px 8px; font-weight: 700; position: sticky; top: 0; z-index: 2; font-size: 10px; }
     .d2-table td { padding: 5px 8px; border-bottom: 1px solid #e2e8f0; color: #1e293b; }
     .d2-table tr:hover { background: #f1f5f9; }
     .d2-table-total { background: #0b2246 !important; color: white !important; font-weight: 800; }
 
-    .d2-bottom-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 15px; margin-top: 8px; }
-    .d2-bottom-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; flex-direction: column; height: 460px; }
+    .d2-bottom-grid { display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 15px; }
+    .d2-bottom-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; display: flex; flex-direction: column; }
     .d2-bottom-title { font-size: 10.5px; font-weight: 800; color: #0b2246; text-transform: uppercase; margin-bottom: 8px; }
     .d2-bottom-chart-container { position: relative; height: 210px; width: 100%; display: flex; align-items: center; justify-content: center; }
 
@@ -507,25 +501,7 @@
         <h1><i class="fa-solid fa-chart-pie"></i> DASHBOARD NKB - PT WASKITA BETON PRECAST, TBK</h1>
         <p>Sistem Informasi Manajemen Kontrak & Perencanaan 2026</p>
       </div>
-<div class="header-right-area" style="display: flex; gap: 10px; align-items: center;">
-        <!-- TOMBOL DOWNLOAD 3 DASHBOARD FORMAT JPG -->
-        <div style="position: relative; display: inline-block;">
-          <button onclick="toggleDownloadMenu()" class="back-btn" style="cursor: pointer; border: none;">
-            <i class="fa-solid fa-download"></i> Download JPG <i class="fa-solid fa-caret-down"></i>
-          </button>
-          <div id="downloadDropdown" style="display: none; position: absolute; right: 0; top: 110%; background: #0f172a; border: 1px solid #334155; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 999; min-width: 220px; overflow: hidden;">
-            <button onclick="downloadDashboardJPG(1)" style="width: 100%; text-align: left; background: none; border: none; color: #ffffff; padding: 10px 14px; font-size: 11.5px; font-weight: bold; cursor: pointer; border-bottom: 1px solid #1e293b;" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='none'">
-              <i class="fa-solid fa-image" style="color: #3b82f6; margin-right: 6px;"></i> Download Dashboard 1 (JPG)
-            </button>
-            <button onclick="downloadDashboardJPG(2)" style="width: 100%; text-align: left; background: none; border: none; color: #ffffff; padding: 10px 14px; font-size: 11.5px; font-weight: bold; cursor: pointer; border-bottom: 1px solid #1e293b;" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='none'">
-              <i class="fa-solid fa-image" style="color: #10b981; margin-right: 6px;"></i> Download Dashboard 2 (JPG)
-            </button>
-            <button onclick="downloadDashboardJPG(3)" style="width: 100%; text-align: left; background: none; border: none; color: #ffffff; padding: 10px 14px; font-size: 11.5px; font-weight: bold; cursor: pointer;" onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='none'">
-              <i class="fa-solid fa-image" style="color: #f59e0b; margin-right: 6px;"></i> Download Dashboard 3 (JPG)
-            </button>
-          </div>
-        </div>
-
+      <div class="header-right-area">
         <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard Utama</a>
       </div>
     </div>
@@ -536,7 +512,7 @@
         <i class="fa-solid fa-chart-column"></i> Dashboard Rencana Kontrak 2026
       </button>
       <button class="tab-btn" onclick="switchTab(event, 'tab-nkb-2')">
-        <i class="fa-solid fa-chart-line"></i> <span id="d2TabTitleLabel">Dashboard Nilai Kontrak Baru (s.d Agustus 2026)</span>
+        <i class="fa-solid fa-chart-line"></i> Dashboard Nilai Kontrak Baru (s.d Agustus 2026)
       </button>
       <button class="tab-btn" onclick="switchTab(event, 'tab-nkb-3')">
         <i class="fa-solid fa-chart-area"></i> Dashboard Prognosa NKB 2026
@@ -551,7 +527,7 @@
       <!-- ADMIN INPUT PANEL BERDASARKAN TABEL EXCEL 2026 -->
       <div class="d1-table-card" style="margin-bottom: 20px; border-top: 4px solid #0b63ce; background: #f8fafc; color: #1e293b;">
         <div class="d1-table-header" style="display: flex; justify-content: space-between; align-items: center; background: #0b2246;">
-          <span><i class="fa-solid fa-gear"></i> Panel Admin: Input, Edit & Perbarui Data Rencana Kontrak 2026</span>
+          <span><i class="fa-solid fa-gear"></i> Panel Admin: Input, Edit & Perbarui Rencana Kontrak 2026</span>
           <button onclick="toggleAdminPanel()" style="background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 2px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold;">Tutup/Buka Panel</button>
         </div>
         <div id="adminFormBody" style="padding: 16px;">
@@ -791,7 +767,7 @@
         <!-- ADMIN INPUT PANEL UNTUK DASHBOARD 2 -->
         <div class="d1-table-card" style="margin-bottom: 20px; border-top: 4px solid #0b63ce; background: #f8fafc; color: #1e293b;">
           <div class="d1-table-header" style="display: flex; justify-content: space-between; align-items: center; background: #0b2246;">
-            <span><i class="fa-solid fa-gear"></i> <span id="d2AdminHeaderLabel">Panel Admin: Input, Edit & Perbarui Data Nilai Kontrak Baru (s.d Agustus 2026)</span></span>
+            <span><i class="fa-solid fa-gear"></i> Panel Admin: Input, Edit & Perbarui Data Dashboard 2 (s.d Agustus 2026)</span>
             <button onclick="toggleAdminPanelD2()" style="background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 2px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold;">Tutup/Buka Panel</button>
           </div>
           <div id="adminFormBodyD2" style="padding: 16px;">
@@ -876,7 +852,7 @@
 
             <!-- TABEL MASTER DATA D2 -->
             <div style="font-size: 11px; font-weight: 800; color: #0b2246; margin-bottom: 6px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center;">
-              <span>Daftar Master Data Kontrak Baru <span id="d2TableTitleLabel">s.d Agustus 2026</span> (<span id="totalD2Count">16</span> Item)</span>
+              <span>Daftar Master Data Kontrak Baru s.d Agustus 2026 (<span id="totalD2Count">16</span> Item)</span>
               <span style="font-size: 10px; font-weight: normal; color: #64748b;">Termasuk kolom No. SPSA & Bulan</span>
             </div>
             <div style="max-height: 200px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 4px; background: white;">
@@ -907,7 +883,7 @@
         <!-- D2 TOP BAR -->
         <div class="d2-top-bar">
           <div>
-            <h2 id="d2BannerTitleLabel">Nilai Kontrak Baru s.d Agustus 2026</h2>
+            <h2>Nilai Kontrak Baru s.d Agustus 2026</h2>
             <p>Sistem Informasi Manajemen Kontrak</p>
           </div>
           <div class="d2-date-box">
@@ -959,50 +935,36 @@
           </div>
         </div>
 
-<!-- D2 MIDDLE SECTION: PROFESSIONAL MAP, CHART ALAT & TABLE -->
+        <!-- D2 MIDDLE SECTION: PROFESSIONAL MAP & TABLE -->
         <div class="d2-middle-grid">
           
-          <!-- Kolom Kiri: Peta & Chart Tipe Alat -->
-          <div style="display: flex; flex-direction: column; gap: 15px;">
-            <!-- PROFESSIONAL MAP CARD -->
-            <div class="d2-map-card">
-              <div class="d2-map-header-row">
-                <div class="d2-map-title">SEBARAN NILAI KONTRAK BARU BERDASARKAN PROVINSI</div>
-                <div style="display:flex; align-items:center; gap:8px;">
-                  <button type="button" class="map-position-reset" onclick="resetD2MapPositions()" title="Kembalikan posisi peta ke posisi awal">
-                    <i class="fa-solid fa-rotate-left"></i> Reset Posisi
-                  </button>
-                  <div class="d2-map-legend">
-                    <span>Nilai Kontrak (Rp)</span>
-                    <span><i class="fa-solid fa-circle" style="color: #3b82f6; font-size: 8px;"></i> Rendah</span>
-                    <span><i class="fa-solid fa-circle" style="color: #1d4ed8; font-size: 8px;"></i> Sedang</span>
-                    <span><i class="fa-solid fa-circle" style="color: #0f172a; font-size: 8px;"></i> Tinggi</span>
-                  </div>
+          <!-- PROFESSIONAL MAP CARD DENGAN TITIK AKURAT PERSIS GAMBAR REFERENSI -->
+          <div class="d2-map-card">
+            <div class="d2-map-header-row">
+              <div class="d2-map-title">SEBARAN NILAI KONTRAK BARU BERDASARKAN PROVINSI</div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <button type="button" class="map-position-reset" onclick="resetD2MapPositions()" title="Kembalikan posisi peta ke posisi awal">
+                  <i class="fa-solid fa-rotate-left"></i> Reset Posisi
+                </button>
+                <div class="d2-map-legend">
+                  <span>Nilai Kontrak (Rp)</span>
+                  <span><i class="fa-solid fa-circle" style="color: #3b82f6; font-size: 8px;"></i> Rendah</span>
+                  <span><i class="fa-solid fa-circle" style="color: #1d4ed8; font-size: 8px;"></i> Sedang</span>
+                  <span><i class="fa-solid fa-circle" style="color: #0f172a; font-size: 8px;"></i> Tinggi</span>
                 </div>
-              </div>
-
-              <!-- MAP CANVAS: TITIK OTOMATIS MENGIKUTI PROVINSI -->
-              <div class="d2-map-canvas" id="d2MapCanvasContainer"></div>
-
-              <!-- RINGKASAN SEBARAN BOX -->
-              <div class="d2-summary-box">
-                <div class="d2-summary-box-title">Ringkasan Sebaran</div>
-                <div class="d2-summary-row"><span>Total Unit</span> <span id="summaryTotalUnit">38</span></div>
-                <div class="d2-summary-row"><span>Total Kontrak</span> <span id="summaryTotalKontrak">23</span></div>
-                <div class="d2-summary-row"><span>Total Customer</span> <span id="summaryTotalCust">12</span></div>
-                <div class="d2-summary-row"><span>Total Nilai Kontrak</span> <span id="summaryTotalNilai" style="color: #0b63ce;">Rp 8.416.583.326</span></div>
               </div>
             </div>
 
-            <!-- Chart Alat (Mepet di bawah peta) -->
-            <div class="d2-bottom-card" style="height: auto;">
-              <div class="d2-bottom-title">PROPORSI NILAI KONTRAK BARU BERDASARKAN TIPE ALAT</div>
-              <div style="display: grid; grid-template-columns: 1fr 130px; gap: 5px; align-items: center; width: 100%; height: 210px;">
-                <div style="position: relative; height: 100%; width: 100%;">
-                  <canvas id="chartD2Equipment"></canvas>
-                </div>
-                <div id="d2EqLegendCustom" style="display: flex; flex-direction: column; gap: 4px; font-size: 9px; overflow-y: auto; max-height: 200px; padding-right: 2px;"></div>
-              </div>
+            <!-- MAP CANVAS: TITIK OTOMATIS MENGIKUTI PROVINSI -->
+            <div class="d2-map-canvas" id="d2MapCanvasContainer"></div>
+
+            <!-- RINGKASAN SEBARAN BOX -->
+            <div class="d2-summary-box">
+              <div class="d2-summary-box-title">Ringkasan Sebaran</div>
+              <div class="d2-summary-row"><span>Total Unit</span> <span id="summaryTotalUnit">38</span></div>
+              <div class="d2-summary-row"><span>Total Kontrak</span> <span id="summaryTotalKontrak">23</span></div>
+              <div class="d2-summary-row"><span>Total Customer</span> <span id="summaryTotalCust">12</span></div>
+              <div class="d2-summary-row"><span>Total Nilai Kontrak</span> <span id="summaryTotalNilai" style="color: #0b63ce;">Rp 8.416.583.326</span></div>
             </div>
           </div>
 
@@ -1029,6 +991,33 @@
                   </tr>
                 </tfoot>
               </table>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- D2 BOTTOM SECTION: 2 CHARTS -->
+        <div class="d2-bottom-grid" style="margin-top: 15px;">
+          
+          <!-- Chart Alat -->
+          <div class="d2-bottom-card">
+            <div class="d2-bottom-title">PROPORSI NILAI KONTRAK BARU BERDASARKAN TIPE ALAT</div>
+            <div style="display: grid; grid-template-columns: 1fr 130px; gap: 5px; align-items: center; width: 100%; height: 210px;">
+              <div style="position: relative; height: 100%; width: 100%;">
+                <canvas id="chartD2Equipment"></canvas>
+              </div>
+              <div id="d2EqLegendCustom" style="display: flex; flex-direction: column; gap: 4px; font-size: 9px; overflow-y: auto; max-height: 200px; padding-right: 2px;"></div>
+            </div>
+          </div>
+
+          <!-- Chart Lokasi Detail -->
+          <div class="d2-bottom-card">
+            <div class="d2-bottom-title">PROPORSI NILAI KONTRAK BARU BERDASARKAN LOKASI</div>
+            <div style="display: grid; grid-template-columns: 1fr 130px; gap: 5px; align-items: center; width: 100%; height: 210px;">
+              <div style="position: relative; height: 100%; width: 100%;">
+                <canvas id="chartD2Location"></canvas>
+              </div>
+              <div id="d2LocLegendCustom" style="display: flex; flex-direction: column; gap: 3px; font-size: 8.5px; overflow-y: auto; max-height: 200px; padding-right: 2px;"></div>
             </div>
           </div>
 
@@ -1263,55 +1252,6 @@
       evt.currentTarget.classList.add('active');
     }
 
-    // --- FUNGSI DOWNLOAD DASHBOARD KE JPG ---
-    function toggleDownloadMenu() {
-      const menu = document.getElementById('downloadDropdown');
-      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-    }
-
-    window.addEventListener('click', function(e) {
-      if (!e.target.closest('#downloadDropdown') && !e.target.closest('button[onclick="toggleDownloadMenu()"]')) {
-        const menu = document.getElementById('downloadDropdown');
-        if (menu) menu.style.display = 'none';
-      }
-    });
-
-    function downloadDashboardJPG(dashboardNum) {
-      document.getElementById('downloadDropdown').style.display = 'none';
-
-      const targetId = dashboardNum === 1 ? 'tab-nkb-1' : (dashboardNum === 2 ? 'tab-nkb-2' : 'tab-nkb-3');
-      const element = document.getElementById(targetId);
-      
-      if (!element) return;
-
-      const wasActive = element.classList.contains('active');
-      const activeTabs = document.querySelectorAll('.tab-content');
-
-      activeTabs.forEach(t => t.classList.remove('active'));
-      element.classList.add('active');
-
-      setTimeout(() => {
-        html2canvas(element, {
-          scale: 2,
-          useCORS: true,
-          backgroundColor: '#060d1a',
-          logging: false
-        }).then(canvas => {
-          if (!wasActive) {
-            element.classList.remove('active');
-          }
-
-          const link = document.createElement('a');
-          link.download = `Dashboard_${dashboardNum}_Waskita_2026.jpg`;
-          link.href = canvas.toDataURL('image/jpeg', 1.0);
-          link.click();
-        }).catch(err => {
-          console.error('Gagal mendownload dashboard:', err);
-          alert('Terjadi kesalahan saat memproses gambar.');
-        });
-      }, 300);
-    }
-    
     // --- CHART 1: Rencana Bulanan ---
     const ctxMonthly = document.getElementById('chartMonthly').getContext('2d');
     window.chartMonthlyObj = new Chart(ctxMonthly, {
@@ -1375,6 +1315,7 @@
     });
 
     let chartD2EqObj = null;
+    let chartD2LocObj = null;
     let chartD2TargetGaugeObj = null;
 
     const chartColorsPalette = ['#0b63ce', '#008767', '#d97706', '#5c165c', '#e65c00', '#7c3aed', '#10b981', '#f59e0b', '#3b82f6', '#1d4ed8', '#0b2246', '#64748b'];
@@ -1410,6 +1351,13 @@
         type: 'doughnut',
         data: { labels: [], datasets: [{ data: [], backgroundColor: chartColorsPalette, borderWidth: 1, borderColor: '#ffffff' }] },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: false } }, cutout: '50%' }
+      });
+
+      const ctxD2Loc = document.getElementById('chartD2Location').getContext('2d');
+      chartD2LocObj = new Chart(ctxD2Loc, {
+        type: 'doughnut',
+        data: { labels: [], datasets: [{ data: [], backgroundColor: chartColorsPalette, borderWidth: 1, borderColor: '#ffffff' }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { display: false } }, cutout: '45%' }
       });
 
     }
@@ -1842,30 +1790,7 @@
       let custMap = {};
       let alatMap = {};
       let provMap = {};
-
-      // Mencari bulan maksimum (terakhir) dari d2MasterData
-      let maxMonthIdx = 7; // Default Agustus (index 7) jika kosong
-      if (d2MasterData.length > 0) {
-        maxMonthIdx = Math.max(...d2MasterData.map(item => (item.bulan !== undefined ? Number(item.bulan) : 7)));
-      }
-      const maxMonthName = monthNames[maxMonthIdx] || 'Agustus';
-      const dynamicStr = `s.d ${maxMonthName} 2026`;
-
-      // Update seluruh label keterangan bulan secara dinamis
-      const elTab = document.getElementById('d2TabTitleLabel');
-      if (elTab) elTab.innerText = `Dashboard Nilai Kontrak Baru (${dynamicStr})`;
-
-      const elAdmin = document.getElementById('d2AdminHeaderLabel');
-      if (elAdmin) elAdmin.innerText = `Panel Admin: Input, Edit & Perbarui Data Nilai Kontrak Baru (${dynamicStr})`;
-
-      const elTblTitle = document.getElementById('d2TableTitleLabel');
-      if (elTblTitle) elTblTitle.innerText = dynamicStr;
-
-      const elBanner = document.getElementById('d2BannerTitleLabel');
-      if (elBanner) elBanner.innerText = `Nilai Kontrak Baru ${dynamicStr}`;
-
-      const elDateBox = document.getElementById('d2DateLabel');
-      if (elDateBox) elDateBox.innerText = `Data ${dynamicStr}`;
+      let lokasiDetailMap = {};
 
       d2MasterData.forEach(item => {
         totalNilai += item.nilai;
@@ -1890,6 +1815,8 @@
         provMap[prov].nilai += item.nilai;
         provMap[prov].count += 1;
 
+        if (!lokasiDetailMap[lok]) lokasiDetailMap[lok] = 0;
+        lokasiDetailMap[lok] += item.nilai;
       });
 
       const uniqueCustomersCount = Object.keys(custMap).length;
@@ -1964,6 +1891,31 @@
         });
         document.getElementById('d2EqLegendCustom').innerHTML = eqLegendHtml;
       }
+
+      if (chartD2LocObj) {
+        const sortedLokasi = Object.keys(lokasiDetailMap).sort((a, b) => lokasiDetailMap[b] - lokasiDetailMap[a]);
+        chartD2LocObj.data.labels = sortedLokasi;
+        chartD2LocObj.data.datasets[0].data = sortedLokasi.map(k => lokasiDetailMap[k]);
+        chartD2LocObj.update();
+
+        let locLegendHtml = '';
+        sortedLokasi.forEach((lokName, i) => {
+          const val = lokasiDetailMap[lokName];
+          const pct = totalNilai > 0 ? (val / totalNilai) * 100 : 0;
+          const color = chartColorsPalette[i % chartColorsPalette.length];
+          locLegendHtml += `
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
+              <div style="display: flex; align-items: center; gap: 4px; overflow: hidden;">
+                <div style="width: 7px; height: 7px; border-radius: 50%; background: ${color}; flex-shrink: 0;"></div>
+                <span style="color: #334155; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${lokName}">${lokName}</span>
+              </div>
+              <span style="color: #0b2246; font-weight: 800; flex-shrink: 0;">${pct.toFixed(1).replace('.', ',')}%</span>
+            </div>
+          `;
+        });
+        document.getElementById('d2LocLegendCustom').innerHTML = locLegendHtml;
+      }
+
       renderD2AdminTable();
     }
 
