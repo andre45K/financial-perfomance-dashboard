@@ -690,7 +690,7 @@
           <div class="kpi-value" id="kpi-total-kontrak">10.956.633.326 <span class="rp">Rp</span></div>
           <div class="kpi-footer">
             <div class="circle-icon"><i class="fa-solid fa-coins"></i></div>
-            <div class="kpi-foot-text">100,00%<small>dari Total Kontrak</small></div>
+            <div class="kpi-foot-text"><span id="kpi-pct-total">100,00%</span><small>dari Total Kontrak</small></div>
           </div>
         </div>
 
@@ -699,7 +699,7 @@
           <div class="kpi-value" id="kpi-pu-terealisasi">5.963.602.686 <span class="rp">Rp</span></div>
           <div class="kpi-footer">
             <div class="circle-icon"><i class="fa-solid fa-circle-check"></i></div>
-            <div class="kpi-foot-text">54,40%<small>dari Total Kontrak</small></div>
+            <div class="kpi-foot-text"><span id="kpi-pct-pu">54,40%</span><small>dari Total Kontrak</small></div>
           </div>
         </div>
 
@@ -708,7 +708,7 @@
           <div class="kpi-value" id="kpi-pu-terserap">1.173.913.978 <span class="rp">Rp</span></div>
           <div class="kpi-footer">
             <div class="circle-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-            <div class="kpi-foot-text">10,72%<small>dari Total Kontrak</small></div>
+            <div class="kpi-foot-text"><span id="kpi-pct-terserap">10,72%</span><small>dari Total Kontrak</small></div>
           </div>
         </div>
 
@@ -717,7 +717,7 @@
           <div class="kpi-value" id="kpi-sisa-kontrak">3.819.116.662 <span class="rp">Rp</span></div>
           <div class="kpi-footer">
             <div class="circle-icon"><i class="fa-solid fa-layer-group"></i></div>
-            <div class="kpi-foot-text">34,87%<small>dari Total Kontrak</small></div>
+            <div class="kpi-foot-text"><span id="kpi-pct-sisa">34,87%</span><small>dari Total Kontrak</small></div>
           </div>
         </div>
 
@@ -1068,10 +1068,20 @@
       document.getElementById("kpi-pu-terserap").innerHTML = fmt(totTdkTerserap) + ' <span class="rp">Rp</span>';
       document.getElementById("kpi-sisa-kontrak").innerHTML = fmt(totSisa) + ' <span class="rp">Rp</span>';
 
-      const tingkatPenyerapan = totKontrak > 0 ? (totPU / totKontrak * 100) : 0;
-      document.getElementById("kpi-tingkat-penyerapan").textContent = tingkatPenyerapan.toFixed(2) + "%";
+      // Hitung persentase aktual berdasarkan total kontrak
+      const pctTotal = totKontrak > 0 ? 100 : 0;
+      const pctPU = totKontrak > 0 ? (totPU / totKontrak * 100) : 0;
+      const pctTdkTerserap = totKontrak > 0 ? (totTdkTerserap / totKontrak * 100) : 0;
+      const pctSisa = totKontrak > 0 ? (totSisa / totKontrak * 100) : 0;
 
-      const deg = (tingkatPenyerapan / 100) * 180;
+      document.getElementById("kpi-pct-total").textContent = pctTotal.toFixed(2).replace('.', ',') + "%";
+      document.getElementById("kpi-pct-pu").textContent = pctPU.toFixed(2).replace('.', ',') + "%";
+      document.getElementById("kpi-pct-terserap").textContent = pctTdkTerserap.toFixed(2).replace('.', ',') + "%";
+      document.getElementById("kpi-pct-sisa").textContent = pctSisa.toFixed(2).replace('.', ',') + "%";
+
+      document.getElementById("kpi-tingkat-penyerapan").textContent = pctPU.toFixed(2) + "%";
+
+      const deg = (pctPU / 100) * 180;
       const arc = document.getElementById("gaugeArc");
       if(arc) {
         arc.style.background = `conic-gradient(from 270deg, #0b3267 0deg ${deg}deg, #e2e8f0 ${deg}deg 360deg)`;
