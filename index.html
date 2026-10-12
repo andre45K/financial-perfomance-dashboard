@@ -234,7 +234,7 @@
       <a href="nkb.html" class="admin-link">Dashboard NKB</a>
       
 
-      <!-- MENU DASHBOARD NKD (DITAMBAHKAN TEPAT DI DISINI) -->
+      <!-- MENU DASHBOARD NKD -->
       <a href="nkd.html" class="admin-link">Dashboard NKD</a>
       <a href="piutang.html" class="admin-link">Dashboard Piutang</a>
       <a href="login.html" class="admin-link">Admin Input</a>
@@ -1429,13 +1429,12 @@
       const targetElement = document.getElementById(elementId);
       if (!targetElement) return;
 
-      // Indikator loading sederhana
       const btn = event.currentTarget;
       const originalText = btn.innerHTML;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
 
       html2canvas(targetElement, {
-        scale: 2, // Kualitas tinggi (retina/HD)
+        scale: 2,
         useCORS: true,
         backgroundColor: elementId === 'dashboardPart3' || elementId === 'dashboardPart2' ? '#ffffff' : '#060d1a'
       }).then(canvas => {
@@ -1452,6 +1451,10 @@
     };
 
     window.addEventListener("DOMContentLoaded", () => {
+      // Render langsung menggunakan data default agar grafik tidak hilang saat di-refresh
+      renderAll();
+      
+      // Sinkronisasi data realtime dengan Firebase setelahnya
       initFirebaseListener();
     });
   </script>
