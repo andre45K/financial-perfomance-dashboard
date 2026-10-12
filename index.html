@@ -8,8 +8,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-  <!-- html2canvas untuk fitur download gambar JPG -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <!-- FIREBASE SDK (Modular v10) -->
   <script type="module">
@@ -49,15 +47,6 @@
 
     .admin-link { color: #3b82f6; text-decoration: none; font-size: 12px; font-weight: bold; border: 1px solid #3b82f6; padding: 4px 8px; border-radius: 4px; }
     .admin-link:hover { background: #3b82f6; color: white; }
-
-    /* TOMBOL DOWNLOAD DROPDOWN */
-    .download-dropdown { position: relative; display: inline-block; }
-    .download-btn { background: #008767; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-    .download-btn:hover { background: #15803d; }
-    .download-content { display: none; position: absolute; right: 0; background-color: #0f1926; min-width: 220px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.4); z-index: 100; border: 1px solid #1e2d42; border-radius: 6px; overflow: hidden; }
-    .download-content button { color: #ffffff; padding: 10px 14px; text-decoration: none; display: block; width: 100%; text-align: left; background: none; border: none; font-size: 11.5px; cursor: pointer; border-bottom: 1px solid #1e2d42; }
-    .download-content button:hover { background-color: #1e2d42; color: #22c55e; }
-    .download-dropdown:hover .download-content { display: block; }
 
     .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 15px; }
     .kpi-card { background: #0f1926; border: 1px solid #1e2d42; border-radius: 6px; padding: 10px 12px; position: relative; }
@@ -230,239 +219,234 @@
         <span>📅 Periode: <strong>Jan - Dec 2026</strong></span>
       </div>
 
-      <!-- MENU DASHBOARD NKB DITAMBAHKAN DI SINI -->
-      <a href="nkb.html" class="admin-link">Dashboard NKB</a>
-
       <a href="login.html" class="admin-link">Admin Input</a>
+    </div>
+  </div>
 
-      <!-- TOMBOL DOWNLOAD JPG TERPISAH MENJADI 3 FILE -->
-      <div class="download-dropdown">
-        <button class="download-btn"><i class="fa-solid fa-download"></i> Download JPG <i class="fa-solid fa-caret-down"></i></button>
-        <div class="download-content">
-          <button onclick="downloadDashboardPart('dashboardPart1', 'Dashboard_Utama_Dark.jpg')"><i class="fa-solid fa-image"></i> 1. Dashboard Utama (Dark)</button>
-          <button onclick="downloadDashboardPart('dashboardPart2', 'Dashboard_Komparatif_Light.jpg')"><i class="fa-solid fa-image"></i> 2. Analisis Komparatif (Light)</button>
-          <button onclick="downloadDashboardPart('dashboardPart3', 'Dashboard_Analisis_Prognosa.jpg')"><i class="fa-solid fa-image"></i> 3. Analisis Prognosa (Full Year)</button>
+
+  <!-- DASHBOARD 1: ORIGINAL ORDER -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-header"><div class="kpi-icon icon-blue">Rp</div><div class="kpi-title">PENDAPATAN USAHA (JUTA RP)</div></div>
+      <div class="kpi-body">
+        <div class="kpi-metrics">
+          <div class="metric-item"><span>RENCANA</span><strong id="kpi-rev-plan">13.502</strong></div>
+          <div class="metric-item"><span>REALISASI</span><strong id="kpi-rev-act" class="metric-actual">13.909</strong></div>
+        </div>
+        <div><div id="kpi-rev-badge" class="kpi-badge badge-up">▲ 103%</div><span class="kpi-subtext">vs Rencana</span></div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-header"><div class="kpi-icon icon-orange">Rp</div><div class="kpi-title">BEBAN POKOK PENDAPATAN (JUTA RP)</div></div>
+      <div class="kpi-body">
+        <div class="kpi-metrics">
+          <div class="metric-item"><span>RENCANA</span><strong id="kpi-bpp-plan">7.344</strong></div>
+          <div class="metric-item"><span>REALISASI</span><strong id="kpi-bpp-act" class="metric-actual">10.670</strong></div>
+        </div>
+        <div><div id="kpi-bpp-badge" class="kpi-badge badge-down">▲ 145%</div><span class="kpi-subtext">vs Rencana</span></div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-header"><div class="kpi-icon icon-green">Rp</div><div class="kpi-title">GROSS PROFIT (JUTA RP)</div></div>
+      <div class="kpi-body">
+        <div class="kpi-metrics">
+          <div class="metric-item"><span>RENCANA</span><strong id="kpi-gp-plan">6.158</strong></div>
+          <div class="metric-item"><span>REALISASI</span><strong id="kpi-gp-act" class="metric-actual">3.239</strong></div>
+        </div>
+        <div><div id="kpi-gp-badge" class="kpi-badge badge-down">▼ 53%</div><span class="kpi-subtext">vs Rencana</span></div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-header"><div class="kpi-icon icon-purple">%</div><div class="kpi-title">GROSS PROFIT MARGIN (%)</div></div>
+      <div class="kpi-body">
+        <div class="kpi-metrics">
+          <div class="metric-item"><span>RENCANA</span><strong id="kpi-gpm-plan">46%</strong></div>
+          <div class="metric-item"><span>REALISASI</span><strong id="kpi-gpm-act" class="metric-actual">23%</strong></div>
+        </div>
+        <div><div id="kpi-gpm-badge" class="kpi-badge badge-down">▼ 51%</div><span class="kpi-subtext">vs Rencana</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card"><div class="chart-title">PENDAPATAN USAHA (Juta Rp)</div><div class="chart-container"><canvas id="chartRevenue"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">BEBAN POKOK PENDAPATAN (Juta Rp)</div><div class="chart-container"><canvas id="chartBPP"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">GROSS PROFIT (Juta Rp)</div><div class="chart-container"><canvas id="chartGP"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">GROSS PROFIT MARGIN (%)</div><div class="chart-container"><canvas id="chartGPM"></canvas></div></div>
+  </div>
+
+
+  <!-- TABEL UTAMA DARK 1 -->
+  <div class="table-container">
+    <table id="main-table">
+      <thead>
+        <tr>
+          <th rowspan="2" class="th-header-main" style="width: 14%;">URAIAN</th>
+          <th colspan="10" id="th-realisasi-hdr" class="th-realisasi">JAN - SEP 2026 (REALISASI)</th>
+          <th colspan="4" id="th-prognosa-hdr" class="th-prognosa">OKT - DES 2026 (PROGNOSA)</th>
+          <th colspan="3" class="th-total">TOTAL 2026</th>
+        </tr>
+        <tr id="main-table-subheaders">
+          <th>Jan-26</th><th>Feb-26</th><th>Mar-26</th><th>Apr-26</th><th>Mei-26</th><th>Jun-26</th><th>Jul-26</th><th>Aug-26</th><th>Sep-26</th>
+          <th class="th-realisasi">TOTAL</th>
+          <th>Okt-26</th><th>Nov-26</th><th>Des-26</th>
+          <th class="th-prognosa">TOTAL</th>
+          <th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Baris tabel dirender otomatis oleh JS -->
+      </tbody>
+    </table>
+  </div>
+
+
+  <!-- DASHBOARD 2: URUTAN BARU (NON-CONTRIBUTING PLANT, BIAYA TIDAK LANGSUNG, NET PROFIT, NET PROFIT MARGIN) -->
+  <hr class="dashboard-divider">
+  <div class="charts-grid" style="margin-top: 15px;">
+    <div class="chart-card"><div class="chart-title">NON-CONTRIBUTING PLANT (Juta Rp)</div><div class="chart-container"><canvas id="altChartNCP"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">BIAYA TIDAK LANGSUNG (Juta Rp)</div><div class="chart-container"><canvas id="altChartBTL"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">NET PROFIT (Juta Rp)</div><div class="chart-container"><canvas id="altChartNP"></canvas></div></div>
+    <div class="chart-card"><div class="chart-title">NET PROFIT MARGIN (%)</div><div class="chart-container"><canvas id="altChartNPM"></canvas></div></div>
+  </div>
+
+
+  <!-- TABEL KEDUA UNTUK DASHBOARD BARU -->
+  <div class="table-container">
+    <table id="alt-table">
+      <thead>
+        <tr>
+          <th rowspan="2" class="th-header-main" style="width: 14%;">URAIAN</th>
+          <th colspan="10" id="alt-th-realisasi-hdr" class="th-realisasi">JAN - SEP 2026 (REALISASI)</th>
+          <th colspan="4" id="alt-th-prognosa-hdr" class="th-prognosa">OKT - DES 2026 (PROGNOSA)</th>
+          <th colspan="3" class="th-total" id="alt-th-total-hdr">TOTAL 2026</th>
+        </tr>
+        <tr id="alt-table-subheaders">
+          <th>Jan-26</th><th>Feb-26</th><th>Mar-26</th><th>Apr-26</th><th>Mei-26</th><th>Jun-26</th><th>Jul-26</th><th>Aug-26</th><th>Sep-26</th>
+          <th class="th-realisasi">TOTAL</th>
+          <th>Okt-26</th><th>Nov-26</th><th>Des-26</th>
+          <th class="th-prognosa">TOTAL</th>
+          <th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Baris tabel kedua dirender otomatis oleh JS -->
+      </tbody>
+    </table>
+  </div>
+
+
+  <!-- LEGEND DARK -->
+  <div class="footer-legend">
+    <strong>CATATAN :</strong>
+    <div class="legend-item"><div class="box-blue"></div><span id="legend-real-text">Data Jan - Sep 2026 merupakan Realisasi</span></div>
+    <div class="legend-item"><div class="box-orange"></div><span id="legend-prog-text">Data Okt - Dec 2026 merupakan Prognosa</span></div>
+  </div>
+
+
+  <!-- DASHBOARD 3 (LIGHT MODE KOMPARATIF) -->
+  <div class="section-divider-title">VISUALISASI ANALISIS KOMPARATIF</div>
+  <div class="panel-card-light">
+    <div class="panel-light-head">
+      <span class="num-badge-light num-blue">01</span>
+      <h2 class="panel-light-title">PENDAPATAN USAHA vs BEBAN POKOK PENDAPATAN</h2>
+    </div>
+    <div class="panel-light-grid">
+      <div class="ringkasan-box-light">
+        <div class="ringkasan-header-banner"><i class="fa-solid fa-clipboard-list"></i> RINGKASAN</div>
+        <div class="ringkasan-content">
+          <div class="item-light">
+            <div class="icon-circle-custom bg-circle-blue"><i class="fa-solid fa-chart-simple" style="font-size: 20px;"></i><span class="badge-rp-sub">Rp</span></div>
+            <div class="item-light-details">
+              <div class="item-light-title">TOTAL PENDAPATAN USAHA</div>
+              <div id="sec1-tot-rev" class="item-light-val val-blue">13.502</div>
+              <div class="item-light-sub-title">RATA-RATA PER BULAN</div>
+              <div id="sec1-avg-rev" class="item-light-sub-val">1.125</div>
+            </div>
+          </div>
+          <hr style="border:none; border-top: 1px solid #cbd5e1; margin: 4px 0;">
+          <div class="item-light">
+            <div class="icon-circle-custom bg-circle-teal"><i class="fa-solid fa-receipt" style="font-size: 20px;"></i><span class="badge-rp-sub badge-rp-teal">Rp</span></div>
+            <div class="item-light-details">
+              <div class="item-light-title">TOTAL BEBAN POKOK PENDAPATAN</div>
+              <div id="sec1-tot-bpp" class="item-light-val val-teal">7.344</div>
+              <div class="item-light-sub-title">RATA-RATA PER BULAN</div>
+              <div id="sec1-avg-bpp" class="item-light-sub-val sub-teal">612</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-box-light"><canvas id="chartSec1"></canvas></div>
+      <div class="total-box-light">
+        <div>
+          <div class="total-icons-top" style="justify-content: center;">
+            <div class="icon-small-circle" style="background:#0b63ce;"><i class="fa-solid fa-chart-simple"></i></div>
+            <div class="icon-small-circle" style="background:#008767;"><i class="fa-solid fa-receipt"></i></div>
+          </div>
+          <div class="tot-light-title">TOTAL TAHUN 2026</div>
+          <div id="sec1-side-tot" class="tot-light-num">13.502</div>
+        </div>
+        <div class="tot-bars-container">
+          <div class="tot-bar-col bg-blue-bar" style="height: 100%;"><div id="side-val-rev" class="bar-val-top val-blue-text">13.502</div></div>
+          <div id="side-bar-bpp-col" class="tot-bar-col bg-teal-bar" style="height: 54%;"><div id="side-val-bpp" class="bar-val-top val-teal-text">7.344</div></div>
         </div>
       </div>
     </div>
   </div>
 
 
-  <!-- BAGIAN 1: DASHBOARD UTAMA DARK (UNTUK DI-DOWNLOAD SEBAGAI FILE 1) -->
-  <div id="dashboardPart1">
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-header"><div class="kpi-icon icon-blue">Rp</div><div class="kpi-title">PENDAPATAN USAHA (JUTA RP)</div></div>
-        <div class="kpi-body">
-          <div class="kpi-metrics">
-            <div class="metric-item"><span>RENCANA</span><strong id="kpi-rev-plan">13.502</strong></div>
-            <div class="metric-item"><span>REALISASI</span><strong id="kpi-rev-act" class="metric-actual">13.909</strong></div>
-          </div>
-          <div><div id="kpi-rev-badge" class="kpi-badge badge-up">▲ 103%</div><span class="kpi-subtext">vs Rencana</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-header"><div class="kpi-icon icon-orange">Rp</div><div class="kpi-title">BEBAN POKOK PENDAPATAN (JUTA RP)</div></div>
-        <div class="kpi-body">
-          <div class="kpi-metrics">
-            <div class="metric-item"><span>RENCANA</span><strong id="kpi-bpp-plan">7.344</strong></div>
-            <div class="metric-item"><span>REALISASI</span><strong id="kpi-bpp-act" class="metric-actual">10.670</strong></div>
-          </div>
-          <div><div id="kpi-bpp-badge" class="kpi-badge badge-down">▲ 145%</div><span class="kpi-subtext">vs Rencana</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-header"><div class="kpi-icon icon-green">Rp</div><div class="kpi-title">GROSS PROFIT (JUTA RP)</div></div>
-        <div class="kpi-body">
-          <div class="kpi-metrics">
-            <div class="metric-item"><span>RENCANA</span><strong id="kpi-gp-plan">6.158</strong></div>
-            <div class="metric-item"><span>REALISASI</span><strong id="kpi-gp-act" class="metric-actual">3.239</strong></div>
-          </div>
-          <div><div id="kpi-gp-badge" class="kpi-badge badge-down">▼ 53%</div><span class="kpi-subtext">vs Rencana</span></div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-header"><div class="kpi-icon icon-purple">%</div><div class="kpi-title">GROSS PROFIT MARGIN (%)</div></div>
-        <div class="kpi-body">
-          <div class="kpi-metrics">
-            <div class="metric-item"><span>RENCANA</span><strong id="kpi-gpm-plan">46%</strong></div>
-            <div class="metric-item"><span>REALISASI</span><strong id="kpi-gpm-act" class="metric-actual">23%</strong></div>
-          </div>
-          <div><div id="kpi-gpm-badge" class="kpi-badge badge-down">▼ 51%</div><span class="kpi-subtext">vs Rencana</span></div>
-        </div>
-      </div>
+  <!-- PANEL 02 -->
+  <div class="panel-card-light">
+    <div class="panel-light-head">
+      <span class="num-badge-light num-purple">02</span>
+      <h2 class="panel-light-title title-purple">GROSS PROFIT & GROSS PROFIT MARGIN</h2>
     </div>
-
-    <div class="charts-grid">
-      <div class="chart-card"><div class="chart-title">PENDAPATAN USAHA (Juta Rp)</div><div class="chart-container"><canvas id="chartRevenue"></canvas></div></div>
-      <div class="chart-card"><div class="chart-title">BEBAN POKOK PENDAPATAN (Juta Rp)</div><div class="chart-container"><canvas id="chartBPP"></canvas></div></div>
-      <div class="chart-card"><div class="chart-title">GROSS PROFIT (Juta Rp)</div><div class="chart-container"><canvas id="chartGP"></canvas></div></div>
-      <div class="chart-card"><div class="chart-title">GROSS PROFIT MARGIN (%)</div><div class="chart-container"><canvas id="chartGPM"></canvas></div></div>
-    </div>
-
-    <!-- TABEL UTAMA DARK 1 -->
-    <div class="table-container">
-      <table id="main-table">
-        <thead>
-          <tr>
-            <th rowspan="2" class="th-header-main" style="width: 14%;">URAIAN</th>
-            <th colspan="10" id="th-realisasi-hdr" class="th-realisasi">JAN - SEP 2026 (REALISASI)</th>
-            <th colspan="4" id="th-prognosa-hdr" class="th-prognosa">OKT - DES 2026 (PROGNOSA)</th>
-            <th colspan="3" class="th-total">TOTAL 2026</th>
-          </tr>
-          <tr id="main-table-subheaders">
-            <th>Jan-26</th><th>Feb-26</th><th>Mar-26</th><th>Apr-26</th><th>Mei-26</th><th>Jun-26</th><th>Jul-26</th><th>Aug-26</th><th>Sep-26</th>
-            <th class="th-realisasi">TOTAL</th>
-            <th>Okt-26</th><th>Nov-26</th><th>Des-26</th>
-            <th class="th-prognosa">TOTAL</th>
-            <th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <!-- DASHBOARD 2 -->
-    <div class="charts-grid" style="margin-top: 15px;">
-      <div class="chart-card"><div class="chart-title">NON-CONTRIBUTING PLANT (Juta Rp)</div><div class="chart-container"><canvas id="altChartNCP"></canvas></div></div>
-      <div class="chart-card"><div class="chart-title">BIAYA TIDAK LANGSUNG (Juta Rp)</div><div class="chart-container"><canvas id="altChartBTL"></canvas></div></div>
-      <div class="chart-card"><div class="chart-title">NET PROFIT (Juta Rp)</div><div class="chart-container"><canvas id="altChartNP"></canvas></div></div>
-      <div class="chart-card"><div class="chart-title">NET PROFIT MARGIN (%)</div><div class="chart-container"><canvas id="altChartNPM"></canvas></div></div>
-    </div>
-
-    <div class="table-container">
-      <table id="alt-table">
-        <thead>
-          <tr>
-            <th rowspan="2" class="th-header-main" style="width: 14%;">URAIAN</th>
-            <th colspan="10" id="alt-th-realisasi-hdr" class="th-realisasi">JAN - SEP 2026 (REALISASI)</th>
-            <th colspan="4" id="alt-th-prognosa-hdr" class="th-prognosa">OKT - DES 2026 (PROGNOSA)</th>
-            <th colspan="3" class="th-total" id="alt-th-total-hdr">TOTAL 2026</th>
-          </tr>
-          <tr id="alt-table-subheaders">
-            <th>Jan-26</th><th>Feb-26</th><th>Mar-26</th><th>Apr-26</th><th>Mei-26</th><th>Jun-26</th><th>Jul-26</th><th>Aug-26</th><th>Sep-26</th>
-            <th class="th-realisasi">TOTAL</th>
-            <th>Okt-26</th><th>Nov-26</th><th>Des-26</th>
-            <th class="th-prognosa">TOTAL</th>
-            <th>RENCANA</th><th>REALISASI</th><th>% vs Rencana</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <div class="footer-legend" style="margin-bottom: 0;">
-      <strong>CATATAN :</strong>
-      <div class="legend-item"><div class="box-blue"></div><span id="legend-real-text">Data Jan - Sep 2026 merupakan Realisasi</span></div>
-      <div class="legend-item"><div class="box-orange"></div><span id="legend-prog-text">Data Okt - Dec 2026 merupakan Prognosa</span></div>
-    </div>
-  </div>
-
-
-  <!-- BAGIAN 2: DASHBOARD 3 LIGHT KOMPARATIF (UNTUK DI-DOWNLOAD SEBAGAI FILE 2) -->
-  <div id="dashboardPart2" style="margin-top: 30px;">
-    <div class="section-divider-title">VISUALISASI ANALISIS KOMPARATIF</div>
-    <div class="panel-card-light">
-      <div class="panel-light-head">
-        <span class="num-badge-light num-blue">01</span>
-        <h2 class="panel-light-title">PENDAPATAN USAHA vs BEBAN POKOK PENDAPATAN</h2>
-      </div>
-      <div class="panel-light-grid">
-        <div class="ringkasan-box-light">
-          <div class="ringkasan-header-banner"><i class="fa-solid fa-clipboard-list"></i> RINGKASAN</div>
-          <div class="ringkasan-content">
-            <div class="item-light">
-              <div class="icon-circle-custom bg-circle-blue"><i class="fa-solid fa-chart-simple" style="font-size: 20px;"></i><span class="badge-rp-sub">Rp</span></div>
-              <div class="item-light-details">
-                <div class="item-light-title">TOTAL PENDAPATAN USAHA</div>
-                <div id="sec1-tot-rev" class="item-light-val val-blue">13.502</div>
-                <div class="item-light-sub-title">RATA-RATA PER BULAN</div>
-                <div id="sec1-avg-rev" class="item-light-sub-val">1.125</div>
-              </div>
+    <div class="panel-light-grid">
+      <div class="ringkasan-box-light">
+        <div class="ringkasan-header-banner ringkasan-header-purple"><i class="fa-solid fa-clipboard-list"></i> RINGKASAN</div>
+        <div class="ringkasan-content">
+          <div class="item-light">
+            <div class="icon-circle-custom bg-circle-purple"><i class="fa-solid fa-chart-line" style="font-size: 20px;"></i><span class="badge-rp-sub" style="color:#7c3aed; border-color:#7c3aed;">Rp</span></div>
+            <div class="item-light-details">
+              <div class="item-light-title">TOTAL GROSS PROFIT</div>
+              <div id="sec2-tot-gp" class="item-light-val val-purple">6.158</div>
+              <div class="item-light-sub-title">RATA-RATA PER BULAN</div>
+              <div id="sec2-avg-gp" class="item-light-sub-val" style="color:#7c3aed;">513</div>
             </div>
-            <hr style="border:none; border-top: 1px solid #cbd5e1; margin: 4px 0;">
-            <div class="item-light">
-              <div class="icon-circle-custom bg-circle-teal"><i class="fa-solid fa-receipt" style="font-size: 20px;"></i><span class="badge-rp-sub badge-rp-teal">Rp</span></div>
-              <div class="item-light-details">
-                <div class="item-light-title">TOTAL BEBAN POKOK PENDAPATAN</div>
-                <div id="sec1-tot-bpp" class="item-light-val val-teal">7.344</div>
-                <div class="item-light-sub-title">RATA-RATA PER BULAN</div>
-                <div id="sec1-avg-bpp" class="item-light-sub-val sub-teal">612</div>
-              </div>
+          </div>
+          <hr style="border:none; border-top: 1px solid #cbd5e1; margin: 4px 0;">
+          <div class="item-light">
+            <div class="icon-circle-custom bg-circle-orange"><i class="fa-solid fa-percent" style="font-size: 20px;"></i></div>
+            <div class="item-light-details">
+              <div class="item-light-title">GROSS PROFIT MARGIN (TAHUNAN)</div>
+              <div id="sec2-tot-gpm" class="item-light-val val-orange">46%</div>
+              <div class="item-light-sub-title">RATA-RATA PER BULAN</div>
+              <div id="sec2-avg-gpm" class="item-light-sub-val" style="color:#e67e22;">49%</div>
             </div>
           </div>
         </div>
-        <div class="chart-box-light"><canvas id="chartSec1"></canvas></div>
-        <div class="total-box-light">
-          <div>
-            <div class="total-icons-top" style="justify-content: center;">
-              <div class="icon-small-circle" style="background:#0b63ce;"><i class="fa-solid fa-chart-simple"></i></div>
-              <div class="icon-small-circle" style="background:#008767;"><i class="fa-solid fa-receipt"></i></div>
-            </div>
-            <div class="tot-light-title">TOTAL TAHUN 2026</div>
-            <div id="sec1-side-tot" class="tot-light-num">13.502</div>
-          </div>
-          <div class="tot-bars-container">
-            <div class="tot-bar-col bg-blue-bar" style="height: 100%;"><div id="side-val-rev" class="bar-val-top val-blue-text">13.502</div></div>
-            <div id="side-bar-bpp-col" class="tot-bar-col bg-teal-bar" style="height: 54%;"><div id="side-val-bpp" class="bar-val-top val-teal-text">7.344</div></div>
-          </div>
-        </div>
       </div>
-    </div>
-
-    <!-- PANEL 02 -->
-    <div class="panel-card-light" style="margin-bottom: 0;">
-      <div class="panel-light-head">
-        <span class="num-badge-light num-purple">02</span>
-        <h2 class="panel-light-title title-purple">GROSS PROFIT & GROSS PROFIT MARGIN</h2>
-      </div>
-      <div class="panel-light-grid">
-        <div class="ringkasan-box-light">
-          <div class="ringkasan-header-banner ringkasan-header-purple"><i class="fa-solid fa-clipboard-list"></i> RINGKASAN</div>
-          <div class="ringkasan-content">
-            <div class="item-light">
-              <div class="icon-circle-custom bg-circle-purple"><i class="fa-solid fa-chart-line" style="font-size: 20px;"></i><span class="badge-rp-sub" style="color:#7c3aed; border-color:#7c3aed;">Rp</span></div>
-              <div class="item-light-details">
-                <div class="item-light-title">TOTAL GROSS PROFIT</div>
-                <div id="sec2-tot-gp" class="item-light-val val-purple">6.158</div>
-                <div class="item-light-sub-title">RATA-RATA PER BULAN</div>
-                <div id="sec2-avg-gp" class="item-light-sub-val" style="color:#7c3aed;">513</div>
-              </div>
-            </div>
-            <hr style="border:none; border-top: 1px solid #cbd5e1; margin: 4px 0;">
-            <div class="item-light">
-              <div class="icon-circle-custom bg-circle-orange"><i class="fa-solid fa-percent" style="font-size: 20px;"></i></div>
-              <div class="item-light-details">
-                <div class="item-light-title">GROSS PROFIT MARGIN (TAHUNAN)</div>
-                <div id="sec2-tot-gpm" class="item-light-val val-orange">46%</div>
-                <div class="item-light-sub-title">RATA-RATA PER BULAN</div>
-                <div id="sec2-avg-gpm" class="item-light-sub-val" style="color:#e67e22;">49%</div>
-              </div>
-            </div>
+      <div class="chart-box-light"><canvas id="chartSec2"></canvas></div>
+      <div class="total-box-light">
+        <div>
+          <div class="total-icons-top" style="justify-content: center;">
+            <div class="icon-small-circle" style="background:#7c3aed;"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="icon-small-circle" style="background:#e67e22;"><i class="fa-solid fa-percent"></i></div>
           </div>
+          <div class="tot-light-title">TOTAL TAHUN 2026</div>
+          <div id="sec2-side-tot" class="tot-light-num" style="color:#7c3aed;">6.158</div>
         </div>
-        <div class="chart-box-light"><canvas id="chartSec2"></canvas></div>
-        <div class="total-box-light">
-          <div>
-            <div class="total-icons-top" style="justify-content: center;">
-              <div class="icon-small-circle" style="background:#7c3aed;"><i class="fa-solid fa-chart-line"></i></div>
-              <div class="icon-small-circle" style="background:#e67e22;"><i class="fa-solid fa-percent"></i></div>
-            </div>
-            <div class="tot-light-title">TOTAL TAHUN 2026</div>
-            <div id="sec2-side-tot" class="tot-light-num" style="color:#7c3aed;">6.158</div>
-          </div>
-          <div class="tot-bars-container">
-            <div class="tot-bar-col bg-purple-bar" style="height: 100%;"><div id="side-val-gp" class="bar-val-top val-purple-text">6.158</div></div>
-            <div id="side-bar-gpm-col" class="tot-bar-col bg-orange-bar" style="height: 46%;"><div id="side-val-gpm" class="bar-val-top val-orange-text">46%</div></div>
-          </div>
+        <div class="tot-bars-container">
+          <div class="tot-bar-col bg-purple-bar" style="height: 100%;"><div id="side-val-gp" class="bar-val-top val-purple-text">6.158</div></div>
+          <div id="side-bar-gpm-col" class="tot-bar-col bg-orange-bar" style="height: 46%;"><div id="side-val-gpm" class="bar-val-top val-orange-text">46%</div></div>
         </div>
       </div>
     </div>
   </div>
 
 
-  <!-- BAGIAN 3: DASHBOARD 4 ANALISIS PROGNOSA (UNTUK DI-DOWNLOAD SEBAGAI FILE 3) -->
-  <div id="dashboardPart3" class="dashboard-3-container">
+  <!-- DASHBOARD 4 -->
+  <div class="dashboard-3-container">
     <div class="d3-header">
       <div>
         <div class="d3-title">FINANCIAL PERFORMANCE DASHBOARD</div>
@@ -492,6 +476,7 @@
         <div id="d3-kpi-gpm-sub" class="d3-kpi-sub">Target 2026: 46%</div>
       </div>
     </div>
+
 
     <!-- BAGIAN 01 -->
     <div style="margin-bottom: 25px;">
@@ -636,7 +621,7 @@
           </div>
         </div>
       </div>
-      <div style="font-size: 9px; color: #64748b; font-style: italic; margin-top: -15px;">*Angka dalam Juta Rupiah (kecuali margin dalam %)</div>
+      <div style="font-size: 9px; color: #64748b; font-style: italic; margin-top: -15px;">*Angka dalam miliar Rupiah (kecuali margin dalam %)</div>
     </div>
   </div>
 
@@ -714,6 +699,7 @@
               let ncpAct = toNumber(source.ncpActual, defMonth.ncpActual);
               let btlAct = toNumber(source.btlActual, defMonth.btlActual);
 
+              // Konversi otomatis ke juta jika input berupa nilai nominal penuh (> 10000 atau < -10000)
               if (Math.abs(revPlan) > 10000) revPlan /= 1000000;
               if (Math.abs(revAct) > 10000) revAct /= 1000000;
               if (Math.abs(bppPlan) > 10000) bppPlan /= 1000000;
@@ -1083,6 +1069,7 @@
 
         let altHtmlRows = "";
         
+        // 1. Non-Contributing Plant
         altHtmlRows += `<tr><td class="row-label">NON-CONTRIBUTING PLANT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realNcp)}</td>`;
@@ -1090,6 +1077,7 @@
         altHtmlRows += `<td class="txt-green">${formatNumber(progNcp)}</td>`;
         altHtmlRows += `<td class="metric-actual">${formatNumber(totalActualNcp)}</td></tr>`;
 
+        // 2. Biaya Tidak Langsung
         altHtmlRows += `<tr><td class="row-label">BIAYA TIDAK LANGSUNG (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.btlActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realBtl)}</td>`;
@@ -1097,6 +1085,7 @@
         altHtmlRows += `<td class="txt-green">${formatNumber(progBtl)}</td>`;
         altHtmlRows += `<td class="metric-actual">${formatNumber(totalActualBtl)}</td></tr>`;
 
+        // 3. Net Profit
         altHtmlRows += `<tr><td class="row-label">NET PROFIT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.npActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realNp)}</td>`;
@@ -1104,6 +1093,7 @@
         altHtmlRows += `<td class="txt-green">${formatNumber(progNp)}</td>`;
         altHtmlRows += `<td class="metric-actual">${formatNumber(totalActualNp)}</td></tr>`;
 
+        // 4. Net Profit Margin
         altHtmlRows += `<tr><td class="row-label">NET PROFIT MARGIN (%)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatPercent(data.npmActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatPercent(realNpm)}</td>`;
@@ -1407,7 +1397,7 @@
     }
 
     function getMonthFullName(month) {
-      const map = { Jan: "Januari", Feb: "Februari", Mar: "Maret", Apr: "April", May: "Mei", Jun: "Juni", Jul: "Juli", Aug: "Agustus", Sep: "September", Oct: "Oktober", November: "November", Dec: "Desember" };
+      const map = { Jan: "Januari", Feb: "Februari", Mar: "Maret", Apr: "April", May: "Mei", Jun: "Juni", Jul: "Juli", Aug: "Agustus", Sep: "September", Oct: "Oktober", Nov: "November", Dec: "Desember" };
       return map[month] || month;
     }
 
@@ -1419,33 +1409,6 @@
       renderLightSectionDirect();
       renderDashboard3();
     }
-
-    // FUNGSI DOWNLOAD BAGIAN DASHBOARD MENJADI JPG KUALITAS TERBAIK
-    window.downloadDashboardPart = function(elementId, filename) {
-      const targetElement = document.getElementById(elementId);
-      if (!targetElement) return;
-
-      // Indikator loading sederhana
-      const btn = event.currentTarget;
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
-
-      html2canvas(targetElement, {
-        scale: 2, // Kualitas tinggi (retina/HD)
-        useCORS: true,
-        backgroundColor: elementId === 'dashboardPart3' || elementId === 'dashboardPart2' ? '#ffffff' : '#060d1a'
-      }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = filename;
-        link.href = canvas.toDataURL('image/jpeg', 0.95);
-        link.click();
-        btn.innerHTML = originalText;
-      }).catch(err => {
-        console.error("Gagal mengunduh gambar:", err);
-        alert("Terjadi kesalahan saat mengunduh gambar.");
-        btn.innerHTML = originalText;
-      });
-    };
 
     window.addEventListener("DOMContentLoaded", () => {
       initFirebaseListener();
