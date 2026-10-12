@@ -732,9 +732,9 @@
                 revenuePlan: revPlan,
                 revenueActual: revAct,
                 bppPlan: bppPlan,
-                bppAct: bppAct,
+                bppActual: bppAct,
                 gpPlan: gpPlan,
-                gpAct: gpAct,
+                gpActual: gpAct,
                 ncpPlan: gpPlan,
                 ncpActual: ncpAct,
                 btlActual: btlAct,
@@ -781,7 +781,7 @@
         const rPlan = Number(item.revenuePlan) || 0;
         const rAct = Number(item.revenueActual) || 0;
         const bPlan = Number(item.bppPlan) || 0;
-        const bAct = Number(item.bppAct) || 0;
+        const bAct = Number(item.bppActual) || 0;
         const nAct = Number(item.ncpActual) || 0;
         const btlVal = Number(item.btlActual) || 0;
 
@@ -1430,8 +1430,10 @@
       if (!targetElement) return;
 
       // Indikator loading sederhana
-      const btn = event.currentTarget;
-      const originalText = btn.innerHTML;
+      const btn = document.activeElement && document.activeElement.tagName === "BUTTON"
+        ? document.activeElement
+        : null;
+      const originalText = btn ? btn.innerHTML : "";
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
 
       html2canvas(targetElement, {
@@ -1443,15 +1445,22 @@
         link.download = filename;
         link.href = canvas.toDataURL('image/jpeg', 0.95);
         link.click();
-        btn.innerHTML = originalText;
+        if (btn) btn.innerHTML = originalText;
       }).catch(err => {
         console.error("Gagal mengunduh gambar:", err);
         alert("Terjadi kesalahan saat mengunduh gambar.");
-        btn.innerHTML = originalText;
+        if (btn) btn.innerHTML = originalText;
       });
     };
 
     window.addEventListener("DOMContentLoaded", () => {
+      // Tampilkan data bawaan terlebih dahulu agar grafik dan tabel tidak kosong
+      // saat koneksi Firebase masih dimuat atau gagal tersambung.
+      try {
+        renderAll();
+      } catch (error) {
+        console.error("Gagal menampilkan dashboard awal:", error);
+      }
       initFirebaseListener();
     });
   </script>
