@@ -676,40 +676,35 @@
     let financialData = structuredClone(defaultFinancialData);
 
     function initFirebaseListener() {
-      // Render data lokal terlebih dahulu agar grafik tetap tampil jika Firebase lambat/gagal.
-      try { renderAll(); } catch (error) { console.error("Gagal merender data awal dashboard:", error); }
-
-      const startedAt = Date.now();
+      let attempts = 0;
       const checkInterval = setInterval(() => {
+        attempts++;
         if (window.firebaseDB && window.firebaseFns) {
           clearInterval(checkInterval);
-          try {
-            const { doc, onSnapshot, setDoc } = window.firebaseFns;
-            const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+          const { doc, onSnapshot, setDoc } = window.firebaseFns;
+          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
 
-            onSnapshot(docRef, (docSnap) => {
-              try {
-                if (docSnap.exists()) {
-                  financialData = normalizeFinancialData(docSnap.data());
-                  renderAll();
-                } else {
-                  setDoc(docRef, defaultFinancialData).catch((error) => {
-                    console.error("Gagal membuat data awal Firestore:", error);
-                  });
-                  // Data default sudah dirender, jadi dashboard tidak menunggu write.
-                }
-              } catch (error) {
-                console.error("Gagal memproses data Firestore:", error);
+          onSnapshot(docRef, async (docSnap) => {
+            try {
+              if (docSnap.exists()) {
+                financialData = normalizeFinancialData(docSnap.data());
+                renderAll();
+              } else {
+                await setDoc(docRef, defaultFinancialData);
               }
-            }, (error) => {
-              console.error("Gagal menyinkronkan data Firestore secara realtime:", error);
-            });
-          } catch (error) {
-            console.error("Inisialisasi listener Firebase gagal:", error);
-          }
-        } else if (Date.now() - startedAt > 10000) {
+            } catch (error) {
+              console.error("Gagal menampilkan data dashboard:", error);
+              renderAll();
+            }
+          }, (error) => {
+            console.error("Gagal menyinkronkan data Firestore secara realtime:", error);
+            // Dashboard tetap tampil dengan data bawaan saat akses Firestore gagal.
+            renderAll();
+          });
+        } else if (attempts >= 100) {
           clearInterval(checkInterval);
-          console.error("Firebase belum siap. Dashboard tetap menampilkan data lokal.");
+          console.error("Firebase belum siap. Periksa koneksi internet dan konfigurasi Firebase.");
+          renderAll();
         }
       }, 100);
     }
@@ -730,8 +725,8 @@
               let revPlan = toNumber(source.revenuePlan, defMonth.revenuePlan);
               let revAct = toNumber(source.revenueActual, defMonth.revenueActual);
               let bppPlan = toNumber(source.bppPlan, defMonth.bppPlan);
-              let bppAct = toNumber(source.bppActual, defMonth.bppActual);
-              
+              let bppAct = toNumber(source.bppActual ?? source.bppAct, defMonth.bppActual);
+
               let ncpAct = toNumber(source.ncpActual, defMonth.ncpActual);
               let btlAct = toNumber(source.btlActual, defMonth.btlActual);
 
@@ -750,10 +745,8 @@
                 revenueActual: revAct,
                 bppPlan: bppPlan,
                 bppActual: bppAct,
-                bppAct: bppAct,
                 gpPlan: gpPlan,
                 gpActual: gpAct,
-                gpAct: gpAct,
                 ncpPlan: gpPlan,
                 ncpActual: ncpAct,
                 btlActual: btlAct,
@@ -1449,7 +1442,7 @@
       if (!targetElement) return;
 
       // Indikator loading sederhana
-      const btn = (typeof event !== "undefined" && event.currentTarget) ? event.currentTarget : document.activeElement;
+      const btn = event.currentTarget;
       const originalText = btn.innerHTML;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
 
@@ -1471,6 +1464,10 @@
     };
 
     window.addEventListener("DOMContentLoaded", () => {
+      if (typeof Chart === "undefined") {
+        console.error("Chart.js tidak berhasil dimuat. Periksa koneksi internet/CDN.");
+        return;
+      }
       initFirebaseListener();
     });
   </script>
