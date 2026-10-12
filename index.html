@@ -52,8 +52,8 @@
 
     /* TOMBOL DOWNLOAD DROPDOWN */
     .download-dropdown { position: relative; display: inline-block; }
-    .download-btn { background: #008767; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-    .download-btn:hover { background: #15803d; }
+    .download-btn { background: #188b24; color: white; border: 1px solid #146e1c; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .download-btn:hover { background: #146e1c; }
     .download-content { display: none; position: absolute; right: 0; background-color: #0f1926; min-width: 220px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.4); z-index: 100; border: 1px solid #1e2d42; border-radius: 6px; overflow: hidden; }
     .download-content button { color: #ffffff; padding: 10px 14px; text-decoration: none; display: block; width: 100%; text-align: left; background: none; border: none; font-size: 11.5px; cursor: pointer; border-bottom: 1px solid #1e2d42; }
     .download-content button:hover { background-color: #1e2d42; color: #22c55e; }
@@ -233,8 +233,7 @@
       <!-- MENU DASHBOARD NKB -->
       <a href="nkb.html" class="admin-link">Dashboard NKB</a>
       
-
-      <!-- MENU DASHBOARD NKD (DITAMBAHKAN TEPAT DI DISINI) -->
+      <!-- MENU DASHBOARD NKD -->
       <a href="nkd.html" class="admin-link">Dashboard NKD</a>
       <a href="piutang.html" class="admin-link">Dashboard Piutang</a>
       <a href="login.html" class="admin-link">Admin Input</a>
@@ -676,6 +675,9 @@
     let financialData = structuredClone(defaultFinancialData);
 
     function initFirebaseListener() {
+      // Langsung render data awal agar grafik tampil seketika tanpa menunggu jeda network/firebase
+      renderAll();
+
       const checkInterval = setInterval(() => {
         if (window.firebaseDB && window.firebaseFns) {
           clearInterval(checkInterval);
@@ -1411,50 +1413,4 @@
     }
 
     function getMonthFullName(month) {
-      const map = { Jan: "Januari", Feb: "Februari", Mar: "Maret", Apr: "April", May: "Mei", Jun: "Juni", Jul: "Juli", Aug: "Agustus", Sep: "September", Oct: "Oktober", November: "November", Dec: "Desember" };
-      return map[month] || month;
-    }
-
-    function renderAll() {
-      renderHeaderStatus();
-      renderDashboard1KPI();
-      renderDarkCharts();
-      renderMainTable();
-      renderLightSectionDirect();
-      renderDashboard3();
-    }
-
-    // FUNGSI DOWNLOAD BAGIAN DASHBOARD MENJADI JPG KUALITAS TERBAIK
-    window.downloadDashboardPart = function(elementId, filename) {
-      const targetElement = document.getElementById(elementId);
-      if (!targetElement) return;
-
-      // Indikator loading sederhana
-      const btn = event.currentTarget;
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
-
-      html2canvas(targetElement, {
-        scale: 2, // Kualitas tinggi (retina/HD)
-        useCORS: true,
-        backgroundColor: elementId === 'dashboardPart3' || elementId === 'dashboardPart2' ? '#ffffff' : '#060d1a'
-      }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = filename;
-        link.href = canvas.toDataURL('image/jpeg', 0.95);
-        link.click();
-        btn.innerHTML = originalText;
-      }).catch(err => {
-        console.error("Gagal mengunduh gambar:", err);
-        alert("Terjadi kesalahan saat mengunduh gambar.");
-        btn.innerHTML = originalText;
-      });
-    };
-
-    window.addEventListener("DOMContentLoaded", () => {
-      initFirebaseListener();
-    });
-  </script>
-
-</body>
-</html>
+      const map = { Jan: "Januari", Feb: "Februari", Mar: "Maret", Apr: "April", May: "Mei", Jun: "Juni", Jul: "Juli", Aug: "Agustus", Sep: "September
