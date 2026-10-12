@@ -230,13 +230,9 @@
         <span>📅 Periode: <strong>Jan - Dec 2026</strong></span>
       </div>
 
-      <!-- MENU DASHBOARD NKB -->
+      <!-- MENU DASHBOARD NKB DITAMBAHKAN DI SINI -->
       <a href="nkb.html" class="admin-link">Dashboard NKB</a>
-      
 
-      <!-- MENU DASHBOARD NKD -->
-      <a href="nkd.html" class="admin-link">Dashboard NKD</a>
-      <a href="piutang.html" class="admin-link">Dashboard Piutang</a>
       <a href="login.html" class="admin-link">Admin Input</a>
 
       <!-- TOMBOL DOWNLOAD JPG TERPISAH MENJADI 3 FILE -->
@@ -623,7 +619,7 @@
           <div class="d3-panel-flex">
             <div class="d3-canvas-wrap"><canvas id="d3ChartGpm"></canvas></div>
             <div class="d3-cumul-box">
-              <div id="d3-gpm-cumul-title" class="d3-cumul-title">Pencapaian s.d. Sep 2026</div>
+              <div id="d3-gpm-cumul-title" class="d3-gpm-cumul-title">Pencapaian s.d. Sep 2026</div>
               <div class="d3-cumul-cols">
                 <div class="d3-cumul-item">
                   <div id="d3-gpm-plan-cumul" class="d3-gpm-plan-cumul-val d3-cumul-val" style="color:#e67e22;">48%</div>
@@ -1429,12 +1425,13 @@
       const targetElement = document.getElementById(elementId);
       if (!targetElement) return;
 
+      // Indikator loading sederhana
       const btn = event.currentTarget;
       const originalText = btn.innerHTML;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
 
       html2canvas(targetElement, {
-        scale: 2,
+        scale: 2, // Kualitas tinggi (retina/HD)
         useCORS: true,
         backgroundColor: elementId === 'dashboardPart3' || elementId === 'dashboardPart2' ? '#ffffff' : '#060d1a'
       }).then(canvas => {
@@ -1451,10 +1448,6 @@
     };
 
     window.addEventListener("DOMContentLoaded", () => {
-      // Render langsung menggunakan data default agar grafik tidak hilang saat di-refresh
-      renderAll();
-      
-      // Sinkronisasi data realtime dengan Firebase setelahnya
       initFirebaseListener();
     });
   </script>
