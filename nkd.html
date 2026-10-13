@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard NKD - Nilai Kontrak yang Dikelola</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- FIREBASE SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
+      authDomain: "financial-perfomance-dashboard.firebaseapp.com",
+      projectId: "financial-perfomance-dashboard",
+      storageBucket: "financial-perfomance-dashboard.firebasestorage.app",
+      messagingSenderId: "136866453174",
+      appId: "1:136866453174:web:b69a3e14672eb96cc53817"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.firebaseDB = db;
+    window.firebaseFns = { doc, getDoc, setDoc, onSnapshot };
+  </script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0b3267;
+      --navy-dark: #072248;
+      --blue: #1266c4;
+      --green: #188b24;
+      --orange: #f0b000;
+      --purple: #6d43b6;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #d8dde4;
+      --card: #ffffff;
+      --bg: #f7f8fa;
+    }
+
+    body {
+      background: #f4f6f9;
+      color: var(--text);
+      font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      padding: 12px 16px 24px;
+    }
+
+    .dashboard {
+      width: 100%;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    /* ================= HEADER UTAMA & NAVIGASI ================= */
+    .header-main-box {
+      background: var(--navy);
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .header-brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-logo-icon {
+      font-size: 28px;
+      color: #fff;
+    }
+
+    .header-title-area h1 {
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      line-height: 1.2;
+    }
+
+    .header-title-area p {
+      font-size: 11px;
+      color: #cbd5e1;
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    .nav-actions-wrap {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-back-btn {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 11.5px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .nav-back-btn:hover { background: rgba(255, 255, 255, 0.25); }
+    .btn-download-jpg { background: var(--green); border-color: #146e1c; }
+    .btn-download-jpg:hover { background: #146e1c; }
+
+    /* ================= PANEL ADMIN / INPUT & EDIT ================= */
+    .admin-panel-container {
+      background: var(--navy);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      overflow: hidden;
+    }
+
+    .admin-panel-header {
+      background: var(--navy-dark);
+      color: #fff;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 800;
+      font-size: 11.5px;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .toggle-panel-btn {
+      background: #ffffff;
+      color: var(--navy-dark);
+      border: none;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 10.5px;
+      cursor: pointer;
+    }
+    .toggle-panel-btn:hover { background: #e2e8f0; }
+
+    .admin-panel-body {
+      background: #ffffff;
+      padding: 16px;
+      color: #111827;
+      display: none;
+    }
+    .admin-panel-body.active { display: block; }
+
+    .admin-desc {
+      font-size: 11px;
+      color: #4b5563;
+      margin-bottom: 12px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr 1fr 1fr 1fr auto auto;
+      gap: 10px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 10px;
+      font-weight: 800;
+      color: #374151;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .form-control {
+      width: 100%;
+      height: 32px;
+      padding: 0 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      font-size: 11px;
+      background: #fff;
+    }
+
+    .btn-action-form {
+      height: 32px;
+      padding: 0 14px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      color: #fff;
+    }
+    .btn-save { background: #1d4ed8; }
+    .btn-save:hover { background: #1e40af; }
+    .btn-reset { background: #64748b; }
+    .btn-reset:hover { background: #475569; }
+
+    .master-table-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #1e293b;
+      margin-bottom: 8px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 12px;
+    }
+    .master-table-scroll {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+    }
+
+    /* ================= TOP SECTION: JUDUL UTAMA & FILTER ================= */
+    .top-section-layout {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      gap: 16px;
+    }
+
+    .dashboard-main-title-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border: 1px solid #e2e5e9;
+      border-radius: 8px;
+      padding: 12px 18px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+      flex: 1;
+    }
+
+    .title-box-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .title-box-text h2 {
+      color: var(--navy);
+      font-size: 18px;
+      font-weight: 850;
+      text-transform: uppercase;
+      line-height: 1.15;
+    }
+
+    .title-box-text p {
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .filter-column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 190px;
+      flex-shrink: 0;
+    }
+
+    .filter-card-custom {
+      border: 1px solid #0b3267;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    }
+
+    .filter-card-header {
+      background: var(--navy);
+      color: #fff;
+      font-weight: 800;
+      font-size: 10px;
+      padding: 6px 10px;
+      text-transform: uppercase;
+    }
+
+    .filter-card-body select {
+      width: 100%;
+      height: 30px;
+      border: none;
+      padding: 0 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #333;
+      background: #fff;
+      outline: none;
+    }
+
+    /* ================= KPI ================= */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .kpi-card {
+      min-height: 150px;
+      background: #fff;
+      border: 1px solid #e2e5e9;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+      padding: 14px 14px 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-title {
+      color: var(--navy-dark);
+      font-size: 11.5px;
+      font-weight: 800;
+      text-align: center;
+      text-transform: uppercase;
+      white-space: nowrap;
+      margin-bottom: 8px;
+    }
+    .kpi-card.green .kpi-title { color: #166534; }
+    .kpi-card.orange .kpi-title { color: #b45309; }
+
+    .kpi-value {
+      text-align: center;
+      color: #101827;
+      font-size: 19px;
+      line-height: 1.1;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+    .kpi-value .rp {
+      font-size: 10px;
+      font-weight: 700;
+      margin-left: 2px;
+      color: #343a40;
+    }
+
+    .kpi-footer {
+      position: absolute;
+      left: 14px;
+      bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--navy-dark);
+      font-weight: 800;
+      font-size: 13px;
+    }
+    .kpi-card.green .kpi-footer { color: #166534; }
+    .kpi-card.orange .kpi-footer { color: #b45309; }
+    .kpi-card.blue .kpi-footer { color: #1d4ed8; }
+
+    .circle-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      background: var(--navy);
+      font-size: 15px;
+    }
+    .green .circle-icon { background: #166534; }
+    .orange .circle-icon { background: #d97706; }
+    .blue .circle-icon { background: #1d4ed8; }
+
+    .kpi-foot-text { line-height: 1.15; }
+    .kpi-foot-text small { display: block; font-size: 9.5px; font-weight: 600; margin-top: 1px; color: #4b5563; }
+
+    /* GAUGE */
+    .gauge-card { padding-left: 10px; padding-right: 10px; }
+    .gauge-card .kpi-value { font-size: 19px; margin-top: -2px; }
+    .gauge-wrap {
+      width: 100px;
+      height: 52px;
+      margin: 4px auto 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .gauge-arc {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: conic-gradient(from 270deg, #0b3267 0deg 195.84deg, #e2e8f0 195.84deg 360deg);
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .gauge-arc::after {
+      content: "";
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #fff;
+      left: 18px;
+      top: 18px;
+    }
+    .gauge-scale {
+      display: flex;
+      justify-content: space-between;
+      width: 105px;
+      margin: 1px auto 0;
+      font-size: 8.5px;
+      color: #555;
+    }
+    .gauge-card .kpi-footer { bottom: 10px; left: 12px; right: 12px; justify-content: center; color: var(--navy); }
+
+    /* ================= PANELS / CHARTS ================= */
+    .panel-grid {
+      display: grid;
+      grid-template-columns: 1.08fr .96fr 1.08fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid #e0e4e8;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+      overflow: hidden;
+    }
+
+    .chart-panel { height: 270px; padding: 10px 12px; }
+    .panel-title {
+      color: var(--navy-dark);
+      font-size: 12px;
+      font-weight: 850;
+      text-transform: uppercase;
+      margin: 0 0 6px;
+    }
+    .chart-box { height: 225px; position: relative; }
+
+    /* ================= TABLES ================= */
+    .table-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .table-panel { min-height: 380px; padding: 12px; }
+    .table-panel .panel-title { margin-bottom: 8px; }
+    .table-scroll { width: 100%; overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 9.5px;
+      color: #111827;
+    }
+    th {
+      background: var(--navy);
+      color: #fff;
+      border: 1px solid #cbd5e1;
+      height: 26px;
+      padding: 4px 4px;
+      font-weight: 800;
+      line-height: 1.1;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    td {
+      border: 1px solid #e2e8f0;
+      height: 25px;
+      padding: 4px 5px;
+      text-align: right;
+      background: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    td.left { text-align: left; }
+    td.center { text-align: center; }
+    tbody tr:nth-child(even) td { background: #f8fafc; }
+    tfoot td {
+      background: #f1f5f9;
+      border-top: 1.5px solid #cbd5e1;
+      font-weight: 800;
+      height: 28px;
+      text-align: right;
+    }
+    tfoot td.left { text-align: left; }
+
+    .customer-table th:nth-child(1), .customer-table td:nth-child(1) { width: 30px; }
+    .customer-table th:nth-child(2), .customer-table td:nth-child(2) { width: 22%; text-align: left; }
+    .customer-table th:nth-child(3), .customer-table td:nth-child(3) { width: 16%; text-align: left; }
+    .customer-table th:nth-child(4), .customer-table td:nth-child(4) { width: 13%; }
+    .customer-table th:nth-child(5), .customer-table td:nth-child(5) { width: 12%; }
+    .customer-table th:nth-child(6), .customer-table td:nth-child(6) { width: 13%; }
+    .customer-table th:nth-child(7), .customer-table td:nth-child(7) { width: 13%; }
+    .customer-table th:nth-child(8), .customer-table td:nth-child(8) { width: 60px; }
+
+    .alat-table th:nth-child(1), .alat-table td:nth-child(1) { width: 30px; }
+    .alat-table th:nth-child(2), .alat-table td:nth-child(2) { width: 31%; text-align: left; }
+    .alat-table th:nth-child(3), .alat-table td:nth-child(3) { width: 16%; }
+    .alat-table th:nth-child(4), .alat-table td:nth-child(4) { width: 15%; }
+    .alat-table th:nth-child(5), .alat-table td:nth-child(5) { width: 17%; }
+    .alat-table th:nth-child(6), .alat-table td:nth-child(6) { width: 17%; }
+
+    .btn-table-action {
+      padding: 2px 6px;
+      font-size: 9.5px;
+      border-radius: 3px;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+    }
+    .btn-edit { background: #d97706; margin-right: 2px; }
+    .btn-edit:hover { background: #b45309; }
+    .btn-delete { background: #dc2626; }
+    .btn-delete:hover { background: #b91c1c; }
+
+    .note { font-size: 10px; color: #4b5563; font-style: italic; margin-top: 15px; }
+
+    @media (max-width: 1200px) {
+      .panel-grid { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .table-grid { grid-template-columns: 1fr; }
+      .top-section-layout { flex-direction: column; }
+      .filter-column { width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="dashboard">
+
+  <!-- HEADER UTAMA & NAVIGASI -->
+  <div class="header-main-box">
+    <div class="header-brand-wrap">
+      <div class="header-logo-icon"><i class="fa-solid fa-file-signature"></i></div>
+      <div class="header-title-area">
+        <h1>DASHBOARD NKB - PT WASKITA BETON PRECAST, TBK</h1>
+        <p>Sistem Informasi Manajemen Kontrak & Perencanaan</p>
+      </div>
+    </div>
+    <div class="nav-actions-wrap">
+      <button class="nav-back-btn btn-download-jpg" onclick="downloadDashboardJPG()"><i class="fa-solid fa-download"></i> Download JPG</button>
+      <a href="index.html" class="nav-back-btn"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard Utama</a>
+    </div>
+  </div>
+
+  <!-- PANEL ADMIN: INPUT, EDIT & PERBARUI DATA -->
+  <div class="admin-panel-container">
+    <div class="admin-panel-header">
+      <span><i class="fa-solid fa-gears"></i> PANEL ADMIN: INPUT, EDIT & PERBARUI DATA NILAI KONTRAK DIKELOLA (NKD)</span>
+      <button class="toggle-panel-btn" onclick="toggleInputPanel()">Tutup/Buka Panel</button>
+    </div>
+    <div class="admin-panel-body" id="inputPanel">
+      <div class="admin-desc" id="formDescTitle">Tambahkan atau ubah data kontrak proyek pada form di bawah ini. Grafik, KPI, dan tabel rincian akan diperbarui secara otomatis.</div>
+      
+      <input type="hidden" id="editIndex" value="-1">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Customer / Proyek</label>
+          <input type="text" id="inCustomer" class="form-control" placeholder="Nama Customer">
+        </div>
+        <div class="form-group">
+          <label>Jenis Alat</label>
+          <select id="inTipeAlat" class="form-control">
+            <option>Truck Mixer</option>
+            <option>Stone Crusher</option>
+            <option>Truck Trailer</option>
+            <option>Mobile Crane+Bucket Cor</option>
+            <option>Dump Truck</option>
+            <option>Silo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Total Kontrak (Rp)</label>
+          <input type="number" id="inTotalKontrak" class="form-control" placeholder="Contoh: 500000000">
+        </div>
+        <div class="form-group">
+          <label>PU Terealisasi (Rp)</label>
+          <input type="number" id="inPU" class="form-control" placeholder="Contoh: 250000000">
+        </div>
+        <div class="form-group">
+          <label>PU Tidak Terserap (Rp)</label>
+          <input type="number" id="inTdkTerserap" class="form-control" placeholder="Contoh: 50000000">
+        </div>
+        <div>
+          <button class="btn-action-form btn-save" onclick="saveCustomerData()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
+        </div>
+        <div>
+          <button class="btn-action-form btn-reset" onclick="resetForm()">Reset</button>
+        </div>
+      </div>
+
+      <div class="master-table-title">DAFTAR MASTER KONTRAK (<span id="totalContractCount">15</span> KONTRAK)</div>
+      <div class="master-table-scroll">
+        <table class="customer-table" style="margin-bottom: 0;">
+          <thead>
+            <tr>
+              <th style="width: 30px;">NO</th>
+              <th style="text-align: left;">CUSTOMER</th>
+              <th style="text-align: left;">TIPE ALAT</th>
+              <th>TOTAL KONTRAK (RP)</th>
+              <th>PU TEREALISASI (RP)</th>
+              <th>PU TDK TERSERAP (RP)</th>
+              <th>SISA KONTRAK (RP)</th>
+              <th style="width: 70px;">AKSI</th>
+            </tr>
+          </thead>
+          <tbody id="master-table-body">
+            <!-- Data master admin dimuat dinamis -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- AREA YANG AKAN DI-DOWNLOAD MULAI DARI SINI -->
+  <div id="captureArea">
+
+    <!-- BAGIAN KETERANGAN "NILAI KONTRAK YANG DIKELOLA" DAN FILTER DINAMIS -->
+    <div class="top-section-layout">
+      <div class="dashboard-main-title-box">
+        <div class="title-box-icon"><i class="fa-solid fa-file-signature"></i></div>
+        <div class="title-box-text">
+          <h2>NILAI KONTRAK YANG DIKELOLA</h2>
+          <p id="labelPeriodeDisplay">s.d. JULI 2026</p>
+        </div>
+      </div>
+
+      <div class="filter-column">
+        <div class="filter-card-custom">
+          <div class="filter-card-header">PERIODE DATA</div>
+          <div class="filter-card-body">
+            <select id="periodeFilter">
+              <!-- Opsi Bulan Januari - Desember & Tahun 2026 - 2030 akan di-generate otomatis via JS -->
+            </select>
+          </div>
+        </div>
+        <div class="filter-card-custom">
+          <div class="filter-card-header">TIPE ALAT</div>
+          <div class="filter-card-body">
+            <select id="tipeAlatFilter">
+              <option>All</option>
+              <option>Truck Mixer</option>
+              <option>Stone Crusher</option>
+              <option>Truck Trailer</option>
+              <option>Mobile Crane+Bucket Cor</option>
+              <option>Dump Truck</option>
+              <option>Silo</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN AREA DASHBOARD -->
+    <main class="main-area">
+
+      <!-- KPI -->
+      <section class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-title">TOTAL KONTRAK</div>
+          <div class="kpi-value" id="kpi-total-kontrak">10.956.633.326 <span class="rp">Rp</span></div>
+          <div class="kpi-footer">
+            <div class="circle-icon"><i class="fa-solid fa-coins"></i></div>
+            <div class="kpi-foot-text"><span id="kpi-pct-total">100,00%</span><small>dari Total Kontrak</small></div>
+          </div>
+        </div>
+
+        <div class="kpi-card green">
+          <div class="kpi-title">PU TEREALISASI</div>
+          <div class="kpi-value" id="kpi-pu-terealisasi">5.963.602.686 <span class="rp">Rp</span></div>
+          <div class="kpi-footer">
+            <div class="circle-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="kpi-foot-text"><span id="kpi-pct-pu">54,40%</span><small>dari Total Kontrak</small></div>
+          </div>
+        </div>
+
+        <div class="kpi-card orange">
+          <div class="kpi-title">PU TIDAK TERSERAP</div>
+          <div class="kpi-value" id="kpi-pu-terserap">1.173.913.978 <span class="rp">Rp</span></div>
+          <div class="kpi-footer">
+            <div class="circle-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="kpi-foot-text"><span id="kpi-pct-terserap">10,72%</span><small>dari Total Kontrak</small></div>
+          </div>
+        </div>
+
+        <div class="kpi-card blue">
+          <div class="kpi-title">SISA KONTRAK</div>
+          <div class="kpi-value" id="kpi-sisa-kontrak">3.819.116.662 <span class="rp">Rp</span></div>
+          <div class="kpi-footer">
+            <div class="circle-icon"><i class="fa-solid fa-layer-group"></i></div>
+            <div class="kpi-foot-text"><span id="kpi-pct-sisa">34,87%</span><small>dari Total Kontrak</small></div>
+          </div>
+        </div>
+
+        <div class="kpi-card gauge-card">
+          <div class="kpi-title">TINGKAT PENYERAPAN (PU)</div>
+          <div class="kpi-value" id="kpi-tingkat-penyerapan">54,40%</div>
+          <div class="gauge-wrap">
+            <div class="gauge-arc" id="gaugeArc"></div>
+          </div>
+          <div class="gauge-scale"><span>0%</span><span>100%</span></div>
+        </div>
+      </section>
+
+      <!-- CHARTS -->
+      <section class="panel-grid">
+        <div class="panel chart-panel">
+          <div class="panel-title">TOTAL KONTRAK PER TIPE ALAT</div>
+          <div class="chart-box"><canvas id="chartTipeAlatBar"></canvas></div>
+        </div>
+
+        <div class="panel chart-panel">
+          <div class="panel-title">KOMPOSISI KONTRAK PER TIPE ALAT</div>
+          <div class="chart-box"><canvas id="chartTipeAlatDonut"></canvas></div>
+        </div>
+
+        <div class="panel chart-panel">
+          <div class="panel-title">REALISASI PU VS SISA KONTRAK</div>
+          <div class="chart-box"><canvas id="chartRealisasiSisa"></canvas></div>
+        </div>
+      </section>
+
+      <!-- TABLES -->
+      <section class="table-grid">
+        <div class="panel table-panel">
+          <div class="panel-title">RINCIAN NILAI KONTRAK PER CUSTOMER</div>
+          <div class="table-scroll">
+            <table class="customer-table">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Customer</th>
+                  <th>Tipe Alat</th>
+                  <th>Total Kontrak</th>
+                  <th>PU</th>
+                  <th>PU Tdk Terserap</th>
+                  <th>Sisa Kontrak</th>
+                </tr>
+              </thead>
+              <tbody id="table-customer-body">
+                <!-- Data dimuat dinamis -->
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="3" class="left">Total</td>
+                  <td id="foot-tot-kontrak">10.956.633.326</td>
+                  <td id="foot-tot-pu">5.963.602.686</td>
+                  <td id="foot-tot-tidakterserap">1.173.913.978</td>
+                  <td id="foot-tot-sisakontrak">3.819.116.662</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel table-panel">
+          <div class="panel-title">RINCIAN NILAI KONTRAK PER TIPE ALAT</div>
+          <div class="table-scroll">
+            <table class="alat-table">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Tipe Alat</th>
+                  <th>Total Kontrak</th>
+                  <th>PU</th>
+                  <th>PU Tdk Terserap</th>
+                  <th>Sisa Kontrak</th>
+                </tr>
+              </thead>
+              <tbody id="table-alat-body">
+                <!-- Data dimuat dinamis -->
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2" class="left">Total</td>
+                  <td id="foot-alat-kontrak">10.956.633.326</td>
+                  <td id="foot-alat-pu">5.963.602.686</td>
+                  <td id="foot-alat-tidakterserap">1.173.913.978</td>
+                  <td id="foot-alat-sisakontrak">3.819.116.662</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <div class="note">Catatan: Seluruh angka dalam Rupiah</div>
+    </main>
+  </div>
+</div>
+
+<script type="module">
+  let chartBarInstance = null;
+  let chartDonutInstance = null;
+  let chartRealisasiInstance = null;
+  let cachedCustomers = [];
+
+  const defaultCustomers = [
+    { customer: "PT Baja Cilegon Energi", tipe: "Truck Mixer", kontrak: 276000000, pu: 103500000, tdkTerserap: 172500000, sisa: 0 },
+    { customer: "PT Baja Comoso Energi", tipe: "Truck Mixer", kontrak: 376000000, pu: 124000000, tdkTerserap: 0, sisa: 252000000 },
+    { customer: "PT Hamori Medical Center", tipe: "Mobile Crane+Bucket Cor", kontrak: 220000000, pu: 220000000, tdkTerserap: 0, sisa: 0 },
+    { customer: "PT Indosarana Jaya Perkasa", tipe: "Dump Truck", kontrak: 138000000, pu: 46000000, tdkTerserap: 0, sisa: 92000000 },
+    { customer: "PT Indosarana Jaya Perkasa", tipe: "Truck Trailer", kontrak: 1075000000, pu: 701586022, tdkTerserap: 73413978, sisa: 300000000 },
+    { customer: "PT Indosarana Nusapersada", tipe: "Truck Mixer", kontrak: 1392000000, pu: 464000000, tdkTerserap: 928000000, sisa: 0 },
+    { customer: "PT Liga Adhi Buana", tipe: "Truck Mixer", kontrak: 459000000, pu: 459000000, tdkTerserap: 0, sisa: 0 },
+    { customer: "PT Sraya Artha Gemilang", tipe: "Truck Mixer", kontrak: 899833326, pu: 433166664, tdkTerserap: 0, sisa: 466666662 },
+    { customer: "PT Sumber Urip Sejati", tipe: "Truck Mixer", kontrak: 2416430000, pu: 2114350000, tdkTerserap: 0, sisa: 302050000 },
+    { customer: "PT Tirta Dan Mitra Pertiwi", tipe: "Stone Crusher", kontrak: 1140000000, pu: 285000000, tdkTerserap: 0, sisa: 855000000 },
+    { customer: "PT Trans Ringo Group", tipe: "Truck Mixer", kontrak: 372000000, pu: 372000000, tdkTerserap: 0, sisa: 0 },
+    { customer: "PT Trimitz Sinergy Mandala", tipe: "Truck Mixer", kontrak: 348000000, pu: 116000000, tdkTerserap: 0, sisa: 232000000 },
+    { customer: "PT Waskita Karya (Persero) Tbk", tipe: "Truck Mixer", kontrak: 1369400000, pu: 140000000, tdkTerserap: 0, sisa: 1229400000 },
+    { customer: "Waskita CAG KSO", tipe: "Truck Mixer", kontrak: 340000000, pu: 340000000, tdkTerserap: 0, sisa: 0 },
+    { customer: "Waskita WKI KSO", tipe: "Silo", kontrak: 135000000, pu: 45000000, tdkTerserap: 0, sisa: 90000000 }
+  ];
+
+  const months = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+  ];
+
+  function generatePeriodeOptions() {
+    const select = document.getElementById("periodeFilter");
+    select.innerHTML = "";
+    for (let year = 2026; year <= 2030; year++) {
+      for (let m = 0; m < months.length; m++) {
+        const optVal = `s.d. ${months[m]} ${year}`;
+        const opt = document.createElement("option");
+        opt.value = optVal;
+        opt.textContent = optVal;
+        select.appendChild(opt);
+      }
+    }
+  }
+
+  window.toggleInputPanel = function() {
+    const p = document.getElementById("inputPanel");
+    p.classList.toggle("active");
+  }
+
+  window.resetForm = function() {
+    document.getElementById("inCustomer").value = "";
+    document.getElementById("inTotalKontrak").value = "";
+    document.getElementById("inPU").value = "";
+    document.getElementById("inTdkTerserap").value = "";
+    document.getElementById("editIndex").value = "-1";
+  }
+
+  window.saveCustomerData = async function() {
+    const cust = document.getElementById("inCustomer").value.trim();
+    const tipe = document.getElementById("inTipeAlat").value;
+    const kont = Number(document.getElementById("inTotalKontrak").value) || 0;
+    const pu = Number(document.getElementById("inPU").value) || 0;
+    const tdkTerserap = Number(document.getElementById("inTdkTerserap").value) || 0;
+    const editIdx = Number(document.getElementById("editIndex").value);
+
+    if (!cust) {
+      alert("Nama customer harus diisi!");
+      return;
+    }
+
+    const sisa = Math.max(0, kont - pu - tdkTerserap);
+    const newEntry = { customer: cust, tipe: tipe, kontrak: kont, pu: pu, tdkTerserap: tdkTerserap, sisa: sisa };
+
+    if (window.firebaseDB && window.firebaseFns) {
+      const { doc, getDoc, setDoc } = window.firebaseFns;
+      const ref = doc(window.firebaseDB, "dashboardNKD", "data_2026");
+      try {
+        const snap = await getDoc(ref);
+        let currentList = snap.exists() ? (snap.data().customers || defaultCustomers) : defaultCustomers;
+        
+        if (editIdx >= 0 && editIdx < currentList.length) {
+          currentList[editIdx] = newEntry;
+        } else {
+          currentList.push(newEntry);
+        }
+
+        await setDoc(ref, { customers: currentList }, { merge: true });
+        alert("Data berhasil disimpan ke database realtime!");
+        resetForm();
+      } catch (err) {
+        console.error("Gagal menyimpan:", err);
+        alert("Gagal menyimpan data.");
+      }
+    }
+  }
+
+  window.editCustomerData = function(idx) {
+    const c = cachedCustomers[idx];
+    if (!c) return;
+    document.getElementById("inCustomer").value = c.customer;
+    document.getElementById("inTipeAlat").value = c.tipe;
+    document.getElementById("inTotalKontrak").value = c.kontrak;
+    document.getElementById("inPU").value = c.pu;
+    document.getElementById("inTdkTerserap").value = c.tdkTerserap || 0;
+    document.getElementById("editIndex").value = idx;
+    
+    const p = document.getElementById("inputPanel");
+    if(!p.classList.contains("active")) p.classList.add("active");
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  window.deleteCustomerData = async function(idx) {
+    if (!confirm("Apakah Anda yakin ingin menghapus data kontrak ini?")) return;
+    if (window.firebaseDB && window.firebaseFns) {
+      const { doc, setDoc } = window.firebaseFns;
+      const ref = doc(window.firebaseDB, "dashboardNKD", "data_2026");
+      try {
+        let currentList = [...cachedCustomers];
+        currentList.splice(idx, 1);
+        await setDoc(ref, { customers: currentList }, { merge: true });
+        alert("Data berhasil dihapus.");
+      } catch (err) {
+        console.error("Gagal menghapus:", err);
+        alert("Gagal menghapus data.");
+      }
+    }
+  }
+
+  window.downloadDashboardJPG = function() {
+    const element = document.getElementById("captureArea");
+    if (!element) return;
+    
+    html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
+      const link = document.createElement("a");
+      link.download = "dashboard-nkd.jpg";
+      link.href = canvas.toDataURL("image/jpeg", 1.0);
+      link.click();
+    }).catch(err => {
+      console.error("Gagal mengunduh gambar:", err);
+      alert("Gagal menghasilkan file gambar.");
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    generatePeriodeOptions();
+
+    if (typeof ChartDataLabels !== 'undefined') {
+      Chart.register(ChartDataLabels);
+    }
+
+    const fmt = (value) => Number(value || 0).toLocaleString("id-ID");
+
+    function initListener() {
+      const check = setInterval(() => {
+        if (window.firebaseDB && window.firebaseFns) {
+          clearInterval(check);
+          const { doc, onSnapshot, setDoc, getDoc } = window.firebaseFns;
+          const ref = doc(window.firebaseDB, "dashboardNKD", "data_2026");
+
+          onSnapshot(ref, async (snap) => {
+            let customers = defaultCustomers;
+            let savedPeriode = "s.d. Juli 2026";
+
+            if (snap.exists()) {
+              const data = snap.data();
+              if (data.customers) customers = data.customers;
+              if (data.periode) savedPeriode = data.periode;
+            } else {
+              await setDoc(ref, { customers: defaultCustomers, periode: savedPeriode });
+            }
+
+            cachedCustomers = customers;
+            const periodeEl = document.getElementById("periodeFilter");
+            if (periodeEl) {
+              periodeEl.value = savedPeriode;
+            }
+            updatePeriodeLabel(savedPeriode);
+            renderDashboard(customers);
+          }, (err) => {
+            console.error("Sync error:", err);
+            cachedCustomers = defaultCustomers;
+            renderDashboard(defaultCustomers);
+          });
+        }
+      }, 100);
+    }
+
+    function updatePeriodeLabel(val) {
+      const labelEl = document.getElementById("labelPeriodeDisplay");
+      if (labelEl) {
+        labelEl.textContent = val.toUpperCase();
+      }
+    }
+
+    const periodeSelect = document.getElementById("periodeFilter");
+    periodeSelect.addEventListener("change", async () => {
+      const selectedVal = periodeSelect.value;
+      updatePeriodeLabel(selectedVal);
+
+      if (window.firebaseDB && window.firebaseFns) {
+        const { doc, setDoc } = window.firebaseFns;
+        const ref = doc(window.firebaseDB, "dashboardNKD", "data_2026");
+        try {
+          await setDoc(ref, { periode: selectedVal }, { merge: true });
+        } catch (e) {
+          console.error("Gagal menyimpan periode:", e);
+        }
+      }
+    });
+
+    function renderDashboard(customers) {
+      document.getElementById("totalContractCount").textContent = customers.length;
+
+      const masterTbody = document.getElementById("master-table-body");
+      let masterHtml = "";
+      customers.forEach((c, idx) => {
+        masterHtml += `<tr>
+          <td class="center">${idx + 1}</td>
+          <td class="left">${c.customer}</td>
+          <td class="left">${c.tipe}</td>
+          <td>${fmt(c.kontrak)}</td>
+          <td>${fmt(c.pu)}</td>
+          <td>${fmt(c.tdkTerserap)}</td>
+          <td>${fmt(c.sisa)}</td>
+          <td class="center">
+            <button class="btn-table-action btn-edit" onclick="editCustomerData(${idx})"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn-table-action btn-delete" onclick="deleteCustomerData(${idx})"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>`;
+      });
+      masterTbody.innerHTML = masterHtml;
+
+      const selectedFilter = document.getElementById("tipeAlatFilter").value.toLowerCase();
+      let filtered = customers;
+      if (selectedFilter && selectedFilter !== "all") {
+        filtered = customers.filter(c => c.tipe.toLowerCase() === selectedFilter);
+      }
+
+      let totKontrak = 0, totPU = 0, totTdkTerserap = 0, totSisa = 0;
+      filtered.forEach(c => {
+        totKontrak += Number(c.kontrak) || 0;
+        totPU += Number(c.pu) || 0;
+        totTdkTerserap += Number(c.tdkTerserap) || 0;
+        totSisa += Number(c.sisa) || 0;
+      });
+
+      document.getElementById("kpi-total-kontrak").innerHTML = fmt(totKontrak) + ' <span class="rp">Rp</span>';
+      document.getElementById("kpi-pu-terealisasi").innerHTML = fmt(totPU) + ' <span class="rp">Rp</span>';
+      document.getElementById("kpi-pu-terserap").innerHTML = fmt(totTdkTerserap) + ' <span class="rp">Rp</span>';
+      document.getElementById("kpi-sisa-kontrak").innerHTML = fmt(totSisa) + ' <span class="rp">Rp</span>';
+
+      // Hitung persentase aktual berdasarkan total kontrak
+      const pctTotal = totKontrak > 0 ? 100 : 0;
+      const pctPU = totKontrak > 0 ? (totPU / totKontrak * 100) : 0;
+      const pctTdkTerserap = totKontrak > 0 ? (totTdkTerserap / totKontrak * 100) : 0;
+      const pctSisa = totKontrak > 0 ? (totSisa / totKontrak * 100) : 0;
+
+      document.getElementById("kpi-pct-total").textContent = pctTotal.toFixed(2).replace('.', ',') + "%";
+      document.getElementById("kpi-pct-pu").textContent = pctPU.toFixed(2).replace('.', ',') + "%";
+      document.getElementById("kpi-pct-terserap").textContent = pctTdkTerserap.toFixed(2).replace('.', ',') + "%";
+      document.getElementById("kpi-pct-sisa").textContent = pctSisa.toFixed(2).replace('.', ',') + "%";
+
+      document.getElementById("kpi-tingkat-penyerapan").textContent = pctPU.toFixed(2) + "%";
+
+      const deg = (pctPU / 100) * 180;
+      const arc = document.getElementById("gaugeArc");
+      if(arc) {
+        arc.style.background = `conic-gradient(from 270deg, #0b3267 0deg ${deg}deg, #e2e8f0 ${deg}deg 360deg)`;
+      }
+
+      const custTbody = document.getElementById("table-customer-body");
+      let custHtml = "";
+      filtered.forEach((c, idx) => {
+        custHtml += `<tr>
+          <td class="center">${idx + 1}</td>
+          <td class="left">${c.customer}</td>
+          <td class="left">${c.tipe}</td>
+          <td>${fmt(c.kontrak)}</td>
+          <td>${fmt(c.pu)}</td>
+          <td>${c.tdkTerserap ? fmt(c.tdkTerserap) : "-"}</td>
+          <td>${c.sisa ? fmt(c.sisa) : "-"}</td>
+        </tr>`;
+      });
+      custTbody.innerHTML = custHtml;
+
+      document.getElementById("foot-tot-kontrak").textContent = fmt(totKontrak);
+      document.getElementById("foot-tot-pu").textContent = fmt(totPU);
+      document.getElementById("foot-tot-tidakterserap").textContent = fmt(totTdkTerserap);
+      document.getElementById("foot-tot-sisakontrak").textContent = fmt(totSisa);
+
+      const alatMap = {};
+      customers.forEach(c => {
+        if (!alatMap[c.tipe]) {
+          alatMap[c.tipe] = { kontrak: 0, pu: 0, tdkTerserap: 0, sisa: 0 };
+        }
+        alatMap[c.tipe].kontrak += Number(c.kontrak) || 0;
+        alatMap[c.tipe].pu += Number(c.pu) || 0;
+        alatMap[c.tipe].tdkTerserap += Number(c.tdkTerserap) || 0;
+        alatMap[c.tipe].sisa += Number(c.sisa) || 0;
+      });
+
+      const alatKeys = Object.keys(alatMap);
+      const alatTbody = document.getElementById("table-alat-body");
+      let alatHtml = "";
+      let alatKontrakArr = [];
+      let alatLabelsArr = [];
+
+      alatKeys.forEach((k, idx) => {
+        const item = alatMap[k];
+        alatLabelsArr.push(k);
+        alatKontrakArr.push(item.kontrak);
+
+        alatHtml += `<tr>
+          <td class="center">${idx + 1}</td>
+          <td class="left">${k}</td>
+          <td>${fmt(item.kontrak)}</td>
+          <td>${fmt(item.pu)}</td>
+          <td>${item.tdkTerserap ? fmt(item.tdkTerserap) : "-"}</td>
+          <td>${fmt(item.sisa)}</td>
+        </tr>`;
+      });
+      alatTbody.innerHTML = alatHtml;
+
+      document.getElementById("foot-alat-kontrak").textContent = fmt(totKontrak);
+      document.getElementById("foot-alat-pu").textContent = fmt(totPU);
+      document.getElementById("foot-alat-tidakterserap").textContent = fmt(totTdkTerserap);
+      document.getElementById("foot-alat-sisakontrak").textContent = fmt(totSisa);
+
+      const donutData = alatKontrakArr.map(val => totKontrak > 0 ? Number((val / totKontrak * 100).toFixed(2)) : 0);
+
+      updateCharts(alatLabelsArr, alatKontrakArr, donutData, [totPU, totTdkTerserap, totSisa]);
+    }
+
+    function updateCharts(labels, barData, donutData, realisasiData) {
+      if (chartBarInstance) chartBarInstance.destroy();
+      chartBarInstance = new Chart(document.getElementById("chartTipeAlatBar").getContext("2d"), {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [{ data: barData, backgroundColor: "#0b3267", borderRadius: 1, barThickness: 18 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, indexAxis: "y", animation: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: (ctx) => " " + fmt(ctx.raw) + " Rp" } },
+            datalabels: { color: "#222", anchor: "end", align: "right", offset: 4, font: { size: 9, weight: "600" }, formatter: (v) => fmt(v) }
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              grid: { color: "#e6e8eb", borderDash: [2, 3] },
+              ticks: { color: "#222", font: { size: 8.5 }, callback: (v) => v >= 1000000 ? (v / 1000000).toFixed(0) + " M" : v }
+            },
+            y: { grid: { display: false }, ticks: { color: "#222", font: { size: 8.5 } } }
+          }
+        },
+        plugins: [ChartDataLabels]
+      });
+
+      if (chartDonutInstance) chartDonutInstance.destroy();
+      chartDonutInstance = new Chart(document.getElementById("chartTipeAlatDonut").getContext("2d"), {
+        type: "doughnut",
+        data: {
+          labels: labels,
+          datasets: [{
+            data: donutData,
+            backgroundColor: ["#1266c4", "#f28b2c", "#5d5d5d", "#66a43a", "#7a4db0", "#e4ad00"],
+            borderColor: "#fff", borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, cutout: "55%", animation: false,
+          plugins: {
+            legend: { position: "right", labels: { color: "#222", boxWidth: 8, boxHeight: 8, padding: 6, font: { size: 8.5 } } },
+            tooltip: { callbacks: { label: (ctx) => " " + ctx.label + ": " + ctx.raw + "%" } },
+            datalabels: { display: false }
+          }
+        }
+      });
+
+      if (chartRealisasiInstance) chartRealisasiInstance.destroy();
+      chartRealisasiInstance = new Chart(document.getElementById("chartRealisasiSisa").getContext("2d"), {
+        type: "bar",
+        data: {
+          labels: ["PU Terealisasi", "PU Tidak Terserap", "Sisa Kontrak"],
+          datasets: [{ data: realisasiData, backgroundColor: ["#188b24", "#f0b000", "#1266c4"], borderRadius: 0, barPercentage: .45 }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false, animation: false,
+          layout: {
+            padding: { top: 16 }
+          },
+          plugins: {
+            legend: { display: false },
+            datalabels: { color: "#222", anchor: "end", align: "top", offset: 2, font: { size: 9, weight: "700" }, formatter: (v) => fmt(v) }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: "#222", font: { size: 8.5 } } },
+            y: {
+              beginAtZero: true,
+              grid: { color: "#e5e7eb", borderDash: [2, 3] },
+              ticks: { color: "#222", font: { size: 8.5 }, callback: (v) => (v / 1000000) + " M" }
+            }
+          }
+        },
+        plugins: [ChartDataLabels]
+      });
+    }
+
+    document.getElementById("tipeAlatFilter").addEventListener("change", () => {
+      initListener();
+    });
+
+    initListener();
+  });
+</script>
+</body>
+</html>
