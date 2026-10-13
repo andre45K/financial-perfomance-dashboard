@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -6,9 +7,8 @@
   <title>Admin Input - Financial Dashboard 2026</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- FIREBASE SDK (Modular v10) -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -20,11 +20,19 @@
       appId: "1:136866453174:web:b69a3e14672eb96cc53817"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    try {
+      const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+      const db = getFirestore(app);
 
-    window.firebaseDB = db;
-    window.firebaseFns = { doc, getDoc, setDoc };
+      window.firebaseDB = db;
+      window.firebaseFns = { doc, getDoc, setDoc };
+
+      window.dispatchEvent(new Event("firebase-ready"));
+    } catch (error) {
+      console.error("Inisialisasi Firebase gagal:", error);
+      window.firebaseInitError = error;
+      window.dispatchEvent(new Event("firebase-ready"));
+    }
   </script>
 
   <style>
@@ -35,7 +43,7 @@
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e2d42; padding-bottom: 15px; margin-bottom: 20px; }
     .modal-title { font-size: 18px; font-weight: 800; color: #3b82f6; display: flex; align-items: center; gap: 10px; }
     .modal-desc { color: #94a3b8; font-size: 12px; margin-top: 4px; }
-    
+
     .instruction-box { background: #132238; border-left: 4px solid #3b82f6; padding: 12px 15px; border-radius: 4px; margin-bottom: 20px; color: #cbd5e1; font-size: 12px; line-height: 1.5; }
 
     .tabs-nav { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #1e2d42; padding-bottom: 10px; }
@@ -56,12 +64,28 @@
     .btn { padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; border: none; text-decoration: none; }
     .btn-primary { background: #2563eb; color: white; }
     .btn-primary:hover { background: #1d4ed8; }
+    .btn-primary:disabled { opacity: .65; cursor: wait; }
     .btn-danger { background: #dc2626; color: white; }
     .btn-danger:hover { background: #b91c1c; }
     .btn-secondary { background: #334155; color: white; }
     .btn-secondary:hover { background: #475569; }
 
     .alert-success { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; color: #22c55e; padding: 10px; border-radius: 6px; margin-bottom: 15px; display: none; text-align: center; font-weight: bold; }
+    .alert-error { background: rgba(220, 38, 38, 0.15); border: 1px solid #dc2626; color: #fca5a5; padding: 10px; border-radius: 6px; margin-bottom: 15px; display: none; line-height: 1.5; overflow-wrap: anywhere; }
+
+    @media (max-width: 768px) {
+      body { padding: 10px; }
+      .modal-container { padding: 14px; }
+      .modal-header { align-items: flex-start; gap: 12px; flex-direction: column; }
+      .modal-title { font-size: 16px; }
+      .tabs-nav { flex-wrap: wrap; }
+      .tab-btn { padding: 8px 10px; }
+      .admin-table { min-width: 850px; }
+      .tab-content { overflow-x: auto; }
+      .footer-actions { flex-direction: column; align-items: stretch; gap: 12px; }
+      .footer-actions > div { flex-wrap: wrap; }
+      .footer-actions .btn { justify-content: center; }
+    }
   </style>
 </head>
 <body>
@@ -75,20 +99,26 @@
       <a href="index.html" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</a>
     </div>
 
-    <div id="alertSuccess" class="alert-success"><i class="fa-solid fa-circle-check"></i> Data berhasil disimpan ke Firebase Firestore!</div>
-
-    <div class="instruction-box">
-      <strong>Informasi:</strong> Perubahan data di sini akan langsung otomatis memperbarui grafik secara realtime.
+    <div id="alertSuccess" class="alert-success" role="status">
+      <i class="fa-solid fa-circle-check"></i> Data berhasil disimpan ke Firebase Firestore!
     </div>
 
-    <!-- Navigation Tabs -->
+    <div id="alertError" class="alert-error" role="alert"></div>
+
+    <div class="instruction-box">
+      <strong>Informasi:</strong> Perubahan data di sini akan langsung otomatis memperbarui grafik secara realtime setelah data disimpan dan dashboard membaca dokumen Firebase yang sama.
+    </div>
+
     <div class="tabs-nav">
-      <button type="button" class="tab-btn active" onclick="switchTab('tab1', this)"><i class="fa-solid fa-chart-line"></i> Dashboard 1: Pendapatan & BPP</button>
-      <button type="button" class="tab-btn" onclick="switchTab('tab2', this)"><i class="fa-solid fa-coins"></i> Dashboard 2: NCP & Biaya Tidak Langsung</button>
+      <button type="button" class="tab-btn active" onclick="switchTab('tab1', this)">
+        <i class="fa-solid fa-chart-line"></i> Dashboard 1: Pendapatan & BPP
+      </button>
+      <button type="button" class="tab-btn" onclick="switchTab('tab2', this)">
+        <i class="fa-solid fa-coins"></i> Dashboard 2: NCP & Biaya Tidak Langsung
+      </button>
     </div>
 
     <form id="adminForm">
-      <!-- TAB 1 -->
       <div id="tab1" class="tab-content">
         <table class="admin-table">
           <thead>
@@ -105,7 +135,6 @@
         </table>
       </div>
 
-      <!-- TAB 2 -->
       <div id="tab2" class="tab-content" style="display: none;">
         <table class="admin-table">
           <thead>
@@ -123,10 +152,14 @@
       </div>
 
       <div class="footer-actions">
-        <button type="button" class="btn btn-danger" onclick="resetDefaultData()"><i class="fa-solid fa-rotate-left"></i> Reset Data Awal</button>
+        <button type="button" class="btn btn-danger" onclick="resetDefaultData()">
+          <i class="fa-solid fa-rotate-left"></i> Reset Data Awal
+        </button>
         <div style="display: flex; gap: 10px;">
           <a href="index.html" class="btn btn-secondary">Tutup</a>
-          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Simpan & Update Dashboard</button>
+          <button id="saveButton" type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-floppy-disk"></i> Simpan & Update Dashboard
+          </button>
         </div>
       </div>
     </form>
@@ -134,7 +167,11 @@
 
   <script type="module">
     const monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const monthNamesFull = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+    const monthNamesFull = [
+      "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+      "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
 
     const defaultFinancialData = {
       year: 2026,
@@ -142,7 +179,7 @@
       months: {
         Jan: { revenuePlan: 554, revenueActual: 823, bppPlan: 195, bppActual: 647, gpPlan: 359, gpActual: 176, ncpPlan: 359, ncpActual: 5, btlActual: 4, status: "REALISASI" },
         Feb: { revenuePlan: 554, revenueActual: 787, bppPlan: 195, bppActual: 632, gpPlan: 359, gpActual: 155, ncpPlan: 359, ncpActual: 0, btlActual: 0, status: "REALISASI" },
-        Mar: { revenuePlan: 449, revenueActual: 99,  bppPlan: 195, bppActual: 92,  gpPlan: 254, gpActual: 7,   ncpPlan: 254, ncpActual: 0, btlActual: 0, status: "REALISASI" },
+        Mar: { revenuePlan: 449, revenueActual: 99, bppPlan: 195, bppActual: 92, gpPlan: 254, gpActual: 7, ncpPlan: 254, ncpActual: 0, btlActual: 0, status: "REALISASI" },
         Apr: { revenuePlan: 380, revenueActual: 782, bppPlan: 165, bppActual: 680, gpPlan: 215, gpActual: 102, ncpPlan: 215, ncpActual: 0, btlActual: 0, status: "REALISASI" },
         May: { revenuePlan: 502, revenueActual: 688, bppPlan: 308, bppActual: 404, gpPlan: 194, gpActual: 284, ncpPlan: 194, ncpActual: 0, btlActual: 0, status: "REALISASI" },
         Jun: { revenuePlan: 879, revenueActual: 1117, bppPlan: 495, bppActual: 913, gpPlan: 384, gpActual: 204, ncpPlan: 384, ncpActual: 0, btlActual: 0, status: "REALISASI" },
@@ -156,65 +193,222 @@
     };
 
     let currentData = structuredClone(defaultFinancialData);
+    let firebaseReadyPromise = null;
+    let saveInProgress = false;
+
+    function cloneDefaultData() {
+      return JSON.parse(JSON.stringify(defaultFinancialData));
+    }
+
+    function showSuccess(message = "Data berhasil disimpan ke Firebase Firestore!") {
+      const success = document.getElementById("alertSuccess");
+      const error = document.getElementById("alertError");
+
+      error.style.display = "none";
+      success.innerHTML = '<i class="fa-solid fa-circle-check"></i> ' + message;
+      success.style.display = "block";
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      setTimeout(() => {
+        success.style.display = "none";
+      }, 3500);
+    }
+
+    function showError(message) {
+      const error = document.getElementById("alertError");
+      document.getElementById("alertSuccess").style.display = "none";
+      error.textContent = message;
+      error.style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function waitForFirebase(timeoutMs = 15000) {
+      if (window.firebaseDB && window.firebaseFns) {
+        return Promise.resolve(true);
+      }
+
+      if (window.firebaseInitError) {
+        return Promise.reject(window.firebaseInitError);
+      }
+
+      if (!firebaseReadyPromise) {
+        firebaseReadyPromise = new Promise((resolve, reject) => {
+          let finished = false;
+
+          const cleanup = () => {
+            window.removeEventListener("firebase-ready", onReady);
+            clearTimeout(timer);
+          };
+
+          const onReady = () => {
+            if (finished) return;
+
+            if (window.firebaseDB && window.firebaseFns) {
+              finished = true;
+              cleanup();
+              resolve(true);
+            } else if (window.firebaseInitError) {
+              finished = true;
+              cleanup();
+              reject(window.firebaseInitError);
+            }
+          };
+
+          const timer = setTimeout(() => {
+            if (finished) return;
+            finished = true;
+            cleanup();
+            reject(new Error("Koneksi Firebase belum siap. Periksa koneksi internet dan konfigurasi Firebase."));
+          }, timeoutMs);
+
+          window.addEventListener("firebase-ready", onReady);
+
+          // Periksa ulang untuk mencegah event terlewat.
+          onReady();
+        });
+      }
+
+      return firebaseReadyPromise;
+    }
+
+    async function getFinancialDocument() {
+      await waitForFirebase();
+
+      const { doc, getDoc } = window.firebaseFns;
+      const ref = doc(window.firebaseDB, "financialDashboards", "year_2026");
+      const snapshot = await getDoc(ref);
+
+      return { ref, snapshot };
+    }
+
+    function normalizeFinancialData(data) {
+      const base = cloneDefaultData();
+
+      if (!data || typeof data !== "object") {
+        return base;
+      }
+
+      const normalized = {
+        ...base,
+        ...data,
+        year: 2026,
+        months: {
+          ...base.months
+        }
+      };
+
+      const savedMonths = data.months && typeof data.months === "object"
+        ? data.months
+        : {};
+
+      monthsList.forEach(month => {
+        normalized.months[month] = {
+          ...base.months[month],
+          ...(savedMonths[month] || {})
+        };
+      });
+
+      return normalized;
+    }
 
     async function loadDataFromFirestore() {
-      const checkInterval = setInterval(async () => {
-        if (window.firebaseDB && window.firebaseFns) {
-          clearInterval(checkInterval);
-          const { doc, getDoc, setDoc } = window.firebaseFns;
-          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
-          const docSnap = await getDoc(docRef);
-          
-          if (docSnap.exists()) {
-            currentData = docSnap.data();
-          } else {
-            await setDoc(docRef, defaultFinancialData);
-            currentData = structuredClone(defaultFinancialData);
-          }
-          renderTableRows();
+      // PENTING: tabel selalu dirender lebih dahulu.
+      renderTableRows();
+
+      try {
+        const { ref, snapshot } = await getFinancialDocument();
+
+        if (snapshot.exists()) {
+          currentData = normalizeFinancialData(snapshot.data());
+        } else {
+          currentData = cloneDefaultData();
+
+          const { setDoc } = window.firebaseFns;
+          await setDoc(ref, currentData);
         }
-      }, 100);
+
+        renderTableRows();
+        console.info("Data keuangan berhasil dimuat.");
+      } catch (error) {
+        console.error("Gagal memuat data Firebase:", error);
+
+        // Jangan mengosongkan tabel saat koneksi gagal.
+        renderTableRows();
+
+        showError(
+          "Tabel edit manual tetap tersedia menggunakan data awal, tetapi data Firebase belum berhasil dimuat. " +
+          "Sebelum menyimpan perubahan, pastikan koneksi internet, konfigurasi Firebase, dan izin Firestore sudah benar. " +
+          "Detail: " + (error.message || error)
+        );
+      }
     }
 
     window.switchTab = function(tabId, btn) {
-      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-      document.getElementById(tabId).style.display = 'block';
-      btn.classList.add('active');
+      document.querySelectorAll(".tab-content").forEach(el => {
+        el.style.display = "none";
+      });
+
+      document.querySelectorAll(".tab-btn").forEach(el => {
+        el.classList.remove("active");
+      });
+
+      document.getElementById(tabId).style.display = "block";
+      btn.classList.add("active");
     };
 
-    function formatNumber(num) { return Number(num || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); }
-    
-    // Diperbarui agar mendukung angka negatif (minus)
+    function formatNumber(num) {
+      const value = Number(num);
+      return (Number.isFinite(value) ? value : 0).toLocaleString("id-ID", {
+        maximumFractionDigits: 2
+      });
+    }
+
     function toNumber(val) {
       if (val === null || val === undefined || val === "") return 0;
+
       let str = String(val).trim();
-      let isNegative = str.startsWith('-');
+      const isNegative = str.startsWith("-");
+
       if (isNegative) {
         str = str.substring(1);
       }
-      str = str.replace(/\./g, '').replace(',', '.');
-      let num = Number(str);
-      if (isNaN(num)) return 0;
+
+      str = str.replace(/\./g, "").replace(",", ".");
+
+      const num = Number(str);
+
+      if (!Number.isFinite(num)) return 0;
+
       return isNegative ? -num : num;
     }
 
-    function renderTableRows() {
-      let htmlTab1 = "", htmlTab2 = "";
-      monthsList.forEach((m, idx) => {
-        const item = currentData.months[m] || {};
-        const statusSelected = item.status === "REALISASI" ? "REALISASI" : "PROGNOSA";
-        
-        const revPlan = item.revenuePlan || 0;
-        const bppPlan = item.bppPlan || 0;
-        const revAct = item.revenueActual || 0;
-        const bppAct = item.bppActual || 0;
-        const ncpAct = item.ncpActual || 0;
-        const btlAct = item.btlActual !== undefined ? item.btlActual : 0;
+    function escapeAttribute(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
 
-        const gpActTab1 = revAct - bppAct;
-        const npAct = gpActTab1 - ncpAct;
-        const npmAct = revAct > 0 ? (npAct / revAct * 100) : 0;
+    function renderTableRows() {
+      let htmlTab1 = "";
+      let htmlTab2 = "";
+
+      monthsList.forEach((m, idx) => {
+        const item = currentData.months?.[m] || {};
+        const statusSelected = item.status === "PROGNOSA" ? "PROGNOSA" : "REALISASI";
+
+        const revPlan = item.revenuePlan ?? 0;
+        const bppPlan = item.bppPlan ?? 0;
+        const revAct = item.revenueActual ?? 0;
+        const bppAct = item.bppActual ?? 0;
+        const ncpAct = item.ncpActual ?? 0;
+        const btlAct = item.btlActual ?? 0;
+
+        const gpAct = Number(revAct) - Number(bppAct);
+        const npAct = gpAct - Number(ncpAct) - Number(btlAct);
+        const npmAct = Number(revAct) > 0 ? (npAct / Number(revAct) * 100) : 0;
 
         htmlTab1 += `
           <tr>
@@ -225,10 +419,10 @@
                 <option value="PROGNOSA" ${statusSelected === "PROGNOSA" ? "selected" : ""}>PROGNOSA</option>
               </select>
             </td>
-            <td><input type="text" name="revPlan_${m}" value="${formatNumber(revPlan)}" oninput="formatInput(this)"></td>
-            <td><input type="text" name="bppPlan_${m}" value="${formatNumber(bppPlan)}" oninput="formatInput(this)"></td>
-            <td><input type="text" name="revAct_${m}" value="${formatNumber(revAct)}" oninput="formatInput(this)"></td>
-            <td><input type="text" name="bppAct_${m}" value="${formatNumber(bppAct)}" oninput="formatInput(this)"></td>
+            <td><input type="text" inputmode="decimal" name="revPlan_${m}" value="${escapeAttribute(formatNumber(revPlan))}" oninput="formatInput(this)"></td>
+            <td><input type="text" inputmode="decimal" name="bppPlan_${m}" value="${escapeAttribute(formatNumber(bppPlan))}" oninput="formatInput(this)"></td>
+            <td><input type="text" inputmode="decimal" name="revAct_${m}" value="${escapeAttribute(formatNumber(revAct))}" oninput="formatInput(this); updateLiveCalc('${m}')"></td>
+            <td><input type="text" inputmode="decimal" name="bppAct_${m}" value="${escapeAttribute(formatNumber(bppAct))}" oninput="formatInput(this); updateLiveCalc('${m}')"></td>
           </tr>
         `;
 
@@ -241,8 +435,8 @@
                 <option value="PROGNOSA" ${statusSelected === "PROGNOSA" ? "selected" : ""}>PROGNOSA</option>
               </select>
             </td>
-            <td><input type="text" name="ncpAct_${m}" value="${formatNumber(ncpAct)}" oninput="formatInput(this); updateLiveCalc('${m}')"></td>
-            <td><input type="text" name="btlAct_${m}" value="${formatNumber(btlAct)}" oninput="formatInput(this); updateLiveCalc('${m}')"></td>
+            <td><input type="text" inputmode="decimal" name="ncpAct_${m}" value="${escapeAttribute(formatNumber(ncpAct))}" oninput="formatInput(this); updateLiveCalc('${m}')"></td>
+            <td><input type="text" inputmode="decimal" name="btlAct_${m}" value="${escapeAttribute(formatNumber(btlAct))}" oninput="formatInput(this); updateLiveCalc('${m}')"></td>
             <td class="readonly-val" id="np_disp_${m}">${formatNumber(npAct)}</td>
             <td class="readonly-val" id="npm_disp_${m}">${npmAct.toFixed(2)}%</td>
           </tr>
@@ -254,98 +448,174 @@
     }
 
     window.syncStatus = function(month, val, sourceTab) {
-      if (sourceTab === 1) {
-        const sel2 = document.querySelector(`[name="status2_${month}"]`);
-        if (sel2) sel2.value = val;
-      } else {
-        const sel1 = document.querySelector(`[name="status_${month}"]`);
-        if (sel1) sel1.value = val;
-      }
+      const otherTab = sourceTab === 1 ? 2 : 1;
+      const selector = `[name="status${otherTab === 2 ? "2" : ""}_${month}"]`;
+      const other = document.querySelector(selector);
+
+      if (other) other.value = val;
     };
 
     window.updateLiveCalc = function(m) {
-      const item = currentData.months[m] || {};
-      const revAct = item.revenueActual || 0;
-      const bppAct = item.bppActual || 0;
-      const ncpVal = toNumber(document.querySelector(`[name="ncpAct_${m}"]`).value);
-      
-      const gpAct = revAct - bppAct;
-      const npAct = gpAct - ncpVal;
+      const revInput = document.querySelector(`[name="revAct_${m}"]`);
+      const bppInput = document.querySelector(`[name="bppAct_${m}"]`);
+      const ncpInput = document.querySelector(`[name="ncpAct_${m}"]`);
+      const btlInput = document.querySelector(`[name="btlAct_${m}"]`);
+
+      const revAct = revInput ? toNumber(revInput.value) : Number(currentData.months[m]?.revenueActual || 0);
+      const bppAct = bppInput ? toNumber(bppInput.value) : Number(currentData.months[m]?.bppActual || 0);
+      const ncpVal = ncpInput ? toNumber(ncpInput.value) : Number(currentData.months[m]?.ncpActual || 0);
+      const btlVal = btlInput ? toNumber(btlInput.value) : Number(currentData.months[m]?.btlActual || 0);
+
+      const npAct = revAct - bppAct - ncpVal - btlVal;
       const npmAct = revAct > 0 ? (npAct / revAct * 100) : 0;
 
-      document.getElementById(`np_disp_${m}`).textContent = formatNumber(npAct);
-      document.getElementById(`npm_disp_${m}`).textContent = npmAct.toFixed(2) + "%";
+      const npDisplay = document.getElementById(`np_disp_${m}`);
+      const npmDisplay = document.getElementById(`npm_disp_${m}`);
+
+      if (npDisplay) npDisplay.textContent = formatNumber(npAct);
+      if (npmDisplay) npmDisplay.textContent = npmAct.toFixed(2) + "%";
     };
 
-    // Diperbarui agar karakter minus (-) di awal bisa diketikkan dengan aman
     window.formatInput = function(el) {
-      let val = el.value;
-      let isNegative = val.startsWith('-');
-      let cleaned = val.replace(/[^,\d]/g, '');
-      let parts = cleaned.split(',');
-      let sisa = parts[0].length % 3;
-      let rupiah = parts[0].substr(0, sisa);
-      let ribuan = parts[0].substr(sisa).match(/\d{3}/g);
+      const val = el.value;
+      const isNegative = val.startsWith("-");
+      const cleaned = val.replace(/[^,\d]/g, "");
+      const parts = cleaned.split(",");
+
+      const integerPart = parts[0] || "";
+      const decimalPart = parts.length > 1 ? parts.slice(1).join("") : undefined;
+
+      const sisa = integerPart.length % 3;
+      let rupiah = integerPart.substr(0, sisa);
+      const ribuan = integerPart.substr(sisa).match(/\d{3}/g);
+
       if (ribuan) {
-        let separator = sisa ? '.' : '';
-        rupiah += separator + ribuan.join('.');
+        const separator = sisa ? "." : "";
+        rupiah += separator + ribuan.join(".");
       }
-      let finalVal = parts[1] !== undefined ? rupiah + ',' + parts[1] : rupiah;
-      el.value = (isNegative ? '-' : '') + finalVal;
+
+      const finalVal = decimalPart !== undefined
+        ? rupiah + "," + decimalPart
+        : rupiah;
+
+      el.value = (isNegative ? "-" : "") + finalVal;
     };
+
+    function readInput(name) {
+      const element = document.querySelector(`[name="${name}"]`);
+      if (!element) return null;
+      return toNumber(element.value);
+    }
+
+    function collectFormData() {
+      const updated = normalizeFinancialData(currentData);
+
+      monthsList.forEach(m => {
+        const statusEl =
+          document.querySelector(`[name="status_${m}"]`) ||
+          document.querySelector(`[name="status2_${m}"]`);
+
+        if (statusEl) updated.months[m].status = statusEl.value;
+
+        const fields = [
+          ["revPlan", "revenuePlan"],
+          ["bppPlan", "bppPlan"],
+          ["revAct", "revenueActual"],
+          ["bppAct", "bppActual"],
+          ["ncpAct", "ncpActual"],
+          ["btlAct", "btlActual"]
+        ];
+
+        fields.forEach(([inputPrefix, dataKey]) => {
+          const value = readInput(`${inputPrefix}_${m}`);
+
+          if (value !== null) {
+            updated.months[m][dataKey] = value;
+          }
+        });
+
+        // Hitung ulang nilai turunan agar konsisten dengan input terbaru.
+        const month = updated.months[m];
+        month.gpPlan = Number(month.revenuePlan || 0) - Number(month.bppPlan || 0);
+        month.gpActual = Number(month.revenueActual || 0) - Number(month.bppActual || 0);
+      });
+
+      return updated;
+    }
 
     document.getElementById("adminForm").addEventListener("submit", async function(e) {
       e.preventDefault();
-      
-      monthsList.forEach(m => {
-        const statusEl = document.querySelector(`[name="status_${m}"]`) || document.querySelector(`[name="status2_${m}"]`);
-        const revPlanEl = document.querySelector(`[name="revPlan_${m}"]`);
-        const bppPlanEl = document.querySelector(`[name="bppPlan_${m}"]`);
-        const revActEl = document.querySelector(`[name="revAct_${m}"]`);
-        const bppActEl = document.querySelector(`[name="bppAct_${m}"]`);
-        const ncpActEl = document.querySelector(`[name="ncpAct_${m}"]`);
-        const btlActEl = document.querySelector(`[name="btlAct_${m}"]`);
 
-        if (!currentData.months[m]) currentData.months[m] = {};
+      if (saveInProgress) return;
 
-        if (statusEl) currentData.months[m].status = statusEl.value;
-        if (revPlanEl) currentData.months[m].revenuePlan = toNumber(revPlanEl.value);
-        if (bppPlanEl) currentData.months[m].bppPlan = toNumber(bppPlanEl.value);
-        if (revActEl) currentData.months[m].revenueActual = toNumber(revActEl.value);
-        if (bppActEl) currentData.months[m].bppActual = toNumber(bppActEl.value);
-        if (ncpActEl) currentData.months[m].ncpActual = toNumber(ncpActEl.value);
-        if (btlActEl) currentData.months[m].btlActual = toNumber(btlActEl.value);
-      });
+      const saveButton = document.getElementById("saveButton");
+      saveInProgress = true;
+      saveButton.disabled = true;
+      saveButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
 
-      if (window.firebaseDB && window.firebaseFns) {
+      try {
+        // Jangan menyatakan berhasil sebelum Firebase benar-benar menyimpan.
+        await waitForFirebase();
+
+        const updatedData = collectFormData();
         const { doc, setDoc } = window.firebaseFns;
         const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
-        await setDoc(docRef, currentData);
-      }
 
-      const alertBox = document.getElementById("alertSuccess");
-      alertBox.style.display = "block";
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      
-      setTimeout(() => { alertBox.style.display = "none"; }, 2500);
+        await setDoc(docRef, updatedData);
+
+        currentData = updatedData;
+        renderTableRows();
+
+        showSuccess("Data berhasil disimpan ke Firebase Firestore!");
+        console.info("Penyimpanan Firebase berhasil.");
+      } catch (error) {
+        console.error("Gagal menyimpan data:", error);
+
+        showError(
+          "Data BELUM berhasil disimpan. Periksa koneksi internet, konfigurasi Firebase, " +
+          "dan Firestore Rules. Perubahan input masih ada di halaman ini; jangan tutup halaman sebelum berhasil menyimpan. " +
+          "Detail: " + (error.message || error)
+        );
+      } finally {
+        saveInProgress = false;
+        saveButton.disabled = false;
+        saveButton.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Simpan & Update Dashboard';
+      }
     });
 
     window.resetDefaultData = async function() {
-      if (confirm("Apakah Anda yakin ingin mereset seluruh data kembali ke pengaturan awal?")) {
-        currentData = structuredClone(defaultFinancialData);
-        if (window.firebaseDB && window.firebaseFns) {
-          const { doc, setDoc } = window.firebaseFns;
-          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
-          await setDoc(docRef, currentData);
-        }
+      if (!confirm("Apakah Anda yakin ingin mereset seluruh data kembali ke pengaturan awal?")) {
+        return;
+      }
+
+      try {
+        await waitForFirebase();
+
+        const resetData = cloneDefaultData();
+        const { doc, setDoc } = window.firebaseFns;
+        const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+
+        await setDoc(docRef, resetData);
+
+        currentData = resetData;
         renderTableRows();
-        alert("Data berhasil direset ke awal!");
+
+        showSuccess("Data berhasil direset ke pengaturan awal dan disimpan ke Firebase!");
+      } catch (error) {
+        console.error("Gagal mereset data:", error);
+
+        showError(
+          "Reset gagal disimpan ke Firebase. Data belum berhasil direset di server. Detail: " +
+          (error.message || error)
+        );
       }
     };
 
-    window.addEventListener("DOMContentLoaded", () => {
-      loadDataFromFirestore();
-    });
+    // Tabel muncul langsung, tidak menunggu Firebase.
+    renderTableRows();
+
+    // Data server dimuat setelah tabel awal tampil.
+    loadDataFromFirestore();
   </script>
 </body>
 </html>
