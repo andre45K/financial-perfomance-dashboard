@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -20,11 +21,17 @@
       appId: "1:136866453174:web:b69a3e14672eb96cc53817"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    try {
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
 
-    window.firebaseDB = db;
-    window.firebaseFns = { doc, getDoc, setDoc };
+      window.firebaseDB = db;
+      window.firebaseFns = { doc, getDoc, setDoc };
+
+      window.dispatchEvent(new Event("firebase-ready"));
+    } catch (error) {
+      console.error("Gagal menginisialisasi Firebase:", error);
+    }
   </script>
 
   <style>
@@ -35,7 +42,7 @@
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e2d42; padding-bottom: 15px; margin-bottom: 20px; }
     .modal-title { font-size: 18px; font-weight: 800; color: #3b82f6; display: flex; align-items: center; gap: 10px; }
     .modal-desc { color: #94a3b8; font-size: 12px; margin-top: 4px; }
-    
+
     .instruction-box { background: #132238; border-left: 4px solid #3b82f6; padding: 12px 15px; border-radius: 4px; margin-bottom: 20px; color: #cbd5e1; font-size: 12px; line-height: 1.5; }
 
     .tabs-nav { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #1e2d42; padding-bottom: 10px; }
@@ -62,6 +69,19 @@
     .btn-secondary:hover { background: #475569; }
 
     .alert-success { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; color: #22c55e; padding: 10px; border-radius: 6px; margin-bottom: 15px; display: none; text-align: center; font-weight: bold; }
+
+    @media (max-width: 768px) {
+      body { padding: 10px; }
+      .modal-container { padding: 14px; }
+      .modal-header { gap: 12px; align-items: flex-start; flex-direction: column; }
+      .modal-title { font-size: 16px; }
+      .tabs-nav { flex-wrap: wrap; }
+      .tab-btn { max-width: 100%; text-align: left; }
+      .admin-table { min-width: 850px; }
+      .tab-content { overflow-x: auto; }
+      .footer-actions { gap: 12px; flex-wrap: wrap; }
+      .footer-actions > div { flex-wrap: wrap; }
+    }
   </style>
 </head>
 <body>
@@ -142,7 +162,7 @@
       months: {
         Jan: { revenuePlan: 554, revenueActual: 823, bppPlan: 195, bppActual: 647, gpPlan: 359, gpActual: 176, ncpPlan: 359, ncpActual: 5, btlActual: 4, status: "REALISASI" },
         Feb: { revenuePlan: 554, revenueActual: 787, bppPlan: 195, bppActual: 632, gpPlan: 359, gpActual: 155, ncpPlan: 359, ncpActual: 0, btlActual: 0, status: "REALISASI" },
-        Mar: { revenuePlan: 449, revenueActual: 99,  bppPlan: 195, bppActual: 92,  gpPlan: 254, gpActual: 7,   ncpPlan: 254, ncpActual: 0, btlActual: 0, status: "REALISASI" },
+        Mar: { revenuePlan: 449, revenueActual: 99, bppPlan: 195, bppActual: 92, gpPlan: 254, gpActual: 7, ncpPlan: 254, ncpActual: 0, btlActual: 0, status: "REALISASI" },
         Apr: { revenuePlan: 380, revenueActual: 782, bppPlan: 165, bppActual: 680, gpPlan: 215, gpActual: 102, ncpPlan: 215, ncpActual: 0, btlActual: 0, status: "REALISASI" },
         May: { revenuePlan: 502, revenueActual: 688, bppPlan: 308, bppActual: 404, gpPlan: 194, gpActual: 284, ncpPlan: 194, ncpActual: 0, btlActual: 0, status: "REALISASI" },
         Jun: { revenuePlan: 879, revenueActual: 1117, bppPlan: 495, bppActual: 913, gpPlan: 384, gpActual: 204, ncpPlan: 384, ncpActual: 0, btlActual: 0, status: "REALISASI" },
@@ -156,64 +176,27 @@
     };
 
     let currentData = structuredClone(defaultFinancialData);
+    let isSaving = false;
 
-    async function loadDataFromFirestore() {
-      const checkInterval = setInterval(async () => {
-        if (window.firebaseDB && window.firebaseFns) {
-          clearInterval(checkInterval);
-          const { doc, getDoc, setDoc } = window.firebaseFns;
-          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
-          const docSnap = await getDoc(docRef);
-          
-          if (docSnap.exists()) {
-            currentData = docSnap.data();
-          } else {
-            await setDoc(docRef, defaultFinancialData);
-            currentData = structuredClone(defaultFinancialData);
-          }
-          renderTableRows();
-        }
-      }, 100);
-    }
-
-    window.switchTab = function(tabId, btn) {
-      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-      document.getElementById(tabId).style.display = 'block';
-      btn.classList.add('active');
-    };
-
-    function formatNumber(num) { return Number(num || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); }
-    
-    function toNumber(val) {
-      if (val === null || val === undefined || val === "") return 0;
-      let str = String(val).trim();
-      let isNegative = str.startsWith('-');
-      if (isNegative) {
-        str = str.substring(1);
-      }
-      str = str.replace(/\./g, '').replace(',', '.');
-      let num = Number(str);
-      if (isNaN(num)) return 0;
-      return isNegative ? -num : num;
-    }
-
+    // PERBAIKAN: render tabel terlebih dahulu agar edit manual
+    // tidak bergantung pada keberhasilan koneksi Firebase.
     function renderTableRows() {
       let htmlTab1 = "", htmlTab2 = "";
+
       monthsList.forEach((m, idx) => {
         const item = currentData.months[m] || {};
         const statusSelected = item.status === "REALISASI" ? "REALISASI" : "PROGNOSA";
-        
-        const revPlan = item.revenuePlan || 0;
-        const bppPlan = item.bppPlan || 0;
-        const revAct = item.revenueActual || 0;
-        const bppAct = item.bppActual || 0;
-        const ncpAct = item.ncpActual || 0;
-        const btlAct = item.btlActual !== undefined ? item.btlActual : 0;
 
-        const gpActTab1 = revAct - bppAct;
-        const npAct = gpActTab1 - ncpAct;
-        const npmAct = revAct > 0 ? (npAct / revAct * 100) : 0;
+        const revPlan = item.revenuePlan ?? 0;
+        const bppPlan = item.bppPlan ?? 0;
+        const revAct = item.revenueActual ?? 0;
+        const bppAct = item.bppActual ?? 0;
+        const ncpAct = item.ncpActual ?? 0;
+        const btlAct = item.btlActual ?? 0;
+
+        const gpActTab1 = Number(revAct) - Number(bppAct);
+        const npAct = gpActTab1 - Number(ncpAct);
+        const npmAct = Number(revAct) > 0 ? (npAct / Number(revAct) * 100) : 0;
 
         htmlTab1 += `
           <tr>
@@ -252,6 +235,43 @@
       document.getElementById("tbodyTab2").innerHTML = htmlTab2;
     }
 
+    function formatNumber(num) {
+      return Number(num || 0).toLocaleString("id-ID", {
+        maximumFractionDigits: 0
+      });
+    }
+
+    // Mendukung angka negatif dan format desimal koma.
+    function toNumber(val) {
+      if (val === null || val === undefined || val === "") return 0;
+
+      let str = String(val).trim();
+      const isNegative = str.startsWith("-");
+
+      if (isNegative) {
+        str = str.substring(1);
+      }
+
+      str = str.replace(/\./g, "").replace(",", ".");
+      const num = Number(str);
+
+      if (isNaN(num)) return 0;
+      return isNegative ? -num : num;
+    }
+
+    window.switchTab = function(tabId, btn) {
+      document.querySelectorAll(".tab-content").forEach(el => {
+        el.style.display = "none";
+      });
+
+      document.querySelectorAll(".tab-btn").forEach(el => {
+        el.classList.remove("active");
+      });
+
+      document.getElementById(tabId).style.display = "block";
+      btn.classList.add("active");
+    };
+
     window.syncStatus = function(month, val, sourceTab) {
       if (sourceTab === 1) {
         const sel2 = document.querySelector(`[name="status2_${month}"]`);
@@ -264,87 +284,193 @@
 
     window.updateLiveCalc = function(m) {
       const item = currentData.months[m] || {};
-      const revAct = item.revenueActual || 0;
-      const bppAct = item.bppActual || 0;
-      const ncpVal = toNumber(document.querySelector(`[name="ncpAct_${m}"]`).value);
-      
+
+      // Gunakan nilai input terbaru dari kedua tabel,
+      // bukan hanya nilai lama yang tersimpan di Firebase.
+      const revInput = document.querySelector(`[name="revAct_${m}"]`);
+      const bppInput = document.querySelector(`[name="bppAct_${m}"]`);
+      const ncpInput = document.querySelector(`[name="ncpAct_${m}"]`);
+
+      const revAct = revInput ? toNumber(revInput.value) : Number(item.revenueActual || 0);
+      const bppAct = bppInput ? toNumber(bppInput.value) : Number(item.bppActual || 0);
+      const ncpVal = ncpInput ? toNumber(ncpInput.value) : Number(item.ncpActual || 0);
+
       const gpAct = revAct - bppAct;
       const npAct = gpAct - ncpVal;
       const npmAct = revAct > 0 ? (npAct / revAct * 100) : 0;
 
-      document.getElementById(`np_disp_${m}`).textContent = formatNumber(npAct);
-      document.getElementById(`npm_disp_${m}`).textContent = npmAct.toFixed(2) + "%";
+      const npDisplay = document.getElementById(`np_disp_${m}`);
+      const npmDisplay = document.getElementById(`npm_disp_${m}`);
+
+      if (npDisplay) npDisplay.textContent = formatNumber(npAct);
+      if (npmDisplay) npmDisplay.textContent = npmAct.toFixed(2) + "%";
     };
 
     window.formatInput = function(el) {
       let val = el.value;
-      let isNegative = val.startsWith('-');
-      let cleaned = val.replace(/[^,\d]/g, '');
-      let parts = cleaned.split(',');
-      let sisa = parts[0].length % 3;
+      const isNegative = val.startsWith("-");
+      const cleaned = val.replace(/[^,\d]/g, "");
+      const parts = cleaned.split(",");
+      const sisa = parts[0].length % 3;
       let rupiah = parts[0].substr(0, sisa);
-      let ribuan = parts[0].substr(sisa).match(/\d{3}/g);
+      const ribuan = parts[0].substr(sisa).match(/\d{3}/g);
+
       if (ribuan) {
-        let separator = sisa ? '.' : '';
-        rupiah += separator + ribuan.join('.');
+        const separator = sisa ? "." : "";
+        rupiah += separator + ribuan.join(".");
       }
-      let finalVal = parts[1] !== undefined ? rupiah + ',' + parts[1] : rupiah;
-      el.value = (isNegative ? '-' : '') + finalVal;
+
+      const finalVal = parts[1] !== undefined
+        ? rupiah + "," + parts[1]
+        : rupiah;
+
+      el.value = (isNegative ? "-" : "") + finalVal;
     };
+
+    // Memuat data Firebase tanpa membuat tabel menjadi kosong
+    // ketika koneksi atau pembacaan data mengalami kegagalan.
+    async function loadDataFromFirestore() {
+      // Render segera menggunakan data awal.
+      renderTableRows();
+
+      try {
+        const deadline = Date.now() + 10000;
+
+        while (!window.firebaseDB || !window.firebaseFns) {
+          if (Date.now() >= deadline) {
+            console.error("Firebase belum siap. Tabel tetap menggunakan data awal.");
+            return;
+          }
+
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+        const { doc, getDoc, setDoc } = window.firebaseFns;
+        const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const savedData = docSnap.data();
+
+          // Gabungkan data tersimpan dengan struktur default
+          // agar properti yang belum tersedia tidak hilang.
+          currentData = {
+            ...structuredClone(defaultFinancialData),
+            ...savedData,
+            months: {
+              ...structuredClone(defaultFinancialData.months),
+              ...(savedData.months || {})
+            }
+          };
+        } else {
+          await setDoc(docRef, defaultFinancialData);
+          currentData = structuredClone(defaultFinancialData);
+        }
+
+        renderTableRows();
+
+      } catch (error) {
+        console.error("Gagal memuat data dari Firebase:", error);
+        // Tabel tetap dapat digunakan dengan data yang tersedia.
+        renderTableRows();
+      }
+    }
 
     document.getElementById("adminForm").addEventListener("submit", async function(e) {
       e.preventDefault();
-      
-      monthsList.forEach(m => {
-        const statusEl = document.querySelector(`[name="status_${m}"]`) || document.querySelector(`[name="status2_${m}"]`);
-        const revPlanEl = document.querySelector(`[name="revPlan_${m}"]`);
-        const bppPlanEl = document.querySelector(`[name="bppPlan_${m}"]`);
-        const revActEl = document.querySelector(`[name="revAct_${m}"]`);
-        const bppActEl = document.querySelector(`[name="bppAct_${m}"]`);
-        const ncpActEl = document.querySelector(`[name="ncpAct_${m}"]`);
-        const btlActEl = document.querySelector(`[name="btlAct_${m}"]`);
 
-        if (!currentData.months[m]) currentData.months[m] = {};
+      if (isSaving) return;
+      isSaving = true;
 
-        if (statusEl) currentData.months[m].status = statusEl.value;
-        if (revPlanEl) currentData.months[m].revenuePlan = toNumber(revPlanEl.value);
-        if (bppPlanEl) currentData.months[m].bppPlan = toNumber(bppPlanEl.value);
-        if (revActEl) currentData.months[m].revenueActual = toNumber(revActEl.value);
-        if (bppActEl) currentData.months[m].bppActual = toNumber(bppActEl.value);
-        if (ncpActEl) currentData.months[m].ncpActual = toNumber(ncpActEl.value);
-        if (btlActEl) currentData.months[m].btlActual = toNumber(btlActEl.value);
-      });
+      const submitButton = this.querySelector('button[type="submit"]');
+      const originalButtonHTML = submitButton.innerHTML;
 
-      if (window.firebaseDB && window.firebaseFns) {
+      submitButton.disabled = true;
+      submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+
+      try {
+        monthsList.forEach(m => {
+          const statusEl =
+            document.querySelector(`[name="status_${m}"]`) ||
+            document.querySelector(`[name="status2_${m}"]`);
+
+          const revPlanEl = document.querySelector(`[name="revPlan_${m}"]`);
+          const bppPlanEl = document.querySelector(`[name="bppPlan_${m}"]`);
+          const revActEl = document.querySelector(`[name="revAct_${m}"]`);
+          const bppActEl = document.querySelector(`[name="bppAct_${m}"]`);
+          const ncpActEl = document.querySelector(`[name="ncpAct_${m}"]`);
+          const btlActEl = document.querySelector(`[name="btlAct_${m}"]`);
+
+          if (!currentData.months[m]) {
+            currentData.months[m] = {};
+          }
+
+          if (statusEl) currentData.months[m].status = statusEl.value;
+          if (revPlanEl) currentData.months[m].revenuePlan = toNumber(revPlanEl.value);
+          if (bppPlanEl) currentData.months[m].bppPlan = toNumber(bppPlanEl.value);
+          if (revActEl) currentData.months[m].revenueActual = toNumber(revActEl.value);
+          if (bppActEl) currentData.months[m].bppActual = toNumber(bppActEl.value);
+          if (ncpActEl) currentData.months[m].ncpActual = toNumber(ncpActEl.value);
+          if (btlActEl) currentData.months[m].btlActual = toNumber(btlActEl.value);
+        });
+
+        if (!window.firebaseDB || !window.firebaseFns) {
+          throw new Error("Firebase belum siap. Data belum berhasil disimpan.");
+        }
+
         const { doc, setDoc } = window.firebaseFns;
         const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
-        await setDoc(docRef, currentData);
-      }
 
-      const alertBox = document.getElementById("alertSuccess");
-      alertBox.style.display = "block";
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      
-      setTimeout(() => { alertBox.style.display = "none"; }, 2500);
+        await setDoc(docRef, currentData);
+
+        const alertBox = document.getElementById("alertSuccess");
+        alertBox.innerHTML = '<i class="fa-solid fa-circle-check"></i> Data berhasil disimpan ke Firebase Firestore!';
+        alertBox.style.display = "block";
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        setTimeout(() => {
+          alertBox.style.display = "none";
+        }, 2500);
+
+      } catch (error) {
+        console.error("Gagal menyimpan data:", error);
+        alert("Data gagal disimpan. Periksa koneksi internet, konfigurasi Firebase, dan aturan keamanan Firestore.\n\nDetail: " + error.message);
+      } finally {
+        isSaving = false;
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalButtonHTML;
+      }
     });
 
     window.resetDefaultData = async function() {
-      if (confirm("Apakah Anda yakin ingin mereset seluruh data kembali ke pengaturan awal?")) {
+      if (!confirm("Apakah Anda yakin ingin mereset seluruh data kembali ke pengaturan awal?")) {
+        return;
+      }
+
+      try {
         currentData = structuredClone(defaultFinancialData);
+
         if (window.firebaseDB && window.firebaseFns) {
           const { doc, setDoc } = window.firebaseFns;
           const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
           await setDoc(docRef, currentData);
+        } else {
+          alert("Firebase belum siap. Data awal ditampilkan, tetapi belum disimpan ke server.");
         }
+
         renderTableRows();
         alert("Data berhasil direset ke awal!");
+
+      } catch (error) {
+        console.error("Gagal mereset data:", error);
+        renderTableRows();
+        alert("Data awal ditampilkan, tetapi gagal disimpan ke Firebase.\n\nDetail: " + error.message);
       }
     };
 
-    window.addEventListener("DOMContentLoaded", () => {
-      loadDataFromFirestore();
-    });
+    // Render tabel secepat mungkin, lalu muat data tersimpan.
+    loadDataFromFirestore();
   </script>
 </body>
 </html>
-```[cite: 5, 6]
