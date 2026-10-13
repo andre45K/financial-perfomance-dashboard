@@ -230,13 +230,9 @@
         <span>📅 Periode: <strong>Jan - Dec 2026</strong></span>
       </div>
 
-      <!-- MENU DASHBOARD NKB -->
+      <!-- MENU DASHBOARD NKB DITAMBAHKAN DI SINI -->
       <a href="nkb.html" class="admin-link">Dashboard NKB</a>
-      
 
-      <!-- MENU DASHBOARD NKD (DITAMBAHKAN TEPAT DI DISINI) -->
-      <a href="nkd.html" class="admin-link">Dashboard NKD</a>
-      <a href="piutang.html" class="admin-link">Dashboard Piutang</a>
       <a href="login.html" class="admin-link">Admin Input</a>
 
       <!-- TOMBOL DOWNLOAD JPG TERPISAH MENJADI 3 FILE -->
@@ -623,7 +619,7 @@
           <div class="d3-panel-flex">
             <div class="d3-canvas-wrap"><canvas id="d3ChartGpm"></canvas></div>
             <div class="d3-cumul-box">
-              <div id="d3-gpm-cumul-title" class="d3-cumul-title">Pencapaian s.d. Sep 2026</div>
+              <div id="d3-gpm-cumul-title" class="d3-gpm-cumul-title">Pencapaian s.d. Sep 2026</div>
               <div class="d3-cumul-cols">
                 <div class="d3-cumul-item">
                   <div id="d3-gpm-plan-cumul" class="d3-gpm-plan-cumul-val d3-cumul-val" style="color:#e67e22;">48%</div>
@@ -676,40 +672,22 @@
     let financialData = structuredClone(defaultFinancialData);
 
     function initFirebaseListener() {
-      // Render data lokal terlebih dahulu agar grafik tetap tampil jika Firebase lambat/gagal.
-      try { renderAll(); } catch (error) { console.error("Gagal merender data awal dashboard:", error); }
-
-      const startedAt = Date.now();
       const checkInterval = setInterval(() => {
         if (window.firebaseDB && window.firebaseFns) {
           clearInterval(checkInterval);
-          try {
-            const { doc, onSnapshot, setDoc } = window.firebaseFns;
-            const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+          const { doc, onSnapshot, setDoc } = window.firebaseFns;
+          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
 
-            onSnapshot(docRef, (docSnap) => {
-              try {
-                if (docSnap.exists()) {
-                  financialData = normalizeFinancialData(docSnap.data());
-                  renderAll();
-                } else {
-                  setDoc(docRef, defaultFinancialData).catch((error) => {
-                    console.error("Gagal membuat data awal Firestore:", error);
-                  });
-                  // Data default sudah dirender, jadi dashboard tidak menunggu write.
-                }
-              } catch (error) {
-                console.error("Gagal memproses data Firestore:", error);
-              }
-            }, (error) => {
-              console.error("Gagal menyinkronkan data Firestore secara realtime:", error);
-            });
-          } catch (error) {
-            console.error("Inisialisasi listener Firebase gagal:", error);
-          }
-        } else if (Date.now() - startedAt > 10000) {
-          clearInterval(checkInterval);
-          console.error("Firebase belum siap. Dashboard tetap menampilkan data lokal.");
+          onSnapshot(docRef, (docSnap) => {
+            if (docSnap.exists()) {
+              financialData = normalizeFinancialData(docSnap.data());
+              renderAll();
+            } else {
+              setDoc(docRef, defaultFinancialData);
+            }
+          }, (error) => {
+            console.error("Gagal menyinkronkan data Firestore secara realtime:", error);
+          });
         }
       }, 100);
     }
@@ -731,7 +709,8 @@
               let revAct = toNumber(source.revenueActual, defMonth.revenueActual);
               let bppPlan = toNumber(source.bppPlan, defMonth.bppPlan);
               let bppAct = toNumber(source.bppActual, defMonth.bppActual);
-              
+              if (bppAct === 0) bppAct = defMonth.bppActual;
+
               let ncpAct = toNumber(source.ncpActual, defMonth.ncpActual);
               let btlAct = toNumber(source.btlActual, defMonth.btlActual);
 
@@ -749,10 +728,8 @@
                 revenuePlan: revPlan,
                 revenueActual: revAct,
                 bppPlan: bppPlan,
-                bppActual: bppAct,
                 bppAct: bppAct,
                 gpPlan: gpPlan,
-                gpActual: gpAct,
                 gpAct: gpAct,
                 ncpPlan: gpPlan,
                 ncpActual: ncpAct,
@@ -800,7 +777,7 @@
         const rPlan = Number(item.revenuePlan) || 0;
         const rAct = Number(item.revenueActual) || 0;
         const bPlan = Number(item.bppPlan) || 0;
-        const bAct = Number(item.bppActual ?? item.bppAct) || 0;
+        const bAct = Number(item.bppAct) || 0;
         const nAct = Number(item.ncpActual) || 0;
         const btlVal = Number(item.btlActual) || 0;
 
@@ -1430,7 +1407,7 @@
     }
 
     function getMonthFullName(month) {
-      const map = { Jan: "Januari", Feb: "Februari", Mar: "Maret", Apr: "April", May: "Mei", Jun: "Juni", Jul: "Juli", Aug: "Agustus", Sep: "September", Oct: "Oktober", Nov: "November", Dec: "Desember" };
+      const map = { Jan: "Januari", Feb: "Februari", Mar: "Maret", Apr: "April", May: "Mei", Jun: "Juni", Jul: "Juli", Aug: "Agustus", Sep: "September", Oct: "Oktober", November: "November", Dec: "Desember" };
       return map[month] || month;
     }
 
@@ -1449,7 +1426,7 @@
       if (!targetElement) return;
 
       // Indikator loading sederhana
-      const btn = (typeof event !== "undefined" && event.currentTarget) ? event.currentTarget : document.activeElement;
+      const btn = event.currentTarget;
       const originalText = btn.innerHTML;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
 
