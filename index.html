@@ -210,10 +210,55 @@
       .d3-kpi-grid { grid-template-columns: repeat(2, 1fr); }
       .d3-panel-flex { grid-template-columns: 1fr; }
     }
+
+/* ADMIN EDIT PANEL */
+.admin-edit-panel{display:none;background:#0f1926;border:1px solid #26384f;border-radius:12px;padding:24px;margin:0 18px 24px;box-shadow:0 8px 24px #0005}
+.admin-edit-panel.active{display:block}
+.admin-edit-head{display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:2px solid #223249;padding-bottom:14px;margin-bottom:20px}
+.admin-edit-head h2{font-size:18px;color:#3b82f6;font-weight:800}
+.admin-edit-head p{font-size:12px;color:#8ba0b8;margin-top:5px}
+.admin-notice{background:#14243a;border-left:4px solid #3b82f6;padding:14px 15px;border-radius:4px;margin-bottom:20px;color:#dbeafe;font-size:12px}
+.admin-tabs{display:flex;gap:10px;border-bottom:1px solid #26384f;padding-bottom:10px;margin-bottom:20px;flex-wrap:wrap}
+.admin-tab{border:1px solid #2b405b;background:#14243a;color:#9fb4ce;padding:10px 15px;border-radius:6px;font-weight:700;cursor:pointer}
+.admin-tab.active{background:#3b82f6;color:#fff;border-color:#3b82f6}
+.admin-edit-table-wrap{overflow:auto}
+.admin-edit-table{min-width:900px;width:100%;border-collapse:collapse;font-size:11px}
+.admin-edit-table th{background:#081321;color:#dbeafe;padding:11px 8px;border:1px solid #26384f;white-space:nowrap}
+.admin-edit-table td{padding:7px;border:1px solid #26384f;text-align:center}
+.admin-edit-table input,.admin-edit-table select{width:100%;min-width:90px;background:#091321;color:#fff;border:1px solid #30435c;border-radius:4px;padding:8px;font-size:11px}
+.admin-edit-table td:first-child{font-weight:700;white-space:nowrap}
+.admin-edit-actions{display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid #26384f;margin-top:24px;padding-top:20px;flex-wrap:wrap}
+.admin-edit-actions-right{display:flex;gap:10px;margin-left:auto}
+.admin-action-btn{border:0;border-radius:6px;padding:11px 18px;color:#fff;font-weight:700;cursor:pointer}
+.admin-back{background:#334155}.admin-save{background:#2563eb}.admin-reset{background:#dc2626}
+@media(max-width:700px){.admin-edit-panel{margin:0 0 20px;padding:15px}.admin-edit-head{align-items:flex-start;flex-direction:column}.admin-edit-actions-right{margin-left:0}}
+
   </style>
 </head>
 
 <body>
+
+  <section id="adminEditPanel" class="admin-edit-panel" aria-label="Admin input data keuangan">
+    <div class="admin-edit-head">
+      <div><h2><i class="fa-solid fa-pen-to-square"></i> ADMIN INPUT DATA KEUANGAN 2026</h2>
+      <p>Kelola dan perbarui data target rencana serta realisasi/prognosa untuk kedua dashboard secara terpisah.</p></div>
+      <button class="admin-action-btn admin-back" type="button" onclick="closeAdminEdit()"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</button>
+    </div>
+    <div class="admin-notice"><strong>Informasi:</strong> Perubahan data di sini akan langsung otomatis memperbarui grafik secara realtime.</div>
+    <div class="admin-tabs">
+      <button id="adminTab1" class="admin-tab active" type="button" onclick="switchAdminTab(1)"><i class="fa-solid fa-chart-line"></i> Dashboard 1: Pendapatan &amp; BPP</button>
+      <button id="adminTab2" class="admin-tab" type="button" onclick="switchAdminTab(2)"><i class="fa-solid fa-coins"></i> Dashboard 2: NCP &amp; Biaya Tidak Langsung</button>
+    </div>
+    <div class="admin-edit-table-wrap"><table class="admin-edit-table"><thead id="adminEditThead"></thead><tbody id="adminEditTbody"></tbody></table></div>
+    <div class="admin-edit-actions">
+      <button class="admin-action-btn admin-reset" type="button" onclick="resetAdminData()"><i class="fa-solid fa-rotate-left"></i> Reset Data Awal</button>
+      <div class="admin-edit-actions-right">
+        <button class="admin-action-btn admin-back" type="button" onclick="closeAdminEdit()">Tutup</button>
+        <button class="admin-action-btn admin-save" type="button" onclick="saveAdminData()"><i class="fa-solid fa-floppy-disk"></i> Simpan &amp; Update Dashboard</button>
+      </div>
+    </div>
+  </section>
+
 
   <!-- HEADER -->
   <div class="header-container">
@@ -237,7 +282,7 @@
       <!-- MENU DASHBOARD NKD (DITAMBAHKAN TEPAT DI DISINI) -->
       <a href="nkd.html" class="admin-link">Dashboard NKD</a>
       <a href="piutang.html" class="admin-link">Dashboard Piutang</a>
-      <a href="login.html" class="admin-link">Admin Input</a>
+      <a href="#" class="admin-link" onclick="event.preventDefault(); openAdminEdit();">Admin Input</a>
 
       <!-- TOMBOL DOWNLOAD JPG TERPISAH MENJADI 3 FILE -->
       <div class="download-dropdown">
@@ -676,35 +721,22 @@
     let financialData = structuredClone(defaultFinancialData);
 
     function initFirebaseListener() {
-      let attempts = 0;
       const checkInterval = setInterval(() => {
-        attempts++;
         if (window.firebaseDB && window.firebaseFns) {
           clearInterval(checkInterval);
           const { doc, onSnapshot, setDoc } = window.firebaseFns;
           const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
 
-          onSnapshot(docRef, async (docSnap) => {
-            try {
-              if (docSnap.exists()) {
-                financialData = normalizeFinancialData(docSnap.data());
-                renderAll();
-              } else {
-                await setDoc(docRef, defaultFinancialData);
-              }
-            } catch (error) {
-              console.error("Gagal menampilkan data dashboard:", error);
+          onSnapshot(docRef, (docSnap) => {
+            if (docSnap.exists()) {
+              financialData = normalizeFinancialData(docSnap.data());
               renderAll();
+            } else {
+              setDoc(docRef, defaultFinancialData);
             }
           }, (error) => {
             console.error("Gagal menyinkronkan data Firestore secara realtime:", error);
-            // Dashboard tetap tampil dengan data bawaan saat akses Firestore gagal.
-            renderAll();
           });
-        } else if (attempts >= 100) {
-          clearInterval(checkInterval);
-          console.error("Firebase belum siap. Periksa koneksi internet dan konfigurasi Firebase.");
-          renderAll();
         }
       }, 100);
     }
@@ -725,7 +757,8 @@
               let revPlan = toNumber(source.revenuePlan, defMonth.revenuePlan);
               let revAct = toNumber(source.revenueActual, defMonth.revenueActual);
               let bppPlan = toNumber(source.bppPlan, defMonth.bppPlan);
-              let bppAct = toNumber(source.bppActual ?? source.bppAct, defMonth.bppActual);
+              let bppAct = toNumber(source.bppActual, defMonth.bppActual);
+              if (bppAct === 0) bppAct = defMonth.bppActual;
 
               let ncpAct = toNumber(source.ncpActual, defMonth.ncpActual);
               let btlAct = toNumber(source.btlActual, defMonth.btlActual);
@@ -744,9 +777,9 @@
                 revenuePlan: revPlan,
                 revenueActual: revAct,
                 bppPlan: bppPlan,
-                bppActual: bppAct,
+                bppAct: bppAct,
                 gpPlan: gpPlan,
-                gpActual: gpAct,
+                gpAct: gpAct,
                 ncpPlan: gpPlan,
                 ncpActual: ncpAct,
                 btlActual: btlAct,
@@ -793,7 +826,7 @@
         const rPlan = Number(item.revenuePlan) || 0;
         const rAct = Number(item.revenueActual) || 0;
         const bPlan = Number(item.bppPlan) || 0;
-        const bAct = Number(item.bppActual ?? item.bppAct) || 0;
+        const bAct = Number(item.bppAct) || 0;
         const nAct = Number(item.ncpActual) || 0;
         const btlVal = Number(item.btlActual) || 0;
 
@@ -1423,7 +1456,7 @@
     }
 
     function getMonthFullName(month) {
-      const map = { Jan: "Januari", Feb: "Februari", Mar: "Maret", Apr: "April", May: "Mei", Jun: "Juni", Jul: "Juli", Aug: "Agustus", Sep: "September", Oct: "Oktober", Nov: "November", Dec: "Desember" };
+      const map = { Jan: "Januari", Feb: "Februari", Mar: "Maret", Apr: "April", May: "Mei", Jun: "Juni", Jul: "Juli", Aug: "Agustus", Sep: "September", Oct: "Oktober", November: "November", Dec: "Desember" };
       return map[month] || month;
     }
 
@@ -1463,11 +1496,83 @@
       });
     };
 
-    window.addEventListener("DOMContentLoaded", () => {
-      if (typeof Chart === "undefined") {
-        console.error("Chart.js tidak berhasil dimuat. Periksa koneksi internet/CDN.");
-        return;
+
+    // ADMIN EDIT: form input untuk data yang dipakai dashboard yang sama.
+    let activeAdminTab = 1;
+    const adminMonthNames = {Jan:"Januari",Feb:"Februari",Mar:"Maret",Apr:"April",May:"Mei",Jun:"Juni",Jul:"Juli",Aug:"Agustus",Sep:"September",Oct:"Oktober",Nov:"November",Dec:"Desember"};
+    window.openAdminEdit = function() {
+      document.getElementById("adminEditPanel").classList.add("active");
+      document.getElementById("dashboardPart1").style.display = "none";
+      document.getElementById("dashboardPart2").style.display = "none";
+      document.getElementById("dashboardPart3").style.display = "none";
+      document.querySelector(".header-container").style.display = "none";
+      renderAdminEditTable();
+      window.scrollTo({top:0,behavior:"smooth"});
+    };
+    window.closeAdminEdit = function() {
+      document.getElementById("adminEditPanel").classList.remove("active");
+      document.getElementById("dashboardPart1").style.display = "";
+      document.getElementById("dashboardPart2").style.display = "";
+      document.getElementById("dashboardPart3").style.display = "";
+      document.querySelector(".header-container").style.display = "";
+      renderAll();
+      window.scrollTo({top:0,behavior:"smooth"});
+    };
+    window.switchAdminTab = function(tab) {
+      activeAdminTab = tab;
+      document.getElementById("adminTab1").classList.toggle("active", tab===1);
+      document.getElementById("adminTab2").classList.toggle("active", tab===2);
+      renderAdminEditTable();
+    };
+    function renderAdminEditTable() {
+      const fields = activeAdminTab === 1
+        ? [["revenuePlan","Rencana Pendapatan"],["bppPlan","Rencana BPP"],["revenueActual","Realisasi/Prognosa Pendapatan"],["bppActual","Realisasi/Prognosa BPP"]]
+        : [["ncpPlan","Rencana NCP"],["ncpActual","Realisasi/Prognosa NCP"],["btlActual","Realisasi/Prognosa Biaya Tidak Langsung"]];
+      document.getElementById("adminEditThead").innerHTML = "<tr><th>BULAN</th><th>STATUS</th>"+fields.map(f=>"<th>"+f[1].toUpperCase()+"</th>").join("")+"</tr>";
+      document.getElementById("adminEditTbody").innerHTML = monthsList.map(month=>{
+        const d=financialData.months[month] || defaultFinancialData.months[month];
+        return "<tr><td>"+adminMonthNames[month]+"</td><td><select data-month='"+month+"' data-field='status'><option value='REALISASI' "+(d.status==="REALISASI"?"selected":"")+">REALISASI</option><option value='PROGNOSA' "+(d.status!=="REALISASI"?"selected":"")+">PROGNOSA</option></select></td>"+
+          fields.map(([field])=>"<td><input type='number' min='0' step='any' data-month='"+month+"' data-field='"+field+"' value='"+Number(d[field] ?? 0)+"'></td>").join("")+"</tr>";
+      }).join("");
+    }
+    window.saveAdminData = async function() {
+      document.querySelectorAll("#adminEditTbody [data-month][data-field]").forEach(input=>{
+        const month=input.dataset.month, field=input.dataset.field;
+        if(!financialData.months[month]) financialData.months[month]={...defaultFinancialData.months[month]};
+        if(field==="status") financialData.months[month].status=input.value;
+        else financialData.months[month][field]=Number(input.value)||0;
+      });
+      try {
+        if(window.firebaseDB && window.firebaseFns) {
+          const {doc,setDoc}=window.firebaseFns;
+          await setDoc(doc(window.firebaseDB,"financialDashboards","year_2026"),financialData);
+        }
+        renderAll();
+        alert("Data berhasil disimpan dan dashboard diperbarui.");
+      } catch(error) {
+        console.error("Gagal menyimpan data dashboard:",error);
+        alert("Data diperbarui di halaman ini, tetapi gagal disimpan ke Firestore. Periksa koneksi dan izin Firebase.");
       }
+    };
+    window.resetAdminData = async function() {
+      if(!confirm("Reset seluruh data ke nilai awal? Data yang tersimpan akan ditimpa.")) return;
+      financialData=structuredClone(defaultFinancialData);
+      try {
+        if(window.firebaseDB && window.firebaseFns) {
+          const {doc,setDoc}=window.firebaseFns;
+          await setDoc(doc(window.firebaseDB,"financialDashboards","year_2026"),financialData);
+        }
+        renderAdminEditTable(); renderAll();
+        alert("Data awal berhasil dipulihkan.");
+      } catch(error) {
+        console.error("Gagal reset data:",error);
+        renderAdminEditTable(); renderAll();
+        alert("Data awal diterapkan di halaman ini, tetapi gagal disimpan ke Firestore.");
+      }
+    };
+
+
+    window.addEventListener("DOMContentLoaded", () => {
       initFirebaseListener();
     });
   </script>
