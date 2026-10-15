@@ -425,15 +425,15 @@
           </div>
           <div class="form-group">
             <label>PU (Rp)</label>
-            <input type="number" id="inputPu" class="form-control" placeholder="0" required>
+            <input type="number" id="inputPu" class="form-control" placeholder="0" step="any" required>
           </div>
           <div class="form-group">
             <label>Tagihan (Rp)</label>
-            <input type="number" id="inputTagihan" class="form-control" placeholder="0" required>
+            <input type="number" id="inputTagihan" class="form-control" placeholder="0" step="any" required>
           </div>
           <div class="form-group">
             <label>Terbayar (Rp)</label>
-            <input type="number" id="inputTerbayar" class="form-control" placeholder="0" required>
+            <input type="number" id="inputTerbayar" class="form-control" placeholder="0" step="any" required>
           </div>
           <button type="submit" class="btn-action btn-save"><i class="fa-solid fa-save"></i> Simpan</button>
           <button type="button" class="btn-action btn-reset" onclick="resetForm()"><i class="fa-solid fa-rotate-right"></i> Reset</button>
@@ -585,10 +585,6 @@
 
   let customerData = [...defaultCustomerData];
   let currentPeriod = "Juli 2026";
-  // Hindari penulisan data default sebelum data Firestore selesai dibaca.
-  let firebaseReady = false;
-  let saveQueue = Promise.resolve();
-  let lastSnapshotSignature = "";
 
   const fmt = (val) => val ? Number(val).toLocaleString("id-ID") : "-";
 
@@ -610,7 +606,8 @@
   }
 
   window.updatePeriodLabel = function() {
-    const val = document.getElementById("periodDropdown").value;
+    const select = document.getElementById("periodDropdown");
+    const val = select.value || currentPeriod;
     currentPeriod = val;
     document.getElementById("bannerSubText").textContent = "s.d " + val;
     document.getElementById("footerInfoText").innerHTML = `Seluruh nilai dalam Rupiah (Rp) &nbsp;|&nbsp; Data periode ${val}`;
@@ -786,10 +783,11 @@
     });
   }
 
-  function saveDataToFirebase() {
-    // Simpan hanya setelah listener menerima data awal / dokumen awal disiapkan.
-    if (!firebaseReady || !window.firebaseDB || !window.firebaseFns) return;
+  let firebaseSaveInProgress = Promise.resolve();
+  let lastRenderedSnapshot = "";
 
+  function saveDataToFirebase() {
+    if (!window.firebaseDB || !window.firebaseFns) return;
     const { doc, setDoc } = window.firebaseFns;
     const docRef = doc(window.firebaseDB, "monitoringPiutang", "data_2026");
     const payload = {
@@ -802,79 +800,72 @@
         terbayar: Number(c.terbayar) || 0
       }))
     };
-
-    // Antrikan penulisan agar simpan cepat berurutan tidak saling menimpa.
-    saveQueue = saveQueue
-      .catch(() => {}) 
+    const payloadKey = JSON.stringify(payload);
+    lastRenderedSnapshot = payloadKey;
+    // Serialize writes so rapid add/edit/delete actions don't race each other.
+    firebaseSaveInProgress = firebaseSaveInProgress
+      .catch(() => {})
       .then(() => setDoc(docRef, payload))
       .catch(err => {
         console.error("Gagal menyimpan ke Firebase:", err);
-        alert("Data gagal disimpan ke Firestore. Periksa koneksi dan izin database, lalu coba lagi.");
+        alert("Data belum berhasil disimpan ke Firebase. Periksa koneksi dan izin Firestore, lalu coba lagi.");
       });
-    return saveQueue;
+    return firebaseSaveInProgress;
   }
 
   function initFirebaseListener() {
     const checkInterval = setInterval(() => {
-      if (window.firebaseDB && window.firebaseFns) {
-        clearInterval(checkInterval);
-        const { doc, onSnapshot, setDoc } = window.firebaseFns;
-        const docRef = doc(window.firebaseDB, "monitoringPiutang", "data_2026");
+      if (!window.firebaseDB || !window.firebaseFns) return;
+      clearInterval(checkInterval);
+      const { doc, onSnapshot, setDoc } = window.firebaseFns;
+      const docRef = doc(window.firebaseDB, "monitoringPiutang", "data_2026");
 
-        onSnapshot(docRef, async (docSnap) => {
-          try {
-            if (docSnap.exists()) {
-              const data = docSnap.data();
-              // Abaikan snapshot identik agar tidak merender ulang tanpa kebutuhan.
-              const signature = JSON.stringify({
-                period: data.period || "Juli 2026",
-                customers: Array.isArray(data.customers) ? data.customers : []
-              });
-              if (signature === lastSnapshotSignature && firebaseReady) return;
-              lastSnapshotSignature = signature;
+      onSnapshot(docRef, (docSnap) => {
+        if (!docSnap.exists()) {
+          // Only seed defaults when the document truly does not exist.
+          setDoc(docRef, {
+            period: currentPeriod,
+            customers: defaultCustomerData
+          }).catch(error => console.error("Gagal membuat data awal Firestore:", error));
+          return;
+        }
 
-              if (data.period) currentPeriod = data.period;
-              const periodSelect = document.getElementById("periodDropdown");
-              if ([...periodSelect.options].some(opt => opt.value === currentPeriod)) {
-                periodSelect.value = currentPeriod;
-              }
+        const data = docSnap.data() || {};
+        const incomingCustomers = Array.isArray(data.customers)
+          ? data.customers.map(c => ({
+              customer: String(c.customer ?? ""),
+              alat: String(c.alat || "Truck Mixer"),
+              pu: Number(c.pu) || 0,
+              tagihan: Number(c.tagihan) || 0,
+              terbayar: Number(c.terbayar) || 0
+            }))
+          : customerData;
+        const incomingPeriod = data.period || currentPeriod;
+        const incomingKey = JSON.stringify({ period: incomingPeriod, customers: incomingCustomers });
+        const currentKey = JSON.stringify({ period: currentPeriod, customers: customerData });
 
-              if (Array.isArray(data.customers)) {
-                customerData = data.customers.map(c => ({
-                  customer: String(c.customer ?? ""),
-                  alat: String(c.alat || "Truck Mixer"),
-                  pu: Number(c.pu) || 0,
-                  tagihan: Number(c.tagihan) || 0,
-                  terbayar: Number(c.terbayar) || 0
-                }));
-              }
-              updatePeriodLabel();
-              renderPiutangDashboard();
-              firebaseReady = true;
-            } else {
-              // Dokumen baru dibuat sekali; jangan menimpa dokumen yang sudah ada.
-              await setDoc(docRef, {
-                period: currentPeriod,
-                customers: defaultCustomerData
-              });
-              customerData = [...defaultCustomerData];
-              lastSnapshotSignature = JSON.stringify({
-                period: currentPeriod,
-                customers: defaultCustomerData
-              });
-              updatePeriodLabel();
-              renderPiutangDashboard();
-              firebaseReady = true;
-            }
-          } catch (err) {
-            console.error("Gagal memuat data Firestore:", err);
+        // Ignore echoes of this tab's own write to avoid flicker/re-render loops.
+        if (incomingKey === currentKey) {
+          lastRenderedSnapshot = incomingKey;
+          if (document.getElementById("periodDropdown").value !== incomingPeriod) {
+            document.getElementById("periodDropdown").value = incomingPeriod;
           }
-        }, (error) => {
-          firebaseReady = false;
-          console.error("Gagal menyinkronkan data Firestore:", error);
-          alert("Data piutang gagal dimuat dari Firestore. Data tidak akan disimpan agar data lama tidak tertimpa.");
-        });
-      }
+          updatePeriodLabel();
+          return;
+        }
+
+        currentPeriod = incomingPeriod;
+        const periodSelect = document.getElementById("periodDropdown");
+        if ([...periodSelect.options].some(option => option.value === currentPeriod)) {
+          periodSelect.value = currentPeriod;
+        }
+        customerData = incomingCustomers;
+        lastRenderedSnapshot = incomingKey;
+        updatePeriodLabel();
+        renderPiutangDashboard();
+      }, (error) => {
+        console.error("Gagal menyinkronkan data Firestore:", error);
+      });
     }, 100);
   }
 
