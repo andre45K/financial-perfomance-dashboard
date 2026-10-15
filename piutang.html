@@ -585,6 +585,10 @@
 
   let customerData = [...defaultCustomerData];
   let currentPeriod = "Juli 2026";
+  // Hindari penulisan data default sebelum data Firestore selesai dibaca.
+  let firebaseReady = false;
+  let saveQueue = Promise.resolve();
+  let lastSnapshotSignature = "";
 
   const fmt = (val) => val ? Number(val).toLocaleString("id-ID") : "-";
 
@@ -610,11 +614,11 @@
     currentPeriod = val;
     document.getElementById("bannerSubText").textContent = "s.d " + val;
     document.getElementById("footerInfoText").innerHTML = `Seluruh nilai dalam Rupiah (Rp) &nbsp;|&nbsp; Data periode ${val}`;
-    saveDataToFirebase();
   }
 
   window.onPeriodChange = function() {
     updatePeriodLabel();
+    saveDataToFirebase();
   }
 
   function renderPiutangDashboard() {
@@ -783,16 +787,31 @@
   }
 
   function saveDataToFirebase() {
-    if (window.firebaseDB && window.firebaseFns) {
-      const { doc, setDoc } = window.firebaseFns;
-      const docRef = doc(window.firebaseDB, "monitoringPiutang", "data_2026");
-      setDoc(docRef, {
-        period: currentPeriod,
-        customers: customerData
-      }).catch(err => {
+    // Simpan hanya setelah listener menerima data awal / dokumen awal disiapkan.
+    if (!firebaseReady || !window.firebaseDB || !window.firebaseFns) return;
+
+    const { doc, setDoc } = window.firebaseFns;
+    const docRef = doc(window.firebaseDB, "monitoringPiutang", "data_2026");
+    const payload = {
+      period: currentPeriod,
+      customers: customerData.map(c => ({
+        customer: String(c.customer ?? ""),
+        alat: String(c.alat || "Truck Mixer"),
+        pu: Number(c.pu) || 0,
+        tagihan: Number(c.tagihan) || 0,
+        terbayar: Number(c.terbayar) || 0
+      }))
+    };
+
+    // Antrikan penulisan agar simpan cepat berurutan tidak saling menimpa.
+    saveQueue = saveQueue
+      .catch(() => {}) 
+      .then(() => setDoc(docRef, payload))
+      .catch(err => {
         console.error("Gagal menyimpan ke Firebase:", err);
+        alert("Data gagal disimpan ke Firestore. Periksa koneksi dan izin database, lalu coba lagi.");
       });
-    }
+    return saveQueue;
   }
 
   function initFirebaseListener() {
@@ -802,26 +821,58 @@
         const { doc, onSnapshot, setDoc } = window.firebaseFns;
         const docRef = doc(window.firebaseDB, "monitoringPiutang", "data_2026");
 
-        onSnapshot(docRef, (docSnap) => {
-          if (docSnap.exists()) {
-            const data = docSnap.data();
-            if (data.period) {
-              currentPeriod = data.period;
-              document.getElementById("periodDropdown").value = currentPeriod;
+        onSnapshot(docRef, async (docSnap) => {
+          try {
+            if (docSnap.exists()) {
+              const data = docSnap.data();
+              // Abaikan snapshot identik agar tidak merender ulang tanpa kebutuhan.
+              const signature = JSON.stringify({
+                period: data.period || "Juli 2026",
+                customers: Array.isArray(data.customers) ? data.customers : []
+              });
+              if (signature === lastSnapshotSignature && firebaseReady) return;
+              lastSnapshotSignature = signature;
+
+              if (data.period) currentPeriod = data.period;
+              const periodSelect = document.getElementById("periodDropdown");
+              if ([...periodSelect.options].some(opt => opt.value === currentPeriod)) {
+                periodSelect.value = currentPeriod;
+              }
+
+              if (Array.isArray(data.customers)) {
+                customerData = data.customers.map(c => ({
+                  customer: String(c.customer ?? ""),
+                  alat: String(c.alat || "Truck Mixer"),
+                  pu: Number(c.pu) || 0,
+                  tagihan: Number(c.tagihan) || 0,
+                  terbayar: Number(c.terbayar) || 0
+                }));
+              }
               updatePeriodLabel();
-            }
-            if (data.customers && Array.isArray(data.customers)) {
-              customerData = data.customers;
               renderPiutangDashboard();
+              firebaseReady = true;
+            } else {
+              // Dokumen baru dibuat sekali; jangan menimpa dokumen yang sudah ada.
+              await setDoc(docRef, {
+                period: currentPeriod,
+                customers: defaultCustomerData
+              });
+              customerData = [...defaultCustomerData];
+              lastSnapshotSignature = JSON.stringify({
+                period: currentPeriod,
+                customers: defaultCustomerData
+              });
+              updatePeriodLabel();
+              renderPiutangDashboard();
+              firebaseReady = true;
             }
-          } else {
-            setDoc(docRef, {
-              period: currentPeriod,
-              customers: defaultCustomerData
-            });
+          } catch (err) {
+            console.error("Gagal memuat data Firestore:", err);
           }
         }, (error) => {
+          firebaseReady = false;
           console.error("Gagal menyinkronkan data Firestore:", error);
+          alert("Data piutang gagal dimuat dari Firestore. Data tidak akan disimpan agar data lama tidak tertimpa.");
         });
       }
     }, 100);
