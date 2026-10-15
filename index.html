@@ -676,40 +676,50 @@
     let financialData = structuredClone(defaultFinancialData);
 
     function initFirebaseListener() {
-      // Render data lokal terlebih dahulu agar grafik tetap tampil jika Firebase lambat/gagal.
-      try { renderAll(); } catch (error) { console.error("Gagal merender data awal dashboard:", error); }
-
+      // Jangan render data default sebelum Firestore selesai dibaca.
+      // Ini mencegah angka default muncul/menimpa tampilan saat halaman di-refresh.
       const startedAt = Date.now();
-      const checkInterval = setInterval(() => {
+      const checkInterval = setInterval(async () => {
         if (window.firebaseDB && window.firebaseFns) {
           clearInterval(checkInterval);
           try {
-            const { doc, onSnapshot, setDoc } = window.firebaseFns;
+            const { doc, getDoc, onSnapshot } = window.firebaseFns;
             const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
 
+            // Ambil data tersimpan terlebih dahulu sebelum render pertama.
+            const initialSnapshot = await getDoc(docRef);
+            if (initialSnapshot.exists()) {
+              financialData = normalizeFinancialData(initialSnapshot.data());
+            } else {
+              // Dokumen belum ada: gunakan nilai awal hanya di memori.
+              // Jangan otomatis menulis data default ke Firestore.
+              financialData = structuredClone(defaultFinancialData);
+            }
+            renderAll();
+
+            // Tetap dengarkan pembaruan realtime dari halaman input/perangkat lain.
             onSnapshot(docRef, (docSnap) => {
               try {
                 if (docSnap.exists()) {
                   financialData = normalizeFinancialData(docSnap.data());
                   renderAll();
-                } else {
-                  setDoc(docRef, defaultFinancialData).catch((error) => {
-                    console.error("Gagal membuat data awal Firestore:", error);
-                  });
-                  // Data default sudah dirender, jadi dashboard tidak menunggu write.
                 }
               } catch (error) {
                 console.error("Gagal memproses data Firestore:", error);
               }
             }, (error) => {
               console.error("Gagal menyinkronkan data Firestore secara realtime:", error);
+              // Jangan mengganti data yang sudah berhasil dimuat dengan nilai default.
             });
           } catch (error) {
-            console.error("Inisialisasi listener Firebase gagal:", error);
+            console.error("Gagal memuat data dashboard dari Firestore:", error);
+            // Jangan menampilkan angka default seolah-olah merupakan data tersimpan.
+            const status = document.getElementById("connection-status");
+            if (status) status.textContent = "Gagal memuat data tersimpan. Periksa koneksi/izin Firestore.";
           }
         } else if (Date.now() - startedAt > 10000) {
           clearInterval(checkInterval);
-          console.error("Firebase belum siap. Dashboard tetap menampilkan data lokal.");
+          console.error("Firebase belum siap. Data dashboard belum dapat dimuat.");
         }
       }, 100);
     }
