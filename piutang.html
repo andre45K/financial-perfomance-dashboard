@@ -785,12 +785,12 @@
 
   let firebaseSaveInProgress = Promise.resolve();
   let lastRenderedSnapshot = "";
+  let firebaseReady = false;
+  let firstSnapshotHandled = false;
+  let saveRequestedBeforeReady = false;
 
-  function saveDataToFirebase() {
-    if (!window.firebaseDB || !window.firebaseFns) return;
-    const { doc, setDoc } = window.firebaseFns;
-    const docRef = doc(window.firebaseDB, "monitoringPiutang", "data_2026");
-    const payload = {
+  function getPiutangPayload() {
+    return {
       period: currentPeriod,
       customers: customerData.map(c => ({
         customer: String(c.customer ?? ""),
@@ -800,16 +800,35 @@
         terbayar: Number(c.terbayar) || 0
       }))
     };
+  }
+
+  function saveDataToFirebase() {
+    // Never overwrite existing cloud data before the first Firestore snapshot
+    // has been received and applied.
+    if (!firebaseReady || !window.firebaseDB || !window.firebaseFns) {
+      saveRequestedBeforeReady = true;
+      return Promise.resolve(false);
+    }
+
+    const { doc, setDoc } = window.firebaseFns;
+    const docRef = doc(window.firebaseDB, "monitoringPiutang", "data_2026");
+    const payload = getPiutangPayload();
     const payloadKey = JSON.stringify(payload);
-    lastRenderedSnapshot = payloadKey;
-    // Serialize writes so rapid add/edit/delete actions don't race each other.
+
+    // Serialize writes so quick add/edit/delete actions persist in order.
     firebaseSaveInProgress = firebaseSaveInProgress
       .catch(() => {})
       .then(() => setDoc(docRef, payload))
+      .then(() => {
+        lastRenderedSnapshot = payloadKey;
+        return true;
+      })
       .catch(err => {
         console.error("Gagal menyimpan ke Firebase:", err);
         alert("Data belum berhasil disimpan ke Firebase. Periksa koneksi dan izin Firestore, lalu coba lagi.");
+        return false;
       });
+
     return firebaseSaveInProgress;
   }
 
@@ -817,16 +836,41 @@
     const checkInterval = setInterval(() => {
       if (!window.firebaseDB || !window.firebaseFns) return;
       clearInterval(checkInterval);
+
       const { doc, onSnapshot, setDoc } = window.firebaseFns;
       const docRef = doc(window.firebaseDB, "monitoringPiutang", "data_2026");
 
       onSnapshot(docRef, (docSnap) => {
         if (!docSnap.exists()) {
-          // Only seed defaults when the document truly does not exist.
-          setDoc(docRef, {
-            period: currentPeriod,
-            customers: defaultCustomerData
-          }).catch(error => console.error("Gagal membuat data awal Firestore:", error));
+          // The first snapshot confirms the document is genuinely absent.
+          // Seed it only once; do not let the initial HTML defaults overwrite
+          // an existing record while the listener is still starting.
+          if (!firstSnapshotHandled) {
+            firstSnapshotHandled = true;
+            firebaseReady = true;
+            const initialPayload = {
+              period: currentPeriod,
+              customers: defaultCustomerData.map(c => ({
+                customer: String(c.customer ?? ""),
+                alat: String(c.alat || "Truck Mixer"),
+                pu: Number(c.pu) || 0,
+                tagihan: Number(c.tagihan) || 0,
+                terbayar: Number(c.terbayar) || 0
+              }))
+            };
+            setDoc(docRef, initialPayload).then(() => {
+              customerData = initialPayload.customers;
+              currentPeriod = initialPayload.period;
+              const select = document.getElementById("periodDropdown");
+              if ([...select.options].some(o => o.value === currentPeriod)) select.value = currentPeriod;
+              updatePeriodLabel();
+              renderPiutangDashboard();
+              lastRenderedSnapshot = JSON.stringify(initialPayload);
+            }).catch(error => {
+              console.error("Gagal membuat data awal Firestore:", error);
+              alert("Data awal belum berhasil dibuat di Firestore. Periksa izin Firestore dan koneksi internet.");
+            });
+          }
           return;
         }
 
@@ -839,21 +883,41 @@
               tagihan: Number(c.tagihan) || 0,
               terbayar: Number(c.terbayar) || 0
             }))
-          : customerData;
+          : [];
         const incomingPeriod = data.period || currentPeriod;
-        const incomingKey = JSON.stringify({ period: incomingPeriod, customers: incomingCustomers });
-        const currentKey = JSON.stringify({ period: currentPeriod, customers: customerData });
+        const incomingPayload = { period: incomingPeriod, customers: incomingCustomers };
+        const incomingKey = JSON.stringify(incomingPayload);
 
-        // Ignore echoes of this tab's own write to avoid flicker/re-render loops.
-        if (incomingKey === currentKey) {
-          lastRenderedSnapshot = incomingKey;
-          if (document.getElementById("periodDropdown").value !== incomingPeriod) {
-            document.getElementById("periodDropdown").value = incomingPeriod;
-          }
+        // Apply the first cloud snapshot unconditionally, replacing the
+        // in-memory sample data with the persisted data.
+        if (!firstSnapshotHandled) {
+          firstSnapshotHandled = true;
+          firebaseReady = true;
+          currentPeriod = incomingPeriod;
+          customerData = incomingCustomers;
+          const select = document.getElementById("periodDropdown");
+          if ([...select.options].some(o => o.value === currentPeriod)) select.value = currentPeriod;
           updatePeriodLabel();
+          renderPiutangDashboard();
+          lastRenderedSnapshot = incomingKey;
           return;
         }
 
+        const currentPayload = getPiutangPayload();
+        const currentKey = JSON.stringify(currentPayload);
+
+        // Snapshot echo of this tab's own write: do not re-render (avoids flicker).
+        if (incomingKey === currentKey || incomingKey === lastRenderedSnapshot) {
+          lastRenderedSnapshot = incomingKey;
+          if (document.getElementById("periodDropdown").value !== incomingPeriod) {
+            document.getElementById("periodDropdown").value = incomingPeriod;
+            currentPeriod = incomingPeriod;
+            updatePeriodLabel();
+          }
+          return;
+        }
+
+        // A genuinely different snapshot (another tab/device) is authoritative.
         currentPeriod = incomingPeriod;
         const periodSelect = document.getElementById("periodDropdown");
         if ([...periodSelect.options].some(option => option.value === currentPeriod)) {
@@ -865,6 +929,7 @@
         renderPiutangDashboard();
       }, (error) => {
         console.error("Gagal menyinkronkan data Firestore:", error);
+        alert("Sinkronisasi Firestore gagal. Data belum tentu tersimpan. Periksa koneksi dan izin Firestore.");
       });
     }, 100);
   }
@@ -872,6 +937,8 @@
   document.addEventListener("DOMContentLoaded", () => {
     initPeriodDropdown();
     updatePeriodLabel();
+    // Show current placeholder UI while Firebase connects. The first Firestore
+    // snapshot will replace this with persisted data; no save is triggered here.
     renderPiutangDashboard();
     initFirebaseListener();
   });
