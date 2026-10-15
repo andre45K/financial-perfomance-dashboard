@@ -78,7 +78,7 @@
     <div id="alertSuccess" class="alert-success"><i class="fa-solid fa-circle-check"></i> Data berhasil disimpan ke Firebase Firestore!</div>
 
     <div class="instruction-box">
-      <strong>Petunjuk:</strong> Perubahan data di sini akan langsung dikirim ke Cloud Database Firestore sehingga perangkat lain maupun halaman utama akan otomatis memperbarui grafik secara realtime.
+      <strong>Petunjuk:</strong> Perubahan data di sini akan langsung dikirim ke Cloud Database Firestore sehingga perangkat lain maupun halaman utama akan otomatis memperbarui grafik secara realtime. (Mendukung input desimal menggunakan titik "." atau koma ",").
     </div>
 
     <!-- Navigation Tabs -->
@@ -183,9 +183,12 @@
       btn.classList.add('active');
     };
 
-    function formatNumber(num) { return Number(num || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); }
+    function formatNumber(num) { 
+      if (num === null || num === undefined || isNaN(num)) return "0";
+      return Number(num).toLocaleString("id-ID", { minimumFractionDigits: 0, maximumFractionDigits: 2 }); 
+    }
     
-    // Diperbarui agar mendukung angka negatif (minus)
+    // Diperbarui untuk mendukung angka desimal dan negatif
     function toNumber(val) {
       if (val === null || val === undefined || val === "") return 0;
       let str = String(val).trim();
@@ -193,7 +196,12 @@
       if (isNegative) {
         str = str.substring(1);
       }
-      str = str.replace(/\./g, '').replace(',', '.');
+      // Ganti titik ribuan jika ada, pastikan koma desimal jadi titik standar JS
+      if (str.includes(',') && str.includes('.')) {
+        str = str.replace(/\./g, '').replace(',', '.');
+      } else if (str.includes(',')) {
+        str = str.replace(',', '.');
+      }
       let num = Number(str);
       if (isNaN(num)) return 0;
       return isNegative ? -num : num;
@@ -225,10 +233,10 @@
                 <option value="PROGNOSA" ${statusSelected === "PROGNOSA" ? "selected" : ""}>PROGNOSA</option>
               </select>
             </td>
-            <td><input type="text" name="revPlan_${m}" value="${formatNumber(revPlan)}" oninput="formatInput(this)"></td>
-            <td><input type="text" name="bppPlan_${m}" value="${formatNumber(bppPlan)}" oninput="formatInput(this)"></td>
-            <td><input type="text" name="revAct_${m}" value="${formatNumber(revAct)}" oninput="formatInput(this)"></td>
-            <td><input type="text" name="bppAct_${m}" value="${formatNumber(bppAct)}" oninput="formatInput(this)"></td>
+            <td><input type="text" name="revPlan_${m}" value="${formatNumber(revPlan)}" oninput="updateLiveCalc('${m}')"></td>
+            <td><input type="text" name="bppPlan_${m}" value="${formatNumber(bppPlan)}" oninput="updateLiveCalc('${m}')"></td>
+            <td><input type="text" name="revAct_${m}" value="${formatNumber(revAct)}" oninput="updateLiveCalc('${m}')"></td>
+            <td><input type="text" name="bppAct_${m}" value="${formatNumber(bppAct)}" oninput="updateLiveCalc('${m}')"></td>
           </tr>
         `;
 
@@ -241,8 +249,8 @@
                 <option value="PROGNOSA" ${statusSelected === "PROGNOSA" ? "selected" : ""}>PROGNOSA</option>
               </select>
             </td>
-            <td><input type="text" name="ncpAct_${m}" value="${formatNumber(ncpAct)}" oninput="formatInput(this); updateLiveCalc('${m}')"></td>
-            <td><input type="text" name="btlAct_${m}" value="${formatNumber(btlAct)}" oninput="formatInput(this); updateLiveCalc('${m}')"></td>
+            <td><input type="text" name="ncpAct_${m}" value="${formatNumber(ncpAct)}" oninput="updateLiveCalc('${m}')"></td>
+            <td><input type="text" name="btlAct_${m}" value="${formatNumber(btlAct)}" oninput="updateLiveCalc('${m}')"></td>
             <td class="readonly-val" id="np_disp_${m}">${formatNumber(npAct)}</td>
             <td class="readonly-val" id="npm_disp_${m}">${npmAct.toFixed(2)}%</td>
           </tr>
@@ -264,34 +272,22 @@
     };
 
     window.updateLiveCalc = function(m) {
-      const item = currentData.months[m] || {};
-      const revAct = item.revenueActual || 0;
-      const bppAct = item.bppActual || 0;
-      const ncpVal = toNumber(document.querySelector(`[name="ncpAct_${m}"]`).value);
+      const revActEl = document.querySelector(`[name="revAct_${m}"]`);
+      const bppActEl = document.querySelector(`[name="bppAct_${m}"]`);
+      const ncpActEl = document.querySelector(`[name="ncpAct_${m}"]`);
+
+      const revAct = revActEl ? toNumber(revActEl.value) : 0;
+      const bppAct = bppActEl ? toNumber(bppActEl.value) : 0;
+      const ncpVal = ncpActEl ? toNumber(ncpActEl.value) : 0;
       
       const gpAct = revAct - bppAct;
       const npAct = gpAct - ncpVal;
       const npmAct = revAct > 0 ? (npAct / revAct * 100) : 0;
 
-      document.getElementById(`np_disp_${m}`).textContent = formatNumber(npAct);
-      document.getElementById(`npm_disp_${m}`).textContent = npmAct.toFixed(2) + "%";
-    };
-
-    // Diperbarui agar karakter minus (-) di awal bisa diketikkan dengan aman
-    window.formatInput = function(el) {
-      let val = el.value;
-      let isNegative = val.startsWith('-');
-      let cleaned = val.replace(/[^,\d]/g, '');
-      let parts = cleaned.split(',');
-      let sisa = parts[0].length % 3;
-      let rupiah = parts[0].substr(0, sisa);
-      let ribuan = parts[0].substr(sisa).match(/\d{3}/g);
-      if (ribuan) {
-        let separator = sisa ? '.' : '';
-        rupiah += separator + ribuan.join('.');
-      }
-      let finalVal = parts[1] !== undefined ? rupiah + ',' + parts[1] : rupiah;
-      el.value = (isNegative ? '-' : '') + finalVal;
+      const npDisp = document.getElementById(`np_disp_${m}`);
+      const npmDisp = document.getElementById(`npm_disp_${m}`);
+      if (npDisp) npDisp.textContent = formatNumber(npAct);
+      if (npmDisp) npmDisp.textContent = npmAct.toFixed(2) + "%";
     };
 
     document.getElementById("adminForm").addEventListener("submit", async function(e) {
