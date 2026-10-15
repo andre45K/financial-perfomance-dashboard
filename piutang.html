@@ -791,6 +791,44 @@
   let unsubscribePiutang = null;
   let remoteApplyInProgress = false;
   let localChangeVersion = 0;
+  const PIUTANG_CACHE_KEY = "monitoringPiutang_data_2026_cache_v1";
+
+  // Simpan perubahan lokal secara persisten terlebih dahulu. Ini menjaga perubahan
+  // tetap ada saat refresh jika Firestore sedang offline / mengalami backoff.
+  function readLocalPiutangCache() {
+    try {
+      const raw = localStorage.getItem(PIUTANG_CACHE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed || !parsed.payload || !Array.isArray(parsed.payload.customers)) return null;
+      return {
+        payload: {
+          period: String(parsed.payload.period || currentPeriod),
+          customers: normalizeCustomers(parsed.payload.customers)
+        },
+        pending: parsed.pending === true,
+        updatedAt: Number(parsed.updatedAt) || 0
+      };
+    } catch (e) {
+      console.warn("[Piutang] Cache lokal tidak dapat dibaca:", e);
+      return null;
+    }
+  }
+
+  function writeLocalPiutangCache(payload, pending) {
+    try {
+      localStorage.setItem(PIUTANG_CACHE_KEY, JSON.stringify({
+        payload: {
+          period: String(payload.period || currentPeriod),
+          customers: normalizeCustomers(payload.customers)
+        },
+        pending: !!pending,
+        updatedAt: Date.now()
+      }));
+    } catch (e) {
+      console.warn("[Piutang] Cache lokal tidak dapat disimpan:", e);
+    }
+  }
 
   function normalizeCustomers(list) {
     return (Array.isArray(list) ? list : []).map(c => ({
@@ -832,6 +870,8 @@
     // cannot finish out of order and restore an older customer list.
     const payload = getPiutangPayload();
     const payloadKey = JSON.stringify(payload);
+    // Cache + tandai pending sebelum menghubungi Firestore.
+    writeLocalPiutangCache(payload, true);
 
     firebaseSaveInProgress = firebaseSaveInProgress
       .catch(() => {})
@@ -840,6 +880,7 @@
         // Only mark this version as latest if no newer local action happened.
         if (requestedVersion === localChangeVersion) {
           lastRenderedSnapshot = payloadKey;
+          writeLocalPiutangCache(payload, false);
         }
         setCloudStatus("Data berhasil disimpan (" + payload.customers.length + " customer).");
         return true;
@@ -879,11 +920,14 @@
             firstSnapshotHandled = true;
             firebaseReady = true;
 
-            // Seed defaults only when the server confirms the document does not
-            // exist. If a user action was queued before readiness, preserve it.
-            const initialPayload = saveRequestedBeforeReady
-              ? getPiutangPayload()
-              : { period: currentPeriod, customers: normalizeCustomers(defaultCustomerData) };
+            // Jika cache menandai perubahan yang belum tersimpan, jangan pernah
+            // menggantinya dengan data contoh saat dokumen cloud belum ada.
+            const localCache = readLocalPiutangCache();
+            const initialPayload = (localCache && localCache.pending)
+              ? localCache.payload
+              : (saveRequestedBeforeReady
+                ? getPiutangPayload()
+                : { period: currentPeriod, customers: normalizeCustomers(defaultCustomerData) });
 
             try {
               await setDoc(docRef, initialPayload);
@@ -894,6 +938,7 @@
               updatePeriodLabel();
               renderPiutangDashboard();
               lastRenderedSnapshot = JSON.stringify(getPiutangPayload());
+              writeLocalPiutangCache(getPiutangPayload(), false);
               saveRequestedBeforeReady = false;
               setCloudStatus("Dokumen awal berhasil dibuat.");
             } catch (error) {
@@ -914,6 +959,21 @@
         if (!firstSnapshotHandled) {
           firstSnapshotHandled = true;
           firebaseReady = true;
+          const localCache = readLocalPiutangCache();
+          // Jika ada perubahan lokal yang belum terkonfirmasi tersimpan, pulihkan
+          // perubahan itu alih-alih menimpanya dengan snapshot cloud yang lama.
+          if (localCache && localCache.pending) {
+            currentPeriod = localCache.payload.period;
+            customerData = normalizeCustomers(localCache.payload.customers);
+            const cachedSelect = document.getElementById("periodDropdown");
+            if ([...cachedSelect.options].some(o => o.value === currentPeriod)) cachedSelect.value = currentPeriod;
+            updatePeriodLabel();
+            renderPiutangDashboard();
+            lastRenderedSnapshot = JSON.stringify(getPiutangPayload());
+            setCloudStatus("Memulihkan perubahan lokal yang belum tersimpan ke Firestore...");
+            await saveDataToFirebase();
+            return;
+          }
           currentPeriod = incomingPayload.period;
           customerData = incomingPayload.customers;
           const select = document.getElementById("periodDropdown");
@@ -921,6 +981,7 @@
           updatePeriodLabel();
           renderPiutangDashboard();
           lastRenderedSnapshot = incomingKey;
+          writeLocalPiutangCache(incomingPayload, false);
 
           // If a user interacted before the first server snapshot, save their
           // current form state only after the existing cloud record was loaded.
@@ -966,6 +1027,7 @@
           }
           customerData = incomingPayload.customers;
           lastRenderedSnapshot = incomingKey;
+          writeLocalPiutangCache(incomingPayload, false);
           updatePeriodLabel();
           renderPiutangDashboard();
         } finally {
