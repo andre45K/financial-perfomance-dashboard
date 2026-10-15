@@ -1,1 +1,382 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Input - Financial Dashboard 2026</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+  <!-- FIREBASE SDK (Modular v10) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
+      authDomain: "financial-perfomance-dashboard.firebaseapp.com",
+      projectId: "financial-perfomance-dashboard",
+      storageBucket: "financial-perfomance-dashboard.firebasestorage.app",
+      messagingSenderId: "136866453174",
+      appId: "1:136866453174:web:b69a3e14672eb96cc53817"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.firebaseDB = db;
+    window.firebaseFns = { doc, getDoc, setDoc };
+  </script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+    body { background-color: #060d1a; color: #ffffff; padding: 20px; font-size: 13px; }
+
+    .modal-container { background: #0f1926; border: 1px solid #1e2d42; border-radius: 12px; padding: 24px; max-width: 1300px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e2d42; padding-bottom: 15px; margin-bottom: 20px; }
+    .modal-title { font-size: 18px; font-weight: 800; color: #3b82f6; display: flex; align-items: center; gap: 10px; }
+    .modal-desc { color: #94a3b8; font-size: 12px; margin-top: 4px; }
+    
+    .instruction-box { background: #132238; border-left: 4px solid #3b82f6; padding: 12px 15px; border-radius: 4px; margin-bottom: 20px; color: #cbd5e1; font-size: 12px; line-height: 1.5; }
+
+    .tabs-nav { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #1e2d42; padding-bottom: 10px; }
+    .tab-btn { background: #132238; color: #94a3b8; border: 1px solid #2a3d54; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+    .tab-btn.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+
+    .admin-table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 12px; }
+    .admin-table th, .admin-table td { border: 1px solid #1e2d42; padding: 8px 10px; text-align: center; }
+    .admin-table th { background: #09121d; color: #cbd5e1; font-weight: bold; text-transform: uppercase; font-size: 11px; }
+    .admin-table td.bulan-col { text-align: left; font-weight: bold; background: #09121d; color: #ffffff; }
+    .admin-table input, .admin-table select { width: 100%; background: #132238; border: 1px solid #2a3d54; color: white; padding: 6px 8px; border-radius: 4px; text-align: right; font-size: 12px; }
+    .admin-table select { text-align: left; cursor: pointer; }
+    .admin-table input:focus, .admin-table select:focus { border-color: #3b82f6; outline: none; background: #172a46; }
+
+    .readonly-val { font-weight: bold; color: #22c55e; }
+
+    .footer-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #1e2d42; padding-top: 20px; }
+    .btn { padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; border: none; text-decoration: none; }
+    .btn-primary { background: #2563eb; color: white; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-danger { background: #dc2626; color: white; }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-secondary { background: #334155; color: white; }
+    .btn-secondary:hover { background: #475569; }
+
+    .alert-success { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; color: #22c55e; padding: 10px; border-radius: 6px; margin-bottom: 15px; display: none; text-align: center; font-weight: bold; }
+    .alert-error { display:none; background:rgba(239,68,68,.12); border:1px solid #ef4444; color:#fca5a5; padding:10px 12px; border-radius:6px; margin-bottom:14px; line-height:1.5; }
+  </style>
+</head>
+<body>
+
+  <div class="modal-container" id="adminContainer">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title"><i class="fa-solid fa-pen-to-square"></i> ADMIN INPUT DATA KEUANGAN 2026</div>
+        <div class="modal-desc">Kelola dan perbarui data target rencana serta realisasi/prognosa untuk kedua dashboard secara terpisah.</div>
+      </div>
+      <a href="index.html" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard</a>
+    </div>
+
+    <div id="alertSuccess" class="alert-success"><i class="fa-solid fa-circle-check"></i> Data berhasil disimpan ke Firebase Firestore!</div>
+
+    <div class="instruction-box">
+      <strong>Informasi:</strong> Perubahan data di sini akan langsung otomatis memperbarui grafik secara realtime.
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs-nav">
+      <button type="button" class="tab-btn active" onclick="switchTab('tab1', this)"><i class="fa-solid fa-chart-line"></i> Dashboard 1: Pendapatan & BPP</button>
+      <button type="button" class="tab-btn" onclick="switchTab('tab2', this)"><i class="fa-solid fa-coins"></i> Dashboard 2: NCP & Biaya Tidak Langsung</button>
+    </div>
+
+    <form id="adminForm">
+      <!-- TAB 1 -->
+      <div id="tab1" class="tab-content">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th style="width: 12%;">Bulan</th>
+              <th style="width: 15%;">Status</th>
+              <th style="width: 18%;">Rencana Pendapatan</th>
+              <th style="width: 18%;">Rencana BPP</th>
+              <th style="width: 18%;">Realisasi/Prognosa Pendapatan</th>
+              <th style="width: 19%;">Realisasi/Prognosa BPP</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyTab1"></tbody>
+        </table>
+      </div>
+
+      <!-- TAB 2 -->
+      <div id="tab2" class="tab-content" style="display: none;">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th style="width: 14%;">Bulan</th>
+              <th style="width: 15%;">Status</th>
+              <th style="width: 25%;">Realisasi/Prognosa Non-Contributing Plant</th>
+              <th style="width: 25%;">Realisasi/Prognosa Biaya Tidak Langsung</th>
+              <th style="width: 10%;">Net Profit</th>
+              <th style="width: 11%;">NPM (%)</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyTab2"></tbody>
+        </table>
+      </div>
+
+      <div class="footer-actions">
+        <button type="button" class="btn btn-danger" onclick="resetDefaultData()"><i class="fa-solid fa-rotate-left"></i> Reset Data Awal</button>
+        <div style="display: flex; gap: 10px;">
+          <a href="index.html" class="btn btn-secondary">Tutup</a>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Simpan & Update Dashboard</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script type="module">
+    const monthsList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthNamesFull = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+    const defaultFinancialData = {
+      year: 2026,
+      targetGPM: 45.59,
+      months: {
+        Jan: { revenuePlan: 554, revenueActual: 823, bppPlan: 195, bppActual: 647, gpPlan: 359, gpActual: 176, ncpPlan: 359, ncpActual: 5, btlActual: 4, status: "REALISASI" },
+        Feb: { revenuePlan: 554, revenueActual: 787, bppPlan: 195, bppActual: 632, gpPlan: 359, gpActual: 155, ncpPlan: 359, ncpActual: 0, btlActual: 0, status: "REALISASI" },
+        Mar: { revenuePlan: 449, revenueActual: 99,  bppPlan: 195, bppActual: 92,  gpPlan: 254, gpActual: 7,   ncpPlan: 254, ncpActual: 0, btlActual: 0, status: "REALISASI" },
+        Apr: { revenuePlan: 380, revenueActual: 782, bppPlan: 165, bppActual: 680, gpPlan: 215, gpActual: 102, ncpPlan: 215, ncpActual: 0, btlActual: 0, status: "REALISASI" },
+        May: { revenuePlan: 502, revenueActual: 688, bppPlan: 308, bppActual: 404, gpPlan: 194, gpActual: 284, ncpPlan: 194, ncpActual: 0, btlActual: 0, status: "REALISASI" },
+        Jun: { revenuePlan: 879, revenueActual: 1117, bppPlan: 495, bppActual: 913, gpPlan: 384, gpActual: 204, ncpPlan: 384, ncpActual: 0, btlActual: 0, status: "REALISASI" },
+        Jul: { revenuePlan: 927, revenueActual: 1668, bppPlan: 531, bppActual: 1342, gpPlan: 396, gpActual: 326, ncpPlan: 396, ncpActual: 0, btlActual: 0, status: "REALISASI" },
+        Aug: { revenuePlan: 1042, revenueActual: 1703, bppPlan: 613, bppActual: 1164, gpPlan: 429, gpActual: 539, ncpPlan: 429, ncpActual: 0, btlActual: 0, status: "REALISASI" },
+        Sep: { revenuePlan: 2196, revenueActual: 1786, bppPlan: 1218, bppActual: 1340, gpPlan: 978, gpActual: 446, ncpPlan: 978, ncpActual: 0, btlActual: 0, status: "REALISASI" },
+        Oct: { revenuePlan: 2196, revenueActual: 1670, bppPlan: 1218, bppActual: 1280, gpPlan: 978, gpActual: 390, ncpPlan: 978, ncpActual: 0, btlActual: 0, status: "PROGNOSA" },
+        Nov: { revenuePlan: 2145, revenueActual: 1393, bppPlan: 1198, bppActual: 1088, gpPlan: 947, gpActual: 305, ncpPlan: 947, ncpActual: 0, btlActual: 0, status: "PROGNOSA" },
+        Dec: { revenuePlan: 1678, revenueActual: 1393, bppPlan: 1013, bppActual: 1088, gpPlan: 665, gpActual: 305, ncpPlan: 665, ncpActual: 0, btlActual: 0, status: "PROGNOSA" }
+      }
+    };
+
+    let currentData = structuredClone(defaultFinancialData);
+
+    function showError(message) {
+      let box = document.getElementById("alertError");
+      if (!box) {
+        box = document.createElement("div");
+        box.id = "alertError";
+        box.className = "alert-error";
+        const container = document.getElementById("adminContainer");
+        container.insertBefore(box, container.firstChild.nextSibling);
+      }
+      box.textContent = message;
+      box.style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    async function loadDataFromFirestore() {
+      const { doc, getDoc, setDoc } = window.firebaseFns;
+      const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+      try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          currentData = { ...structuredClone(defaultFinancialData), ...docSnap.data(), months: { ...structuredClone(defaultFinancialData.months), ...(docSnap.data().months || {}) } };
+        } else {
+          // Dokumen awal hanya dibuat oleh akun admin yang memiliki izin write.
+          await setDoc(docRef, defaultFinancialData);
+          currentData = structuredClone(defaultFinancialData);
+        }
+        renderTableRows();
+      } catch (error) {
+        console.error("Gagal memuat data Firestore:", error);
+        showError("Gagal memuat data Firestore. Pastikan akun Anda memiliki izin baca dan proyek/Firestore Rules sudah benar. Kode: " + (error.code || error.message));
+      }
+    }
+
+    window.switchTab = function(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).style.display = 'block';
+      btn.classList.add('active');
+    };
+
+    function formatNumber(num) { return Number(num || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); }
+    
+    // Diperbarui agar mendukung angka negatif (minus)
+    function toNumber(val) {
+      if (val === null || val === undefined || val === "") return 0;
+      let str = String(val).trim();
+      let isNegative = str.startsWith('-');
+      if (isNegative) {
+        str = str.substring(1);
+      }
+      str = str.replace(/\./g, '').replace(',', '.');
+      let num = Number(str);
+      if (isNaN(num)) return 0;
+      return isNegative ? -num : num;
+    }
+
+    function renderTableRows() {
+      let htmlTab1 = "", htmlTab2 = "";
+      monthsList.forEach((m, idx) => {
+        const item = currentData.months[m] || {};
+        const statusSelected = item.status === "REALISASI" ? "REALISASI" : "PROGNOSA";
+        
+        const revPlan = item.revenuePlan || 0;
+        const bppPlan = item.bppPlan || 0;
+        const revAct = item.revenueActual || 0;
+        const bppAct = item.bppActual || 0;
+        const ncpAct = item.ncpActual || 0;
+        const btlAct = item.btlActual !== undefined ? item.btlActual : 0;
+
+        const gpActTab1 = revAct - bppAct;
+        const npAct = gpActTab1 - ncpAct;
+        const npmAct = revAct > 0 ? (npAct / revAct * 100) : 0;
+
+        htmlTab1 += `
+          <tr>
+            <td class="bulan-col">${monthNamesFull[idx]}</td>
+            <td>
+              <select name="status_${m}" onchange="syncStatus('${m}', this.value, 1)">
+                <option value="REALISASI" ${statusSelected === "REALISASI" ? "selected" : ""}>REALISASI</option>
+                <option value="PROGNOSA" ${statusSelected === "PROGNOSA" ? "selected" : ""}>PROGNOSA</option>
+              </select>
+            </td>
+            <td><input type="text" name="revPlan_${m}" value="${formatNumber(revPlan)}" oninput="formatInput(this)"></td>
+            <td><input type="text" name="bppPlan_${m}" value="${formatNumber(bppPlan)}" oninput="formatInput(this)"></td>
+            <td><input type="text" name="revAct_${m}" value="${formatNumber(revAct)}" oninput="formatInput(this)"></td>
+            <td><input type="text" name="bppAct_${m}" value="${formatNumber(bppAct)}" oninput="formatInput(this)"></td>
+          </tr>
+        `;
+
+        htmlTab2 += `
+          <tr>
+            <td class="bulan-col">${monthNamesFull[idx]}</td>
+            <td>
+              <select name="status2_${m}" onchange="syncStatus('${m}', this.value, 2)">
+                <option value="REALISASI" ${statusSelected === "REALISASI" ? "selected" : ""}>REALISASI</option>
+                <option value="PROGNOSA" ${statusSelected === "PROGNOSA" ? "selected" : ""}>PROGNOSA</option>
+              </select>
+            </td>
+            <td><input type="text" name="ncpAct_${m}" value="${formatNumber(ncpAct)}" oninput="formatInput(this); updateLiveCalc('${m}')"></td>
+            <td><input type="text" name="btlAct_${m}" value="${formatNumber(btlAct)}" oninput="formatInput(this); updateLiveCalc('${m}')"></td>
+            <td class="readonly-val" id="np_disp_${m}">${formatNumber(npAct)}</td>
+            <td class="readonly-val" id="npm_disp_${m}">${npmAct.toFixed(2)}%</td>
+          </tr>
+        `;
+      });
+
+      document.getElementById("tbodyTab1").innerHTML = htmlTab1;
+      document.getElementById("tbodyTab2").innerHTML = htmlTab2;
+    }
+
+    window.syncStatus = function(month, val, sourceTab) {
+      if (sourceTab === 1) {
+        const sel2 = document.querySelector(`[name="status2_${month}"]`);
+        if (sel2) sel2.value = val;
+      } else {
+        const sel1 = document.querySelector(`[name="status_${month}"]`);
+        if (sel1) sel1.value = val;
+      }
+    };
+
+    window.updateLiveCalc = function(m) {
+      const item = currentData.months[m] || {};
+      const revAct = item.revenueActual || 0;
+      const bppAct = item.bppActual || 0;
+      const ncpVal = toNumber(document.querySelector(`[name="ncpAct_${m}"]`).value);
+      
+      const gpAct = revAct - bppAct;
+      const npAct = gpAct - ncpVal;
+      const npmAct = revAct > 0 ? (npAct / revAct * 100) : 0;
+
+      document.getElementById(`np_disp_${m}`).textContent = formatNumber(npAct);
+      document.getElementById(`npm_disp_${m}`).textContent = npmAct.toFixed(2) + "%";
+    };
+
+    // Diperbarui agar karakter minus (-) di awal bisa diketikkan dengan aman
+    window.formatInput = function(el) {
+      let val = el.value;
+      let isNegative = val.startsWith('-');
+      let cleaned = val.replace(/[^,\d]/g, '');
+      let parts = cleaned.split(',');
+      let sisa = parts[0].length % 3;
+      let rupiah = parts[0].substr(0, sisa);
+      let ribuan = parts[0].substr(sisa).match(/\d{3}/g);
+      if (ribuan) {
+        let separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+      }
+      let finalVal = parts[1] !== undefined ? rupiah + ',' + parts[1] : rupiah;
+      el.value = (isNegative ? '-' : '') + finalVal;
+    };
+
+    document.getElementById("adminForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      
+      monthsList.forEach(m => {
+        const statusEl = document.querySelector(`[name="status_${m}"]`) || document.querySelector(`[name="status2_${m}"]`);
+        const revPlanEl = document.querySelector(`[name="revPlan_${m}"]`);
+        const bppPlanEl = document.querySelector(`[name="bppPlan_${m}"]`);
+        const revActEl = document.querySelector(`[name="revAct_${m}"]`);
+        const bppActEl = document.querySelector(`[name="bppAct_${m}"]`);
+        const ncpActEl = document.querySelector(`[name="ncpAct_${m}"]`);
+        const btlActEl = document.querySelector(`[name="btlAct_${m}"]`);
+
+        if (!currentData.months[m]) currentData.months[m] = {};
+
+        if (statusEl) currentData.months[m].status = statusEl.value;
+        if (revPlanEl) currentData.months[m].revenuePlan = toNumber(revPlanEl.value);
+        if (bppPlanEl) currentData.months[m].bppPlan = toNumber(bppPlanEl.value);
+        if (revActEl) currentData.months[m].revenueActual = toNumber(revActEl.value);
+        if (bppActEl) currentData.months[m].bppActual = toNumber(bppActEl.value);
+        if (ncpActEl) currentData.months[m].ncpActual = toNumber(ncpActEl.value);
+        if (btlActEl) currentData.months[m].btlActual = toNumber(btlActEl.value);
+      });
+
+      try {
+        if (!window.firebaseDB || !window.firebaseFns) {
+          throw new Error("Firebase belum siap. Periksa koneksi dan konfigurasi Firebase.");
+        }
+        const { doc, setDoc, getDoc } = window.firebaseFns;
+        const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+        await setDoc(docRef, currentData);
+        const verifySnap = await getDoc(docRef);
+        if (!verifySnap.exists()) throw new Error("Verifikasi penyimpanan gagal: dokumen tidak ditemukan.");
+        const alertBox = document.getElementById("alertSuccess");
+        alertBox.style.display = "block";
+        const errorBox = document.getElementById("alertError");
+        if (errorBox) errorBox.style.display = "none";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => { alertBox.style.display = "none"; }, 2500);
+      } catch (error) {
+        console.error("Gagal menyimpan data ke Firestore:", error);
+        showError("Gagal menyimpan data ke Firestore. Pastikan Firestore Rules mengizinkan penulisan dari halaman ini. Kode: " + (error.code || error.message));
+      }
+    });
+
+    window.resetDefaultData = async function() {
+      if (!confirm("Apakah Anda yakin ingin mereset seluruh data kembali ke pengaturan awal?")) return;
+      try {
+        if (!window.firebaseDB || !window.firebaseFns) {
+          throw new Error("Firebase belum siap. Periksa koneksi dan konfigurasi Firebase.");
+        }
+        const { doc, setDoc, getDoc } = window.firebaseFns;
+        const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+        await setDoc(docRef, structuredClone(defaultFinancialData));
+        const verifySnap = await getDoc(docRef);
+        if (!verifySnap.exists()) throw new Error("Verifikasi reset gagal.");
+        currentData = structuredClone(defaultFinancialData);
+        renderTableRows();
+        alert("Data berhasil direset ke awal!");
+      } catch (error) {
+        console.error("Gagal mereset data:", error);
+        showError("Gagal mereset data. Pastikan Firestore Rules mengizinkan penulisan dari halaman ini. Kode: " + (error.code || error.message));
+      }
+    };
+
+    window.addEventListener("DOMContentLoaded", () => {
+      loadDataFromFirestore();
+    });
+
+  </script>
+</body>
+</html>
