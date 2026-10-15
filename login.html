@@ -183,7 +183,9 @@
       btn.classList.add('active');
     };
 
-    function formatNumber(num) { return Number(num || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); }
+    function formatNumber(num) {
+      return Number(num || 0).toLocaleString("id-ID", { maximumFractionDigits: 2, useGrouping: true });
+    }
     
     // Diperbarui agar mendukung angka negatif (minus)
     function toNumber(val) {
