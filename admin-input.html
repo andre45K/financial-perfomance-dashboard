@@ -61,13 +61,13 @@
     .btn-secondary { background: #334155; color: white; }
     .btn-secondary:hover { background: #475569; }
 
-    .alert-success { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; color: #22c55e; padding: 10px; border-radius: 6px; margin-bottom: 15px; display: none; text-align: center; font-weight: bold; }
-    .alert-error { display:none; background:rgba(239,68,68,.12); border:1px solid #ef4444; color:#fca5a5; padding:10px 12px; border-radius:6px; margin-bottom:14px; line-height:1.5; }
+    .alert-success { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; color: #22c55e; padding: 10px; border-radius: 6px; margin-bottom: 15px; display: none; text-align: center; font-weight: bold; line-height: 1.5; }
+    .alert-error { background: rgba(239, 68, 68, 0.15); border-color: #ef4444; color: #fca5a5; }
   </style>
 </head>
 <body>
 
-  <div class="modal-container" id="adminContainer">
+  <div class="modal-container">
     <div class="modal-header">
       <div>
         <div class="modal-title"><i class="fa-solid fa-pen-to-square"></i> ADMIN INPUT DATA KEUANGAN 2026</div>
@@ -158,37 +158,66 @@
 
     let currentData = structuredClone(defaultFinancialData);
 
-    function showError(message) {
-      let box = document.getElementById("alertError");
-      if (!box) {
-        box = document.createElement("div");
-        box.id = "alertError";
-        box.className = "alert-error";
-        const container = document.getElementById("adminContainer");
-        container.insertBefore(box, container.firstChild.nextSibling);
-      }
-      box.textContent = message;
-      box.style.display = "block";
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    async function loadDataFromFirestore() {
+      const startedAt = Date.now();
+      const checkInterval = setInterval(async () => {
+        if (!(window.firebaseDB && window.firebaseFns)) {
+          if (Date.now() - startedAt > 15000) {
+            clearInterval(checkInterval);
+            showSaveError("Firebase gagal dimuat. Periksa koneksi internet dan konfigurasi Firebase, lalu muat ulang halaman.");
+          }
+          return;
+        }
+        clearInterval(checkInterval);
+        try {
+          const { doc, getDoc, setDoc } = window.firebaseFns;
+          const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            const saved = docSnap.data();
+            currentData = {
+              ...structuredClone(defaultFinancialData),
+              ...saved,
+              months: { ...structuredClone(defaultFinancialData.months), ...(saved.months || {}) }
+            };
+          } else {
+            // Buat dokumen awal hanya jika akun/rules Firestore mengizinkan penulisan.
+            await setDoc(docRef, defaultFinancialData);
+            currentData = structuredClone(defaultFinancialData);
+          }
+          renderTableRows();
+        } catch (error) {
+          console.error("Gagal memuat data Firestore:", error);
+          renderTableRows();
+          showSaveError(firebaseErrorMessage(error, "memuat data"));
+        }
+      }, 100);
     }
 
-    async function loadDataFromFirestore() {
-      const { doc, getDoc, setDoc } = window.firebaseFns;
-      const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
-      try {
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          currentData = { ...structuredClone(defaultFinancialData), ...docSnap.data(), months: { ...structuredClone(defaultFinancialData.months), ...(docSnap.data().months || {}) } };
-        } else {
-          // Dokumen awal hanya dibuat oleh akun admin yang memiliki izin write.
-          await setDoc(docRef, defaultFinancialData);
-          currentData = structuredClone(defaultFinancialData);
-        }
-        renderTableRows();
-      } catch (error) {
-        console.error("Gagal memuat data Firestore:", error);
-        showError("Gagal memuat data Firestore. Pastikan akun Anda memiliki izin baca dan proyek/Firestore Rules sudah benar. Kode: " + (error.code || error.message));
+    function firebaseErrorMessage(error, action) {
+      const code = error && error.code ? error.code : "";
+      if (code === "permission-denied" || /insufficient permissions/i.test((error && error.message) || "")) {
+        return "Akses Firestore ditolak saat " + action + ". Periksa Firestore Rules dan pastikan akun yang digunakan memiliki izin read/write untuk financialDashboards/year_2026. Kode: Missing or insufficient permissions.";
       }
+      if (code === "unavailable" || !navigator.onLine) {
+        return "Tidak dapat terhubung ke Firestore saat " + action + ". Periksa koneksi internet.";
+      }
+      return "Gagal " + action + ": " + ((error && error.message) || "kesalahan tidak diketahui");
+    }
+
+    function showSaveError(message) {
+      const box = document.getElementById("alertSuccess");
+      box.className = "alert-success alert-error";
+      box.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> ' + message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      box.style.display = "block";
+    }
+
+    function showSaveSuccess(message) {
+      const box = document.getElementById("alertSuccess");
+      box.className = "alert-success";
+      box.innerHTML = '<i class="fa-solid fa-circle-check"></i> ' + message;
+      box.style.display = "block";
+      setTimeout(() => { box.style.display = "none"; }, 3500);
     }
 
     window.switchTab = function(tabId, btn) {
@@ -311,72 +340,83 @@
 
     document.getElementById("adminForm").addEventListener("submit", async function(e) {
       e.preventDefault();
-      
-      monthsList.forEach(m => {
-        const statusEl = document.querySelector(`[name="status_${m}"]`) || document.querySelector(`[name="status2_${m}"]`);
-        const revPlanEl = document.querySelector(`[name="revPlan_${m}"]`);
-        const bppPlanEl = document.querySelector(`[name="bppPlan_${m}"]`);
-        const revActEl = document.querySelector(`[name="revAct_${m}"]`);
-        const bppActEl = document.querySelector(`[name="bppAct_${m}"]`);
-        const ncpActEl = document.querySelector(`[name="ncpAct_${m}"]`);
-        const btlActEl = document.querySelector(`[name="btlAct_${m}"]`);
-
-        if (!currentData.months[m]) currentData.months[m] = {};
-
-        if (statusEl) currentData.months[m].status = statusEl.value;
-        if (revPlanEl) currentData.months[m].revenuePlan = toNumber(revPlanEl.value);
-        if (bppPlanEl) currentData.months[m].bppPlan = toNumber(bppPlanEl.value);
-        if (revActEl) currentData.months[m].revenueActual = toNumber(revActEl.value);
-        if (bppActEl) currentData.months[m].bppActual = toNumber(bppActEl.value);
-        if (ncpActEl) currentData.months[m].ncpActual = toNumber(ncpActEl.value);
-        if (btlActEl) currentData.months[m].btlActual = toNumber(btlActEl.value);
-      });
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalHTML = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
 
       try {
-        if (!window.firebaseDB || !window.firebaseFns) {
-          throw new Error("Firebase belum siap. Periksa koneksi dan konfigurasi Firebase.");
+        if (!(window.firebaseDB && window.firebaseFns)) {
+          throw new Error("Firebase belum siap. Periksa koneksi internet lalu coba kembali.");
         }
+
+        // Baca ulang input dari kedua tab agar data yang tidak sedang terlihat tetap ikut tersimpan.
+        monthsList.forEach(m => {
+          const statusEl = document.querySelector(`[name="status_${m}"]`) || document.querySelector(`[name="status2_${m}"]`);
+          const revPlanEl = document.querySelector(`[name="revPlan_${m}"]`);
+          const bppPlanEl = document.querySelector(`[name="bppPlan_${m}"]`);
+          const revActEl = document.querySelector(`[name="revAct_${m}"]`);
+          const bppActEl = document.querySelector(`[name="bppAct_${m}"]`);
+          const ncpActEl = document.querySelector(`[name="ncpAct_${m}"]`);
+          const btlActEl = document.querySelector(`[name="btlAct_${m}"]`);
+          if (!currentData.months[m]) currentData.months[m] = {};
+          if (statusEl) currentData.months[m].status = statusEl.value;
+          if (revPlanEl) currentData.months[m].revenuePlan = toNumber(revPlanEl.value);
+          if (bppPlanEl) currentData.months[m].bppPlan = toNumber(bppPlanEl.value);
+          if (revActEl) currentData.months[m].revenueActual = toNumber(revActEl.value);
+          if (bppActEl) currentData.months[m].bppActual = toNumber(bppActEl.value);
+          if (ncpActEl) currentData.months[m].ncpActual = toNumber(ncpActEl.value);
+          if (btlActEl) currentData.months[m].btlActual = toNumber(btlActEl.value);
+        });
+
         const { doc, setDoc, getDoc } = window.firebaseFns;
         const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
         await setDoc(docRef, currentData);
+        // Verifikasi bahwa dokumen benar-benar sudah tersimpan, bukan sekadar tombol diklik.
         const verifySnap = await getDoc(docRef);
-        if (!verifySnap.exists()) throw new Error("Verifikasi penyimpanan gagal: dokumen tidak ditemukan.");
-        const alertBox = document.getElementById("alertSuccess");
-        alertBox.style.display = "block";
-        const errorBox = document.getElementById("alertError");
-        if (errorBox) errorBox.style.display = "none";
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => { alertBox.style.display = "none"; }, 2500);
+        if (!verifySnap.exists()) throw new Error("Penulisan selesai tetapi dokumen tidak ditemukan saat verifikasi.");
+
+        currentData = {
+          ...structuredClone(defaultFinancialData),
+          ...verifySnap.data(),
+          months: { ...structuredClone(defaultFinancialData.months), ...((verifySnap.data() || {}).months || {}) }
+        };
+        showSaveSuccess("Data berhasil disimpan ke Firebase Firestore dan dashboard akan diperbarui otomatis.");
+        window.scrollTo({ top: 0, behavior: "smooth" });
       } catch (error) {
         console.error("Gagal menyimpan data ke Firestore:", error);
-        showError("Gagal menyimpan data ke Firestore. Pastikan Firestore Rules mengizinkan penulisan dari halaman ini. Kode: " + (error.code || error.message));
+        showSaveError(firebaseErrorMessage(error, "menyimpan data"));
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalHTML;
       }
     });
 
     window.resetDefaultData = async function() {
       if (!confirm("Apakah Anda yakin ingin mereset seluruh data kembali ke pengaturan awal?")) return;
       try {
-        if (!window.firebaseDB || !window.firebaseFns) {
-          throw new Error("Firebase belum siap. Periksa koneksi dan konfigurasi Firebase.");
-        }
+        if (!(window.firebaseDB && window.firebaseFns)) throw new Error("Firebase belum siap.");
         const { doc, setDoc, getDoc } = window.firebaseFns;
         const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
         await setDoc(docRef, structuredClone(defaultFinancialData));
-        const verifySnap = await getDoc(docRef);
-        if (!verifySnap.exists()) throw new Error("Verifikasi reset gagal.");
-        currentData = structuredClone(defaultFinancialData);
+        const snap = await getDoc(docRef);
+        if (!snap.exists()) throw new Error("Data reset belum dapat diverifikasi.");
+        currentData = {
+          ...structuredClone(defaultFinancialData),
+          ...snap.data(),
+          months: { ...structuredClone(defaultFinancialData.months), ...((snap.data() || {}).months || {}) }
+        };
         renderTableRows();
-        alert("Data berhasil direset ke awal!");
+        showSaveSuccess("Data berhasil direset dan disimpan ke Firestore.");
       } catch (error) {
         console.error("Gagal mereset data:", error);
-        showError("Gagal mereset data. Pastikan Firestore Rules mengizinkan penulisan dari halaman ini. Kode: " + (error.code || error.message));
+        showSaveError(firebaseErrorMessage(error, "mereset data"));
       }
     };
 
     window.addEventListener("DOMContentLoaded", () => {
       loadDataFromFirestore();
     });
-
   </script>
 </body>
 </html>
