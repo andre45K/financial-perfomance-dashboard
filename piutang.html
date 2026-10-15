@@ -788,44 +788,70 @@
   let firebaseReady = false;
   let firstSnapshotHandled = false;
   let saveRequestedBeforeReady = false;
+  let unsubscribePiutang = null;
+  let remoteApplyInProgress = false;
+  let localChangeVersion = 0;
+
+  function normalizeCustomers(list) {
+    return (Array.isArray(list) ? list : []).map(c => ({
+      customer: String(c?.customer ?? ""),
+      alat: String(c?.alat || "Truck Mixer"),
+      pu: Number(c?.pu) || 0,
+      tagihan: Number(c?.tagihan) || 0,
+      terbayar: Number(c?.terbayar) || 0
+    }));
+  }
 
   function getPiutangPayload() {
     return {
       period: currentPeriod,
-      customers: customerData.map(c => ({
-        customer: String(c.customer ?? ""),
-        alat: String(c.alat || "Truck Mixer"),
-        pu: Number(c.pu) || 0,
-        tagihan: Number(c.tagihan) || 0,
-        terbayar: Number(c.terbayar) || 0
-      }))
+      customers: normalizeCustomers(customerData)
     };
   }
 
+  function setCloudStatus(message, isError = false) {
+    console[isError ? "error" : "log"]("[Piutang Firestore] " + message);
+  }
+
   function saveDataToFirebase() {
-    // Never overwrite existing cloud data before the first Firestore snapshot
-    // has been received and applied.
+    if (remoteApplyInProgress) return Promise.resolve(false);
+
+    // Don't write anything until the initial server snapshot has been received.
+    // This prevents the HTML sample data from overwriting saved cloud data.
     if (!firebaseReady || !window.firebaseDB || !window.firebaseFns) {
       saveRequestedBeforeReady = true;
       return Promise.resolve(false);
     }
 
+    localChangeVersion += 1;
+    const requestedVersion = localChangeVersion;
     const { doc, setDoc } = window.firebaseFns;
     const docRef = doc(window.firebaseDB, "monitoringPiutang", "data_2026");
+
+    // Snapshot the payload at call time, and serialize writes so rapid actions
+    // cannot finish out of order and restore an older customer list.
     const payload = getPiutangPayload();
     const payloadKey = JSON.stringify(payload);
 
-    // Serialize writes so quick add/edit/delete actions persist in order.
     firebaseSaveInProgress = firebaseSaveInProgress
       .catch(() => {})
       .then(() => setDoc(docRef, payload))
       .then(() => {
-        lastRenderedSnapshot = payloadKey;
+        // Only mark this version as latest if no newer local action happened.
+        if (requestedVersion === localChangeVersion) {
+          lastRenderedSnapshot = payloadKey;
+        }
+        setCloudStatus("Data berhasil disimpan (" + payload.customers.length + " customer).");
         return true;
       })
       .catch(err => {
-        console.error("Gagal menyimpan ke Firebase:", err);
-        alert("Data belum berhasil disimpan ke Firebase. Periksa koneksi dan izin Firestore, lalu coba lagi.");
+        console.error("[Piutang Firestore] Gagal menyimpan:", err.code || "", err.message || err);
+        const detail = err.code === "permission-denied"
+          ? "Izin Firestore ditolak. Aturan harus mengizinkan read/write pada monitoringPiutang/data_2026."
+          : err.code === "unavailable"
+            ? "Firestore tidak dapat dijangkau. Periksa koneksi internet dan status Firebase."
+            : "Penyimpanan gagal. Periksa koneksi dan aturan Firestore.";
+        alert(detail + "\n\nDetail: " + (err.code || err.message || "unknown"));
         return false;
       });
 
@@ -840,96 +866,117 @@
       const { doc, onSnapshot, setDoc } = window.firebaseFns;
       const docRef = doc(window.firebaseDB, "monitoringPiutang", "data_2026");
 
-      onSnapshot(docRef, (docSnap) => {
+      unsubscribePiutang = onSnapshot(docRef, { includeMetadataChanges: true }, async (docSnap) => {
+        // Ignore local cache snapshots while offline; wait for server confirmation
+        // before declaring initialization complete or seeding the document.
+        if (docSnap.metadata?.fromCache && !firstSnapshotHandled) {
+          setCloudStatus("Memuat data tersimpan dari Firestore...");
+          return;
+        }
+
         if (!docSnap.exists()) {
-          // The first snapshot confirms the document is genuinely absent.
-          // Seed it only once; do not let the initial HTML defaults overwrite
-          // an existing record while the listener is still starting.
           if (!firstSnapshotHandled) {
             firstSnapshotHandled = true;
             firebaseReady = true;
-            const initialPayload = {
-              period: currentPeriod,
-              customers: defaultCustomerData.map(c => ({
-                customer: String(c.customer ?? ""),
-                alat: String(c.alat || "Truck Mixer"),
-                pu: Number(c.pu) || 0,
-                tagihan: Number(c.tagihan) || 0,
-                terbayar: Number(c.terbayar) || 0
-              }))
-            };
-            setDoc(docRef, initialPayload).then(() => {
-              customerData = initialPayload.customers;
+
+            // Seed defaults only when the server confirms the document does not
+            // exist. If a user action was queued before readiness, preserve it.
+            const initialPayload = saveRequestedBeforeReady
+              ? getPiutangPayload()
+              : { period: currentPeriod, customers: normalizeCustomers(defaultCustomerData) };
+
+            try {
+              await setDoc(docRef, initialPayload);
               currentPeriod = initialPayload.period;
+              customerData = normalizeCustomers(initialPayload.customers);
               const select = document.getElementById("periodDropdown");
               if ([...select.options].some(o => o.value === currentPeriod)) select.value = currentPeriod;
               updatePeriodLabel();
               renderPiutangDashboard();
-              lastRenderedSnapshot = JSON.stringify(initialPayload);
-            }).catch(error => {
-              console.error("Gagal membuat data awal Firestore:", error);
-              alert("Data awal belum berhasil dibuat di Firestore. Periksa izin Firestore dan koneksi internet.");
-            });
+              lastRenderedSnapshot = JSON.stringify(getPiutangPayload());
+              saveRequestedBeforeReady = false;
+              setCloudStatus("Dokumen awal berhasil dibuat.");
+            } catch (error) {
+              console.error("[Piutang Firestore] Gagal membuat dokumen awal:", error.code || "", error.message || error);
+              alert("Gagal membuat data awal di Firestore. Periksa izin read/write untuk monitoringPiutang/data_2026.\n\nDetail: " + (error.code || error.message || "unknown"));
+            }
           }
           return;
         }
 
         const data = docSnap.data() || {};
-        const incomingCustomers = Array.isArray(data.customers)
-          ? data.customers.map(c => ({
-              customer: String(c.customer ?? ""),
-              alat: String(c.alat || "Truck Mixer"),
-              pu: Number(c.pu) || 0,
-              tagihan: Number(c.tagihan) || 0,
-              terbayar: Number(c.terbayar) || 0
-            }))
-          : [];
-        const incomingPeriod = data.period || currentPeriod;
-        const incomingPayload = { period: incomingPeriod, customers: incomingCustomers };
+        const incomingPayload = {
+          period: String(data.period || currentPeriod),
+          customers: normalizeCustomers(data.customers)
+        };
         const incomingKey = JSON.stringify(incomingPayload);
 
-        // Apply the first cloud snapshot unconditionally, replacing the
-        // in-memory sample data with the persisted data.
         if (!firstSnapshotHandled) {
           firstSnapshotHandled = true;
           firebaseReady = true;
-          currentPeriod = incomingPeriod;
-          customerData = incomingCustomers;
+          currentPeriod = incomingPayload.period;
+          customerData = incomingPayload.customers;
           const select = document.getElementById("periodDropdown");
           if ([...select.options].some(o => o.value === currentPeriod)) select.value = currentPeriod;
           updatePeriodLabel();
           renderPiutangDashboard();
           lastRenderedSnapshot = incomingKey;
+
+          // If a user interacted before the first server snapshot, save their
+          // current form state only after the existing cloud record was loaded.
+          if (saveRequestedBeforeReady) {
+            saveRequestedBeforeReady = false;
+            await saveDataToFirebase();
+          }
+          setCloudStatus("Data tersimpan berhasil dimuat (" + customerData.length + " customer).");
           return;
         }
 
-        const currentPayload = getPiutangPayload();
-        const currentKey = JSON.stringify(currentPayload);
+        // Ignore local pending-write echoes. The write promise handles errors;
+        // rerendering a pending snapshot can make add/delete appear to flicker.
+        if (docSnap.metadata?.hasPendingWrites) return;
 
-        // Snapshot echo of this tab's own write: do not re-render (avoids flicker).
+        const currentKey = JSON.stringify(getPiutangPayload());
         if (incomingKey === currentKey || incomingKey === lastRenderedSnapshot) {
           lastRenderedSnapshot = incomingKey;
-          if (document.getElementById("periodDropdown").value !== incomingPeriod) {
-            document.getElementById("periodDropdown").value = incomingPeriod;
-            currentPeriod = incomingPeriod;
+          if (document.getElementById("periodDropdown").value !== incomingPayload.period) {
+            document.getElementById("periodDropdown").value = incomingPayload.period;
+            currentPeriod = incomingPayload.period;
             updatePeriodLabel();
           }
           return;
         }
 
-        // A genuinely different snapshot (another tab/device) is authoritative.
-        currentPeriod = incomingPeriod;
-        const periodSelect = document.getElementById("periodDropdown");
-        if ([...periodSelect.options].some(option => option.value === currentPeriod)) {
-          periodSelect.value = currentPeriod;
+        // A genuinely new server snapshot from another tab/device is applied
+        // only when no local write is still queued.
+        if (firebaseSaveInProgress) {
+          await firebaseSaveInProgress.catch(() => {});
         }
-        customerData = incomingCustomers;
-        lastRenderedSnapshot = incomingKey;
-        updatePeriodLabel();
-        renderPiutangDashboard();
+        if (incomingKey === JSON.stringify(getPiutangPayload())) {
+          lastRenderedSnapshot = incomingKey;
+          return;
+        }
+
+        remoteApplyInProgress = true;
+        try {
+          currentPeriod = incomingPayload.period;
+          const periodSelect = document.getElementById("periodDropdown");
+          if ([...periodSelect.options].some(option => option.value === currentPeriod)) {
+            periodSelect.value = currentPeriod;
+          }
+          customerData = incomingPayload.customers;
+          lastRenderedSnapshot = incomingKey;
+          updatePeriodLabel();
+          renderPiutangDashboard();
+        } finally {
+          remoteApplyInProgress = false;
+        }
       }, (error) => {
-        console.error("Gagal menyinkronkan data Firestore:", error);
-        alert("Sinkronisasi Firestore gagal. Data belum tentu tersimpan. Periksa koneksi dan izin Firestore.");
+        console.error("[Piutang Firestore] Sinkronisasi gagal:", error.code || "", error.message || error);
+        const detail = error.code === "permission-denied"
+          ? "Akses Firestore ditolak. Periksa Rules untuk koleksi monitoringPiutang."
+          : "Firestore gagal menyinkronkan data. Periksa koneksi internet dan konfigurasi Firebase.";
+        alert(detail + "\n\nDetail: " + (error.code || error.message || "unknown"));
       });
     }, 100);
   }
