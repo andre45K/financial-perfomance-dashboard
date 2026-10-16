@@ -14,6 +14,7 @@
   <!-- FIREBASE SDK (Modular v10) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -27,9 +28,12 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     window.firebaseDB = db;
     window.firebaseFns = { doc, getDoc, setDoc, onSnapshot };
+    window.firebaseAuth = auth;
+    window.firebaseAuthFns = { signOut };
   </script>
 
   <style>
@@ -211,83 +215,71 @@
       .d3-panel-flex { grid-template-columns: 1fr; }
     }
 
-    /* SIDEBAR INTERAKTIF PT WASKITA BETON PRECAST */
-    body { padding: 0; }
-    .app-layout { min-height: 100vh; display: flex; align-items: stretch; }
-    .app-sidebar { width: 250px; min-width: 250px; background: #ffffff; color: #334155; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; transition: width .25s ease, min-width .25s ease, transform .25s ease; z-index: 1000; }
-    .sidebar-brand { min-height: 76px; padding: 14px 16px; display: flex; align-items: center; gap: 11px; border-bottom: 1px solid #e5e7eb; }
-    .waskita-logo-mark { width: 42px; height: 42px; flex: 0 0 42px; border-radius: 10px; background: linear-gradient(145deg,#2563eb,#0f4c81); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; letter-spacing: -1px; box-shadow: 0 3px 8px #1d4ed833; }
-    .sidebar-brand-text { min-width: 0; line-height: 1.2; }
-    .sidebar-brand-text strong { display: block; color: #172033; font-size: 12px; font-weight: 800; }
-    .sidebar-brand-text span { display: block; color: #64748b; font-size: 9px; margin-top: 4px; }
-    .sidebar-toggle { margin-left: auto; border: 0; background: transparent; color: #64748b; cursor: pointer; padding: 7px; border-radius: 6px; }
-    .sidebar-toggle:hover { background: #eff6ff; color: #1d4ed8; }
-    .sidebar-label { padding: 20px 20px 8px; color: #94a3b8; font-size: 10px; font-weight: 800; letter-spacing: 1px; }
-    .sidebar-nav { padding: 0 10px 18px; display: flex; flex-direction: column; gap: 4px; }
-    .sidebar-link { display: flex; align-items: center; gap: 13px; min-height: 42px; padding: 10px 12px; border-radius: 8px; color: #475569; text-decoration: none; font-size: 12px; font-weight: 600; white-space: nowrap; transition: background .18s ease, color .18s ease; }
-    .sidebar-link i { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
-    .sidebar-link:hover, .sidebar-link.active { background: #eff6ff; color: #1d4ed8; }
-    .sidebar-link.active { font-weight: 800; }
-    .sidebar-footer { margin-top: auto; border-top: 1px solid #e5e7eb; padding: 13px 18px; color: #94a3b8; font-size: 9px; line-height: 1.5; }
-    .app-main { flex: 1; min-width: 0; padding: 15px; overflow: hidden; }
-    .app-main .header-container { flex-wrap: wrap; gap: 12px; }
-    .app-main .header-info { flex-wrap: wrap; }
-    .app-layout.sidebar-collapsed .app-sidebar { width: 74px; min-width: 74px; }
-    .app-layout.sidebar-collapsed .sidebar-brand { padding: 14px 16px; }
-    .app-layout.sidebar-collapsed .sidebar-brand-text, .app-layout.sidebar-collapsed .sidebar-label, .app-layout.sidebar-collapsed .sidebar-link span, .app-layout.sidebar-collapsed .sidebar-footer { display: none; }
-    .app-layout.sidebar-collapsed .sidebar-toggle { margin-left: 0; }
-    .app-layout.sidebar-collapsed .sidebar-nav { padding: 0 9px; }
-    .app-layout.sidebar-collapsed .sidebar-link { justify-content: center; padding: 11px 0; }
-    .app-layout.sidebar-collapsed .sidebar-link i { width: auto; }
-    @media (max-width: 900px) {
-      .app-sidebar { width: 235px; min-width: 235px; }
-      .app-main { padding: 10px; }
-      .app-main .header-info { gap: 7px; }
+    /* SIDEBAR INTERAKTIF - tambahan tanpa mengubah komponen dashboard yang sudah ada */
+    body { transition: padding-left .25s ease; }
+    .app-sidebar {
+      position: fixed; z-index: 1000; left: 0; top: 0; bottom: 0; width: 250px;
+      background: #ffffff; color: #334155; border-right: 1px solid #e2e8f0;
+      display: flex; flex-direction: column; transition: width .25s ease, transform .25s ease;
+      box-shadow: 2px 0 12px rgba(15,23,42,.08);
     }
-    @media (max-width: 680px) {
-      .app-layout { display: block; }
-      .app-sidebar { position: fixed; top: 0; bottom: 0; left: 0; width: 250px; min-width: 250px; box-shadow: 8px 0 28px #0003; transform: translateX(-105%); }
-      .app-layout.mobile-sidebar-open .app-sidebar { transform: translateX(0); }
-      .app-layout.sidebar-collapsed .app-sidebar { width: 250px; min-width: 250px; }
-      .app-layout.sidebar-collapsed .sidebar-brand-text, .app-layout.sidebar-collapsed .sidebar-label, .app-layout.sidebar-collapsed .sidebar-link span, .app-layout.sidebar-collapsed .sidebar-footer { display: initial; }
-      .app-layout.sidebar-collapsed .sidebar-link { justify-content: flex-start; padding: 10px 12px; }
-      .app-layout.sidebar-collapsed .sidebar-link i { width: 18px; }
-      .mobile-menu-button { display: inline-flex !important; }
-      .sidebar-overlay { display: none; position: fixed; inset: 0; background: #0f172a66; z-index: 999; }
-      .app-layout.mobile-sidebar-open .sidebar-overlay { display: block; }
+    .sidebar-brand { display:flex; align-items:center; gap:11px; padding:18px 17px; min-height:76px; border-bottom:1px solid #e5e7eb; }
+    .sidebar-brand-mark { flex:0 0 40px; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; background:#155eef; color:#fff; font-size:20px; }
+    .sidebar-brand-text { min-width:0; font-weight:800; font-size:12px; line-height:1.35; color:#1e293b; }
+    .sidebar-brand-text small { display:block; color:#64748b; font-size:10px; font-weight:600; }
+    .sidebar-section { padding:20px 17px 8px; font-size:10px; color:#94a3b8; font-weight:800; letter-spacing:1px; }
+    .sidebar-nav { padding:0 10px; display:flex; flex-direction:column; gap:4px; }
+    .sidebar-link { display:flex; align-items:center; gap:13px; min-height:43px; padding:11px 13px; color:#475569; text-decoration:none; border-radius:8px; font-size:12px; font-weight:600; transition:background .18s,color .18s; white-space:nowrap; overflow:hidden; }
+    .sidebar-link i { width:18px; text-align:center; flex:0 0 18px; font-size:15px; }
+    .sidebar-link:hover,.sidebar-link.active { background:#eaf2ff; color:#155eef; }
+    .sidebar-bottom { margin-top:auto; padding:12px 10px 18px; border-top:1px solid #e5e7eb; }
+    .sidebar-toggle { border:0; background:transparent; color:#475569; cursor:pointer; font-size:16px; width:34px; height:34px; border-radius:8px; }
+    .sidebar-toggle:hover { background:#eaf2ff; color:#155eef; }
+    .app-main { margin-left:250px; min-width:0; transition:margin-left .25s ease; }
+    .topbar-tools { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+    .logout-link { cursor:pointer; border:0; background:transparent; color:#dc3545; display:flex; align-items:center; gap:10px; padding:11px 13px; width:100%; font:inherit; font-size:12px; font-weight:700; text-align:left; border-radius:8px; }
+    .logout-link:hover { background:#fff1f2; }
+    body.sidebar-collapsed .app-sidebar { width:72px; }
+    body.sidebar-collapsed .app-main { margin-left:72px; }
+    body.sidebar-collapsed .sidebar-brand { padding-left:16px; padding-right:16px; }
+    body.sidebar-collapsed .sidebar-brand-text, body.sidebar-collapsed .sidebar-section,
+    body.sidebar-collapsed .sidebar-link span, body.sidebar-collapsed .logout-link span { display:none; }
+    body.sidebar-collapsed .sidebar-nav { padding:0 9px; }
+    body.sidebar-collapsed .sidebar-link { justify-content:center; padding-left:0; padding-right:0; }
+    body.sidebar-collapsed .logout-link { justify-content:center; padding-left:0; padding-right:0; }
+    @media (max-width: 760px) {
+      .app-sidebar { width:250px; transform:translateX(-100%); }
+      body.sidebar-mobile-open .app-sidebar { transform:translateX(0); }
+      .app-main, body.sidebar-collapsed .app-main { margin-left:0; }
+      body { padding:10px; }
+      .header-container { flex-wrap:wrap; gap:10px; }
+      .header-info { flex-wrap:wrap; }
     }
-    .mobile-menu-button { display: none; align-items: center; justify-content: center; border: 1px solid #334155; border-radius: 6px; background: #0f1926; color: #fff; padding: 7px 10px; cursor: pointer; margin-bottom: 10px; }
 
   </style>
 </head>
 
 <body>
-  <div class="app-layout" id="appLayout">
-    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
-    <aside class="app-sidebar" id="appSidebar" aria-label="Navigasi dashboard">
-      <div class="sidebar-brand">
-        <div class="waskita-logo-mark" aria-label="Logo Waskita Beton Precast">WB</div>
-        <div class="sidebar-brand-text">
-          <strong>WASKITA BETON PRECAST</strong>
-          <span>PT Waskita Beton Precast, Tbk.</span>
-        </div>
-        <button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="Buka atau tutup sidebar" title="Buka/tutup sidebar"><i class="fa-solid fa-angles-left"></i></button>
-      </div>
-      <div class="sidebar-label">MENU UTAMA</div>
-      <nav class="sidebar-nav">
-        <a href="#dashboardPart1" class="sidebar-link active" data-section="dashboardPart1"><i class="fa-solid fa-house"></i><span>Dashboard Utama</span></a>
-        <a href="#dashboardPart2" class="sidebar-link" data-section="dashboardPart2"><i class="fa-solid fa-chart-column"></i><span>Analisis Komparatif</span></a>
-        <a href="#dashboardPart3" class="sidebar-link" data-section="dashboardPart3"><i class="fa-solid fa-chart-line"></i><span>Analisis Prognosa</span></a>
-        <a href="nkb.html" class="sidebar-link"><i class="fa-solid fa-industry"></i><span>Dashboard NKB</span></a>
-        <a href="nkd.html" class="sidebar-link"><i class="fa-solid fa-building"></i><span>Dashboard NKD</span></a>
-        <a href="piutang.html" class="sidebar-link"><i class="fa-solid fa-file-invoice-dollar"></i><span>Dashboard Piutang</span></a>
-        <a href="login.html" class="sidebar-link"><i class="fa-solid fa-pen-to-square"></i><span>Admin Input</span></a>
-      </nav>
-      <div class="sidebar-footer">Financial Performance Dashboard<br>© PT Waskita Beton Precast, Tbk.</div>
-    </aside>
-    <main class="app-main" id="appMain">
-      <button type="button" class="mobile-menu-button" id="mobileMenuButton"><i class="fa-solid fa-bars"></i>&nbsp; Menu</button>
-
+  <aside class="app-sidebar" id="appSidebar" aria-label="Navigasi utama">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-mark"><i class="fa-solid fa-building"></i></div>
+      <div class="sidebar-brand-text">PT. Waskita Beton Precast, Tbk<small>Financial Performance</small></div>
+    </div>
+    <div class="sidebar-section">MENU UTAMA</div>
+    <nav class="sidebar-nav">
+      <a href="#dashboardPart1" class="sidebar-link active" data-nav="dashboardPart1"><i class="fa-solid fa-house"></i><span>Dashboard Utama</span></a>
+      <a href="nkb.html" class="sidebar-link"><i class="fa-solid fa-chart-column"></i><span>Dashboard NKB</span></a>
+      <a href="nkd.html" class="sidebar-link"><i class="fa-solid fa-chart-line"></i><span>Dashboard NKD</span></a>
+      <a href="piutang.html" class="sidebar-link"><i class="fa-solid fa-file-invoice-dollar"></i><span>Dashboard Piutang</span></a>
+      <a href="admin-input.html" class="sidebar-link"><i class="fa-solid fa-pen-to-square"></i><span>Admin Input</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <button type="button" class="sidebar-link" id="sidebarCollapse" style="width:100%;border:0;background:transparent;cursor:pointer;"><i class="fa-solid fa-angles-left"></i><span>Tutup Sidebar</span></button>
+      <button type="button" class="logout-link" id="logoutButton"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></button>
+    </div>
+  </aside>
+  <main class="app-main" id="appMain">
+    <div class="topbar-tools"><button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="Buka atau tutup sidebar" title="Buka/tutup sidebar"><i class="fa-solid fa-bars"></i></button></div>
   <!-- HEADER -->
   <div class="header-container">
     <div class="title-area">
@@ -1558,43 +1550,31 @@
     });
   </script>
 
-    </main>
-  </div>
+
+  </main>
   <script>
     (function () {
-      const layout = document.getElementById('appLayout');
+      const body = document.body;
+      const collapse = document.getElementById('sidebarCollapse');
       const toggle = document.getElementById('sidebarToggle');
-      const mobileButton = document.getElementById('mobileMenuButton');
-      const overlay = document.getElementById('sidebarOverlay');
-      const toggleIcon = toggle ? toggle.querySelector('i') : null;
-
-      function setCollapsed(collapsed) {
-        layout.classList.toggle('sidebar-collapsed', collapsed);
-        if (toggleIcon) {
-          toggleIcon.classList.toggle('fa-angles-left', !collapsed);
-          toggleIcon.classList.toggle('fa-angles-right', collapsed);
-        }
+      const logout = document.getElementById('logoutButton');
+      function toggleSidebar() {
+        if (window.matchMedia('(max-width: 760px)').matches) body.classList.toggle('sidebar-mobile-open');
+        else body.classList.toggle('sidebar-collapsed');
       }
-      if (toggle) toggle.addEventListener('click', function () {
-        if (window.matchMedia('(max-width: 680px)').matches) {
-          layout.classList.toggle('mobile-sidebar-open');
-        } else {
-          setCollapsed(!layout.classList.contains('sidebar-collapsed'));
-        }
-      });
-      if (mobileButton) mobileButton.addEventListener('click', function () {
-        layout.classList.toggle('mobile-sidebar-open');
-      });
-      if (overlay) overlay.addEventListener('click', function () {
-        layout.classList.remove('mobile-sidebar-open');
-      });
-      document.querySelectorAll('.sidebar-link[data-section]').forEach(function (link) {
-        link.addEventListener('click', function () {
-          document.querySelectorAll('.sidebar-link[data-section]').forEach(function (item) {
-            item.classList.toggle('active', item === link);
-          });
-          layout.classList.remove('mobile-sidebar-open');
-        });
+      if (collapse) collapse.addEventListener('click', toggleSidebar);
+      if (toggle) toggle.addEventListener('click', toggleSidebar);
+      document.querySelectorAll('.sidebar-link[data-nav]').forEach(link => link.addEventListener('click', () => {
+        document.querySelectorAll('.sidebar-link[data-nav]').forEach(item => item.classList.remove('active'));
+        link.classList.add('active');
+        if (window.matchMedia('(max-width: 760px)').matches) body.classList.remove('sidebar-mobile-open');
+      }));
+      if (logout) logout.addEventListener('click', async () => {
+        logout.disabled = true;
+        try {
+          if (window.firebaseAuth && window.firebaseAuthFns) await window.firebaseAuthFns.signOut(window.firebaseAuth);
+        } catch (error) { console.error('Gagal mengakhiri sesi Firebase:', error); }
+        finally { window.location.replace('login.html'); }
       });
     })();
   </script>
