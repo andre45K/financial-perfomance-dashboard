@@ -127,8 +127,12 @@
             text-decoration: underline;
         }
     </style>
+    <style>
+        /* Mencegah halaman login berkedip saat Firebase memulihkan sesi. */
+        body.auth-checking { visibility: hidden; }
+        </style>
 </head>
-<body class="login-body">
+<body class="login-body auth-checking">
     
     <div class="login-container">
         <h2>login</h2>
@@ -195,6 +199,7 @@
             !firebaseConfig.appId || firebaseConfig.appId.startsWith("GANTI_");
 
         if (configIncomplete) {
+            document.body.classList.remove("auth-checking");
             showMessage("Konfigurasi Firebase belum diisi. Masukkan konfigurasi Web App Firebase pada kode login.", true);
             loginButton.disabled = true;
             loginButton.style.opacity = "0.65";
@@ -206,7 +211,12 @@
 
                 // Jika sesi login masih aktif, langsung buka dashboard utama.
                 onAuthStateChanged(auth, (user) => {
-                    if (user) window.location.replace("dashboard.html");
+                    if (user) {
+                        window.location.replace("dashboard.html");
+                    } else {
+                        // Tampilkan form hanya setelah Firebase memastikan belum ada sesi aktif.
+                        document.body.classList.remove("auth-checking");
+                    }
                 });
 
                 form.addEventListener("submit", async (event) => {
@@ -269,6 +279,7 @@
                     }
                 });
             } catch (error) {
+                document.body.classList.remove("auth-checking");
                 showMessage("Firebase gagal diinisialisasi. Periksa konfigurasi Web App Firebase.", true);
                 loginButton.disabled = true;
             }
