@@ -127,12 +127,8 @@
             text-decoration: underline;
         }
     </style>
-    <style>
-        /* Mencegah halaman login berkedip saat Firebase memulihkan sesi. */
-        body.auth-checking { visibility: hidden; }
-        </style>
 </head>
-<body class="login-body auth-checking">
+<body class="login-body">
     
     <div class="login-container">
         <h2>login</h2>
@@ -174,10 +170,10 @@
          * UID saja tidak cukup untuk menentukan apiKey/authDomain/projectId.
          */
         const firebaseConfig = {
-            apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
-            authDomain: "financial-perfomance-dashboard.firebaseapp.com",
-            projectId: "financial-perfomance-dashboard",
-            appId: "1:136866453174:web:b69a3e14672eb96cc53817"
+            apiKey: "GANTI_DENGAN_API_KEY_FIREBASE",
+            authDomain: "GANTI_DENGAN_PROJECT_ID.firebaseapp.com",
+            projectId: "GANTI_DENGAN_PROJECT_ID",
+            appId: "GANTI_DENGAN_APP_ID"
         };
 
         const form = document.getElementById("loginForm");
@@ -199,7 +195,6 @@
             !firebaseConfig.appId || firebaseConfig.appId.startsWith("GANTI_");
 
         if (configIncomplete) {
-            document.body.classList.remove("auth-checking");
             showMessage("Konfigurasi Firebase belum diisi. Masukkan konfigurasi Web App Firebase pada kode login.", true);
             loginButton.disabled = true;
             loginButton.style.opacity = "0.65";
@@ -211,12 +206,7 @@
 
                 // Jika sesi login masih aktif, langsung buka dashboard utama.
                 onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        window.location.replace("dashboard.html");
-                    } else {
-                        // Tampilkan form hanya setelah Firebase memastikan belum ada sesi aktif.
-                        document.body.classList.remove("auth-checking");
-                    }
+                    if (user) window.location.replace("dashboard.html");
                 });
 
                 form.addEventListener("submit", async (event) => {
@@ -279,7 +269,6 @@
                     }
                 });
             } catch (error) {
-                document.body.classList.remove("auth-checking");
                 showMessage("Firebase gagal diinisialisasi. Periksa konfigurasi Web App Firebase.", true);
                 loginButton.disabled = true;
             }
