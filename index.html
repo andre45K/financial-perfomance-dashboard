@@ -206,7 +206,7 @@
 
                 // Jika sesi login masih aktif, langsung buka dashboard utama.
                 onAuthStateChanged(auth, (user) => {
-                    if (user) window.location.replace("index.html");
+                    if (user) window.location.replace("dashboard.html");
                 });
 
                 form.addEventListener("submit", async (event) => {
@@ -230,7 +230,7 @@
                         );
                         await signInWithEmailAndPassword(auth, email, password);
                         showMessage("Login berhasil. Membuka dashboard...", false);
-                        window.location.replace("index.html");
+                        window.location.assign(new URL("dashboard.html", window.location.href).href);
                     } catch (error) {
                         const messages = {
                             "auth/invalid-credential": "Email atau password salah.",
