@@ -76,7 +76,7 @@
     .btn-icon-delete { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid #ef4444; width: 26px; height: 26px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
     .btn-icon-delete:hover { background: #ef4444; color: #fff; }
 
-    /* Modal Form Kontrak Baru */
+    /* Modal Form Kontrak */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
     .modal-container { background: #0f172a; border: 1px solid #334155; width: 600px; max-width: 90%; border-radius: 10px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 10px; margin-bottom: 15px; }
@@ -115,7 +115,6 @@
       <a href="dashboard.html" class="btn-action"><i class="fa-solid fa-house"></i> Dashboard Utama</a>
       <button class="btn-action" onclick="location.reload()"><i class="fa-solid fa-rotate"></i> Muat Ulang</button>
       <button class="btn-action"><i class="fa-solid fa-file-excel"></i> Impor CSV</button>
-      <!-- Navigasi Tombol Kontrak Baru yang Difungsikan -->
       <button class="btn-action btn-primary" onclick="bukaModalKontrakBaru()"><i class="fa-solid fa-plus"></i> Kontrak Baru</button>
     </div>
   </div>
@@ -456,14 +455,15 @@
     </table>
   </div>
 
-  <!-- Modal Input / Tambah Kontrak Baru -->
+  <!-- Modal Input / Edit Kontrak -->
   <div class="modal-overlay" id="modalKontrak">
     <div class="modal-container">
       <div class="modal-header">
-        <div class="modal-title"><i class="fa-solid fa-file-circle-plus" style="color: #f59e0b;"></i> Tambah Kontrak Baru</div>
+        <div class="modal-title" id="modalTitleText"><i class="fa-solid fa-file-circle-plus" style="color: #f59e0b;"></i> Tambah Kontrak Baru</div>
         <button class="modal-close" onclick="tutupModalKontrakBaru()"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <form id="formKontrakBaru" onsubmit="simpanKontrakBaru(event)">
+      <form id="formKontrakBaru" onsubmit="simpanKontrak(event)">
+        <input type="hidden" id="editRowIndex" value="">
         <div class="form-grid">
           <div class="form-group">
             <label class="form-label">No. SPSA</label>
@@ -475,15 +475,15 @@
           </div>
           <div class="form-group">
             <label class="form-label">Tanggal Kontrak</label>
-            <input type="date" class="form-input" id="inputTglKontrak" required>
+            <input type="text" class="form-input" id="inputTglKontrak" placeholder="Contoh: 11-Jan-26" required>
           </div>
           <div class="form-group">
             <label class="form-label">Tanggal Start</label>
-            <input type="date" class="form-input" id="inputStart" required>
+            <input type="text" class="form-input" id="inputStart" placeholder="Contoh: 15-Jan-26" required>
           </div>
           <div class="form-group">
             <label class="form-label">Tanggal Ending</label>
-            <input type="date" class="form-input" id="inputEnding" required>
+            <input type="text" class="form-input" id="inputEnding" placeholder="Contoh: 14-Feb-26" required>
           </div>
           <div class="form-group">
             <label class="form-label">Jumlah Alat (Unit)</label>
@@ -506,7 +506,7 @@
           </div>
           <div class="form-group">
             <label class="form-label">Nilai Kontrak (Rp)</label>
-            <input type="number" class="form-input" id="inputNilaiKontrak" placeholder="Total Nilai Kontrak" required>
+            <input type="text" class="form-input" id="inputNilaiKontrak" placeholder="Total Nilai Kontrak" required>
           </div>
           <div class="form-group">
             <label class="form-label">Status Kontrak</label>
@@ -528,9 +528,8 @@
     </div>
   </div>
 
-  <!-- Script Chart & Interaksi Filter & Modal -->
+  <!-- Script Chart & Interaksi Filter & Modal (Tambah & Edit) -->
   <script>
-    // Inisialisasi Grafik Chart.js
     document.addEventListener("DOMContentLoaded", () => {
       new Chart(document.getElementById("chartPelanggan").getContext("2d"), {
         type: "bar",
@@ -617,8 +616,11 @@
       });
     });
 
-    // Fungsi Navigasi & Kontrol Modal Kontrak Baru
+    // Fungsi Navigasi Modal (Tambah & Edit Kontrak)
     function bukaModalKontrakBaru() {
+      document.getElementById("editRowIndex").value = "";
+      document.getElementById("modalTitleText").innerHTML = '<i class="fa-solid fa-file-circle-plus" style="color: #f59e0b;"></i> Tambah Kontrak Baru';
+      document.getElementById("formKontrakBaru").reset();
       document.getElementById("modalKontrak").style.display = "flex";
     }
 
@@ -627,8 +629,34 @@
       document.getElementById("formKontrakBaru").reset();
     }
 
-    function simpanKontrakBaru(event) {
+    function editKontrak(btn) {
+      const row = btn.closest("tr");
+      document.getElementById("editRowIndex").value = row.rowIndex;
+      document.getElementById("modalTitleText").innerHTML = '<i class="fa-solid fa-pen-to-square" style="color: #3b82f6;"></i> Edit Data Kontrak';
+
+      // Ambil nilai dari sel tabel baris yang dipilih
+      document.getElementById("inputNoSPSA").value = row.cells[1].innerText.trim();
+      document.getElementById("inputCustomer").value = row.cells[2].innerText.trim();
+      document.getElementById("inputTglKontrak").value = row.cells[3].innerText.trim();
+      document.getElementById("inputStart").value = row.cells[4].innerText.trim();
+      document.getElementById("inputEnding").value = row.cells[5].innerText.trim();
+      document.getElementById("inputJmlAlat").value = row.cells[6].innerText.trim();
+      document.getElementById("inputJenisAlat").value = row.cells[7].innerText.trim();
+      document.getElementById("inputLokasi").value = row.cells[9].innerText.trim();
+      
+      let rawNilai = row.cells[14].innerText.replace("Rp", "").replace(/\./g, "").trim();
+      document.getElementById("inputNilaiKontrak").value = rawNilai;
+      
+      let statusBadge = row.cells[15].innerText.trim();
+      document.getElementById("inputStatus").value = statusBadge.includes("Open") ? "Open" : "Closed";
+      document.getElementById("inputKeterangan").value = row.cells[21].innerText.trim() === "-" ? "" : row.cells[21].innerText.trim();
+
+      document.getElementById("modalKontrak").style.display = "flex";
+    }
+
+    function simpanKontrak(event) {
       event.preventDefault();
+      const editIndex = document.getElementById("editRowIndex").value;
       const noSpsa = document.getElementById("inputNoSPSA").value;
       const customer = document.getElementById("inputCustomer").value;
       const tglKontrak = document.getElementById("inputTglKontrak").value;
@@ -637,47 +665,68 @@
       const jmlAlat = document.getElementById("inputJmlAlat").value;
       const jenisAlat = document.getElementById("inputJenisAlat").value;
       const lokasi = document.getElementById("inputLokasi").value;
-      const nilaiKontrak = Number(document.getElementById("inputNilaiKontrak").value).toLocaleString("id-ID");
+      const nilaiInput = Number(document.getElementById("inputNilaiKontrak").value);
+      const nilaiFormatted = !isNaN(nilaiInput) ? nilaiInput.toLocaleString("id-ID") : document.getElementById("inputNilaiKontrak").value;
       const status = document.getElementById("inputStatus").value;
       const ket = document.getElementById("inputKeterangan").value || "-";
 
-      const table = document.getElementById("contractTable").getElementsByTagName("tbody")[0];
-      const rowCount = table.rows.length + 1;
+      const table = document.getElementById("contractTable");
 
-      const newRow = table.insertRow(0);
-      newRow.innerHTML = `
-        <td>${rowCount}</td>
-        <td>${noSpsa}</td>
-        <td class="text-left">${customer}</td>
-        <td>${tglKontrak}</td>
-        <td>${start}</td>
-        <td>${ending}</td>
-        <td>${jmlAlat}</td>
-        <td class="text-left">${jenisAlat}</td>
-        <td class="text-left">-</td>
-        <td class="text-left">${lokasi}</td>
-        <td>1</td>
-        <td class="text-right">Rp ${nilaiKontrak}</td>
-        <td class="text-right">Rp ${nilaiKontrak}</td>
-        <td class="text-right">Rp 0</td>
-        <td class="text-right"><b>Rp ${nilaiKontrak}</b></td>
-        <td><span class="badge-status-${status.toLowerCase()}">${status}</span></td>
-        <td>-</td>
-        <td>-</td>
-        <td class="text-right">Rp 0</td>
-        <td class="text-right">Rp 0</td>
-        <td>100%</td>
-        <td class="text-left">${ket}</td>
-        <td>
-          <div class="action-btns">
-            <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
-            <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
-          </div>
-        </td>
-      `;
+      if (editIndex !== "") {
+        // Mode Update / Edit Baris yang Ada
+        const row = table.rows[editIndex];
+        row.cells[1].innerText = noSpsa;
+        row.cells[2].innerText = customer;
+        row.cells[3].innerText = tglKontrak;
+        row.cells[4].innerText = start;
+        row.cells[5].innerText = ending;
+        row.cells[6].innerText = jmlAlat;
+        row.cells[7].innerText = jenisAlat;
+        row.cells[9].innerText = lokasi;
+        row.cells[12].innerText = "Rp " + nilaiFormatted;
+        row.cells[14].innerHTML = "<b>Rp " + nilaiFormatted + "</b>";
+        row.cells[15].innerHTML = `<span class="badge-status-${status.toLowerCase()}">${status}</span>`;
+        row.cells[21].innerText = ket;
+        alert("Data kontrak berhasil diperbarui!");
+      } else {
+        // Mode Tambah Baris Baru
+        const tbody = table.getElementsByTagName("tbody")[0];
+        const rowCount = tbody.rows.length + 1;
+        const newRow = tbody.insertRow(0);
+        newRow.innerHTML = `
+          <td>${rowCount}</td>
+          <td>${noSpsa}</td>
+          <td class="text-left">${customer}</td>
+          <td>${tglKontrak}</td>
+          <td>${start}</td>
+          <td>${ending}</td>
+          <td>${jmlAlat}</td>
+          <td class="text-left">${jenisAlat}</td>
+          <td class="text-left">-</td>
+          <td class="text-left">${lokasi}</td>
+          <td>1</td>
+          <td class="text-right">Rp ${nilaiFormatted}</td>
+          <td class="text-right">Rp ${nilaiFormatted}</td>
+          <td class="text-right">Rp 0</td>
+          <td class="text-right"><b>Rp ${nilaiFormatted}</b></td>
+          <td><span class="badge-status-${status.toLowerCase()}">${status}</span></td>
+          <td>-</td>
+          <td>-</td>
+          <td class="text-right">Rp 0</td>
+          <td class="text-right">Rp 0</td>
+          <td>100%</td>
+          <td class="text-left">${ket}</td>
+          <td>
+            <div class="action-btns">
+              <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
+        `;
+        alert("Kontrak baru berhasil ditambahkan!");
+      }
 
       tutupModalKontrakBaru();
-      alert("Kontrak baru berhasil ditambahkan!");
     }
 
     function hapusKontrak(btn) {
@@ -685,10 +734,6 @@
         const row = btn.closest("tr");
         row.remove();
       }
-    }
-
-    function editKontrak(btn) {
-      alert("Fitur edit baris kontrak aktif. Silakan sesuaikan data langsung pada baris tabel.");
     }
 
     // Fungsi Filter Tabel Interaktif
