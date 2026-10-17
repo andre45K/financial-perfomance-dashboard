@@ -7,6 +7,31 @@
   <!-- FontAwesome & Chart.js -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- FIREBASE SDK (Modular v10) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, doc, getDocs, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
+      authDomain: "financial-perfomance-dashboard.firebaseapp.com",
+      projectId: "financial-perfomance-dashboard",
+      storageBucket: "financial-perfomance-dashboard.firebasestorage.app",
+      messagingSenderId: "136866453174",
+      appId: "1:136866453174:web:b69a3e14672eb96cc53817"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    window.firebaseDB = db;
+    window.firebaseFns = { collection, doc, getDocs, setDoc, deleteDoc, onSnapshot };
+    window.firebaseAuth = auth;
+    window.firebaseAuthFns = { signOut };
+  </script>
   
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
@@ -126,16 +151,16 @@
         <div class="kpi-label">Total Kontrak</div>
         <div class="kpi-badge-icon bg-yellow"><i class="fa-solid fa-file-lines"></i></div>
       </div>
-      <div class="kpi-value">64</div>
-      <div class="kpi-sub">Rp 14.5 M total nilai</div>
+      <div class="kpi-value" id="kpiTotalKontrak">64</div>
+      <div class="kpi-sub">Total data kontrak</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-card-header">
         <div class="kpi-label">Kontrak Aktif</div>
         <div class="kpi-badge-icon bg-green"><i class="fa-solid fa-bolt"></i></div>
       </div>
-      <div class="kpi-value">20</div>
-      <div class="kpi-sub">Rp 7.3 M nilai aktif</div>
+      <div class="kpi-value" id="kpiKontrakAktif">20</div>
+      <div class="kpi-sub">Status Open</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-card-header">
@@ -150,8 +175,8 @@
         <div class="kpi-label">Expired / Selesai</div>
         <div class="kpi-badge-icon bg-red"><i class="fa-solid fa-circle-check"></i></div>
       </div>
-      <div class="kpi-value">41</div>
-      <div class="kpi-sub">7 expired - 34 selesai</div>
+      <div class="kpi-value" id="kpiKontrakSelesai">41</div>
+      <div class="kpi-sub">Status Closed</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-card-header">
@@ -241,216 +266,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>001/SP5A/WSBP/2026</td>
-          <td class="text-left">PT. Baja Cosmo Energi</td>
-          <td>11-Jan-26</td>
-          <td>15-Jan-26</td>
-          <td>14-Feb-26</td>
-          <td>1</td>
-          <td class="text-left">Truck Mixer</td>
-          <td class="text-left">-</td>
-          <td class="text-left">Kalimantan</td>
-          <td>1</td>
-          <td class="text-right">Rp 31.000.000</td>
-          <td class="text-right">Rp 31.000.000</td>
-          <td class="text-right">Rp 3.410.000</td>
-          <td class="text-right"><b>Rp 34.410.000</b></td>
-          <td><span class="badge-status-open">Open</span></td>
-          <td>-</td>
-          <td>-</td>
-          <td class="text-right">Rp 15.025.217</td>
-          <td class="text-right">Rp 15.025.217</td>
-          <td>106%</td>
-          <td class="text-left">-</td>
-          <td>
-            <div class="action-btns">
-              <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>007/SP5A/WSBP/2026</td>
-          <td class="text-left">PT. Baja Cosmo Energi</td>
-          <td>11-Jan-26</td>
-          <td>15-Jan-26</td>
-          <td>14-Feb-26</td>
-          <td>1</td>
-          <td class="text-left">Truck Mixer</td>
-          <td class="text-left">-</td>
-          <td class="text-left">Kalimantan Tengah</td>
-          <td>1</td>
-          <td class="text-right">Rp 25.000.000</td>
-          <td class="text-right">Rp 25.000.000</td>
-          <td class="text-right">Rp 2.750.000</td>
-          <td class="text-right"><b>Rp 27.750.000</b></td>
-          <td><span class="badge-status-open">Open</span></td>
-          <td>-</td>
-          <td>-</td>
-          <td class="text-right">Rp 15.025.217</td>
-          <td class="text-right">Rp 15.025.217</td>
-          <td>85%</td>
-          <td class="text-left">-</td>
-          <td>
-            <div class="action-btns">
-              <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>008/SP5A/WSBP/2026</td>
-          <td class="text-left">PT. Baja Cosmo Energi</td>
-          <td>11-Jan-26</td>
-          <td>15-Jan-26</td>
-          <td>14-Feb-26</td>
-          <td>2</td>
-          <td class="text-left">Truck Mixer</td>
-          <td class="text-left">-</td>
-          <td class="text-left">Kalimantan, Sumatera</td>
-          <td>1</td>
-          <td class="text-right">Rp 25.000.000</td>
-          <td class="text-right">252.000.000</td>
-          <td class="text-right">Rp 27.720.000</td>
-          <td class="text-right"><b>Rp 279.720.000</b></td>
-          <td><span class="badge-status-open">Open</span></td>
-          <td>-</td>
-          <td>-</td>
-          <td class="text-right">Rp 15.025.217</td>
-          <td class="text-right">Rp 15.025.217</td>
-          <td>86%</td>
-          <td class="text-left">-</td>
-          <td>
-            <div class="action-btns">
-              <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td>004/SP5A/WSBP/2026</td>
-          <td class="text-left">PT. Sumber Urip Sejati</td>
-          <td>2-Jun-26</td>
-          <td>3-Jun-26</td>
-          <td>3-Jul-26</td>
-          <td>3</td>
-          <td class="text-left">Truck Mixer</td>
-          <td class="text-left">-</td>
-          <td class="text-left">Sumsel, Lampung</td>
-          <td>3</td>
-          <td class="text-right">Rp 21.175.808</td>
-          <td class="text-right">Rp 63.527.424</td>
-          <td class="text-right">Rp 6.988.017</td>
-          <td class="text-right"><b>Rp 70.515.441</b></td>
-          <td><span class="badge-status-open">Open</span></td>
-          <td>-</td>
-          <td>-</td>
-          <td class="text-right">Rp 15.025.217</td>
-          <td class="text-right">Rp 15.025.217</td>
-          <td>44%</td>
-          <td class="text-left">-</td>
-          <td>
-            <div class="action-btns">
-              <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>5</td>
-          <td>00001/HAM/ON/SPK/01/2026</td>
-          <td class="text-left">PT Hamori Medical Center</td>
-          <td>27-Jan-26</td>
-          <td>1-Feb-26</td>
-          <td>2-Feb-26</td>
-          <td>1</td>
-          <td class="text-left">Mobile Crane+Bucket Cor</td>
-          <td class="text-left">-</td>
-          <td class="text-left">Subang</td>
-          <td>1</td>
-          <td class="text-right">Rp 110.000.000</td>
-          <td class="text-right">Rp 110.000.000</td>
-          <td class="text-right">Rp 12.100.000</td>
-          <td class="text-right"><b>Rp 122.100.000</b></td>
-          <td><span class="badge-status-closed">Closed</span></td>
-          <td>-</td>
-          <td>-</td>
-          <td class="text-right">Rp 68.228.694</td>
-          <td class="text-right">Rp 68.228.694</td>
-          <td>25%</td>
-          <td class="text-left">-</td>
-          <td>
-            <div class="action-btns">
-              <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </td>
-        </tr>
-        <tr class="highlight-row-blue">
-          <td>13</td>
-          <td>011/SP5A-I/SP5A/WBP/2026</td>
-          <td class="text-left">PT Sisaya Artha Gemilang</td>
-          <td>10-Jan-26</td>
-          <td>15-Jan-26</td>
-          <td>15-Feb-26</td>
-          <td>1</td>
-          <td class="text-left">Truck Mixer</td>
-          <td class="text-left">TM 161</td>
-          <td class="text-left">Tegal</td>
-          <td>1</td>
-          <td class="text-right">Rp 44.500.000</td>
-          <td class="text-right">Rp 44.500.000</td>
-          <td class="text-right">Rp 4.895.000</td>
-          <td class="text-right"><b>Rp 49.395.000</b></td>
-          <td><span class="badge-status-open">Open</span></td>
-          <td>0865/EW/WBP/2026</td>
-          <td>31-Jan-26</td>
-          <td class="text-right">Rp 15.025.217</td>
-          <td class="text-right">Rp 15.025.217</td>
-          <td>168%</td>
-          <td class="text-left">Unit siap operasional</td>
-          <td>
-            <div class="action-btns">
-              <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </td>
-        </tr>
-        <tr class="highlight-row-pink">
-          <td>42</td>
-          <td>026/ADD-5/SP5A/WBP/2026</td>
-          <td class="text-left">PT Sumber Urip Sejati</td>
-          <td>6-Feb-26</td>
-          <td>7-Feb-26</td>
-          <td>8-May-26</td>
-          <td>4</td>
-          <td class="text-left">Truck Mixer</td>
-          <td class="text-left">-</td>
-          <td class="text-left">Cilegon</td>
-          <td>3</td>
-          <td class="text-right">Rp 21.175.808</td>
-          <td class="text-right">Rp 21.175.808</td>
-          <td class="text-right">Rp 2.329.339</td>
-          <td class="text-right"><b>Rp 23.505.147</b></td>
-          <td><span class="badge-status-open">Open</span></td>
-          <td>-</td>
-          <td>-</td>
-          <td class="text-right">Rp 15.025.217</td>
-          <td class="text-right">Rp 15.025.217</td>
-          <td>44%</td>
-          <td class="text-left">Belum Ada Kontrak</td>
-          <td>
-            <div class="action-btns">
-              <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </td>
-        </tr>
+        <!-- Data dimuat secara realtime dari Firestore -->
       </tbody>
     </table>
   </div>
@@ -462,8 +278,8 @@
         <div class="modal-title" id="modalTitleText"><i class="fa-solid fa-file-circle-plus" style="color: #f59e0b;"></i> Tambah Kontrak Baru</div>
         <button class="modal-close" onclick="tutupModalKontrakBaru()"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <form id="formKontrakBaru" onsubmit="simpanKontrak(event)">
-        <input type="hidden" id="editRowIndex" value="">
+      <form id="formKontrakBaru" onsubmit="simpanKontrakFirestore(event)">
+        <input type="hidden" id="editDocId" value="">
         <div class="form-grid">
           <div class="form-group">
             <label class="form-label">No. SPSA</label>
@@ -528,23 +344,24 @@
     </div>
   </div>
 
-  <!-- Script Chart & Interaksi Filter & Modal (Tambah & Edit) -->
+  <!-- Script Chart & Realtime Firestore Integration -->
   <script>
+    let globalContractsData = [];
+
     document.addEventListener("DOMContentLoaded", () => {
+      initCharts();
+      initFirebaseRealtimeSync();
+    });
+
+    function initCharts() {
       new Chart(document.getElementById("chartPelanggan").getContext("2d"), {
         type: "bar",
         data: {
-          labels: ["Indosarana Jaya", "Sumber Urip Sejati", "Waskita Karya (P", "Tirta Dan Mitra", "Sisaya Artha Gem", "Liga Adhi Buana", "Trans Ringo Grou", "Baja Cosmo Energ"],
-          datasets: [{
-            data: [5.6, 5.2, 3.4, 2.3, 1.8, 1.4, 0.9, 0.5],
-            backgroundColor: "#f59e0b",
-            borderRadius: 4
-          }]
+          labels: ["Indosarana Jaya", "Sumber Urip Sejati", "Waskita Karya", "Tirta Dan Mitra", "Sisaya Artha", "Liga Adhi Buana", "Trans Ringo", "Baja Cosmo"],
+          datasets: [{ data: [5.6, 5.2, 3.4, 2.3, 1.8, 1.4, 0.9, 0.5], backgroundColor: "#f59e0b", borderRadius: 4 }]
         },
         options: {
-          indexAxis: 'y',
-          responsive: true,
-          maintainAspectRatio: false,
+          indexAxis: 'y', responsive: true, maintainAspectRatio: false,
           plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: "#94a3b8", font: { size: 9 }, callback: val => 'Rp ' + val + ' M' }, grid: { color: "#1e293b" } },
@@ -556,33 +373,20 @@
       new Chart(document.getElementById("chartStatus").getContext("2d"), {
         type: 'doughnut',
         data: {
-          labels: ['Aktif (16)', 'Selesai (34)', 'Expired (7)', 'Segera Expired (4)', 'Tanpa Tanggal (3)'],
-          datasets: [{
-            data: [16, 34, 7, 4, 3],
-            backgroundColor: ['#22c55e', '#64748b', '#ef4444', '#f59e0b', '#3b82f6'],
-            borderWidth: 0
-          }]
+          labels: ['Aktif', 'Selesai'],
+          datasets: [{ data: [16, 34], backgroundColor: ['#22c55e', '#64748b'], borderWidth: 0 }]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 10 } } }
-        }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 10 } } } }
       });
 
       new Chart(document.getElementById("chartAlat").getContext("2d"), {
         type: 'bar',
         data: {
-          labels: ['Stone Crusher', 'Truck Mixer', 'Truck Trailer', 'Mobile Crane+Buck', 'Silo', 'Dump Truck'],
-          datasets: [{
-            data: [2, 44, 16, 2, 1, 2],
-            backgroundColor: '#3b82f6',
-            borderRadius: 4
-          }]
+          labels: ['Stone Crusher', 'Truck Mixer', 'Truck Trailer', 'Mobile Crane', 'Silo', 'Dump Truck'],
+          datasets: [{ data: [2, 44, 16, 2, 1, 2], backgroundColor: '#3b82f6', borderRadius: 4 }]
         },
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
+          responsive: true, maintainAspectRatio: false,
           plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { display: false } },
@@ -595,18 +399,10 @@
         type: 'line',
         data: {
           labels: ['2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09', '2026-10'],
-          datasets: [{
-            data: [1.3, 1.1, 0.4, 0.2, 2.7, 1.8, 1.5, 1.2, 2.9, 0.2],
-            borderColor: '#f59e0b',
-            backgroundColor: 'rgba(245, 158, 11, 0.1)',
-            fill: true,
-            tension: 0.3,
-            pointRadius: 3
-          }]
+          datasets: [{ data: [1.3, 1.1, 0.4, 0.2, 2.7, 1.8, 1.5, 1.2, 2.9, 0.2], borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', fill: true, tension: 0.3, pointRadius: 3 }]
         },
         options: {
-          responsive: true,
-          maintainAspectRatio: false,
+          responsive: true, maintainAspectRatio: false,
           plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { display: false } },
@@ -614,11 +410,84 @@
           }
         }
       });
-    });
+    }
 
-    // Fungsi Navigasi Modal (Tambah & Edit Kontrak)
+    // Koneksi Realtime Firestore
+    function initFirebaseRealtimeSync() {
+      const checkInterval = setInterval(() => {
+        if (window.firebaseDB && window.firebaseFns) {
+          clearInterval(checkInterval);
+          const { collection, onSnapshot } = window.firebaseFns;
+          const colRef = collection(window.firebaseDB, "monitoringKontrak");
+
+          onSnapshot(colRef, (snapshot) => {
+            globalContractsData = [];
+            snapshot.forEach((docSnap) => {
+              globalContractsData.push({ id: docSnap.id, ...docSnap.data() });
+            });
+            renderTableData(globalContractsData);
+          }, (error) => {
+            console.error("Gagal menyinkronkan data kontrak realtime:", error);
+          });
+        }
+      }, 100);
+    }
+
+    function renderTableData(dataList) {
+      const tbody = document.querySelector("#contractTable tbody");
+      tbody.innerHTML = "";
+
+      let totalOpen = 0;
+      let totalClosed = 0;
+
+      dataList.forEach((item, index) => {
+        if (item.status === "Open") totalOpen++;
+        else totalClosed++;
+
+        const tr = document.createElement("tr");
+        if (index === 5) tr.className = "highlight-row-blue";
+        if (index === 6) tr.className = "highlight-row-pink";
+
+        tr.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${item.noSpsa || "-"}</td>
+          <td class="text-left">${item.customer || "-"}</td>
+          <td>${item.tglKontrak || "-"}</td>
+          <td>${item.start || "-"}</td>
+          <td>${item.ending || "-"}</td>
+          <td>${item.jmlAlat || 1}</td>
+          <td class="text-left">${item.jenisAlat || "-"}</td>
+          <td class="text-left">-</td>
+          <td class="text-left">${item.lokasi || "-"}</td>
+          <td>1</td>
+          <td class="text-right">Rp ${Number(item.nilaiKontrak || 0).toLocaleString("id-ID")}</td>
+          <td class="text-right">Rp ${Number(item.nilaiKontrak || 0).toLocaleString("id-ID")}</td>
+          <td class="text-right">Rp 0</td>
+          <td class="text-right"><b>Rp ${Number(item.nilaiKontrak || 0).toLocaleString("id-ID")}</b></td>
+          <td><span class="badge-status-${(item.status || "Open").toLowerCase()}">${item.status || "Open"}</span></td>
+          <td>-</td>
+          <td>-</td>
+          <td class="text-right">Rp 0</td>
+          <td class="text-right">Rp 0</td>
+          <td>100%</td>
+          <td class="text-left">${item.keterangan || "-"}</td>
+          <td>
+            <div class="action-btns">
+              <button class="btn-icon-edit" title="Edit" onclick="editKontrakFirestore('${item.id}')"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrakFirestore('${item.id}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById("kpiTotalKontrak").innerText = dataList.length;
+      document.getElementById("kpiKontrakAktif").innerText = totalOpen;
+      document.getElementById("kpiKontrakSelesai").innerText = totalClosed;
+    }
+
     function bukaModalKontrakBaru() {
-      document.getElementById("editRowIndex").value = "";
+      document.getElementById("editDocId").value = "";
       document.getElementById("modalTitleText").innerHTML = '<i class="fa-solid fa-file-circle-plus" style="color: #f59e0b;"></i> Tambah Kontrak Baru';
       document.getElementById("formKontrakBaru").reset();
       document.getElementById("modalKontrak").style.display = "flex";
@@ -629,114 +498,77 @@
       document.getElementById("formKontrakBaru").reset();
     }
 
-    function editKontrak(btn) {
-      const row = btn.closest("tr");
-      document.getElementById("editRowIndex").value = row.rowIndex;
+    function editKontrakFirestore(id) {
+      const item = globalContractsData.find(d => d.id === id);
+      if (!item) return;
+
+      document.getElementById("editDocId").value = item.id;
       document.getElementById("modalTitleText").innerHTML = '<i class="fa-solid fa-pen-to-square" style="color: #3b82f6;"></i> Edit Data Kontrak';
 
-      // Ambil nilai dari sel tabel baris yang dipilih
-      document.getElementById("inputNoSPSA").value = row.cells[1].innerText.trim();
-      document.getElementById("inputCustomer").value = row.cells[2].innerText.trim();
-      document.getElementById("inputTglKontrak").value = row.cells[3].innerText.trim();
-      document.getElementById("inputStart").value = row.cells[4].innerText.trim();
-      document.getElementById("inputEnding").value = row.cells[5].innerText.trim();
-      document.getElementById("inputJmlAlat").value = row.cells[6].innerText.trim();
-      document.getElementById("inputJenisAlat").value = row.cells[7].innerText.trim();
-      document.getElementById("inputLokasi").value = row.cells[9].innerText.trim();
-      
-      let rawNilai = row.cells[14].innerText.replace("Rp", "").replace(/\./g, "").trim();
-      document.getElementById("inputNilaiKontrak").value = rawNilai;
-      
-      let statusBadge = row.cells[15].innerText.trim();
-      document.getElementById("inputStatus").value = statusBadge.includes("Open") ? "Open" : "Closed";
-      document.getElementById("inputKeterangan").value = row.cells[21].innerText.trim() === "-" ? "" : row.cells[21].innerText.trim();
+      document.getElementById("inputNoSPSA").value = item.noSpsa || "";
+      document.getElementById("inputCustomer").value = item.customer || "";
+      document.getElementById("inputTglKontrak").value = item.tglKontrak || "";
+      document.getElementById("inputStart").value = item.start || "";
+      document.getElementById("inputEnding").value = item.ending || "";
+      document.getElementById("inputJmlAlat").value = item.jmlAlat || 1;
+      document.getElementById("inputJenisAlat").value = item.jenisAlat || "Truck Mixer";
+      document.getElementById("inputLokasi").value = item.lokasi || "";
+      document.getElementById("inputNilaiKontrak").value = item.nilaiKontrak || "";
+      document.getElementById("inputStatus").value = item.status || "Open";
+      document.getElementById("inputKeterangan").value = item.keterangan || "";
 
       document.getElementById("modalKontrak").style.display = "flex";
     }
 
-    function simpanKontrak(event) {
+    async function simpanKontrakFirestore(event) {
       event.preventDefault();
-      const editIndex = document.getElementById("editRowIndex").value;
-      const noSpsa = document.getElementById("inputNoSPSA").value;
-      const customer = document.getElementById("inputCustomer").value;
-      const tglKontrak = document.getElementById("inputTglKontrak").value;
-      const start = document.getElementById("inputStart").value;
-      const ending = document.getElementById("inputEnding").value;
-      const jmlAlat = document.getElementById("inputJmlAlat").value;
-      const jenisAlat = document.getElementById("inputJenisAlat").value;
-      const lokasi = document.getElementById("inputLokasi").value;
-      const nilaiInput = Number(document.getElementById("inputNilaiKontrak").value);
-      const nilaiFormatted = !isNaN(nilaiInput) ? nilaiInput.toLocaleString("id-ID") : document.getElementById("inputNilaiKontrak").value;
-      const status = document.getElementById("inputStatus").value;
-      const ket = document.getElementById("inputKeterangan").value || "-";
-
-      const table = document.getElementById("contractTable");
-
-      if (editIndex !== "") {
-        // Mode Update / Edit Baris yang Ada
-        const row = table.rows[editIndex];
-        row.cells[1].innerText = noSpsa;
-        row.cells[2].innerText = customer;
-        row.cells[3].innerText = tglKontrak;
-        row.cells[4].innerText = start;
-        row.cells[5].innerText = ending;
-        row.cells[6].innerText = jmlAlat;
-        row.cells[7].innerText = jenisAlat;
-        row.cells[9].innerText = lokasi;
-        row.cells[12].innerText = "Rp " + nilaiFormatted;
-        row.cells[14].innerHTML = "<b>Rp " + nilaiFormatted + "</b>";
-        row.cells[15].innerHTML = `<span class="badge-status-${status.toLowerCase()}">${status}</span>`;
-        row.cells[21].innerText = ket;
-        alert("Data kontrak berhasil diperbarui!");
-      } else {
-        // Mode Tambah Baris Baru
-        const tbody = table.getElementsByTagName("tbody")[0];
-        const rowCount = tbody.rows.length + 1;
-        const newRow = tbody.insertRow(0);
-        newRow.innerHTML = `
-          <td>${rowCount}</td>
-          <td>${noSpsa}</td>
-          <td class="text-left">${customer}</td>
-          <td>${tglKontrak}</td>
-          <td>${start}</td>
-          <td>${ending}</td>
-          <td>${jmlAlat}</td>
-          <td class="text-left">${jenisAlat}</td>
-          <td class="text-left">-</td>
-          <td class="text-left">${lokasi}</td>
-          <td>1</td>
-          <td class="text-right">Rp ${nilaiFormatted}</td>
-          <td class="text-right">Rp ${nilaiFormatted}</td>
-          <td class="text-right">Rp 0</td>
-          <td class="text-right"><b>Rp ${nilaiFormatted}</b></td>
-          <td><span class="badge-status-${status.toLowerCase()}">${status}</span></td>
-          <td>-</td>
-          <td>-</td>
-          <td class="text-right">Rp 0</td>
-          <td class="text-right">Rp 0</td>
-          <td>100%</td>
-          <td class="text-left">${ket}</td>
-          <td>
-            <div class="action-btns">
-              <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </td>
-        `;
-        alert("Kontrak baru berhasil ditambahkan!");
+      if (!window.firebaseDB || !window.firebaseFns) {
+        alert("Koneksi Database belum siap.");
+        return;
       }
 
-      tutupModalKontrakBaru();
+      const { doc, setDoc } = window.firebaseFns;
+      const editId = document.getElementById("editDocId").value;
+      const docId = editId !== "" ? editId : "kontrak_" + Date.now();
+
+      const kontrakData = {
+        noSpsa: document.getElementById("inputNoSPSA").value,
+        customer: document.getElementById("inputCustomer").value,
+        tglKontrak: document.getElementById("inputTglKontrak").value,
+        start: document.getElementById("inputStart").value,
+        ending: document.getElementById("inputEnding").value,
+        jmlAlat: Number(document.getElementById("inputJmlAlat").value),
+        jenisAlat: document.getElementById("inputJenisAlat").value,
+        lokasi: document.getElementById("inputLokasi").value,
+        nilaiKontrak: Number(document.getElementById("inputNilaiKontrak").value) || 0,
+        status: document.getElementById("inputStatus").value,
+        keterangan: document.getElementById("inputKeterangan").value || "-"
+      };
+
+      try {
+        await setDoc(doc(window.firebaseDB, "monitoringKontrak", docId), kontrakData);
+        alert(editId !== "" ? "Data kontrak berhasil diperbarui!" : "Kontrak baru berhasil disimpan secara realtime!");
+        tutupModalKontrakBaru();
+      } catch (error) {
+        console.error("Gagal menyimpan ke Firestore:", error);
+        alert("Terjadi kesalahan saat menyimpan data.");
+      }
     }
 
-    function hapusKontrak(btn) {
+    async function hapusKontrakFirestore(id) {
       if (confirm("Apakah Anda yakin ingin menghapus data kontrak ini?")) {
-        const row = btn.closest("tr");
-        row.remove();
+        if (!window.firebaseDB || !window.firebaseFns) return;
+        try {
+          const { doc, deleteDoc } = window.firebaseFns;
+          await deleteDoc(doc(window.firebaseDB, "monitoringKontrak", id));
+          alert("Data berhasil dihapus!");
+        } catch (error) {
+          console.error("Gagal menghapus data:", error);
+          alert("Gagal menghapus data dari database.");
+        }
       }
     }
 
-    // Fungsi Filter Tabel Interaktif
     function filterTable() {
       const input = document.getElementById("searchInput").value.toLowerCase();
       const statusFilter = document.getElementById("filterStatus").value.toLowerCase();
