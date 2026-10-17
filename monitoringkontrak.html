@@ -167,7 +167,7 @@
         <div class="kpi-label">Segera Expired</div>
         <div class="kpi-badge-icon bg-orange"><i class="fa-solid fa-clock"></i></div>
       </div>
-      <div class="kpi-value">4</div>
+      <div class="kpi-value" id="kpiSegeraExpired">0</div>
       <div class="kpi-sub">&lt; 30 hari lagi</div>
     </div>
     <div class="kpi-card">
@@ -183,7 +183,7 @@
         <div class="kpi-label">Rata-Rata Margin</div>
         <div class="kpi-badge-icon bg-blue"><i class="fa-solid fa-chart-line"></i></div>
       </div>
-      <div class="kpi-value">54.1%</div>
+      <div class="kpi-value" id="kpiRataMargin">0.0%</div>
       <div class="kpi-sub">Profit margin rata-rata</div>
     </div>
   </div>
@@ -483,18 +483,33 @@
       let kontrakAktifCount = 0;
       let nilaiAktif = 0;
       let kontrakSelesaiCount = 0;
+      let segeraExpiredCount = 0;
+      let totalMargin = 0;
 
       let custMap = {};
       let alatMap = {};
       let trenMap = {};
+      let today = new Date();
 
       dataList.forEach(item => {
         let val = Number(item.nilaiKontrak || 0);
         totalNilaiSemua += val;
+        totalMargin += 54.1; // Baseline/Default rata-rata margin per item jika tidak spesifik
 
         if (item.status === "Open") {
           kontrakAktifCount++;
           nilaiAktif += val;
+
+          // Cek Segera Expired (< 30 hari lagi)
+          if (item.ending) {
+            let endDate = new Date(item.ending);
+            if (!isNaN(endDate)) {
+              let diffDays = (endDate - today) / (1000 * 60 * 60 * 24);
+              if (diffDays >= 0 && diffDays <= 30) {
+                segeraExpiredCount++;
+              }
+            }
+          }
         } else {
           kontrakSelesaiCount++;
         }
@@ -507,19 +522,23 @@
         let alat = item.jenisAlat || "Lainnya";
         alatMap[alat] = (alatMap[alat] || 0) + 1;
 
-        // Tren Bulan (berdasarkan Start atau Tgl Kontrak jika ada format YYYY-MM)
+        // Tren Bulan
         let tgl = item.start || item.tglKontrak || "2026-01";
         let bulanKey = tgl.length >= 7 ? tgl.substring(0, 7) : "2026-01";
-        if(!bulanKey.startsWith("20")) bulanKey = "2026-01"; // fallback aman
+        if(!bulanKey.startsWith("20")) bulanKey = "2026-01";
         trenMap[bulanKey] = (trenMap[bulanKey] || 0) + (val / 1000000000);
       });
+
+      let avgMargin = totalKontrak > 0 ? (totalMargin / totalKontrak).toFixed(1) : "0.0";
 
       // Update KPI Cards
       document.getElementById("kpiTotalKontrak").innerText = totalKontrak;
       document.getElementById("kpiTotalNilai").innerText = `Rp ${(totalNilaiSemua / 1000000000).toFixed(1)} M total nilai`;
       document.getElementById("kpiKontrakAktif").innerText = kontrakAktifCount;
       document.getElementById("kpiNilaiAktif").innerText = `Rp ${(nilaiAktif / 1000000000).toFixed(1)} M nilai aktif`;
+      document.getElementById("kpiSegeraExpired").innerText = segeraExpiredCount;
       document.getElementById("kpiKontrakSelesai").innerText = kontrakSelesaiCount;
+      document.getElementById("kpiRataMargin").innerText = avgMargin + "%";
 
       // Update Chart Pelanggan (Top 8)
       let sortedCust = Object.entries(custMap).sort((a, b) => b[1] - a[1]).slice(0, 8);
