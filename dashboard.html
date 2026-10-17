@@ -14,6 +14,7 @@
   <!-- FIREBASE SDK (Modular v10) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -27,9 +28,12 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     window.firebaseDB = db;
     window.firebaseFns = { doc, getDoc, setDoc, onSnapshot };
+    window.firebaseAuth = auth;
+    window.firebaseAuthFns = { signOut };
   </script>
 
   <style>
@@ -210,11 +214,72 @@
       .d3-kpi-grid { grid-template-columns: repeat(2, 1fr); }
       .d3-panel-flex { grid-template-columns: 1fr; }
     }
+
+    /* SIDEBAR INTERAKTIF - tambahan tanpa mengubah komponen dashboard yang sudah ada */
+    body { transition: padding-left .25s ease; }
+    .app-sidebar {
+      position: fixed; z-index: 1000; left: 0; top: 0; bottom: 0; width: 250px;
+      background: #ffffff; color: #334155; border-right: 1px solid #e2e8f0;
+      display: flex; flex-direction: column; transition: width .25s ease, transform .25s ease;
+      box-shadow: 2px 0 12px rgba(15,23,42,.08);
+    }
+    .sidebar-brand { display:flex; align-items:center; gap:11px; padding:18px 17px; min-height:76px; border-bottom:1px solid #e5e7eb; }
+    .sidebar-brand-mark { flex:0 0 40px; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; background:#155eef; color:#fff; font-size:20px; }
+    .sidebar-brand-text { min-width:0; font-weight:800; font-size:12px; line-height:1.35; color:#1e293b; }
+    .sidebar-brand-text small { display:block; color:#64748b; font-size:10px; font-weight:600; }
+    .sidebar-section { padding:20px 17px 8px; font-size:10px; color:#94a3b8; font-weight:800; letter-spacing:1px; }
+    .sidebar-nav { padding:0 10px; display:flex; flex-direction:column; gap:4px; }
+    .sidebar-link { display:flex; align-items:center; gap:13px; min-height:43px; padding:11px 13px; color:#475569; text-decoration:none; border-radius:8px; font-size:12px; font-weight:600; transition:background .18s,color .18s; white-space:nowrap; overflow:hidden; }
+    .sidebar-link i { width:18px; text-align:center; flex:0 0 18px; font-size:15px; }
+    .sidebar-link:hover,.sidebar-link.active { background:#eaf2ff; color:#155eef; }
+    .sidebar-bottom { margin-top:auto; padding:12px 10px 18px; border-top:1px solid #e5e7eb; }
+    .sidebar-toggle { border:0; background:transparent; color:#475569; cursor:pointer; font-size:16px; width:34px; height:34px; border-radius:8px; }
+    .sidebar-toggle:hover { background:#eaf2ff; color:#155eef; }
+    .app-main { margin-left:250px; min-width:0; transition:margin-left .25s ease; }
+    .topbar-tools { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+    .logout-link { cursor:pointer; border:0; background:transparent; color:#dc3545; display:flex; align-items:center; gap:10px; padding:11px 13px; width:100%; font:inherit; font-size:12px; font-weight:700; text-align:left; border-radius:8px; }
+    .logout-link:hover { background:#fff1f2; }
+    body.sidebar-collapsed .app-sidebar { width:72px; }
+    body.sidebar-collapsed .app-main { margin-left:72px; }
+    body.sidebar-collapsed .sidebar-brand { padding-left:16px; padding-right:16px; }
+    body.sidebar-collapsed .sidebar-brand-text, body.sidebar-collapsed .sidebar-section,
+    body.sidebar-collapsed .sidebar-link span, body.sidebar-collapsed .logout-link span { display:none; }
+    body.sidebar-collapsed .sidebar-nav { padding:0 9px; }
+    body.sidebar-collapsed .sidebar-link { justify-content:center; padding-left:0; padding-right:0; }
+    body.sidebar-collapsed .logout-link { justify-content:center; padding-left:0; padding-right:0; }
+    @media (max-width: 760px) {
+      .app-sidebar { width:250px; transform:translateX(-100%); }
+      body.sidebar-mobile-open .app-sidebar { transform:translateX(0); }
+      .app-main, body.sidebar-collapsed .app-main { margin-left:0; }
+      body { padding:10px; }
+      .header-container { flex-wrap:wrap; gap:10px; }
+      .header-info { flex-wrap:wrap; }
+    }
+
   </style>
 </head>
 
 <body>
-
+  <aside class="app-sidebar" id="appSidebar" aria-label="Navigasi utama">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-mark"><i class="fa-solid fa-building"></i></div>
+      <div class="sidebar-brand-text">PT. Waskita Beton Precast, Tbk<small>Financial Performance</small></div>
+    </div>
+    <div class="sidebar-section">MENU UTAMA</div>
+    <nav class="sidebar-nav">
+      <a href="#dashboardPart1" class="sidebar-link active" data-nav="dashboardPart1"><i class="fa-solid fa-house"></i><span>Dashboard Utama</span></a>
+      <a href="nkb.html" class="sidebar-link"><i class="fa-solid fa-chart-column"></i><span>Dashboard NKB</span></a>
+      <a href="nkd.html" class="sidebar-link"><i class="fa-solid fa-chart-line"></i><span>Dashboard NKD</span></a>
+      <a href="piutang.html" class="sidebar-link"><i class="fa-solid fa-file-invoice-dollar"></i><span>Dashboard Piutang</span></a>
+      <a href="admin-input.html" class="sidebar-link"><i class="fa-solid fa-pen-to-square"></i><span>Admin Input</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <button type="button" class="sidebar-link" id="sidebarCollapse" style="width:100%;border:0;background:transparent;cursor:pointer;"><i class="fa-solid fa-angles-left"></i><span>Tutup Sidebar</span></button>
+      <button type="button" class="logout-link" id="logoutButton"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></button>
+    </div>
+  </aside>
+  <main class="app-main" id="appMain">
+    <div class="topbar-tools"><button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="Buka atau tutup sidebar" title="Buka/tutup sidebar"><i class="fa-solid fa-bars"></i></button></div>
   <!-- HEADER -->
   <div class="header-container">
     <div class="title-area">
@@ -1485,5 +1550,33 @@
     });
   </script>
 
+
+  </main>
+  <script>
+    (function () {
+      const body = document.body;
+      const collapse = document.getElementById('sidebarCollapse');
+      const toggle = document.getElementById('sidebarToggle');
+      const logout = document.getElementById('logoutButton');
+      function toggleSidebar() {
+        if (window.matchMedia('(max-width: 760px)').matches) body.classList.toggle('sidebar-mobile-open');
+        else body.classList.toggle('sidebar-collapsed');
+      }
+      if (collapse) collapse.addEventListener('click', toggleSidebar);
+      if (toggle) toggle.addEventListener('click', toggleSidebar);
+      document.querySelectorAll('.sidebar-link[data-nav]').forEach(link => link.addEventListener('click', () => {
+        document.querySelectorAll('.sidebar-link[data-nav]').forEach(item => item.classList.remove('active'));
+        link.classList.add('active');
+        if (window.matchMedia('(max-width: 760px)').matches) body.classList.remove('sidebar-mobile-open');
+      }));
+      if (logout) logout.addEventListener('click', async () => {
+        logout.disabled = true;
+        try {
+          if (window.firebaseAuth && window.firebaseAuthFns) await window.firebaseAuthFns.signOut(window.firebaseAuth);
+        } catch (error) { console.error('Gagal mengakhiri sesi Firebase:', error); }
+        finally { window.location.replace('login.html'); }
+      });
+    })();
+  </script>
 </body>
 </html>
