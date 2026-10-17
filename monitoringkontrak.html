@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Monitoring Kontrak - PT Waskita Beton Precast, Tbk</title>
-  <!-- FontAwesome & Chart.js -->
+  <!-- FontAwesome, Chart.js & SheetJS (xlsx) untuk Impor Excel/CSV -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <!-- FIREBASE SDK (Modular v10) -->
   <script type="module">
@@ -127,6 +128,9 @@
 </head>
 <body>
 
+  <!-- Hidden File Input untuk Impor Excel/CSV -->
+  <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" style="display: none;" onchange="prosesFileExcel(event)">
+
   <!-- Top Header -->
   <div class="top-header">
     <div class="brand-area">
@@ -139,7 +143,7 @@
     <div class="top-actions">
       <a href="dashboard.html" class="btn-action"><i class="fa-solid fa-house"></i> Dashboard Utama</a>
       <button class="btn-action" onclick="location.reload()"><i class="fa-solid fa-rotate"></i> Muat Ulang</button>
-      <button class="btn-action"><i class="fa-solid fa-file-excel"></i> Impor CSV</button>
+      <button class="btn-action" onclick="bukaPilihFileExcel()"><i class="fa-solid fa-file-excel"></i> Impor CSV</button>
       <button class="btn-action btn-primary" onclick="bukaModalKontrakBaru()"><i class="fa-solid fa-plus"></i> Kontrak Baru</button>
     </div>
   </div>
@@ -449,6 +453,125 @@
           }
         }
       });
+    }
+
+    // Fungsi Trigger Pilih File Excel/CSV
+    function bukaPilihFileExcel() {
+      document.getElementById('excelFileInput').click();
+    }
+
+    // Fungsi Parsing dan Impor Excel/CSV secara Otomatis
+    async function prosesFileExcel(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+          
+          // Cari sheet yang sesuai ('All', atau sheet pertama)
+          let sheetName = workbook.SheetNames.includes('All') ? 'All' : workbook.SheetNames[0];
+          if (workbook.SheetNames.includes('2025')) sheetName = '2025'; // Fallback umum
+          
+          const worksheet = workbook.Sheets[sheetName];
+          const jsonRaw = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+          // Deteksi baris header (mencari kata kunci 'No. SPSA' atau 'Customer')
+          let headerRowIdx = 0;
+          for (let i = 0; i < Math.min(jsonRaw.length, 10); i++) {
+            let rowStr = JSON.stringify(jsonRaw[i]).toLowerCase();
+            if (rowStr.includes('spsa') || rowStr.includes('customer')) {
+              headerRowIdx = i;
+              break;
+            }
+          }
+
+          const headers = jsonRaw[headerRowIdx].map(h => String(h || "").trim().toLowerCase());
+          
+          // Pemetaan indeks kolom secara fleksibel
+          const getColIdx = (keywords) => {
+            return headers.findIndex(h => keywords.some(k => h.includes(k)));
+          };
+
+          const idxSpsa = getColIdx(['spsa']);
+          const idxCust = getColIdx(['customer']);
+          const idxTglKontrak = getColIdx(['tanggal kontrak', 'tgl kontrak']);
+          const idxStart = getColIdx(['start', 'tanggal aktif']);
+          const idxEnding = getColIdx(['ending']);
+          const idxJmlUnit = getColIdx(['jumlah unit', 'jumlah alat', 'jml alat']);
+          const idxJenisAlat = getColIdx(['jenis alat', 'tipe alat']);
+          const idxNkp = getColIdx(['nkp']);
+          const idxLokasi = getColIdx(['lokasi']);
+          const idxLamaSewa = getColIdx(['lama sewa']);
+          const idxHargaSatuan = getColIdx(['harga satuan']);
+          const idxDpp = getColIdx(['dpp']);
+          const idxPpn = getColIdx(['ppn']);
+          const idxNilaiKontrak = getColIdx(['nilai kontrak']);
+          const idxStatus = getColIdx(['status kontrak']);
+          const idxKwitansi = getColIdx(['kwitansi']);
+          const idxTglInvoice = getColIdx(['tanggal invoice', 'tanggal kwitansi']);
+          const idxCogm = getColIdx(['cogm']);
+          const idxCogs = getColIdx(['cogs']);
+          const idxMargin = getColIdx(['margin']);
+          const idxKet = getColIdx(['keterangan']);
+
+          let importedCount = 0;
+          const { doc, setDoc } = window.firebaseFns;
+
+          for (let i = headerRowIdx + 1; i < jsonRaw.length; i++) {
+            let row = jsonRaw[i];
+            if (!row || row.length === 0) continue;
+
+            let customerVal = idxCust !== -1 ? row[idxCust] : null;
+            let spsaVal = idxSpsa !== -1 ? row[idxSpsa] : null;
+            if (!customerVal && !spsaVal) continue; // Lewati baris kosong
+
+            const formatDate = (val) => {
+              if (!val) return "";
+              if (val instanceof Date) return val.toISOString().split('T')[0];
+              let d = new Date(val);
+              return !isNaN(d) ? d.toISOString().split('T')[0] : String(val);
+            };
+
+            let kontrakData = {
+              noSpsa: spsaVal ? String(spsaVal) : "-",
+              customer: customerVal ? String(customerVal) : "Lainnya",
+              tglKontrak: formatDate(idxTglKontrak !== -1 ? row[idxTglKontrak] : ""),
+              start: formatDate(idxStart !== -1 ? row[idxStart] : ""),
+              ending: formatDate(idxEnding !== -1 ? row[idxEnding] : ""),
+              jmlAlat: Number(idxJmlUnit !== -1 ? row[idxJmlUnit] : 1) || 1,
+              jenisAlat: idxJenisAlat !== -1 && row[idxJenisAlat] ? String(row[idxJenisAlat]) : "Truck Mixer",
+              nkp: idxNkp !== -1 && row[idxNkp] ? String(row[idxNkp]) : "-",
+              lokasi: idxLokasi !== -1 && row[idxLokasi] ? String(row[idxLokasi]) : "Proyek",
+              lamaSewa: Number(idxLamaSewa !== -1 ? row[idxLamaSewa] : 1) || 1,
+              hargaSatuan: Number(idxHargaSatuan !== -1 ? row[idxHargaSatuan] : 0) || 0,
+              dpp: Number(idxDpp !== -1 ? row[idxDpp] : 0) || 0,
+              ppn: Number(idxPpn !== -1 ? row[idxPpn] : 0) || 0,
+              nilaiKontrak: Number(idxNilaiKontrak !== -1 ? row[idxNilaiKontrak] : 0) || 0,
+              status: idxStatus !== -1 && row[idxStatus] ? String(row[idxStatus]) : "Open",
+              kwitansi: idxKwitansi !== -1 && row[idxKwitansi] ? String(row[idxKwitansi]) : "-",
+              tglInvoice: formatDate(idxTglInvoice !== -1 ? row[idxTglInvoice] : ""),
+              cogm: Number(idxCogm !== -1 ? row[idxCogm] : 0) || 0,
+              cogs: Number(idxCogs !== -1 ? row[idxCogs] : 0) || 0,
+              margin: idxMargin !== -1 && row[idxMargin] ? String(row[idxMargin]) : "100%",
+              keterangan: idxKet !== -1 && row[idxKet] ? String(row[idxKet]) : "-"
+            };
+
+            let docId = "import_" + Date.now() + "_" + i;
+            await setDoc(doc(window.firebaseDB, "monitoringKontrak", docId), kontrakData);
+            importedCount++;
+          }
+
+          alert(`Berhasil mengimpor ${importedCount} data kontrak secara otomatis ke database!`);
+          event.target.value = ""; // Reset input file
+        } catch (err) {
+          console.error("Gagal memproses file Excel/CSV:", err);
+          alert("Terjadi kesalahan saat membaca file. Pastikan format file sesuai.");
+        }
+      };
+      reader.readAsArrayBuffer(file);
     }
 
     // Koneksi Realtime Firestore & Pembaruan Dashboard Otomatis
