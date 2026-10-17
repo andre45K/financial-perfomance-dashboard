@@ -471,15 +471,13 @@
           const data = new Uint8Array(e.target.result);
           const workbook = XLSX.read(data, { type: 'array', cellDates: true });
           
-          // Cari sheet yang sesuai ('All', atau sheet pertama)
-          let sheetName = workbook.SheetNames.includes('All') ? 'All' : workbook.SheetNames[0];
-          if (workbook.SheetNames.includes('2025')) sheetName = '2025'; // Fallback umum
-          
+          // Cari sheet yang sesuai ('All', '2025', atau sheet pertama)
+          let sheetName = workbook.SheetNames.includes('All') ? 'All' : (workbook.SheetNames.includes('2025') ? '2025' : workbook.SheetNames[0]);
           const worksheet = workbook.Sheets[sheetName];
           const jsonRaw = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-          // Deteksi baris header (mencari kata kunci 'No. SPSA' atau 'Customer')
-          let headerRowIdx = 0;
+          // Deteksi baris header secara fleksibel (mencari baris yang mengandung 'No. SPSA' atau 'Customer')
+          let headerRowIdx = -1;
           for (let i = 0; i < Math.min(jsonRaw.length, 10); i++) {
             let rowStr = JSON.stringify(jsonRaw[i]).toLowerCase();
             if (rowStr.includes('spsa') || rowStr.includes('customer')) {
@@ -487,10 +485,11 @@
               break;
             }
           }
+          if (headerRowIdx === -1) headerRowIdx = 1; // Default fallback baris ke-2
 
           const headers = jsonRaw[headerRowIdx].map(h => String(h || "").trim().toLowerCase());
           
-          // Pemetaan indeks kolom secara fleksibel
+          // Pemetaan indeks kolom secara fleksibel berdasarkan keyword
           const getColIdx = (keywords) => {
             return headers.findIndex(h => keywords.some(k => h.includes(k)));
           };
@@ -520,6 +519,24 @@
           let importedCount = 0;
           const { doc, setDoc } = window.firebaseFns;
 
+          // Helper format tanggal dari serial Excel / Date object / String
+          const formatDate = (val) => {
+            if (!val) return "";
+            if (val instanceof Date && !isNaN(val)) return val.toISOString().split('T')[0];
+            if (typeof val === 'number') {
+              // Konversi Excel serial date ke Date JS
+              let d = XLSX.SSF.parse_date_code(val);
+              if (d) {
+                let m = String(d.m).padStart(2, '0');
+                let day = String(d.d).padStart(2, '0');
+                return `${d.y}-${m}-${day}`;
+              }
+            }
+            let parsed = new Date(val);
+            if (!isNaN(parsed)) return parsed.toISOString().split('T')[0];
+            return String(val);
+          };
+
           for (let i = headerRowIdx + 1; i < jsonRaw.length; i++) {
             let row = jsonRaw[i];
             if (!row || row.length === 0) continue;
@@ -527,13 +544,6 @@
             let customerVal = idxCust !== -1 ? row[idxCust] : null;
             let spsaVal = idxSpsa !== -1 ? row[idxSpsa] : null;
             if (!customerVal && !spsaVal) continue; // Lewati baris kosong
-
-            const formatDate = (val) => {
-              if (!val) return "";
-              if (val instanceof Date) return val.toISOString().split('T')[0];
-              let d = new Date(val);
-              return !isNaN(d) ? d.toISOString().split('T')[0] : String(val);
-            };
 
             let kontrakData = {
               noSpsa: spsaVal ? String(spsaVal) : "-",
