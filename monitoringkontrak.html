@@ -151,16 +151,16 @@
         <div class="kpi-label">Total Kontrak</div>
         <div class="kpi-badge-icon bg-yellow"><i class="fa-solid fa-file-lines"></i></div>
       </div>
-      <div class="kpi-value" id="kpiTotalKontrak">64</div>
-      <div class="kpi-sub">Total data kontrak</div>
+      <div class="kpi-value" id="kpiTotalKontrak">0</div>
+      <div class="kpi-sub" id="kpiTotalNilai">Rp 0 total nilai</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-card-header">
         <div class="kpi-label">Kontrak Aktif</div>
         <div class="kpi-badge-icon bg-green"><i class="fa-solid fa-bolt"></i></div>
       </div>
-      <div class="kpi-value" id="kpiKontrakAktif">20</div>
-      <div class="kpi-sub">Status Open</div>
+      <div class="kpi-value" id="kpiKontrakAktif">0</div>
+      <div class="kpi-sub" id="kpiNilaiAktif">Rp 0 nilai aktif</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-card-header">
@@ -175,7 +175,7 @@
         <div class="kpi-label">Expired / Selesai</div>
         <div class="kpi-badge-icon bg-red"><i class="fa-solid fa-circle-check"></i></div>
       </div>
-      <div class="kpi-value" id="kpiKontrakSelesai">41</div>
+      <div class="kpi-value" id="kpiKontrakSelesai">0</div>
       <div class="kpi-sub">Status Closed</div>
     </div>
     <div class="kpi-card">
@@ -344,9 +344,13 @@
     </div>
   </div>
 
-  <!-- Script Chart & Realtime Firestore Integration -->
+  <!-- Script Chart & Dynamic Dashboard Integration -->
   <script>
     let globalContractsData = [];
+    let chartPelangganInstance = null;
+    let chartStatusInstance = null;
+    let chartAlatInstance = null;
+    let chartTrenInstance = null;
 
     document.addEventListener("DOMContentLoaded", () => {
       initCharts();
@@ -354,12 +358,10 @@
     });
 
     function initCharts() {
-      new Chart(document.getElementById("chartPelanggan").getContext("2d"), {
+      // 1. Chart Pelanggan
+      chartPelangganInstance = new Chart(document.getElementById("chartPelanggan").getContext("2d"), {
         type: "bar",
-        data: {
-          labels: ["Indosarana Jaya", "Sumber Urip Sejati", "Waskita Karya", "Tirta Dan Mitra", "Sisaya Artha", "Liga Adhi Buana", "Trans Ringo", "Baja Cosmo"],
-          datasets: [{ data: [5.6, 5.2, 3.4, 2.3, 1.8, 1.4, 0.9, 0.5], backgroundColor: "#f59e0b", borderRadius: 4 }]
-        },
+        data: { labels: [], datasets: [{ data: [], backgroundColor: "#f59e0b", borderRadius: 4 }] },
         options: {
           indexAxis: 'y', responsive: true, maintainAspectRatio: false,
           plugins: { legend: { display: false } },
@@ -370,21 +372,20 @@
         }
       });
 
-      new Chart(document.getElementById("chartStatus").getContext("2d"), {
+      // 2. Chart Status
+      chartStatusInstance = new Chart(document.getElementById("chartStatus").getContext("2d"), {
         type: 'doughnut',
         data: {
           labels: ['Aktif', 'Selesai'],
-          datasets: [{ data: [16, 34], backgroundColor: ['#22c55e', '#64748b'], borderWidth: 0 }]
+          datasets: [{ data: [0, 0], backgroundColor: ['#22c55e', '#64748b'], borderWidth: 0 }]
         },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 10 } } } }
       });
 
-      new Chart(document.getElementById("chartAlat").getContext("2d"), {
+      // 3. Chart Jenis Alat
+      chartAlatInstance = new Chart(document.getElementById("chartAlat").getContext("2d"), {
         type: 'bar',
-        data: {
-          labels: ['Stone Crusher', 'Truck Mixer', 'Truck Trailer', 'Mobile Crane', 'Silo', 'Dump Truck'],
-          datasets: [{ data: [2, 44, 16, 2, 1, 2], backgroundColor: '#3b82f6', borderRadius: 4 }]
-        },
+        data: { labels: [], datasets: [{ data: [], backgroundColor: '#3b82f6', borderRadius: 4 }] },
         options: {
           responsive: true, maintainAspectRatio: false,
           plugins: { legend: { display: false } },
@@ -395,12 +396,10 @@
         }
       });
 
-      new Chart(document.getElementById("chartTren").getContext("2d"), {
+      // 4. Chart Tren Bulan
+      chartTrenInstance = new Chart(document.getElementById("chartTren").getContext("2d"), {
         type: 'line',
-        data: {
-          labels: ['2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09', '2026-10'],
-          datasets: [{ data: [1.3, 1.1, 0.4, 0.2, 2.7, 1.8, 1.5, 1.2, 2.9, 0.2], borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', fill: true, tension: 0.3, pointRadius: 3 }]
-        },
+        data: { labels: [], datasets: [{ data: [], borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', fill: true, tension: 0.3, pointRadius: 3 }] },
         options: {
           responsive: true, maintainAspectRatio: false,
           plugins: { legend: { display: false } },
@@ -412,7 +411,7 @@
       });
     }
 
-    // Koneksi Realtime Firestore
+    // Koneksi Realtime Firestore & Pembaruan Dashboard Otomatis
     function initFirebaseRealtimeSync() {
       const checkInterval = setInterval(() => {
         if (window.firebaseDB && window.firebaseFns) {
@@ -426,6 +425,7 @@
               globalContractsData.push({ id: docSnap.id, ...docSnap.data() });
             });
             renderTableData(globalContractsData);
+            updateDashboardMetrics(globalContractsData);
           }, (error) => {
             console.error("Gagal menyinkronkan data kontrak realtime:", error);
           });
@@ -437,13 +437,7 @@
       const tbody = document.querySelector("#contractTable tbody");
       tbody.innerHTML = "";
 
-      let totalOpen = 0;
-      let totalClosed = 0;
-
       dataList.forEach((item, index) => {
-        if (item.status === "Open") totalOpen++;
-        else totalClosed++;
-
         const tr = document.createElement("tr");
         if (index === 5) tr.className = "highlight-row-blue";
         if (index === 6) tr.className = "highlight-row-pink";
@@ -480,10 +474,74 @@
         `;
         tbody.appendChild(tr);
       });
+    }
 
-      document.getElementById("kpiTotalKontrak").innerText = dataList.length;
-      document.getElementById("kpiKontrakAktif").innerText = totalOpen;
-      document.getElementById("kpiKontrakSelesai").innerText = totalClosed;
+    // Fungsi Kalkulasi & Pembaruan Otomatis KPI dan Grafik
+    function updateDashboardMetrics(dataList) {
+      let totalKontrak = dataList.length;
+      let totalNilaiSemua = 0;
+      let kontrakAktifCount = 0;
+      let nilaiAktif = 0;
+      let kontrakSelesaiCount = 0;
+
+      let custMap = {};
+      let alatMap = {};
+      let trenMap = {};
+
+      dataList.forEach(item => {
+        let val = Number(item.nilaiKontrak || 0);
+        totalNilaiSemua += val;
+
+        if (item.status === "Open") {
+          kontrakAktifCount++;
+          nilaiAktif += val;
+        } else {
+          kontrakSelesaiCount++;
+        }
+
+        // Pelanggan (Top)
+        let cust = item.customer || "Lainnya";
+        custMap[cust] = (custMap[cust] || 0) + (val / 1000000000); // dalam Miliar
+
+        // Jenis Alat
+        let alat = item.jenisAlat || "Lainnya";
+        alatMap[alat] = (alatMap[alat] || 0) + 1;
+
+        // Tren Bulan (berdasarkan Start atau Tgl Kontrak jika ada format YYYY-MM)
+        let tgl = item.start || item.tglKontrak || "2026-01";
+        let bulanKey = tgl.length >= 7 ? tgl.substring(0, 7) : "2026-01";
+        if(!bulanKey.startsWith("20")) bulanKey = "2026-01"; // fallback aman
+        trenMap[bulanKey] = (trenMap[bulanKey] || 0) + (val / 1000000000);
+      });
+
+      // Update KPI Cards
+      document.getElementById("kpiTotalKontrak").innerText = totalKontrak;
+      document.getElementById("kpiTotalNilai").innerText = `Rp ${(totalNilaiSemua / 1000000000).toFixed(1)} M total nilai`;
+      document.getElementById("kpiKontrakAktif").innerText = kontrakAktifCount;
+      document.getElementById("kpiNilaiAktif").innerText = `Rp ${(nilaiAktif / 1000000000).toFixed(1)} M nilai aktif`;
+      document.getElementById("kpiKontrakSelesai").innerText = kontrakSelesaiCount;
+
+      // Update Chart Pelanggan (Top 8)
+      let sortedCust = Object.entries(custMap).sort((a, b) => b[1] - a[1]).slice(0, 8);
+      chartPelangganInstance.data.labels = sortedCust.map(x => x[0]);
+      chartPelangganInstance.data.datasets[0].data = sortedCust.map(x => Number(x[1].toFixed(2)));
+      chartPelangganInstance.update();
+
+      // Update Chart Status
+      chartStatusInstance.data.datasets[0].data = [kontrakAktifCount, kontrakSelesaiCount];
+      chartStatusInstance.update();
+
+      // Update Chart Jenis Alat
+      let sortedAlat = Object.entries(alatMap);
+      chartAlatInstance.data.labels = sortedAlat.map(x => x[0]);
+      chartAlatInstance.data.datasets[0].data = sortedAlat.map(x => x[1]);
+      chartAlatInstance.update();
+
+      // Update Chart Tren Bulan
+      let sortedTren = Object.entries(trenMap).sort();
+      chartTrenInstance.data.labels = sortedTren.length > 0 ? sortedTren.map(x => x[0]) : ['2026-01'];
+      chartTrenInstance.data.datasets[0].data = sortedTren.length > 0 ? sortedTren.map(x => Number(x[1].toFixed(2))) : [0];
+      chartTrenInstance.update();
     }
 
     function bukaModalKontrakBaru() {
