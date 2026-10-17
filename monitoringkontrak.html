@@ -103,7 +103,7 @@
 
     /* Modal Form Kontrak */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
-    .modal-container { background: #0f172a; border: 1px solid #334155; width: 600px; max-width: 90%; border-radius: 10px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    .modal-container { background: #0f172a; border: 1px solid #334155; width: 680px; max-width: 95%; max-height: 90vh; overflow-y: auto; border-radius: 10px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
     .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 10px; margin-bottom: 15px; }
     .modal-title { font-size: 15px; font-weight: 800; color: #fff; }
     .modal-close { background: none; border: none; color: #94a3b8; font-size: 16px; cursor: pointer; }
@@ -317,12 +317,32 @@
             </select>
           </div>
           <div class="form-group">
+            <label class="form-label">NKP</label>
+            <input type="text" class="form-input" id="inputNkp" placeholder="Nilai Kontrak Proyek / -">
+          </div>
+          <div class="form-group">
             <label class="form-label">Lokasi</label>
             <input type="text" class="form-input" id="inputLokasi" placeholder="Lokasi Proyek" required>
           </div>
           <div class="form-group">
+            <label class="form-label">Lama Sewa (Bulan)</label>
+            <input type="number" class="form-input" id="inputLamaSewa" value="1" min="1" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Harga Satuan (Rp)</label>
+            <input type="number" class="form-input" id="inputHargaSatuan" placeholder="Harga Satuan" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">DPP (Rp)</label>
+            <input type="number" class="form-input" id="inputDpp" placeholder="DPP" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">PPN 11% (Rp)</label>
+            <input type="number" class="form-input" id="inputPpn" placeholder="PPN 11%">
+          </div>
+          <div class="form-group">
             <label class="form-label">Nilai Kontrak (Rp)</label>
-            <input type="text" class="form-input" id="inputNilaiKontrak" placeholder="Total Nilai Kontrak" required>
+            <input type="number" class="form-input" id="inputNilaiKontrak" placeholder="Total Nilai Kontrak" required>
           </div>
           <div class="form-group">
             <label class="form-label">Status Kontrak</label>
@@ -330,6 +350,26 @@
               <option value="Open">Open (Aktif)</option>
               <option value="Closed">Closed (Selesai)</option>
             </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">No. Kwitansi</label>
+            <input type="text" class="form-input" id="inputKwitansi" placeholder="No. Kwitansi / -">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tanggal Invoice</label>
+            <input type="date" class="form-input" id="inputTglInvoice">
+          </div>
+          <div class="form-group">
+            <label class="form-label">COGM (Rp)</label>
+            <input type="number" class="form-input" id="inputCogm" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">COGS (Rp)</label>
+            <input type="number" class="form-input" id="inputCogs" value="0">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Margin (%)</label>
+            <input type="text" class="form-input" id="inputMargin" placeholder="Contoh: 100%">
           </div>
           <div class="form-group full">
             <label class="form-label">Keterangan</label>
@@ -470,19 +510,19 @@
           <td>${item.ending || "-"}</td>
           <td>${item.jmlAlat || 1}</td>
           <td class="text-left">${item.jenisAlat || "-"}</td>
-          <td class="text-left">-</td>
+          <td class="text-left">${item.nkp || "-"}</td>
           <td class="text-left">${item.lokasi || "-"}</td>
-          <td>1</td>
-          <td class="text-right">Rp ${Number(item.nilaiKontrak || 0).toLocaleString("id-ID")}</td>
-          <td class="text-right">Rp ${Number(item.nilaiKontrak || 0).toLocaleString("id-ID")}</td>
-          <td class="text-right">Rp 0</td>
+          <td>${item.lamaSewa || 1}</td>
+          <td class="text-right">Rp ${Number(item.hargaSatuan || 0).toLocaleString("id-ID")}</td>
+          <td class="text-right">Rp ${Number(item.dpp || 0).toLocaleString("id-ID")}</td>
+          <td class="text-right">Rp ${Number(item.ppn || 0).toLocaleString("id-ID")}</td>
           <td class="text-right"><b>Rp ${Number(item.nilaiKontrak || 0).toLocaleString("id-ID")}</b></td>
           <td><span class="${statusBadgeClass}">${statusText}</span></td>
-          <td>-</td>
-          <td>-</td>
-          <td class="text-right">Rp 0</td>
-          <td class="text-right">Rp 0</td>
-          <td>100%</td>
+          <td>${item.kwitansi || "-"}</td>
+          <td>${item.tglInvoice || "-"}</td>
+          <td class="text-right">Rp ${Number(item.cogm || 0).toLocaleString("id-ID")}</td>
+          <td class="text-right">Rp ${Number(item.cogs || 0).toLocaleString("id-ID")}</td>
+          <td>${item.margin || "100%"}</td>
           <td class="text-left">${item.keterangan || "-"}</td>
           <td>
             <div class="action-btns">
@@ -503,7 +543,7 @@
       let nilaiAktif = 0;
       let kontrakSelesaiCount = 0;
       let segeraExpiredCount = 0;
-      let totalMargin = 0;
+      let totalMarginVal = 0;
 
       let custMap = {};
       let alatMap = {};
@@ -514,7 +554,10 @@
       dataList.forEach(item => {
         let val = Number(item.nilaiKontrak || 0);
         totalNilaiSemua += val;
-        totalMargin += 54.1; // Baseline rata-rata margin
+
+        let marginStr = String(item.margin || "54.1").replace("%", "");
+        let marginNum = parseFloat(marginStr) || 54.1;
+        totalMarginVal += marginNum;
 
         if (item.status === "Open") {
           kontrakAktifCount++;
@@ -550,7 +593,7 @@
         trenMap[bulanKey] = (trenMap[bulanKey] || 0) + (val / 1000000000);
       });
 
-      let avgMargin = totalKontrak > 0 ? (totalMargin / totalKontrak).toFixed(1) : "0.0";
+      let avgMargin = totalKontrak > 0 ? (totalMarginVal / totalKontrak).toFixed(1) : "0.0";
 
       // Update KPI Cards
       document.getElementById("kpiTotalKontrak").innerText = totalKontrak;
@@ -610,9 +653,19 @@
       document.getElementById("inputEnding").value = item.ending || "";
       document.getElementById("inputJmlAlat").value = item.jmlAlat || 1;
       document.getElementById("inputJenisAlat").value = item.jenisAlat || "Truck Mixer";
+      document.getElementById("inputNkp").value = item.nkp || "";
       document.getElementById("inputLokasi").value = item.lokasi || "";
+      document.getElementById("inputLamaSewa").value = item.lamaSewa || 1;
+      document.getElementById("inputHargaSatuan").value = item.hargaSatuan || "";
+      document.getElementById("inputDpp").value = item.dpp || "";
+      document.getElementById("inputPpn").value = item.ppn || "";
       document.getElementById("inputNilaiKontrak").value = item.nilaiKontrak || "";
       document.getElementById("inputStatus").value = item.status || "Open";
+      document.getElementById("inputKwitansi").value = item.kwitansi || "";
+      document.getElementById("inputTglInvoice").value = item.tglInvoice || "";
+      document.getElementById("inputCogm").value = item.cogm || 0;
+      document.getElementById("inputCogs").value = item.cogs || 0;
+      document.getElementById("inputMargin").value = item.margin || "";
       document.getElementById("inputKeterangan").value = item.keterangan || "";
 
       document.getElementById("modalKontrak").style.display = "flex";
@@ -651,9 +704,19 @@
         ending: endingVal,
         jmlAlat: Number(document.getElementById("inputJmlAlat").value),
         jenisAlat: document.getElementById("inputJenisAlat").value,
+        nkp: document.getElementById("inputNkp").value || "-",
         lokasi: document.getElementById("inputLokasi").value,
+        lamaSewa: Number(document.getElementById("inputLamaSewa").value) || 1,
+        hargaSatuan: Number(document.getElementById("inputHargaSatuan").value) || 0,
+        dpp: Number(document.getElementById("inputDpp").value) || 0,
+        ppn: Number(document.getElementById("inputPpn").value) || 0,
         nilaiKontrak: Number(document.getElementById("inputNilaiKontrak").value) || 0,
         status: statusVal,
+        kwitansi: document.getElementById("inputKwitansi").value || "-",
+        tglInvoice: document.getElementById("inputTglInvoice").value || "-",
+        cogm: Number(document.getElementById("inputCogm").value) || 0,
+        cogs: Number(document.getElementById("inputCogs").value) || 0,
+        margin: document.getElementById("inputMargin").value || "100%",
         keterangan: document.getElementById("inputKeterangan").value || "-"
       };
 
