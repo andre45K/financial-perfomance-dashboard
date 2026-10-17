@@ -291,15 +291,15 @@
           </div>
           <div class="form-group">
             <label class="form-label">Tanggal Kontrak</label>
-            <input type="text" class="form-input" id="inputTglKontrak" placeholder="Contoh: 11-Jan-26" required>
+            <input type="date" class="form-input" id="inputTglKontrak" required>
           </div>
           <div class="form-group">
             <label class="form-label">Tanggal Start</label>
-            <input type="text" class="form-input" id="inputStart" placeholder="Contoh: 15-Jan-26" required>
+            <input type="date" class="form-input" id="inputStart" required>
           </div>
           <div class="form-group">
             <label class="form-label">Tanggal Ending</label>
-            <input type="text" class="form-input" id="inputEnding" placeholder="Contoh: 14-Feb-26" required>
+            <input type="date" class="form-input" id="inputEnding" required>
           </div>
           <div class="form-group">
             <label class="form-label">Jumlah Alat (Unit)</label>
@@ -421,8 +421,24 @@
 
           onSnapshot(colRef, (snapshot) => {
             globalContractsData = [];
+            let today = new Date();
+            today.setHours(0, 0, 0, 0);
+
             snapshot.forEach((docSnap) => {
-              globalContractsData.push({ id: docSnap.id, ...docSnap.data() });
+              let data = docSnap.id ? { id: docSnap.id, ...docSnap.data() } : docSnap.data();
+              
+              // Cek Otomatis Status Berdasarkan Kalender (Tanggal Ending)
+              if (data.ending) {
+                let endDate = new Date(data.ending);
+                endDate.setHours(0, 0, 0, 0);
+                if (!isNaN(endDate)) {
+                  if (endDate < today) {
+                    data.status = "Closed";
+                  }
+                }
+              }
+
+              globalContractsData.push(data);
             });
             renderTableData(globalContractsData);
             updateDashboardMetrics(globalContractsData);
@@ -442,6 +458,9 @@
         if (index === 5) tr.className = "highlight-row-blue";
         if (index === 6) tr.className = "highlight-row-pink";
 
+        let statusText = item.status || "Open";
+        let statusBadgeClass = statusText.toLowerCase() === "closed" ? "badge-status-closed" : "badge-status-open";
+
         tr.innerHTML = `
           <td>${index + 1}</td>
           <td>${item.noSpsa || "-"}</td>
@@ -458,7 +477,7 @@
           <td class="text-right">Rp ${Number(item.nilaiKontrak || 0).toLocaleString("id-ID")}</td>
           <td class="text-right">Rp 0</td>
           <td class="text-right"><b>Rp ${Number(item.nilaiKontrak || 0).toLocaleString("id-ID")}</b></td>
-          <td><span class="badge-status-${(item.status || "Open").toLowerCase()}">${item.status || "Open"}</span></td>
+          <td><span class="${statusBadgeClass}">${statusText}</span></td>
           <td>-</td>
           <td>-</td>
           <td class="text-right">Rp 0</td>
@@ -490,11 +509,12 @@
       let alatMap = {};
       let trenMap = {};
       let today = new Date();
+      today.setHours(0, 0, 0, 0);
 
       dataList.forEach(item => {
         let val = Number(item.nilaiKontrak || 0);
         totalNilaiSemua += val;
-        totalMargin += 54.1; // Baseline/Default rata-rata margin per item jika tidak spesifik
+        totalMargin += 54.1; // Baseline rata-rata margin
 
         if (item.status === "Open") {
           kontrakAktifCount++;
@@ -503,6 +523,7 @@
           // Cek Segera Expired (< 30 hari lagi)
           if (item.ending) {
             let endDate = new Date(item.ending);
+            endDate.setHours(0, 0, 0, 0);
             if (!isNaN(endDate)) {
               let diffDays = (endDate - today) / (1000 * 60 * 60 * 24);
               if (diffDays >= 0 && diffDays <= 30) {
@@ -608,17 +629,31 @@
       const editId = document.getElementById("editDocId").value;
       const docId = editId !== "" ? editId : "kontrak_" + Date.now();
 
+      let endingVal = document.getElementById("inputEnding").value;
+      let statusVal = document.getElementById("inputStatus").value;
+
+      // Evaluasi otomatis status jika tanggal ending sudah lewat hari ini
+      if (endingVal) {
+        let endDate = new Date(endingVal);
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+        endDate.setHours(0, 0, 0, 0);
+        if (!isNaN(endDate) && endDate < today) {
+          statusVal = "Closed";
+        }
+      }
+
       const kontrakData = {
         noSpsa: document.getElementById("inputNoSPSA").value,
         customer: document.getElementById("inputCustomer").value,
         tglKontrak: document.getElementById("inputTglKontrak").value,
         start: document.getElementById("inputStart").value,
-        ending: document.getElementById("inputEnding").value,
+        ending: endingVal,
         jmlAlat: Number(document.getElementById("inputJmlAlat").value),
         jenisAlat: document.getElementById("inputJenisAlat").value,
         lokasi: document.getElementById("inputLokasi").value,
         nilaiKontrak: Number(document.getElementById("inputNilaiKontrak").value) || 0,
-        status: document.getElementById("inputStatus").value,
+        status: statusVal,
         keterangan: document.getElementById("inputKeterangan").value || "-"
       };
 
