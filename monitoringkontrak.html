@@ -76,6 +76,21 @@
     .btn-icon-delete { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid #ef4444; width: 26px; height: 26px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
     .btn-icon-delete:hover { background: #ef4444; color: #fff; }
 
+    /* Modal Form Kontrak Baru */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
+    .modal-container { background: #0f172a; border: 1px solid #334155; width: 600px; max-width: 90%; border-radius: 10px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 10px; margin-bottom: 15px; }
+    .modal-title { font-size: 15px; font-weight: 800; color: #fff; }
+    .modal-close { background: none; border: none; color: #94a3b8; font-size: 16px; cursor: pointer; }
+    .modal-close:hover { color: #fff; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+    .form-group.full { grid-column: span 2; }
+    .form-label { font-size: 11px; font-weight: 700; color: #94a3b8; }
+    .form-input { background: #020617; border: 1px solid #334155; padding: 8px; border-radius: 6px; color: #fff; font-size: 12px; outline: none; }
+    .form-input:focus { border-color: #f59e0b; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; border-top: 1px solid #1e293b; padding-top: 12px; }
+
     .highlight-row-blue { background: rgba(59, 130, 246, 0.15) !important; }
     .highlight-row-pink { background: rgba(239, 68, 68, 0.15) !important; }
 
@@ -100,7 +115,8 @@
       <a href="dashboard.html" class="btn-action"><i class="fa-solid fa-house"></i> Dashboard Utama</a>
       <button class="btn-action" onclick="location.reload()"><i class="fa-solid fa-rotate"></i> Muat Ulang</button>
       <button class="btn-action"><i class="fa-solid fa-file-excel"></i> Impor CSV</button>
-      <button class="btn-action btn-primary"><i class="fa-solid fa-plus"></i> Kontrak Baru</button>
+      <!-- Navigasi Tombol Kontrak Baru yang Difungsikan -->
+      <button class="btn-action btn-primary" onclick="bukaModalKontrakBaru()"><i class="fa-solid fa-plus"></i> Kontrak Baru</button>
     </div>
   </div>
 
@@ -251,8 +267,8 @@
           <td class="text-left">-</td>
           <td>
             <div class="action-btns">
-              <button class="btn-icon-edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-icon-delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+              <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
             </div>
           </td>
         </tr>
@@ -281,8 +297,8 @@
           <td class="text-left">-</td>
           <td>
             <div class="action-btns">
-              <button class="btn-icon-edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-icon-delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+              <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
             </div>
           </td>
         </tr>
@@ -311,8 +327,8 @@
           <td class="text-left">-</td>
           <td>
             <div class="action-btns">
-              <button class="btn-icon-edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-icon-delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+              <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
             </div>
           </td>
         </tr>
@@ -341,8 +357,8 @@
           <td class="text-left">-</td>
           <td>
             <div class="action-btns">
-              <button class="btn-icon-edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-icon-delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+              <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
             </div>
           </td>
         </tr>
@@ -371,12 +387,11 @@
           <td class="text-left">-</td>
           <td>
             <div class="action-btns">
-              <button class="btn-icon-edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-icon-delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+              <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
             </div>
           </td>
         </tr>
-        <!-- Baris highlight contoh (Biru & Pink) -->
         <tr class="highlight-row-blue">
           <td>13</td>
           <td>011/SP5A-I/SP5A/WBP/2026</td>
@@ -402,8 +417,8 @@
           <td class="text-left">Unit siap operasional</td>
           <td>
             <div class="action-btns">
-              <button class="btn-icon-edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-icon-delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+              <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
             </div>
           </td>
         </tr>
@@ -432,8 +447,8 @@
           <td class="text-left">Belum Ada Kontrak</td>
           <td>
             <div class="action-btns">
-              <button class="btn-icon-edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-icon-delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+              <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
             </div>
           </td>
         </tr>
@@ -441,11 +456,82 @@
     </table>
   </div>
 
-  <!-- Script Chart & Interaksi Filter -->
+  <!-- Modal Input / Tambah Kontrak Baru -->
+  <div class="modal-overlay" id="modalKontrak">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title"><i class="fa-solid fa-file-circle-plus" style="color: #f59e0b;"></i> Tambah Kontrak Baru</div>
+        <button class="modal-close" onclick="tutupModalKontrakBaru()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="formKontrakBaru" onsubmit="simpanKontrakBaru(event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">No. SPSA</label>
+            <input type="text" class="form-input" id="inputNoSPSA" placeholder="Contoh: 009/SP5A/WSBP/2026" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Customer</label>
+            <input type="text" class="form-input" id="inputCustomer" placeholder="Nama Perusahaan Customer" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tanggal Kontrak</label>
+            <input type="date" class="form-input" id="inputTglKontrak" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tanggal Start</label>
+            <input type="date" class="form-input" id="inputStart" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tanggal Ending</label>
+            <input type="date" class="form-input" id="inputEnding" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Jumlah Alat (Unit)</label>
+            <input type="number" class="form-input" id="inputJmlAlat" value="1" min="1" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Jenis Alat</label>
+            <select class="form-input" id="inputJenisAlat">
+              <option value="Truck Mixer">Truck Mixer</option>
+              <option value="Truck Trailer">Truck Trailer</option>
+              <option value="Dump Truck">Dump Truck</option>
+              <option value="Stone Crusher">Stone Crusher</option>
+              <option value="Mobile Crane+Bucket Cor">Mobile Crane+Bucket Cor</option>
+              <option value="Silo">Silo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Lokasi</label>
+            <input type="text" class="form-input" id="inputLokasi" placeholder="Lokasi Proyek" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nilai Kontrak (Rp)</label>
+            <input type="number" class="form-input" id="inputNilaiKontrak" placeholder="Total Nilai Kontrak" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status Kontrak</label>
+            <select class="form-input" id="inputStatus">
+              <option value="Open">Open (Aktif)</option>
+              <option value="Closed">Closed (Selesai)</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Keterangan</label>
+            <input type="text" class="form-input" id="inputKeterangan" placeholder="Keterangan tambahan (opsional)">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-action" onclick="tutupModalKontrakBaru()">Batal</button>
+          <button type="submit" class="btn-action btn-primary"><i class="fa-solid fa-save"></i> Simpan Kontrak</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Script Chart & Interaksi Filter & Modal -->
   <script>
     // Inisialisasi Grafik Chart.js
     document.addEventListener("DOMContentLoaded", () => {
-      // 1. Pelanggan Top (Bar Horizontal)
       new Chart(document.getElementById("chartPelanggan").getContext("2d"), {
         type: "bar",
         data: {
@@ -468,7 +554,6 @@
         }
       });
 
-      // 2. Distribusi Status (Doughnut)
       new Chart(document.getElementById("chartStatus").getContext("2d"), {
         type: 'doughnut',
         data: {
@@ -486,7 +571,6 @@
         }
       });
 
-      // 3. Jumlah Kontrak per Jenis Alat (Bar)
       new Chart(document.getElementById("chartAlat").getContext("2d"), {
         type: 'bar',
         data: {
@@ -508,7 +592,6 @@
         }
       });
 
-      // 4. Tren Nilai Kontrak per Bulan (Line)
       new Chart(document.getElementById("chartTren").getContext("2d"), {
         type: 'line',
         data: {
@@ -533,6 +616,80 @@
         }
       });
     });
+
+    // Fungsi Navigasi & Kontrol Modal Kontrak Baru
+    function bukaModalKontrakBaru() {
+      document.getElementById("modalKontrak").style.display = "flex";
+    }
+
+    function tutupModalKontrakBaru() {
+      document.getElementById("modalKontrak").style.display = "none";
+      document.getElementById("formKontrakBaru").reset();
+    }
+
+    function simpanKontrakBaru(event) {
+      event.preventDefault();
+      const noSpsa = document.getElementById("inputNoSPSA").value;
+      const customer = document.getElementById("inputCustomer").value;
+      const tglKontrak = document.getElementById("inputTglKontrak").value;
+      const start = document.getElementById("inputStart").value;
+      const ending = document.getElementById("inputEnding").value;
+      const jmlAlat = document.getElementById("inputJmlAlat").value;
+      const jenisAlat = document.getElementById("inputJenisAlat").value;
+      const lokasi = document.getElementById("inputLokasi").value;
+      const nilaiKontrak = Number(document.getElementById("inputNilaiKontrak").value).toLocaleString("id-ID");
+      const status = document.getElementById("inputStatus").value;
+      const ket = document.getElementById("inputKeterangan").value || "-";
+
+      const table = document.getElementById("contractTable").getElementsByTagName("tbody")[0];
+      const rowCount = table.rows.length + 1;
+
+      const newRow = table.insertRow(0);
+      newRow.innerHTML = `
+        <td>${rowCount}</td>
+        <td>${noSpsa}</td>
+        <td class="text-left">${customer}</td>
+        <td>${tglKontrak}</td>
+        <td>${start}</td>
+        <td>${ending}</td>
+        <td>${jmlAlat}</td>
+        <td class="text-left">${jenisAlat}</td>
+        <td class="text-left">-</td>
+        <td class="text-left">${lokasi}</td>
+        <td>1</td>
+        <td class="text-right">Rp ${nilaiKontrak}</td>
+        <td class="text-right">Rp ${nilaiKontrak}</td>
+        <td class="text-right">Rp 0</td>
+        <td class="text-right"><b>Rp ${nilaiKontrak}</b></td>
+        <td><span class="badge-status-${status.toLowerCase()}">${status}</span></td>
+        <td>-</td>
+        <td>-</td>
+        <td class="text-right">Rp 0</td>
+        <td class="text-right">Rp 0</td>
+        <td>100%</td>
+        <td class="text-left">${ket}</td>
+        <td>
+          <div class="action-btns">
+            <button class="btn-icon-edit" title="Edit" onclick="editKontrak(this)"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn-icon-delete" title="Hapus" onclick="hapusKontrak(this)"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </td>
+      `;
+
+      tutupModalKontrakBaru();
+      alert("Kontrak baru berhasil ditambahkan!");
+    }
+
+    function hapusKontrak(btn) {
+      if (confirm("Apakah Anda yakin ingin menghapus data kontrak ini?")) {
+        const row = btn.closest("tr");
+        row.remove();
+      }
+    }
+
+    function editKontrak(btn) {
+      alert("Fitur edit baris kontrak aktif. Silakan sesuaikan data langsung pada baris tabel.");
+    }
 
     // Fungsi Filter Tabel Interaktif
     function filterTable() {
