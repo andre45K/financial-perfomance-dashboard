@@ -69,6 +69,13 @@
     .badge-status-open { background: rgba(34, 197, 94, 0.2); color: #22c55e; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; }
     .badge-status-closed { background: rgba(100, 116, 139, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; }
     
+    /* Tombol Aksi */
+    .action-btns { display: flex; gap: 6px; justify-content: center; align-items: center; }
+    .btn-icon-edit { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid #3b82f6; width: 26px; height: 26px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .btn-icon-edit:hover { background: #3b82f6; color: #fff; }
+    .btn-icon-delete { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid #ef4444; width: 26px; height: 26px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .btn-icon-delete:hover { background: #ef4444; color: #fff; }
+
     .highlight-row-blue { background: rgba(59, 130, 246, 0.15) !important; }
     .highlight-row-pink { background: rgba(239, 68, 68, 0.15) !important; }
 
@@ -196,6 +203,10 @@
           <th>No.</th>
           <th>No. SPSA</th>
           <th class="text-left">Customer</th>
+          <th>Tanggal Kontrak</th>
+          <th>Start</th>
+          <th>Ending</th>
+          <th>Jumlah Alat</th>
           <th class="text-left">Jenis Alat</th>
           <th class="text-left">NKP</th>
           <th>Lokasi</th>
@@ -211,6 +222,7 @@
           <th>COGS</th>
           <th>Margin</th>
           <th class="text-left">Keterangan</th>
+          <th>Aksi</th>
         </tr>
       </thead>
       <tbody>
@@ -218,6 +230,10 @@
           <td>1</td>
           <td>001/SP5A/WSBP/2026</td>
           <td class="text-left">PT. Baja Cosmo Energi</td>
+          <td>11-Jan-26</td>
+          <td>15-Jan-26</td>
+          <td>14-Feb-26</td>
+          <td>1</td>
           <td class="text-left">Truck Mixer</td>
           <td class="text-left">-</td>
           <td class="text-left">Kalimantan</td>
@@ -233,11 +249,21 @@
           <td class="text-right">Rp 15.025.217</td>
           <td>106%</td>
           <td class="text-left">-</td>
+          <td>
+            <div class="action-btns">
+              <button class="btn-icon-edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
         </tr>
         <tr>
           <td>2</td>
           <td>007/SP5A/WSBP/2026</td>
           <td class="text-left">PT. Baja Cosmo Energi</td>
+          <td>11-Jan-26</td>
+          <td>15-Jan-26</td>
+          <td>14-Feb-26</td>
+          <td>1</td>
           <td class="text-left">Truck Mixer</td>
           <td class="text-left">-</td>
           <td class="text-left">Kalimantan Tengah</td>
@@ -253,11 +279,21 @@
           <td class="text-right">Rp 15.025.217</td>
           <td>85%</td>
           <td class="text-left">-</td>
+          <td>
+            <div class="action-btns">
+              <button class="btn-icon-edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
         </tr>
         <tr>
           <td>3</td>
           <td>008/SP5A/WSBP/2026</td>
           <td class="text-left">PT. Baja Cosmo Energi</td>
+          <td>11-Jan-26</td>
+          <td>15-Jan-26</td>
+          <td>14-Feb-26</td>
+          <td>2</td>
           <td class="text-left">Truck Mixer</td>
           <td class="text-left">-</td>
           <td class="text-left">Kalimantan, Sumatera</td>
@@ -273,11 +309,21 @@
           <td class="text-right">Rp 15.025.217</td>
           <td>86%</td>
           <td class="text-left">-</td>
+          <td>
+            <div class="action-btns">
+              <button class="btn-icon-edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
         </tr>
         <tr>
           <td>4</td>
           <td>004/SP5A/WSBP/2026</td>
           <td class="text-left">PT. Sumber Urip Sejati</td>
+          <td>2-Jun-26</td>
+          <td>3-Jun-26</td>
+          <td>3-Jul-26</td>
+          <td>3</td>
           <td class="text-left">Truck Mixer</td>
           <td class="text-left">-</td>
           <td class="text-left">Sumsel, Lampung</td>
@@ -293,11 +339,21 @@
           <td class="text-right">Rp 15.025.217</td>
           <td>44%</td>
           <td class="text-left">-</td>
+          <td>
+            <div class="action-btns">
+              <button class="btn-icon-edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
         </tr>
         <tr>
           <td>5</td>
           <td>00001/HAM/ON/SPK/01/2026</td>
           <td class="text-left">PT Hamori Medical Center</td>
+          <td>27-Jan-26</td>
+          <td>1-Feb-26</td>
+          <td>2-Feb-26</td>
+          <td>1</td>
           <td class="text-left">Mobile Crane+Bucket Cor</td>
           <td class="text-left">-</td>
           <td class="text-left">Subang</td>
@@ -313,52 +369,22 @@
           <td class="text-right">Rp 68.228.694</td>
           <td>25%</td>
           <td class="text-left">-</td>
-        </tr>
-        <tr>
-          <td>6</td>
-          <td>00001/HAM/ON/SPK/01/2026</td>
-          <td class="text-left">PT Hamori Medical Center</td>
-          <td class="text-left">Mobile Crane+Bucket Cor</td>
-          <td class="text-left">-</td>
-          <td class="text-left">Subang</td>
-          <td>1</td>
-          <td class="text-right">Rp 110.000.000</td>
-          <td class="text-right">Rp 110.000.000</td>
-          <td class="text-right">Rp 12.100.000</td>
-          <td class="text-right"><b>Rp 122.100.000</b></td>
-          <td><span class="badge-status-closed">Closed</span></td>
-          <td>-</td>
-          <td>-</td>
-          <td class="text-right">Rp 68.228.694</td>
-          <td class="text-right">Rp 68.228.694</td>
-          <td>25%</td>
-          <td class="text-left">-</td>
-        </tr>
-        <tr>
-          <td>7</td>
-          <td>003/SP5A/WSBP/2026</td>
-          <td class="text-left">PT Indosarana Jaya Perkasa</td>
-          <td class="text-left">Truck Trailer</td>
-          <td class="text-left">-</td>
-          <td class="text-left">Subang</td>
-          <td>1</td>
-          <td class="text-right">Rp 50.000.000</td>
-          <td class="text-right">Rp 50.000.000</td>
-          <td class="text-right">Rp 5.500.000</td>
-          <td class="text-right"><b>Rp 55.500.000</b></td>
-          <td><span class="badge-status-closed">Closed</span></td>
-          <td>-</td>
-          <td>-</td>
-          <td class="text-right">Rp 21.615.156</td>
-          <td class="text-right">Rp 21.615.156</td>
-          <td>6%</td>
-          <td class="text-left">-</td>
+          <td>
+            <div class="action-btns">
+              <button class="btn-icon-edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
         </tr>
         <!-- Baris highlight contoh (Biru & Pink) -->
         <tr class="highlight-row-blue">
           <td>13</td>
           <td>011/SP5A-I/SP5A/WBP/2026</td>
           <td class="text-left">PT Sisaya Artha Gemilang</td>
+          <td>10-Jan-26</td>
+          <td>15-Jan-26</td>
+          <td>15-Feb-26</td>
+          <td>1</td>
           <td class="text-left">Truck Mixer</td>
           <td class="text-left">TM 161</td>
           <td class="text-left">Tegal</td>
@@ -374,15 +400,25 @@
           <td class="text-right">Rp 15.025.217</td>
           <td>168%</td>
           <td class="text-left">Unit siap operasional</td>
+          <td>
+            <div class="action-btns">
+              <button class="btn-icon-edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
         </tr>
         <tr class="highlight-row-pink">
           <td>42</td>
           <td>026/ADD-5/SP5A/WBP/2026</td>
           <td class="text-left">PT Sumber Urip Sejati</td>
+          <td>6-Feb-26</td>
+          <td>7-Feb-26</td>
+          <td>8-May-26</td>
+          <td>4</td>
           <td class="text-left">Truck Mixer</td>
           <td class="text-left">-</td>
           <td class="text-left">Cilegon</td>
-          <td>1</td>
+          <td>3</td>
           <td class="text-right">Rp 21.175.808</td>
           <td class="text-right">Rp 21.175.808</td>
           <td class="text-right">Rp 2.329.339</td>
@@ -394,6 +430,12 @@
           <td class="text-right">Rp 15.025.217</td>
           <td>44%</td>
           <td class="text-left">Belum Ada Kontrak</td>
+          <td>
+            <div class="action-btns">
+              <button class="btn-icon-edit" title="Edit"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-icon-delete" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -507,8 +549,8 @@
           rowText += tds[j].textContent.toLowerCase() + " ";
         }
 
-        const statusText = tds[11] ? tds[11].textContent.toLowerCase() : "";
-        const alatText = tds[3] ? tds[3].textContent.toLowerCase() : "";
+        const statusText = tds[15] ? tds[15].textContent.toLowerCase() : "";
+        const alatText = tds[7] ? tds[7].textContent.toLowerCase() : "";
 
         const matchesSearch = rowText.includes(input);
         const matchesStatus = statusFilter === "" || statusText.includes(statusFilter);
