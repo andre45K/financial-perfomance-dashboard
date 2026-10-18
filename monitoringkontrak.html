@@ -383,8 +383,8 @@
             <input type="text" class="form-input" id="inputKeterangan" placeholder="Keterangan tambahan (opsional)">
           </div>
           <div class="form-group full">
-            <label class="form-label">Upload File SPSA (PDF)</label>
-            <input type="file" class="form-input" id="inputSpsaFile" accept=".pdf">
+            <label class="form-label">Link Dokumen SPSA (OneDrive / Cloud URL)</label>
+            <input type="url" class="form-input" id="inputSpsaFile" placeholder="https://1drv.ms/b/s!... atau URL OneDrive lainnya">
           </div>
         </div>
         <div class="modal-footer">
@@ -759,7 +759,7 @@
 
         tr.innerHTML = `
           <td>${index + 1}</td>
-          <td>${item.noSpsa || "-"} ${item.spsaFile ? `<a href="${item.spsaFile}" target="_blank" title="Buka File SPSA" style="color: #3b82f6; margin-left: 6px; font-size: 12px;"><i class="fa-solid fa-file-pdf"></i></a>` : ""}</td>
+          <td>${item.noSpsa || "-"} ${item.spsaFile ? `<a href="${item.spsaFile}" target="_blank" title="Buka File SPSA (OneDrive)" style="color: #3b82f6; margin-left: 6px; font-size: 13px;"><i class="fa-solid fa-file-pdf"></i></a>` : ""}</td>
           <td class="text-left">${item.customer || "-"}</td>
           <td>${formatTanggalIndo(item.tglKontrak)}</td>
           <td>${formatTanggalIndo(item.start)}</td>
@@ -913,7 +913,7 @@
       document.getElementById("inputCogs").value = item.cogs || 0;
       document.getElementById("inputMargin").value = item.margin || "";
       document.getElementById("inputKeterangan").value = item.keterangan || "";
-      document.getElementById("inputSpsaFile").value = "";
+      document.getElementById("inputSpsaFile").value = item.spsaFile || "";
 
       document.getElementById("modalKontrak").style.display = "flex";
     }
@@ -942,58 +942,40 @@
         }
       }
 
-      const fileInput = document.getElementById("inputSpsaFile");
-      let existingItem = editId !== "" ? globalContractsData.find(d => d.id === editId) : null;
-      let spsaFileVal = existingItem ? (existingItem.spsaFile || "") : "";
+      const spsaFileVal = document.getElementById("inputSpsaFile").value.trim();
 
-      const executeSave = async (fileDataUrl) => {
-        if (fileDataUrl) {
-          spsaFileVal = fileDataUrl;
-        }
-
-        const kontrakData = {
-          noSpsa: document.getElementById("inputNoSPSA").value,
-          customer: document.getElementById("inputCustomer").value,
-          tglKontrak: document.getElementById("inputTglKontrak").value,
-          start: document.getElementById("inputStart").value,
-          ending: endingVal,
-          jmlAlat: Number(document.getElementById("inputJmlAlat").value),
-          jenisAlat: document.getElementById("inputJenisAlat").value,
-          nkp: document.getElementById("inputNkp").value || "-",
-          lokasi: document.getElementById("inputLokasi").value,
-          lamaSewa: Number(document.getElementById("inputLamaSewa").value) || 1,
-          hargaSatuan: Number(document.getElementById("inputHargaSatuan").value) || 0,
-          dpp: Number(document.getElementById("inputDpp").value) || 0,
-          ppn: Number(document.getElementById("inputPpn").value) || 0,
-          nilaiKontrak: Number(document.getElementById("inputNilaiKontrak").value) || 0,
-          status: statusVal,
-          kwitansi: document.getElementById("inputKwitansi").value || "-",
-          tglInvoice: document.getElementById("inputTglInvoice").value || "-",
-          cogm: Number(document.getElementById("inputCogm").value) || 0,
-          cogs: Number(document.getElementById("inputCogs").value) || 0,
-          margin: document.getElementById("inputMargin").value || "100%",
-          keterangan: document.getElementById("inputKeterangan").value || "-",
-          spsaFile: spsaFileVal
-        };
-
-        try {
-          await setDoc(doc(window.firebaseDB, "monitoringKontrak", docId), kontrakData);
-          alert(editId !== "" ? "Data kontrak berhasil diperbarui!" : "Kontrak baru berhasil disimpan secara realtime!");
-          tutupModalKontrakBaru();
-        } catch (error) {
-          console.error("Gagal menyimpan ke Firestore:", error);
-          alert("Terjadi kesalahan saat menyimpan data.");
-        }
+      const kontrakData = {
+        noSpsa: document.getElementById("inputNoSPSA").value,
+        customer: document.getElementById("inputCustomer").value,
+        tglKontrak: document.getElementById("inputTglKontrak").value,
+        start: document.getElementById("inputStart").value,
+        ending: endingVal,
+        jmlAlat: Number(document.getElementById("inputJmlAlat").value),
+        jenisAlat: document.getElementById("inputJenisAlat").value,
+        nkp: document.getElementById("inputNkp").value || "-",
+        lokasi: document.getElementById("inputLokasi").value,
+        lamaSewa: Number(document.getElementById("inputLamaSewa").value) || 1,
+        hargaSatuan: Number(document.getElementById("inputHargaSatuan").value) || 0,
+        dpp: Number(document.getElementById("inputDpp").value) || 0,
+        ppn: Number(document.getElementById("inputPpn").value) || 0,
+        nilaiKontrak: Number(document.getElementById("inputNilaiKontrak").value) || 0,
+        status: statusVal,
+        kwitansi: document.getElementById("inputKwitansi").value || "-",
+        tglInvoice: document.getElementById("inputTglInvoice").value || "-",
+        cogm: Number(document.getElementById("inputCogm").value) || 0,
+        cogs: Number(document.getElementById("inputCogs").value) || 0,
+        margin: document.getElementById("inputMargin").value || "100%",
+        keterangan: document.getElementById("inputKeterangan").value || "-",
+        spsaFile: spsaFileVal
       };
 
-      if (fileInput.files && fileInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          executeSave(e.target.result);
-        };
-        reader.readAsDataURL(fileInput.files[0]);
-      } else {
-        executeSave(null);
+      try {
+        await setDoc(doc(window.firebaseDB, "monitoringKontrak", docId), kontrakData);
+        alert(editId !== "" ? "Data kontrak berhasil diperbarui!" : "Kontrak baru berhasil disimpan secara realtime!");
+        tutupModalKontrakBaru();
+      } catch (error) {
+        console.error("Gagal menyimpan ke Firestore:", error);
+        alert("Terjadi kesalahan saat menyimpan data.");
       }
     }
 
