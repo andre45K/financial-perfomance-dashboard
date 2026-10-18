@@ -476,12 +476,11 @@
       return `${day} ${month} ${year}`;
     }
 
-    // Fungsi Sorting Kolom A to Z / Z to A yang Diperbaiki agar responsif pada klik ikon panah
+    // Fungsi Sorting Kolom A-Z / Z-A yang Disempurnakan untuk Angka, Teks, & Ikon Panah
     function sortTable(colIndex) {
       const table = document.getElementById("contractTable");
       let switching = true;
       let dir = "asc";
-      let switchcount = 0;
 
       // Reset semua ikon panah tabel ke default
       for (let k = 0; k <= 21; k++) {
@@ -499,7 +498,7 @@
         dir = "asc";
       }
 
-      // Update ikon panah kolom yang aktif
+      // Update ikon panah kolom aktif
       let activeIcon = document.getElementById(`sort-icon-${colIndex}`);
       if (activeIcon) {
         activeIcon.className = dir === "asc" ? "fa-solid fa-sort-up" : "fa-solid fa-sort-down";
@@ -517,11 +516,14 @@
           let xVal = x ? x.textContent.trim() : "";
           let yVal = y ? y.textContent.trim() : "";
 
-          // Cek jika angka (hapus format Rp atau titik/koma)
-          let xNum = parseFloat(xVal.replace(/[^0-9,-]+/g, "").replace(",", "."));
-          let yNum = parseFloat(yVal.replace(/[^0-9,-]+/g, "").replace(",", "."));
+          // Bersihkan string untuk parsing angka (hapus "Rp ", titik pemisah ribuan, ganti koma dengan titik)
+          let cleanX = xVal.replace(/^Rp\s*/i, "").replace(/\./g, "").replace(",", ".");
+          let cleanY = yVal.replace(/^Rp\s*/i, "").replace(/\./g, "").replace(",", ".");
 
-          if (!isNaN(xNum) && !isNaN(yNum) && xVal.length < 15 && yVal.length < 15) {
+          let xNum = parseFloat(cleanX);
+          let yNum = parseFloat(cleanY);
+
+          if (!isNaN(xNum) && !isNaN(yNum) && xVal !== "" && yVal !== "") {
             if (dir === "asc") {
               if (xNum > yNum) { shouldSwitch = true; break; }
             } else if (dir === "desc") {
@@ -539,7 +541,6 @@
         if (shouldSwitch) {
           rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
           switching = true;
-          switchcount++;
         }
       }
     }
