@@ -143,6 +143,7 @@
     <div class="top-actions">
       <a href="dashboard.html" class="btn-action"><i class="fa-solid fa-house"></i> Dashboard Utama</a>
       <button class="btn-action" onclick="location.reload()"><i class="fa-solid fa-rotate"></i> Muat Ulang</button>
+      <button class="btn-action" onclick="resetDataKontrakFirestore()" style="border-color: rgba(239,68,68,0.4); color: #ef4444;"><i class="fa-solid fa-trash-can"></i> Reset Data</button>
       <button class="btn-action" onclick="bukaPilihFileExcel()"><i class="fa-solid fa-file-excel"></i> Impor CSV</button>
       <button class="btn-action btn-primary" onclick="bukaModalKontrakBaru()"><i class="fa-solid fa-plus"></i> Kontrak Baru</button>
     </div>
@@ -460,6 +461,32 @@
       document.getElementById('excelFileInput').click();
     }
 
+    // Fungsi Reset / Hapus Seluruh Data Kontrak dari Firestore
+    async function resetDataKontrakFirestore() {
+      if (confirm("PERINGATAN: Apakah Anda yakin ingin menghapus SELURUH data monitoring kontrak? Tindakan ini tidak dapat dibatalkan.")) {
+        if (!window.firebaseDB || !window.firebaseFns) {
+          alert("Koneksi Database belum siap.");
+          return;
+        }
+        try {
+          const { collection, getDocs, doc, deleteDoc } = window.firebaseFns;
+          const colRef = collection(window.firebaseDB, "monitoringKontrak");
+          const snapshot = await getDocs(colRef);
+          
+          let deletePromises = [];
+          snapshot.forEach((documentSnap) => {
+            deletePromises.push(deleteDoc(doc(window.firebaseDB, "monitoringKontrak", documentSnap.id)));
+          });
+
+          await Promise.all(deletePromises);
+          alert("Semua data kontrak berhasil di-reset (dihapus).");
+        } catch (error) {
+          console.error("Gagal mereset data:", error);
+          alert("Terjadi kesalahan saat menghapus data dari database.");
+        }
+      }
+    }
+
     // Fungsi Parsing dan Impor Excel/CSV secara Otomatis
     async function prosesFileExcel(event) {
       const file = event.target.files[0];
@@ -471,12 +498,10 @@
           const data = new Uint8Array(e.target.result);
           const workbook = XLSX.read(data, { type: 'array', cellDates: true });
           
-          // Cari sheet yang sesuai ('All', '2025', atau sheet pertama)
           let sheetName = workbook.SheetNames.includes('All') ? 'All' : (workbook.SheetNames.includes('2025') ? '2025' : workbook.SheetNames[0]);
           const worksheet = workbook.Sheets[sheetName];
           const jsonRaw = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-          // Deteksi baris header secara fleksibel (mencari baris yang mengandung 'No. SPSA' atau 'Customer')
           let headerRowIdx = -1;
           for (let i = 0; i < Math.min(jsonRaw.length, 10); i++) {
             let rowStr = JSON.stringify(jsonRaw[i]).toLowerCase();
@@ -485,11 +510,10 @@
               break;
             }
           }
-          if (headerRowIdx === -1) headerRowIdx = 1; // Default fallback baris ke-2
+          if (headerRowIdx === -1) headerRowIdx = 1;
 
           const headers = jsonRaw[headerRowIdx].map(h => String(h || "").trim().toLowerCase());
           
-          // Pemetaan indeks kolom secara fleksibel berdasarkan keyword
           const getColIdx = (keywords) => {
             return headers.findIndex(h => keywords.some(k => h.includes(k)));
           };
@@ -519,12 +543,10 @@
           let importedCount = 0;
           const { doc, setDoc } = window.firebaseFns;
 
-          // Helper format tanggal dari serial Excel / Date object / String
           const formatDate = (val) => {
             if (!val) return "";
             if (val instanceof Date && !isNaN(val)) return val.toISOString().split('T')[0];
             if (typeof val === 'number') {
-              // Konversi Excel serial date ke Date JS
               let d = XLSX.SSF.parse_date_code(val);
               if (d) {
                 let m = String(d.m).padStart(2, '0');
@@ -543,7 +565,7 @@
 
             let customerVal = idxCust !== -1 ? row[idxCust] : null;
             let spsaVal = idxSpsa !== -1 ? row[idxSpsa] : null;
-            if (!customerVal && !spsaVal) continue; // Lewati baris kosong
+            if (!customerVal && !spsaVal) continue;
 
             let kontrakData = {
               noSpsa: spsaVal ? String(spsaVal) : "-",
@@ -575,7 +597,7 @@
           }
 
           alert(`Berhasil mengimpor ${importedCount} data kontrak secara otomatis ke database!`);
-          event.target.value = ""; // Reset input file
+          event.target.value = "";
         } catch (err) {
           console.error("Gagal memproses file Excel/CSV:", err);
           alert("Terjadi kesalahan saat membaca file. Pastikan format file sesuai.");
@@ -600,7 +622,6 @@
             snapshot.forEach((docSnap) => {
               let data = docSnap.id ? { id: docSnap.id, ...docSnap.data() } : docSnap.data();
               
-              // Cek Otomatis Status Berdasarkan Kalender (Tanggal Ending)
               if (data.ending) {
                 let endDate = new Date(data.ending);
                 endDate.setHours(0, 0, 0, 0);
@@ -668,7 +689,6 @@
       });
     }
 
-    // Fungsi Kalkulasi & Pembaruan Otomatis KPI dan Grafik
     function updateDashboardMetrics(dataList) {
       let totalKontrak = dataList.length;
       let totalNilaiSemua = 0;
@@ -696,7 +716,6 @@
           kontrakAktifCount++;
           nilaiAktif += val;
 
-          // Cek Segera Expired (< 30 hari lagi)
           if (item.ending) {
             let endDate = new Date(item.ending);
             endDate.setHours(0, 0, 0, 0);
@@ -711,15 +730,12 @@
           kontrakSelesaiCount++;
         }
 
-        // Pelanggan (Top)
         let cust = item.customer || "Lainnya";
-        custMap[cust] = (custMap[cust] || 0) + (val / 1000000000); // dalam Miliar
+        custMap[cust] = (custMap[cust] || 0) + (val / 1000000000);
 
-        // Jenis Alat
         let alat = item.jenisAlat || "Lainnya";
         alatMap[alat] = (alatMap[alat] || 0) + 1;
 
-        // Tren Bulan
         let tgl = item.start || item.tglKontrak || "2026-01";
         let bulanKey = tgl.length >= 7 ? tgl.substring(0, 7) : "2026-01";
         if(!bulanKey.startsWith("20")) bulanKey = "2026-01";
@@ -728,7 +744,6 @@
 
       let avgMargin = totalKontrak > 0 ? (totalMarginVal / totalKontrak).toFixed(1) : "0.0";
 
-      // Update KPI Cards
       document.getElementById("kpiTotalKontrak").innerText = totalKontrak;
       document.getElementById("kpiTotalNilai").innerText = `Rp ${(totalNilaiSemua / 1000000000).toFixed(1)} M total nilai`;
       document.getElementById("kpiKontrakAktif").innerText = kontrakAktifCount;
@@ -737,23 +752,19 @@
       document.getElementById("kpiKontrakSelesai").innerText = kontrakSelesaiCount;
       document.getElementById("kpiRataMargin").innerText = avgMargin + "%";
 
-      // Update Chart Pelanggan (Top 8)
       let sortedCust = Object.entries(custMap).sort((a, b) => b[1] - a[1]).slice(0, 8);
       chartPelangganInstance.data.labels = sortedCust.map(x => x[0]);
       chartPelangganInstance.data.datasets[0].data = sortedCust.map(x => Number(x[1].toFixed(2)));
       chartPelangganInstance.update();
 
-      // Update Chart Status
       chartStatusInstance.data.datasets[0].data = [kontrakAktifCount, kontrakSelesaiCount];
       chartStatusInstance.update();
 
-      // Update Chart Jenis Alat
       let sortedAlat = Object.entries(alatMap);
       chartAlatInstance.data.labels = sortedAlat.map(x => x[0]);
       chartAlatInstance.data.datasets[0].data = sortedAlat.map(x => x[1]);
       chartAlatInstance.update();
 
-      // Update Chart Tren Bulan
       let sortedTren = Object.entries(trenMap).sort();
       chartTrenInstance.data.labels = sortedTren.length > 0 ? sortedTren.map(x => x[0]) : ['2026-01'];
       chartTrenInstance.data.datasets[0].data = sortedTren.length > 0 ? sortedTren.map(x => Number(x[1].toFixed(2))) : [0];
@@ -818,7 +829,6 @@
       let endingVal = document.getElementById("inputEnding").value;
       let statusVal = document.getElementById("inputStatus").value;
 
-      // Evaluasi otomatis status jika tanggal ending sudah lewat hari ini
       if (endingVal) {
         let endDate = new Date(endingVal);
         let today = new Date();
