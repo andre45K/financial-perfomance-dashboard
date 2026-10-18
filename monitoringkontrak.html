@@ -247,28 +247,28 @@
     <table id="contractTable">
       <thead>
         <tr>
-          <th onclick="sortTable(0)">No. <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(1)">No. SPSA <i class="fa-solid fa-sort"></i></th>
-          <th class="text-left" onclick="sortTable(2)">Customer <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(3)">Tanggal Kontrak <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(4)">Start <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(5)">Ending <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(6)">Jumlah Alat <i class="fa-solid fa-sort"></i></th>
-          <th class="text-left" onclick="sortTable(7)">Jenis Alat <i class="fa-solid fa-sort"></i></th>
-          <th class="text-left" onclick="sortTable(8)">NKP <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(9)">Lokasi <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(10)">Lama Sewa (Bulan) <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(11)">Harga Satuan <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(12)">DPP <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(13)">PPN 11% <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(14)">Nilai Kontrak <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(15)">Status Kontrak <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(16)">No. Kwitansi <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(17)">Tanggal Invoice <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(18)">COGM <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(19)">COGS <i class="fa-solid fa-sort"></i></th>
-          <th onclick="sortTable(20)">Margin <i class="fa-solid fa-sort"></i></th>
-          <th class="text-left" onclick="sortTable(21)">Keterangan <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(0)">No. <i class="fa-solid fa-sort" id="sort-icon-0"></i></th>
+          <th onclick="sortTable(1)">No. SPSA <i class="fa-solid fa-sort" id="sort-icon-1"></i></th>
+          <th class="text-left" onclick="sortTable(2)">Customer <i class="fa-solid fa-sort" id="sort-icon-2"></i></th>
+          <th onclick="sortTable(3)">Tanggal Kontrak <i class="fa-solid fa-sort" id="sort-icon-3"></i></th>
+          <th onclick="sortTable(4)">Start <i class="fa-solid fa-sort" id="sort-icon-4"></i></th>
+          <th onclick="sortTable(5)">Ending <i class="fa-solid fa-sort" id="sort-icon-5"></i></th>
+          <th onclick="sortTable(6)">Jumlah Alat <i class="fa-solid fa-sort" id="sort-icon-6"></i></th>
+          <th class="text-left" onclick="sortTable(7)">Jenis Alat <i class="fa-solid fa-sort" id="sort-icon-7"></i></th>
+          <th class="text-left" onclick="sortTable(8)">NKP <i class="fa-solid fa-sort" id="sort-icon-8"></i></th>
+          <th onclick="sortTable(9)">Lokasi <i class="fa-solid fa-sort" id="sort-icon-9"></i></th>
+          <th onclick="sortTable(10)">Lama Sewa (Bulan) <i class="fa-solid fa-sort" id="sort-icon-10"></i></th>
+          <th onclick="sortTable(11)">Harga Satuan <i class="fa-solid fa-sort" id="sort-icon-11"></i></th>
+          <th onclick="sortTable(12)">DPP <i class="fa-solid fa-sort" id="sort-icon-12"></i></th>
+          <th onclick="sortTable(13)">PPN 11% <i class="fa-solid fa-sort" id="sort-icon-13"></i></th>
+          <th onclick="sortTable(14)">Nilai Kontrak <i class="fa-solid fa-sort" id="sort-icon-14"></i></th>
+          <th onclick="sortTable(15)">Status Kontrak <i class="fa-solid fa-sort" id="sort-icon-15"></i></th>
+          <th onclick="sortTable(16)">No. Kwitansi <i class="fa-solid fa-sort" id="sort-icon-16"></i></th>
+          <th onclick="sortTable(17)">Tanggal Invoice <i class="fa-solid fa-sort" id="sort-icon-17"></i></th>
+          <th onclick="sortTable(18)">COGM <i class="fa-solid fa-sort" id="sort-icon-18"></i></th>
+          <th onclick="sortTable(19)">COGS <i class="fa-solid fa-sort" id="sort-icon-19"></i></th>
+          <th onclick="sortTable(20)">Margin <i class="fa-solid fa-sort" id="sort-icon-20"></i></th>
+          <th class="text-left" onclick="sortTable(21)">Keterangan <i class="fa-solid fa-sort" id="sort-icon-21"></i></th>
           <th>Aksi</th>
         </tr>
       </thead>
@@ -476,12 +476,18 @@
       return `${day} ${month} ${year}`;
     }
 
-    // Fungsi Sorting Kolom A to Z / Z to A
+    // Fungsi Sorting Kolom A to Z / Z to A yang Diperbaiki agar responsif pada klik ikon panah
     function sortTable(colIndex) {
       const table = document.getElementById("contractTable");
       let switching = true;
       let dir = "asc";
       let switchcount = 0;
+
+      // Reset semua ikon panah tabel ke default
+      for (let k = 0; k <= 21; k++) {
+        let iconEl = document.getElementById(`sort-icon-${k}`);
+        if (iconEl) iconEl.className = "fa-solid fa-sort";
+      }
 
       if (!sortDirections[colIndex]) {
         sortDirections[colIndex] = "asc";
@@ -491,6 +497,12 @@
       } else {
         sortDirections[colIndex] = "asc";
         dir = "asc";
+      }
+
+      // Update ikon panah kolom yang aktif
+      let activeIcon = document.getElementById(`sort-icon-${colIndex}`);
+      if (activeIcon) {
+        activeIcon.className = dir === "asc" ? "fa-solid fa-sort-up" : "fa-solid fa-sort-down";
       }
 
       while (switching) {
