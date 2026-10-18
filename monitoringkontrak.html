@@ -476,18 +476,15 @@
       return `${day} ${month} ${year}`;
     }
 
-    // Fungsi Sorting Kolom A-Z / Z-A yang Disempurnakan untuk Angka, Teks, & Ikon Panah
+    // Fungsi Sorting Data Array Berdasarkan Kolom Tabel
     function sortTable(colIndex) {
-      const table = document.getElementById("contractTable");
-      let switching = true;
-      let dir = "asc";
-
       // Reset semua ikon panah tabel ke default
       for (let k = 0; k <= 21; k++) {
         let iconEl = document.getElementById(`sort-icon-${k}`);
         if (iconEl) iconEl.className = "fa-solid fa-sort";
       }
 
+      let dir = "asc";
       if (!sortDirections[colIndex]) {
         sortDirections[colIndex] = "asc";
       } else if (sortDirections[colIndex] === "asc") {
@@ -498,51 +495,63 @@
         dir = "asc";
       }
 
-      // Update ikon panah kolom aktif
+      // Update ikon panah kolom yang aktif
       let activeIcon = document.getElementById(`sort-icon-${colIndex}`);
       if (activeIcon) {
         activeIcon.className = dir === "asc" ? "fa-solid fa-sort-up" : "fa-solid fa-sort-down";
       }
 
-      while (switching) {
-        switching = false;
-        let rows = table.rows;
-        let shouldSwitch = false;
+      // Mapping kolom ke properti data objek globalContractsData
+      const keysMap = {
+        0: null, // No urut
+        1: 'noSpsa',
+        2: 'customer',
+        3: 'tglKontrak',
+        4: 'start',
+        5: 'ending',
+        6: 'jmlAlat',
+        7: 'jenisAlat',
+        8: 'nkp',
+        9: 'lokasi',
+        10: 'lamaSewa',
+        11: 'hargaSatuan',
+        12: 'dpp',
+        13: 'ppn',
+        14: 'nilaiKontrak',
+        15: 'status',
+        16: 'kwitansi',
+        17: 'tglInvoice',
+        18: 'cogm',
+        19: 'cogs',
+        20: 'margin',
+        21: 'keterangan'
+      };
 
-        for (let i = 1; i < (rows.length - 1); i++) {
-          let x = rows[i].getElementsByTagName("TD")[colIndex];
-          let y = rows[i + 1].getElementsByTagName("TD")[colIndex];
-          
-          let xVal = x ? x.textContent.trim() : "";
-          let yVal = y ? y.textContent.trim() : "";
+      const prop = keysMap[colIndex];
+      if (prop !== undefined && prop !== null) {
+        globalContractsData.sort((a, b) => {
+          let valA = a[prop] !== undefined && a[prop] !== null ? a[prop] : "";
+          let valB = b[prop] !== undefined && b[prop] !== null ? b[prop] : "";
 
-          // Bersihkan string untuk parsing angka (hapus "Rp ", titik pemisah ribuan, ganti koma dengan titik)
-          let cleanX = xVal.replace(/^Rp\s*/i, "").replace(/\./g, "").replace(",", ".");
-          let cleanY = yVal.replace(/^Rp\s*/i, "").replace(/\./g, "").replace(",", ".");
+          // Cek apakah data bertipe angka
+          let numA = parseFloat(valA);
+          let numB = parseFloat(valB);
 
-          let xNum = parseFloat(cleanX);
-          let yNum = parseFloat(cleanY);
-
-          if (!isNaN(xNum) && !isNaN(yNum) && xVal !== "" && yVal !== "") {
-            if (dir === "asc") {
-              if (xNum > yNum) { shouldSwitch = true; break; }
-            } else if (dir === "desc") {
-              if (xNum < yNum) { shouldSwitch = true; break; }
-            }
-          } else {
-            if (dir === "asc") {
-              if (xVal.toLowerCase() > yVal.toLowerCase()) { shouldSwitch = true; break; }
-            } else if (dir === "desc") {
-              if (xVal.toLowerCase() < yVal.toLowerCase()) { shouldSwitch = true; break; }
-            }
+          if (!isNaN(numA) && !isNaN(numB) && typeof valA !== 'boolean' && typeof valB !== 'boolean') {
+            return dir === "asc" ? numA - numB : numB - numA;
           }
-        }
 
-        if (shouldSwitch) {
-          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-          switching = true;
-        }
+          // Perbandingan string / teks biasa
+          let strA = String(valA).toLowerCase();
+          let strB = String(valB).toLowerCase();
+
+          if (strA < strB) return dir === "asc" ? -1 : 1;
+          if (strA > strB) return dir === "asc" ? 1 : -1;
+          return 0;
+        });
       }
+
+      renderTableData(globalContractsData);
     }
 
     // Fungsi Reset / Hapus Seluruh Data Kontrak dari Firestore
