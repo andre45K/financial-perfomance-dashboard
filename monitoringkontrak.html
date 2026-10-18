@@ -86,7 +86,9 @@
     /* Table Container Styling */
     .table-responsive { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; overflow-x: auto; max-height: 500px; margin-bottom: 20px; }
     table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; white-space: nowrap; }
-    th { background: #1e293b; color: #f8fafc; padding: 9px 8px; font-weight: 700; border-bottom: 2px solid #334155; position: sticky; top: 0; z-index: 10; text-align: center; }
+    th { background: #1e293b; color: #f8fafc; padding: 9px 8px; font-weight: 700; border-bottom: 2px solid #334155; position: sticky; top: 0; z-index: 10; text-align: center; cursor: pointer; user-select: none; transition: background 0.2s; }
+    th:hover { background: #334155; }
+    th i { margin-left: 5px; font-size: 10px; color: #94a3b8; }
     td { padding: 7px 8px; border-bottom: 1px solid #1e293b; color: #cbd5e1; text-align: center; }
     tr:hover { background-color: rgba(30, 41, 59, 0.5); }
     
@@ -245,28 +247,28 @@
     <table id="contractTable">
       <thead>
         <tr>
-          <th>No.</th>
-          <th>No. SPSA</th>
-          <th class="text-left">Customer</th>
-          <th>Tanggal Kontrak</th>
-          <th>Start</th>
-          <th>Ending</th>
-          <th>Jumlah Alat</th>
-          <th class="text-left">Jenis Alat</th>
-          <th class="text-left">NKP</th>
-          <th>Lokasi</th>
-          <th>Lama Sewa (Bulan)</th>
-          <th>Harga Satuan</th>
-          <th>DPP</th>
-          <th>PPN 11%</th>
-          <th>Nilai Kontrak</th>
-          <th>Status Kontrak</th>
-          <th>No. Kwitansi</th>
-          <th>Tanggal Invoice</th>
-          <th>COGM</th>
-          <th>COGS</th>
-          <th>Margin</th>
-          <th class="text-left">Keterangan</th>
+          <th onclick="sortTable(0)">No. <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(1)">No. SPSA <i class="fa-solid fa-sort"></i></th>
+          <th class="text-left" onclick="sortTable(2)">Customer <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(3)">Tanggal Kontrak <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(4)">Start <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(5)">Ending <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(6)">Jumlah Alat <i class="fa-solid fa-sort"></i></th>
+          <th class="text-left" onclick="sortTable(7)">Jenis Alat <i class="fa-solid fa-sort"></i></th>
+          <th class="text-left" onclick="sortTable(8)">NKP <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(9)">Lokasi <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(10)">Lama Sewa (Bulan) <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(11)">Harga Satuan <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(12)">DPP <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(13)">PPN 11% <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(14)">Nilai Kontrak <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(15)">Status Kontrak <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(16)">No. Kwitansi <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(17)">Tanggal Invoice <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(18)">COGM <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(19)">COGS <i class="fa-solid fa-sort"></i></th>
+          <th onclick="sortTable(20)">Margin <i class="fa-solid fa-sort"></i></th>
+          <th class="text-left" onclick="sortTable(21)">Keterangan <i class="fa-solid fa-sort"></i></th>
           <th>Aksi</th>
         </tr>
       </thead>
@@ -396,6 +398,7 @@
     let chartStatusInstance = null;
     let chartAlatInstance = null;
     let chartTrenInstance = null;
+    let sortDirections = {};
 
     document.addEventListener("DOMContentLoaded", () => {
       initCharts();
@@ -459,6 +462,74 @@
     // Fungsi Trigger Pilih File Excel/CSV
     function bukaPilihFileExcel() {
       document.getElementById('excelFileInput').click();
+    }
+
+    // Helper Format Tanggal Indonesia (DD MMM YYYY, cth: 17 Jul 2026)
+    function formatTanggalIndo(dateStr) {
+      if (!dateStr || dateStr === "-") return "-";
+      let d = new Date(dateStr);
+      if (isNaN(d)) return dateStr;
+      let day = String(d.getDate()).padStart(2, '0');
+      const bulanIndo = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
+      let month = bulanIndo[d.getMonth()];
+      let year = d.getFullYear();
+      return `${day} ${month} ${year}`;
+    }
+
+    // Fungsi Sorting Kolom A to Z / Z to A
+    function sortTable(colIndex) {
+      const table = document.getElementById("contractTable");
+      let switching = true;
+      let dir = "asc";
+      let switchcount = 0;
+
+      if (!sortDirections[colIndex]) {
+        sortDirections[colIndex] = "asc";
+      } else if (sortDirections[colIndex] === "asc") {
+        sortDirections[colIndex] = "desc";
+        dir = "desc";
+      } else {
+        sortDirections[colIndex] = "asc";
+        dir = "asc";
+      }
+
+      while (switching) {
+        switching = false;
+        let rows = table.rows;
+        let shouldSwitch = false;
+
+        for (let i = 1; i < (rows.length - 1); i++) {
+          let x = rows[i].getElementsByTagName("TD")[colIndex];
+          let y = rows[i + 1].getElementsByTagName("TD")[colIndex];
+          
+          let xVal = x ? x.textContent.trim() : "";
+          let yVal = y ? y.textContent.trim() : "";
+
+          // Cek jika angka (hapus format Rp atau titik/koma)
+          let xNum = parseFloat(xVal.replace(/[^0-9,-]+/g, "").replace(",", "."));
+          let yNum = parseFloat(yVal.replace(/[^0-9,-]+/g, "").replace(",", "."));
+
+          if (!isNaN(xNum) && !isNaN(yNum) && xVal.length < 15 && yVal.length < 15) {
+            if (dir === "asc") {
+              if (xNum > yNum) { shouldSwitch = true; break; }
+            } else if (dir === "desc") {
+              if (xNum < yNum) { shouldSwitch = true; break; }
+            }
+          } else {
+            if (dir === "asc") {
+              if (xVal.toLowerCase() > yVal.toLowerCase()) { shouldSwitch = true; break; }
+            } else if (dir === "desc") {
+              if (xVal.toLowerCase() < yVal.toLowerCase()) { shouldSwitch = true; break; }
+            }
+          }
+        }
+
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          switchcount++;
+        }
+      }
     }
 
     // Fungsi Reset / Hapus Seluruh Data Kontrak dari Firestore
@@ -659,9 +730,9 @@
           <td>${index + 1}</td>
           <td>${item.noSpsa || "-"}</td>
           <td class="text-left">${item.customer || "-"}</td>
-          <td>${item.tglKontrak || "-"}</td>
-          <td>${item.start || "-"}</td>
-          <td>${item.ending || "-"}</td>
+          <td>${formatTanggalIndo(item.tglKontrak)}</td>
+          <td>${formatTanggalIndo(item.start)}</td>
+          <td>${formatTanggalIndo(item.ending)}</td>
           <td>${item.jmlAlat || 1}</td>
           <td class="text-left">${item.jenisAlat || "-"}</td>
           <td class="text-left">${item.nkp || "-"}</td>
@@ -673,7 +744,7 @@
           <td class="text-right"><b>Rp ${Number(item.nilaiKontrak || 0).toLocaleString("id-ID")}</b></td>
           <td><span class="${statusBadgeClass}">${statusText}</span></td>
           <td>${item.kwitansi || "-"}</td>
-          <td>${item.tglInvoice || "-"}</td>
+          <td>${formatTanggalIndo(item.tglInvoice)}</td>
           <td class="text-right">Rp ${Number(item.cogm || 0).toLocaleString("id-ID")}</td>
           <td class="text-right">Rp ${Number(item.cogs || 0).toLocaleString("id-ID")}</td>
           <td>${item.margin || "100%"}</td>
