@@ -11,6 +11,7 @@
   <!-- FIREBASE SDK (Modular v10) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -24,9 +25,16 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // Mengatur persistensi lokal agar sesi login langsung terbaca instan tanpa jeda/refresh
+    setPersistence(auth, browserLocalPersistence).catch((error) => {
+      console.error("Gagal mengatur persistensi auth:", error);
+    });
 
     window.firebaseDB = db;
     window.firebaseFns = { doc, getDoc, setDoc, onSnapshot };
+    window.firebaseAuth = auth;
   </script>
 
   <style>
@@ -393,8 +401,8 @@
       </div>
     </div>
     <div class="nav-actions-wrap">
+      <a href="index.html" class="nav-back-btn"><i class="fa-solid fa-house"></i> Dashboard Utama</a>
       <button class="nav-back-btn btn-download-jpg" onclick="downloadDashboardJPG()"><i class="fa-solid fa-download"></i> Download JPG</button>
-      <a href="index.html" class="nav-back-btn"><i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard Utama</a>
     </div>
   </div>
 
@@ -793,8 +801,6 @@
   let localChangeVersion = 0;
   const PIUTANG_CACHE_KEY = "monitoringPiutang_data_2026_cache_v1";
 
-  // Simpan perubahan lokal secara persisten terlebih dahulu. Ini menjaga perubahan
-  // tetap ada saat refresh jika Firestore sedang offline / mengalami backoff.
   function readLocalPiutangCache() {
     try {
       const raw = localStorage.getItem(PIUTANG_CACHE_KEY);
@@ -854,8 +860,6 @@
   function saveDataToFirebase() {
     if (remoteApplyInProgress) return Promise.resolve(false);
 
-    // Don't write anything until the initial server snapshot has been received.
-    // This prevents the HTML sample data from overwriting saved cloud data.
     if (!firebaseReady || !window.firebaseDB || !window.firebaseFns) {
       saveRequestedBeforeReady = true;
       return Promise.resolve(false);
@@ -866,18 +870,14 @@
     const { doc, setDoc } = window.firebaseFns;
     const docRef = doc(window.firebaseDB, "monitoringPiutang", "data_2026");
 
-    // Snapshot the payload at call time, and serialize writes so rapid actions
-    // cannot finish out of order and restore an older customer list.
     const payload = getPiutangPayload();
     const payloadKey = JSON.stringify(payload);
-    // Cache + tandai pending sebelum menghubungi Firestore.
     writeLocalPiutangCache(payload, true);
 
     firebaseSaveInProgress = firebaseSaveInProgress
       .catch(() => {})
       .then(() => setDoc(docRef, payload))
       .then(() => {
-        // Only mark this version as latest if no newer local action happened.
         if (requestedVersion === localChangeVersion) {
           lastRenderedSnapshot = payloadKey;
           writeLocalPiutangCache(payload, false);
@@ -908,8 +908,6 @@
       const docRef = doc(window.firebaseDB, "monitoringPiutang", "data_2026");
 
       unsubscribePiutang = onSnapshot(docRef, { includeMetadataChanges: true }, async (docSnap) => {
-        // Ignore local cache snapshots while offline; wait for server confirmation
-        // before declaring initialization complete or seeding the document.
         if (docSnap.metadata?.fromCache && !firstSnapshotHandled) {
           setCloudStatus("Memuat data tersimpan dari Firestore...");
           return;
@@ -920,8 +918,6 @@
             firstSnapshotHandled = true;
             firebaseReady = true;
 
-            // Jika cache menandai perubahan yang belum tersimpan, jangan pernah
-            // menggantinya dengan data contoh saat dokumen cloud belum ada.
             const localCache = readLocalPiutangCache();
             const initialPayload = (localCache && localCache.pending)
               ? localCache.payload
@@ -960,8 +956,6 @@
           firstSnapshotHandled = true;
           firebaseReady = true;
           const localCache = readLocalPiutangCache();
-          // Jika ada perubahan lokal yang belum terkonfirmasi tersimpan, pulihkan
-          // perubahan itu alih-alih menimpanya dengan snapshot cloud yang lama.
           if (localCache && localCache.pending) {
             currentPeriod = localCache.payload.period;
             customerData = normalizeCustomers(localCache.payload.customers);
@@ -983,8 +977,6 @@
           lastRenderedSnapshot = incomingKey;
           writeLocalPiutangCache(incomingPayload, false);
 
-          // If a user interacted before the first server snapshot, save their
-          // current form state only after the existing cloud record was loaded.
           if (saveRequestedBeforeReady) {
             saveRequestedBeforeReady = false;
             await saveDataToFirebase();
@@ -993,8 +985,6 @@
           return;
         }
 
-        // Ignore local pending-write echoes. The write promise handles errors;
-        // rerendering a pending snapshot can make add/delete appear to flicker.
         if (docSnap.metadata?.hasPendingWrites) return;
 
         const currentKey = JSON.stringify(getPiutangPayload());
@@ -1008,8 +998,6 @@
           return;
         }
 
-        // A genuinely new server snapshot from another tab/device is applied
-        // only when no local write is still queued.
         if (firebaseSaveInProgress) {
           await firebaseSaveInProgress.catch(() => {});
         }
@@ -1046,8 +1034,6 @@
   document.addEventListener("DOMContentLoaded", () => {
     initPeriodDropdown();
     updatePeriodLabel();
-    // Show current placeholder UI while Firebase connects. The first Firestore
-    // snapshot will replace this with persisted data; no save is triggered here.
     renderPiutangDashboard();
     initFirebaseListener();
   });
