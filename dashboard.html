@@ -294,7 +294,7 @@
         <span>📅 Periode: <strong>Jan - Dec 2026</strong></span>
       </div>
 
-      <!-- TOMBOL ADMIN DI HEADER -->
+      <!-- TOMBOL ADMIN DI HEADER (Dashboard NKB, NKD, Piutang dihilangkan, Admin Input & Download tetap dipertahankan) -->
       <a href="login.html" class="admin-link">Admin Input</a>
 
       <!-- TOMBOL DOWNLOAD JPG TERPISAH MENJADI 3 FILE -->
@@ -310,7 +310,7 @@
   </div>
 
 
-  <!-- BAGIAN 1: DASHBOARD UTAMA DARK -->
+  <!-- BAGIAN 1: DASHBOARD UTAMA DARK (UNTUK DI-DOWNLOAD SEBAGAI FILE 1) -->
   <div id="dashboardPart1">
     <div class="kpi-grid">
       <div class="kpi-card">
@@ -421,7 +421,7 @@
   </div>
 
 
-  <!-- BAGIAN 2: DASHBOARD 3 LIGHT KOMPARATIF -->
+  <!-- BAGIAN 2: DASHBOARD 3 LIGHT KOMPARATIF (UNTUK DI-DOWNLOAD SEBAGAI FILE 2) -->
   <div id="dashboardPart2" style="margin-top: 30px;">
     <div class="section-divider-title">VISUALISASI ANALISIS KOMPARATIF</div>
     <div class="panel-card-light">
@@ -523,7 +523,7 @@
   </div>
 
 
-  <!-- BAGIAN 3: DASHBOARD 4 ANALISIS PROGNOSA -->
+  <!-- BAGIAN 3: DASHBOARD 4 ANALISIS PROGNOSA (UNTUK DI-DOWNLOAD SEBAGAI FILE 3) -->
   <div id="dashboardPart3" class="dashboard-3-container">
     <div class="d3-header">
       <div>
@@ -764,10 +764,12 @@
             });
           } catch (error) {
             console.error("Gagal memuat data dashboard dari Firestore:", error);
+            const status = document.getElementById("connection-status");
+            if (status) status.textContent = "Gagal memuat data tersimpan. Periksa koneksi/izin Firestore.";
           }
         } else if (Date.now() - startedAt > 10000) {
           clearInterval(checkInterval);
-          console.error("Firebase belum siap.");
+          console.error("Firebase belum siap. Data dashboard belum dapat dimuat.");
         }
       }, 100);
     }
@@ -825,8 +827,11 @@
       if (value === null || value === undefined || value === "") return fallback;
       if (typeof value === 'number') return Number.isFinite(value) ? value : fallback;
       let str = String(value).trim();
+      
       let isNegative = str.startsWith('-');
-      if (isNegative) str = str.substring(1);
+      if (isNegative) {
+        str = str.substring(1);
+      }
       
       if (str.includes(',') && str.includes('.')) {
         str = str.replace(/\./g, '').replace(',', '.');
@@ -838,6 +843,7 @@
       
       let number = Number(str);
       if (!Number.isFinite(number)) return fallback;
+      
       return isNegative ? -number : number;
     }
 
@@ -888,7 +894,11 @@
 
     function sum(array) { return array.reduce((total, value) => total + (Number(value) || 0), 0); }
     function average(array) { if (!array.length) return 0; return sum(array) / array.length; }
-    function formatNumber(value) { return Number(value || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); }
+    
+    function formatNumber(value) { 
+      return Number(value || 0).toLocaleString("id-ID", { maximumFractionDigits: 0 }); 
+    }
+
     function formatPercent(value) { return Math.round(Number(value || 0)) + "%"; }
     function formatPercentOne(value) { return Math.round(Number(value || 0)) + "%"; }
     function getAchievement(actual, plan) { if (!plan) return 0; return actual / plan * 100; }
@@ -998,7 +1008,9 @@
       element.classList.remove("badge-up", "badge-down");
       
       let isGood = higherIsGood ? percentage >= 100 : percentage <= 100;
-      if (id === "kpi-bpp-badge") isGood = percentage <= 100;
+      if (id === "kpi-bpp-badge") {
+        isGood = percentage <= 100;
+      }
 
       if (isGood) {
         element.classList.add("badge-up");
@@ -1150,6 +1162,7 @@
         const totalActualNpm = sum(data.revenueActual) > 0 ? (sum(data.npActual) / sum(data.revenueActual) * 100) : 0;
 
         let altHtmlRows = "";
+        
         altHtmlRows += `<tr><td class="row-label">NON-CONTRIBUTING PLANT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realNcp)}</td>`;
@@ -1180,6 +1193,11 @@
 
         altTableBody.innerHTML = altHtmlRows;
       }
+
+      const legendReal = document.getElementById("legend-real-text");
+      const legendProg = document.getElementById("legend-prog-text");
+      if (legendReal) legendReal.textContent = `Data Jan - ${getMonthShortName(lastRealMonth)} 2026 merupakan Realisasi`;
+      if (legendProg) legendProg.textContent = `Data ${getMonthShortName(firstProgMonth)} - Dec 2026 merupakan Prognosa`;
     }
 
     function renderLightSectionDirect() {
@@ -1290,10 +1308,37 @@
       const actualMonthName = monthsList[actualEndIndex];
       const actualMonthFull = getMonthFullName(actualMonthName);
 
+      setText("d3-subtitle", "Rencana vs Realisasi | Januari – " + actualMonthFull + " " + financialData.year + " | Outlook Full Year " + financialData.year);
+      setText("d3-badge-top", "Data s.d. " + actualMonthFull + " " + financialData.year);
+      setText("d3-section1-sub", "Monthly performance – actual data available through " + actualMonthFull + " " + financialData.year);
+      setText("d3-section2-sub", "Monthly profitability performance and full-year target positioning");
+
       setText("d3-kpi-rev", formatNumber(actualRevCum));
+      setText("d3-kpi-rev-sub", formatPercent(getAchievement(actualRevCum, sum(data.revenuePlan))) + " dari target 2026");
+
       setText("d3-kpi-bpp", formatNumber(actualBppCum));
+      setText("d3-kpi-bpp-sub", formatPercent(getAchievement(actualBppCum, sum(data.bppPlan))) + " dari target 2026");
+
       setText("d3-kpi-gp", formatNumber(actualGpCum));
+      setText("d3-kpi-gp-sub", formatPercent(getAchievement(actualGpCum, sum(data.gpPlan))) + " dari target 2026");
+
       setText("d3-kpi-gpm", formatPercent(actualGpmCum));
+      setText("d3-kpi-gpm-sub", "Target 2026: " + formatPercent(financialData.targetGPM));
+
+      const cumulativeLabel = "Pencapaian s.d. " + getMonthShortName(actualMonthName) + " " + financialData.year;
+      setText("d3-rev-cumul-title", cumulativeLabel);
+      setText("d3-bpp-cumul-title", cumulativeLabel);
+      setText("d3-gp-cumul-title", cumulativeLabel);
+      setText("d3-gpm-cumul-title", cumulativeLabel);
+
+      setText("d3-rev-act-cumul", formatNumber(actualRevCum));
+      setText("d3-rev-plan-cumul", formatNumber(planRevCum));
+      setText("d3-bpp-act-cumul", formatNumber(actualBppCum));
+      setText("d3-bpp-plan-cumul", formatNumber(planBppCum));
+      setText("d3-gp-act-cumul", formatNumber(actualGpCum));
+      setText("d3-gp-plan-cumul", formatNumber(planGpCum));
+      setText("d3-gpm-act-cumul", formatPercent(actualGpmCum));
+      setText("d3-gpm-plan-cumul", formatPercent(planGpmCum));
 
       setBarHeight("d3-rev-act-bar", actualRevCum, Math.max(actualRevCum, planRevCum));
       setBarHeight("d3-rev-plan-bar", planRevCum, Math.max(actualRevCum, planRevCum));
@@ -1303,14 +1348,122 @@
       setBarHeight("d3-gp-plan-bar", planGpCum, Math.max(actualGpCum, planGpCum));
       setBarHeight("d3-gpm-act-bar", actualGpmCum, 100);
       setBarHeight("d3-gpm-plan-bar", planGpmCum, 100);
+
+      createDashboard3Charts(data);
+    }
+
+    function createDashboard3Charts(data) {
+      const latestIndex = getLatestActualIndex();
+      const endIndex = latestIndex >= 0 ? latestIndex : 0;
+      const shortMonths = monthsList.slice(0, endIndex + 1);
+
+      const planRev = data.revenuePlan.slice(0, endIndex + 1);
+      const actRev = data.revenueActual.slice(0, endIndex + 1);
+      const planBpp = data.bppPlan.slice(0, endIndex + 1);
+      const actBpp = data.bppActual.slice(0, endIndex + 1);
+      const planGp = data.gpPlan.slice(0, endIndex + 1);
+      const actGp = data.gpActual.slice(0, endIndex + 1);
+      const planGpm = data.gpmPlan.slice(0, endIndex + 1);
+      const actGpm = data.gpmActual.slice(0, endIndex + 1);
+
+      destroyChart("d3ChartRev");
+      chartInstances["d3ChartRev"] = new Chart(document.getElementById("d3ChartRev").getContext("2d"), {
+        data: {
+          labels: shortMonths,
+          datasets: [
+            { type: "bar", label: "Rencana", data: planRev, backgroundColor: "#cbd5e1", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#475569", font: { size: 8, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } },
+            { type: "bar", label: "Realisasi", data: actRev, backgroundColor: "#0b63ce", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#0b63ce", font: { size: 8.5, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } } }
+      });
+
+      destroyChart("d3ChartBpp");
+      chartInstances["d3ChartBpp"] = new Chart(document.getElementById("d3ChartBpp").getContext("2d"), {
+        data: {
+          labels: shortMonths,
+          datasets: [
+            { type: "bar", label: "Rencana", data: planBpp, backgroundColor: "#cbd5e1", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#475569", font: { size: 8, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } },
+            { type: "bar", label: "Realisasi", data: actBpp, backgroundColor: "#008767", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#008767", font: { size: 8.5, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } } }
+      });
+
+      destroyChart("d3ChartGp");
+      chartInstances["d3ChartGp"] = new Chart(document.getElementById("d3ChartGp").getContext("2d"), {
+        data: {
+          labels: shortMonths,
+          datasets: [
+            { type: "bar", label: "Rencana", data: planGp, backgroundColor: "#cbd5e1", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#475569", font: { size: 8, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } },
+            { type: "bar", label: "Realisasi", data: actGp, backgroundColor: "#7c3aed", barPercentage: 0.6, borderRadius: 2, datalabels: { align: "top", anchor: "end", color: "#7c3aed", font: { size: 8.5, weight: "bold" }, formatter: v => Number(v).toLocaleString("id-ID", { maximumFractionDigits: 0 }) } }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { font: { size: 9 } } }, y: { min: 0, ticks: { font: { size: 9 } } } } }
+      });
+
+      const targetLine = shortMonths.map(() => financialData.targetGPM);
+      destroyChart("d3ChartGpm");
+      chartInstances["d3ChartGpm"] = new Chart(document.getElementById("d3ChartGpm").getContext("2d"), {
+        data: {
+          labels: shortMonths,
+          datasets: [
+            { type: "line", label: "Target FY", data: targetLine, borderColor: "#e67e22", borderDash: [4, 4], borderWidth: 1.5, pointRadius: 0, datalabels: { display: false } },
+            {
+              type: "line", label: "Rencana", data: planGpm, borderColor: "#e67e22", backgroundColor: "#e67e22", borderWidth: 2, pointRadius: 4,
+              datalabels: {
+                align: function(context) { return context.dataIndex === 4 ? 'bottom' : 'top'; },
+                anchor: 'end', color: "#e67e22", font: { size: 8, weight: "bold" },
+                formatter: value => Math.round(value) + "%"
+              }
+            },
+            {
+              type: "line", label: "Realisasi", data: actGpm, borderColor: "#1e293b", backgroundColor: "#1e293b", borderWidth: 2, pointRadius: 4,
+              datalabels: {
+                align: function(context) { return context.dataIndex === 4 ? 'top' : 'bottom'; },
+                anchor: 'start', color: "#1e293b", font: { size: 8, weight: "bold" },
+                formatter: value => Math.round(value) + "%"
+              }
+            }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              enabled: true,
+              callbacks: {
+                label: function(tooltipItem) {
+                  return tooltipItem.dataset.label + ': ' + Math.round(tooltipItem.raw) + '%';
+                }
+              }
+            }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { font: { size: 9 } } },
+            y: { min: 0, max: 100, ticks: { font: { size: 9 }, callback: value => value + "%" } }
+          }
+        }
+      });
     }
 
     function renderHeaderStatus() {
       const latestIndex = getLatestActualIndex();
       if (latestIndex < 0) return;
+
       const actualMonth = monthsList[latestIndex];
       const actualFull = getMonthFullName(actualMonth);
+      const nextIndex = latestIndex + 1;
+      const nextMonth = nextIndex < monthsList.length ? getMonthShortName(monthsList[nextIndex]) : null;
+
       setText("badge-realisasi-text", "Jan - " + actualFull + " " + financialData.year + " (Realisasi)");
+
+      if (nextMonth) {
+        setText("badge-prognosa-text", nextMonth + " - " + getMonthShortName(monthsList[monthsList.length - 1]) + " " + financialData.year + " (Prognosa)");
+      } else {
+        setText("badge-prognosa-text", "Full Year " + financialData.year + " (Realisasi)");
+      }
     }
 
     function setText(id, value) {
@@ -1367,6 +1520,7 @@
         btn.innerHTML = originalText;
       }).catch(err => {
         console.error("Gagal mengunduh gambar:", err);
+        alert("Terjadi kesalahan saat mengunduh gambar.");
         btn.innerHTML = originalText;
       });
     };
@@ -1377,43 +1531,28 @@
   </script>
 
   </main>
-
-  <!-- KODE LOGOUT & SIDEBAR YANG DIPERBAIKI -->
   <script>
     (function () {
       const body = document.body;
       const toggle = document.getElementById('sidebarToggle');
       const logout = document.getElementById('logoutButton');
-      
       function toggleSidebar() {
         if (window.matchMedia('(max-width: 760px)').matches) body.classList.toggle('sidebar-mobile-open');
         else body.classList.toggle('sidebar-collapsed');
       }
-      
       if (toggle) toggle.addEventListener('click', toggleSidebar);
-      
       document.querySelectorAll('.sidebar-link[data-nav]').forEach(link => link.addEventListener('click', () => {
         document.querySelectorAll('.sidebar-link[data-nav]').forEach(item => item.classList.remove('active'));
         link.classList.add('active');
         if (window.matchMedia('(max-width: 760px)').matches) body.classList.remove('sidebar-mobile-open');
       }));
-
-      // Aksi Logout langsung menghapus sesi auth firebase dan beralih ke login.html
-      if (logout) {
-        logout.addEventListener('click', async (e) => {
-          e.preventDefault();
-          logout.disabled = true;
-          try {
-            if (window.firebaseAuth && window.firebaseAuthFns) {
-              await window.firebaseAuthFns.signOut(window.firebaseAuth);
-            }
-          } catch (error) { 
-            console.error('Gagal mengakhiri sesi Firebase:', error); 
-          } finally { 
-            window.location.replace('login.html'); 
-          }
-        });
-      }
+      if (logout) logout.addEventListener('click', async () => {
+        logout.disabled = true;
+        try {
+          if (window.firebaseAuth && window.firebaseAuthFns) await window.firebaseAuthFns.signOut(window.firebaseAuth);
+        } catch (error) { console.error('Gagal mengakhiri sesi Firebase:', error); }
+        finally { window.location.replace('login.html'); }
+      });
     })();
   </script>
 </body>
