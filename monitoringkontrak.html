@@ -119,9 +119,6 @@
     .form-input:focus { border-color: #f59e0b; }
     .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; border-top: 1px solid #1e293b; padding-top: 12px; }
 
-    .highlight-row-blue { background: rgba(59, 130, 246, 0.15) !important; }
-    .highlight-row-pink { background: rgba(239, 68, 68, 0.15) !important; }
-
     @media (max-width: 1200px) {
       .kpi-grid { grid-template-columns: repeat(3, 1fr); }
       .charts-grid-main { grid-template-columns: 1fr; }
@@ -751,8 +748,6 @@
 
       dataList.forEach((item, index) => {
         const tr = document.createElement("tr");
-        if (index === 5) tr.className = "highlight-row-blue";
-        if (index === 6) tr.className = "highlight-row-pink";
 
         let statusText = item.status || "Open";
         let statusBadgeClass = statusText.toLowerCase() === "closed" ? "badge-status-closed" : "badge-status-open";
