@@ -14,7 +14,7 @@
   <!-- FIREBASE SDK (Modular v10) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getAuth, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -29,6 +29,10 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
+
+    setPersistence(auth, browserLocalPersistence).catch((error) => {
+      console.error("Gagal mengatur persistensi auth:", error);
+    });
 
     window.firebaseDB = db;
     window.firebaseFns = { doc, getDoc, setDoc, onSnapshot };
@@ -51,7 +55,7 @@
     .badge-prognosa { background-color: #d97706; color: white; }
     .period-box { background: #111d2e; border: 1px solid #2a3d54; padding: 4px 10px; border-radius: 4px; display: flex; align-items: center; gap: 8px; font-size: 12px; }
 
-    .admin-link { color: #3b82f6; text-decoration: none; font-size: 12px; font-weight: bold; border: 1px solid #3b82f6; padding: 4px 8px; border-radius: 4px; }
+    .admin-link { color: #3b82f6; text-decoration: none; font-size: 12px; font-weight: bold; border: 1px solid #3b82f6; padding: 4px 8px; border-radius: 4px; display: inline-flex; align-items: center; }
     .admin-link:hover { background: #3b82f6; color: white; }
 
     /* TOMBOL DOWNLOAD DROPDOWN */
@@ -294,7 +298,7 @@
         <span>📅 Periode: <strong>Jan - Dec 2026</strong></span>
       </div>
 
-      <!-- TOMBOL ADMIN DI HEADER (Dashboard NKB, NKD, Piutang dihilangkan, Admin Input & Download tetap dipertahankan) -->
+      <!-- TOMBOL ADMIN DIPERBAIKI (MENGARAH KE HALAMAN LOGIN/ADMIN YANG NORMAL) -->
       <a href="login.html" class="admin-link">Admin Input</a>
 
       <!-- TOMBOL DOWNLOAD JPG TERPISAH MENJADI 3 FILE -->
