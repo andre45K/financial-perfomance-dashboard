@@ -215,7 +215,7 @@
       .d3-panel-flex { grid-template-columns: 1fr; }
     }
 
-    /* SIDEBAR INTERAKTIF - tanpa menu Admin Input dan tanpa tombol Tutup Sidebar */
+    /* SIDEBAR INTERAKTIF */
     body { transition: padding-left .25s ease; }
     .app-sidebar {
       position: fixed; z-index: 1000; left: 0; top: 0; bottom: 0; width: 250px;
@@ -294,10 +294,7 @@
         <span>📅 Periode: <strong>Jan - Dec 2026</strong></span>
       </div>
 
-      <!-- MENU TOMBOL ADMIN DI HEADER TETAP ADA -->
-      <a href="nkb.html" class="admin-link">Dashboard NKB</a>
-      <a href="nkd.html" class="admin-link">Dashboard NKD</a>
-      <a href="piutang.html" class="admin-link">Dashboard Piutang</a>
+      <!-- TOMBOL ADMIN DI HEADER (Dashboard NKB, NKD, Piutang dihilangkan, Admin Input & Download tetap dipertahankan) -->
       <a href="login.html" class="admin-link">Admin Input</a>
 
       <!-- TOMBOL DOWNLOAD JPG TERPISAH MENJADI 3 FILE -->
