@@ -215,7 +215,7 @@
       .d3-panel-flex { grid-template-columns: 1fr; }
     }
 
-    /* SIDEBAR INTERAKTIF - tambahan tanpa mengubah komponen dashboard yang sudah ada */
+    /* SIDEBAR INTERAKTIF - tanpa menu Admin Input dan tanpa tombol Tutup Sidebar */
     body { transition: padding-left .25s ease; }
     .app-sidebar {
       position: fixed; z-index: 1000; left: 0; top: 0; bottom: 0; width: 250px;
@@ -294,13 +294,11 @@
         <span>📅 Periode: <strong>Jan - Dec 2026</strong></span>
       </div>
 
-      <!-- MENU DASHBOARD NKB -->
+      <!-- MENU TOMBOL ADMIN DI HEADER TETAP ADA -->
       <a href="nkb.html" class="admin-link">Dashboard NKB</a>
-      
-
-      <!-- MENU DASHBOARD NKD (DITAMBAHKAN TEPAT DI DISINI) -->
       <a href="nkd.html" class="admin-link">Dashboard NKD</a>
       <a href="piutang.html" class="admin-link">Dashboard Piutang</a>
+      <a href="login.html" class="admin-link">Admin Input</a>
 
       <!-- TOMBOL DOWNLOAD JPG TERPISAH MENJADI 3 FILE -->
       <div class="download-dropdown">
@@ -769,6 +767,8 @@
             });
           } catch (error) {
             console.error("Gagal memuat data dashboard dari Firestore:", error);
+            const status = document.getElementById("connection-status");
+            if (status) status.textContent = "Gagal memuat data tersimpan. Periksa koneksi/izin Firestore.";
           }
         } else if (Date.now() - startedAt > 10000) {
           clearInterval(checkInterval);
@@ -832,7 +832,9 @@
       let str = String(value).trim();
       
       let isNegative = str.startsWith('-');
-      if (isNegative) str = str.substring(1);
+      if (isNegative) {
+        str = str.substring(1);
+      }
       
       if (str.includes(',') && str.includes('.')) {
         str = str.replace(/\./g, '').replace(',', '.');
@@ -844,6 +846,7 @@
       
       let number = Number(str);
       if (!Number.isFinite(number)) return fallback;
+      
       return isNegative ? -number : number;
     }
 
@@ -1008,7 +1011,9 @@
       element.classList.remove("badge-up", "badge-down");
       
       let isGood = higherIsGood ? percentage >= 100 : percentage <= 100;
-      if (id === "kpi-bpp-badge") isGood = percentage <= 100;
+      if (id === "kpi-bpp-badge") {
+        isGood = percentage <= 100;
+      }
 
       if (isGood) {
         element.classList.add("badge-up");
@@ -1160,6 +1165,7 @@
         const totalActualNpm = sum(data.revenueActual) > 0 ? (sum(data.npActual) / sum(data.revenueActual) * 100) : 0;
 
         let altHtmlRows = "";
+        
         altHtmlRows += `<tr><td class="row-label">NON-CONTRIBUTING PLANT (Juta Rp)</td>`;
         realIndices.forEach(i => { altHtmlRows += `<td>${formatNumber(data.ncpActual[i])}</td>`; });
         altHtmlRows += `<td class="txt-green">${formatNumber(realNcp)}</td>`;
@@ -1526,8 +1532,8 @@
       initFirebaseListener();
     });
   </script>
-  </main>
 
+  </main>
   <script>
     (function () {
       const body = document.body;
