@@ -215,7 +215,7 @@
       .d3-panel-flex { grid-template-columns: 1fr; }
     }
 
-    /* SIDEBAR INTERAKTIF */
+    /* SIDEBAR INTERAKTIF - tambahan tanpa mengubah komponen dashboard yang sudah ada */
     body { transition: padding-left .25s ease; }
     .app-sidebar {
       position: fixed; z-index: 1000; left: 0; top: 0; bottom: 0; width: 250px;
@@ -272,8 +272,10 @@
       <a href="nkd.html" class="sidebar-link"><i class="fa-solid fa-chart-line"></i><span>Dashboard NKD</span></a>
       <a href="piutang.html" class="sidebar-link"><i class="fa-solid fa-file-invoice-dollar"></i><span>Dashboard Piutang</span></a>
       <a href="monitoringkontrak.html" class="sidebar-link"><i class="fa-solid fa-file-contract"></i><span>Monitoring Kontrak</span></a>
+      <a href="admin-input.html" class="sidebar-link"><i class="fa-solid fa-pen-to-square"></i><span>Admin Input</span></a>
     </nav>
     <div class="sidebar-bottom">
+      <button type="button" class="sidebar-link" id="sidebarCollapse" style="width:100%;border:0;background:transparent;cursor:pointer;"><i class="fa-solid fa-angles-left"></i><span>Tutup Sidebar</span></button>
       <button type="button" class="logout-link" id="logoutButton"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></button>
     </div>
   </aside>
@@ -294,7 +296,13 @@
         <span>📅 Periode: <strong>Jan - Dec 2026</strong></span>
       </div>
 
-      <!-- TOMBOL ADMIN DI HEADER (Dashboard NKB, NKD, Piutang dihilangkan, Admin Input & Download tetap dipertahankan) -->
+      <!-- MENU DASHBOARD NKB -->
+      <a href="nkb.html" class="admin-link">Dashboard NKB</a>
+      
+
+      <!-- MENU DASHBOARD NKD (DITAMBAHKAN TEPAT DI DISINI) -->
+      <a href="nkd.html" class="admin-link">Dashboard NKD</a>
+      <a href="piutang.html" class="admin-link">Dashboard Piutang</a>
       <a href="login.html" class="admin-link">Admin Input</a>
 
       <!-- TOMBOL DOWNLOAD JPG TERPISAH MENJADI 3 FILE -->
@@ -734,6 +742,8 @@
     let financialData = structuredClone(defaultFinancialData);
 
     function initFirebaseListener() {
+      // Jangan render data default sebelum Firestore selesai dibaca.
+      // Ini mencegah angka default muncul/menimpa tampilan saat halaman di-refresh.
       const startedAt = Date.now();
       const checkInterval = setInterval(async () => {
         if (window.firebaseDB && window.firebaseFns) {
@@ -742,14 +752,18 @@
             const { doc, getDoc, onSnapshot } = window.firebaseFns;
             const docRef = doc(window.firebaseDB, "financialDashboards", "year_2026");
 
+            // Ambil data tersimpan terlebih dahulu sebelum render pertama.
             const initialSnapshot = await getDoc(docRef);
             if (initialSnapshot.exists()) {
               financialData = normalizeFinancialData(initialSnapshot.data());
             } else {
+              // Dokumen belum ada: gunakan nilai awal hanya di memori.
+              // Jangan otomatis menulis data default ke Firestore.
               financialData = structuredClone(defaultFinancialData);
             }
             renderAll();
 
+            // Tetap dengarkan pembaruan realtime dari halaman input/perangkat lain.
             onSnapshot(docRef, (docSnap) => {
               try {
                 if (docSnap.exists()) {
@@ -761,9 +775,11 @@
               }
             }, (error) => {
               console.error("Gagal menyinkronkan data Firestore secara realtime:", error);
+              // Jangan mengganti data yang sudah berhasil dimuat dengan nilai default.
             });
           } catch (error) {
             console.error("Gagal memuat data dashboard dari Firestore:", error);
+            // Jangan menampilkan angka default seolah-olah merupakan data tersimpan.
             const status = document.getElementById("connection-status");
             if (status) status.textContent = "Gagal memuat data tersimpan. Periksa koneksi/izin Firestore.";
           }
@@ -791,6 +807,7 @@
               let revAct = toNumber(source.revenueActual, defMonth.revenueActual);
               let bppPlan = toNumber(source.bppPlan, defMonth.bppPlan);
               let bppAct = toNumber(source.bppActual, defMonth.bppActual);
+              
               let ncpAct = toNumber(source.ncpActual, defMonth.ncpActual);
               let btlAct = toNumber(source.btlActual, defMonth.btlActual);
 
@@ -809,8 +826,10 @@
                 revenueActual: revAct,
                 bppPlan: bppPlan,
                 bppActual: bppAct,
+                bppAct: bppAct,
                 gpPlan: gpPlan,
                 gpActual: gpAct,
+                gpAct: gpAct,
                 ncpPlan: gpPlan,
                 ncpActual: ncpAct,
                 btlActual: btlAct,
@@ -1500,16 +1519,18 @@
       renderDashboard3();
     }
 
+    // FUNGSI DOWNLOAD BAGIAN DASHBOARD MENJADI JPG KUALITAS TERBAIK
     window.downloadDashboardPart = function(elementId, filename) {
       const targetElement = document.getElementById(elementId);
       if (!targetElement) return;
 
+      // Indikator loading sederhana
       const btn = (typeof event !== "undefined" && event.currentTarget) ? event.currentTarget : document.activeElement;
       const originalText = btn.innerHTML;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
 
       html2canvas(targetElement, {
-        scale: 2,
+        scale: 2, // Kualitas tinggi (retina/HD)
         useCORS: true,
         backgroundColor: elementId === 'dashboardPart3' || elementId === 'dashboardPart2' ? '#ffffff' : '#060d1a'
       }).then(canvas => {
@@ -1530,16 +1551,19 @@
     });
   </script>
 
+
   </main>
   <script>
     (function () {
       const body = document.body;
+      const collapse = document.getElementById('sidebarCollapse');
       const toggle = document.getElementById('sidebarToggle');
       const logout = document.getElementById('logoutButton');
       function toggleSidebar() {
         if (window.matchMedia('(max-width: 760px)').matches) body.classList.toggle('sidebar-mobile-open');
         else body.classList.toggle('sidebar-collapsed');
       }
+      if (collapse) collapse.addEventListener('click', toggleSidebar);
       if (toggle) toggle.addEventListener('click', toggleSidebar);
       document.querySelectorAll('.sidebar-link[data-nav]').forEach(link => link.addEventListener('click', () => {
         document.querySelectorAll('.sidebar-link[data-nav]').forEach(item => item.classList.remove('active'));
