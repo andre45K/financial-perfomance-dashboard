@@ -331,7 +331,7 @@
           </div>
           <div class="form-group">
             <label class="form-label">Harga Satuan (Rp)</label>
-            <input type="text" class="form-input" id="inputHargaSatuan" placeholder="Harga Satuan" required onkeyup="formatRibuan(this); hitungNilaiKontrak()">
+            <input type="text" class="form-input" id="inputHargaSatuan" placeholder="Harga Satuan" required onkeyup="formatRibuan(this); hitungNilaiKontrak(); hitungMargin()">
           </div>
           <div class="form-group">
             <label class="form-label">Nilai Kontrak (Rp) <span style="color: #f59e0b; font-weight: normal;">(+ PPN 11%)</span></label>
@@ -358,7 +358,7 @@
           </div>
           <div class="form-group">
             <label class="form-label">Margin (%)</label>
-            <input type="text" class="form-input" id="inputMargin" placeholder="Terhitung Otomatis" readonly style="background-color: #0f172a; cursor: not-allowed;">
+            <input type="text" class="form-input" id="inputMargin" placeholder="Otomatis terhitung" readonly style="background: #090d16; cursor: not-allowed;">
           </div>
           <div class="form-group full">
             <label class="form-label">Keterangan</label>
@@ -428,19 +428,19 @@
       
       const rounded = Math.round(nilaiDenganPpn);
       document.getElementById("inputNilaiKontrak").value = rounded.toLocaleString("id-ID");
-      hitungMargin();
     }
 
-    // Otomatis menghitung Margin (%) = (Harga Satuan / COGM) * 100
+    // Otomatis menghitung Margin (%) = (Harga Satuan / COGM) - 1
     function hitungMargin() {
       const hargaSatuan = parseRibuan(document.getElementById("inputHargaSatuan").value);
       const cogm = parseRibuan(document.getElementById("inputCogm").value);
 
       if (cogm > 0) {
-        const marginVal = (hargaSatuan / cogm) * 100;
-        document.getElementById("inputMargin").value = marginVal.toFixed(2) + "%";
+        const marginVal = (hargaSatuan / cogm) - 1;
+        const marginPercent = marginVal * 100;
+        document.getElementById("inputMargin").value = marginPercent.toFixed(1) + "%";
       } else {
-        document.getElementById("inputMargin").value = "0.00%";
+        document.getElementById("inputMargin").value = "0.0%";
       }
     }
 
@@ -515,7 +515,7 @@
       return `${day} ${month} ${year}`;
     }
 
-    // Sorting tabel (COGS dihapus dari mapping indeks)
+    // Sorting tabel
     function sortTable(colIndex) {
       const keysMap = {
         0: null, 1: 'noSpsa', 2: 'customer', 3: 'tglKontrak', 4: 'start',
@@ -699,7 +699,12 @@
             }
 
             let cogmVal = Number(idxCogm !== -1 ? row[idxCogm] : 0) || 0;
-            let marginVal = idxMargin !== -1 && row[idxMargin] ? String(row[idxMargin]) : (cogmVal > 0 ? ((hargaSatuanVal / cogmVal) * 100).toFixed(2) + "%" : "100%");
+            let marginVal = idxMargin !== -1 && row[idxMargin] ? String(row[idxMargin]) : "";
+            if (!marginVal && cogmVal > 0) {
+              marginVal = (((hargaSatuanVal / cogmVal) - 1) * 100).toFixed(1) + "%";
+            } else if (!marginVal) {
+              marginVal = "100.0%";
+            }
 
             let kontrakData = {
               noSpsa: spsaVal ? String(spsaVal) : "-",
@@ -811,7 +816,7 @@
           <td>${item.kwitansi || "-"}</td>
           <td>${formatTanggalIndo(item.tglInvoice)}</td>
           <td class="text-right">Rp ${Number(item.cogm || 0).toLocaleString("id-ID")}</td>
-          <td>${item.margin || "0.00%"}</td>
+          <td>${item.margin || "0.0%"}</td>
           <td class="text-left">${item.keterangan || "-"}</td>
           <td>
             <div class="action-btns">
@@ -843,8 +848,8 @@
         let val = Number(item.nilaiKontrak || 0);
         totalNilaiSemua += val;
 
-        let marginStr = String(item.margin || "54.1").replace("%", "");
-        let marginNum = parseFloat(marginStr) || 54.1;
+        let marginStr = String(item.margin || "0").replace("%", "");
+        let marginNum = parseFloat(marginStr) || 0;
         totalMarginVal += marginNum;
 
         if (item.status === "Open") {
@@ -913,7 +918,7 @@
       document.getElementById("inputJmlAlat").value = "1";
       document.getElementById("inputLamaSewa").value = "1";
       document.getElementById("inputCogm").value = "0";
-      document.getElementById("inputMargin").value = "0.00%";
+      document.getElementById("inputMargin").value = "0.0%";
       document.getElementById("modalKontrak").style.display = "flex";
     }
 
@@ -945,7 +950,7 @@
       document.getElementById("inputKwitansi").value = item.kwitansi || "";
       document.getElementById("inputTglInvoice").value = item.tglInvoice || "";
       document.getElementById("inputCogm").value = item.cogm ? Number(item.cogm).toLocaleString("id-ID") : "0";
-      document.getElementById("inputMargin").value = item.margin || "0.00%";
+      document.getElementById("inputMargin").value = item.margin || "0.0%";
       document.getElementById("inputKeterangan").value = item.keterangan || "";
       document.getElementById("inputSpsaFile").value = item.spsaFile || "";
 
@@ -995,7 +1000,7 @@
         kwitansi: document.getElementById("inputKwitansi").value || "-",
         tglInvoice: document.getElementById("inputTglInvoice").value || "-",
         cogm: parseRibuan(document.getElementById("inputCogm").value) || 0,
-        margin: document.getElementById("inputMargin").value || "0.00%",
+        margin: document.getElementById("inputMargin").value || "0.0%",
         keterangan: document.getElementById("inputKeterangan").value || "-",
         spsaFile: spsaFileVal
       };
