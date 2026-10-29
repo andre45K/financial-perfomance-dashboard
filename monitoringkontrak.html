@@ -239,7 +239,7 @@
     </div>
   </div>
 
-  <!-- Tabel Data Monitoring Kontrak Lengkap -->
+  <!-- Tabel Data Monitoring Kontrak Lengkap (COGS Dihapus) -->
   <div class="table-responsive">
     <table id="contractTable">
       <thead>
@@ -261,9 +261,8 @@
           <th onclick="sortTable(14)">No. Kwitansi <i class="fa-solid fa-sort" id="sort-icon-14"></i></th>
           <th onclick="sortTable(15)">Tanggal Invoice <i class="fa-solid fa-sort" id="sort-icon-15"></i></th>
           <th onclick="sortTable(16)">COGM <i class="fa-solid fa-sort" id="sort-icon-16"></i></th>
-          <th onclick="sortTable(17)">COGS <i class="fa-solid fa-sort" id="sort-icon-17"></i></th>
-          <th onclick="sortTable(18)">Margin <i class="fa-solid fa-sort" id="sort-icon-18"></i></th>
-          <th class="text-left" onclick="sortTable(19)">Keterangan <i class="fa-solid fa-sort" id="sort-icon-19"></i></th>
+          <th onclick="sortTable(17)">Margin <i class="fa-solid fa-sort" id="sort-icon-17"></i></th>
+          <th class="text-left" onclick="sortTable(18)">Keterangan <i class="fa-solid fa-sort" id="sort-icon-18"></i></th>
           <th>Aksi</th>
         </tr>
       </thead>
@@ -355,15 +354,11 @@
           </div>
           <div class="form-group">
             <label class="form-label">COGM (Rp)</label>
-            <input type="text" class="form-input" id="inputCogm" value="0" onkeyup="formatRibuan(this)">
-          </div>
-          <div class="form-group">
-            <label class="form-label">COGS (Rp)</label>
-            <input type="text" class="form-input" id="inputCogs" value="0" onkeyup="formatRibuan(this)">
+            <input type="text" class="form-input" id="inputCogm" value="0" onkeyup="formatRibuan(this); hitungMargin()">
           </div>
           <div class="form-group">
             <label class="form-label">Margin (%)</label>
-            <input type="text" class="form-input" id="inputMargin" placeholder="Contoh: 100%">
+            <input type="text" class="form-input" id="inputMargin" placeholder="Terhitung Otomatis" readonly style="background-color: #0f172a; cursor: not-allowed;">
           </div>
           <div class="form-group full">
             <label class="form-label">Keterangan</label>
@@ -433,6 +428,20 @@
       
       const rounded = Math.round(nilaiDenganPpn);
       document.getElementById("inputNilaiKontrak").value = rounded.toLocaleString("id-ID");
+      hitungMargin();
+    }
+
+    // Otomatis menghitung Margin (%) = (Harga Satuan / COGM) * 100
+    function hitungMargin() {
+      const hargaSatuan = parseRibuan(document.getElementById("inputHargaSatuan").value);
+      const cogm = parseRibuan(document.getElementById("inputCogm").value);
+
+      if (cogm > 0) {
+        const marginVal = (hargaSatuan / cogm) * 100;
+        document.getElementById("inputMargin").value = marginVal.toFixed(2) + "%";
+      } else {
+        document.getElementById("inputMargin").value = "0.00%";
+      }
     }
 
     function initCharts() {
@@ -506,14 +515,14 @@
       return `${day} ${month} ${year}`;
     }
 
-    // Sorting tabel
+    // Sorting tabel (COGS dihapus dari mapping indeks)
     function sortTable(colIndex) {
       const keysMap = {
         0: null, 1: 'noSpsa', 2: 'customer', 3: 'tglKontrak', 4: 'start',
         5: 'ending', 6: 'jmlAlat', 7: 'jenisAlat', 8: 'nkp', 9: 'lokasi',
         10: 'lamaSewa', 11: 'hargaSatuan', 12: 'nilaiKontrak', 13: 'status', 
-        14: 'kwitansi', 15: 'tglInvoice', 16: 'cogm', 17: 'cogs', 18: 'margin', 
-        19: 'keterangan'
+        14: 'kwitansi', 15: 'tglInvoice', 16: 'cogm', 17: 'margin', 
+        18: 'keterangan'
       };
 
       if (activeSortColumn === colIndex) {
@@ -525,7 +534,7 @@
       sortDirections = { [colIndex]: activeSortDirection };
       const dir = activeSortDirection === 'asc' ? 1 : -1;
 
-      for (let k = 0; k <= 19; k++) {
+      for (let k = 0; k <= 18; k++) {
         const iconEl = document.getElementById(`sort-icon-${k}`);
         if (iconEl) iconEl.className = 'fa-solid fa-sort';
       }
@@ -651,7 +660,6 @@
           const idxKwitansi = getColIdx(['kwitansi']);
           const idxTglInvoice = getColIdx(['tanggal invoice', 'tanggal kwitansi']);
           const idxCogm = getColIdx(['cogm']);
-          const idxCogs = getColIdx(['cogs']);
           const idxMargin = getColIdx(['margin']);
           const idxKet = getColIdx(['keterangan']);
 
@@ -690,6 +698,9 @@
               nilaiKontrakVal = hargaSatuanVal * lamaSewaVal * jmlAlatVal * 1.11;
             }
 
+            let cogmVal = Number(idxCogm !== -1 ? row[idxCogm] : 0) || 0;
+            let marginVal = idxMargin !== -1 && row[idxMargin] ? String(row[idxMargin]) : (cogmVal > 0 ? ((hargaSatuanVal / cogmVal) * 100).toFixed(2) + "%" : "100%");
+
             let kontrakData = {
               noSpsa: spsaVal ? String(spsaVal) : "-",
               customer: customerVal ? String(customerVal) : "Lainnya",
@@ -706,9 +717,8 @@
               status: idxStatus !== -1 && row[idxStatus] ? String(row[idxStatus]) : "Open",
               kwitansi: idxKwitansi !== -1 && row[idxKwitansi] ? String(row[idxKwitansi]) : "-",
               tglInvoice: formatDate(idxTglInvoice !== -1 ? row[idxTglInvoice] : ""),
-              cogm: Number(idxCogm !== -1 ? row[idxCogm] : 0) || 0,
-              cogs: Number(idxCogs !== -1 ? row[idxCogs] : 0) || 0,
-              margin: idxMargin !== -1 && row[idxMargin] ? String(row[idxMargin]) : "100%",
+              cogm: cogmVal,
+              margin: marginVal,
               keterangan: idxKet !== -1 && row[idxKet] ? String(row[idxKet]) : "-"
             };
 
@@ -801,8 +811,7 @@
           <td>${item.kwitansi || "-"}</td>
           <td>${formatTanggalIndo(item.tglInvoice)}</td>
           <td class="text-right">Rp ${Number(item.cogm || 0).toLocaleString("id-ID")}</td>
-          <td class="text-right">Rp ${Number(item.cogs || 0).toLocaleString("id-ID")}</td>
-          <td>${item.margin || "100%"}</td>
+          <td>${item.margin || "0.00%"}</td>
           <td class="text-left">${item.keterangan || "-"}</td>
           <td>
             <div class="action-btns">
@@ -904,7 +913,7 @@
       document.getElementById("inputJmlAlat").value = "1";
       document.getElementById("inputLamaSewa").value = "1";
       document.getElementById("inputCogm").value = "0";
-      document.getElementById("inputCogs").value = "0";
+      document.getElementById("inputMargin").value = "0.00%";
       document.getElementById("modalKontrak").style.display = "flex";
     }
 
@@ -936,8 +945,7 @@
       document.getElementById("inputKwitansi").value = item.kwitansi || "";
       document.getElementById("inputTglInvoice").value = item.tglInvoice || "";
       document.getElementById("inputCogm").value = item.cogm ? Number(item.cogm).toLocaleString("id-ID") : "0";
-      document.getElementById("inputCogs").value = item.cogs ? Number(item.cogs).toLocaleString("id-ID") : "0";
-      document.getElementById("inputMargin").value = item.margin || "";
+      document.getElementById("inputMargin").value = item.margin || "0.00%";
       document.getElementById("inputKeterangan").value = item.keterangan || "";
       document.getElementById("inputSpsaFile").value = item.spsaFile || "";
 
@@ -987,8 +995,7 @@
         kwitansi: document.getElementById("inputKwitansi").value || "-",
         tglInvoice: document.getElementById("inputTglInvoice").value || "-",
         cogm: parseRibuan(document.getElementById("inputCogm").value) || 0,
-        cogs: parseRibuan(document.getElementById("inputCogs").value) || 0,
-        margin: document.getElementById("inputMargin").value || "100%",
+        margin: document.getElementById("inputMargin").value || "0.00%",
         keterangan: document.getElementById("inputKeterangan").value || "-",
         spsaFile: spsaFileVal
       };
