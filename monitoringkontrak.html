@@ -239,7 +239,7 @@
     </div>
   </div>
 
-  <!-- Tabel Data Monitoring Kontrak Lengkap (COGS Dihapus) -->
+  <!-- Tabel Data Monitoring Kontrak Lengkap -->
   <div class="table-responsive">
     <table id="contractTable">
       <thead>
@@ -506,6 +506,16 @@
     // Helper Format Tanggal Indonesia (DD MMM YYYY, cth: 17 Jul 2026)
     function formatTanggalIndo(dateStr) {
       if (!dateStr || dateStr === "-") return "-";
+      let parts = dateStr.split('-');
+      if (parts.length === 3 && parts[0].length === 4) {
+        let year = parts[0];
+        let monthIdx = parseInt(parts[1], 10) - 1;
+        let day = parts[2];
+        const bulanIndo = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
+        if (monthIdx >= 0 && monthIdx < 12) {
+          return `${day} ${bulanIndo[monthIdx]} ${year}`;
+        }
+      }
       let d = new Date(dateStr);
       if (isNaN(d)) return dateStr;
       let day = String(d.getDate()).padStart(2, '0');
@@ -666,9 +676,14 @@
           let importedCount = 0;
           const { doc, setDoc } = window.firebaseFns;
 
-          const formatDate = (val) => {
+          const formatDateExact = (val) => {
             if (!val) return "";
-            if (val instanceof Date && !isNaN(val)) return val.toISOString().split('T')[0];
+            if (val instanceof Date && !isNaN(val)) {
+              let y = val.getFullYear();
+              let m = String(val.getMonth() + 1).padStart(2, '0');
+              let d = String(val.getDate()).padStart(2, '0');
+              return `${y}-${m}-${d}`;
+            }
             if (typeof val === 'number') {
               let d = XLSX.SSF.parse_date_code(val);
               if (d) {
@@ -677,9 +692,26 @@
                 return `${d.y}-${m}-${day}`;
               }
             }
-            let parsed = new Date(val);
-            if (!isNaN(parsed)) return parsed.toISOString().split('T')[0];
-            return String(val);
+            let strVal = String(val).trim();
+            // Jika format DD-MMM-YY atau DD/MM/YY (misal: 9-Jan-26 atau 9/Jan/26)
+            let matchDateText = strVal.match(/^(\d{1,2})[-\/]([A-Za-z]{3})[-\/](\d{2,4})$/);
+            if (matchDateText) {
+              let day = matchDateText[1].padStart(2, '0');
+              let monStr = matchDateText[2].toLowerCase();
+              let yr = matchDateText[3];
+              if (yr.length === 2) yr = '20' + yr;
+              const months = {jan:'01', feb:'02', mar:'03', apr:'04', mei:'05', may:'05', jun:'06', jul:'07', ags:'08', aug:'08', sep:'09', okt:'10', oct:'10', nov:'11', des:'12', dec:'12'};
+              let m = months[monStr] || '01';
+              return `${yr}-${m}-${day}`;
+            }
+            let parsed = new Date(strVal);
+            if (!isNaN(parsed)) {
+              let y = parsed.getFullYear();
+              let m = String(parsed.getMonth() + 1).padStart(2, '0');
+              let d = String(parsed.getDate()).padStart(2, '0');
+              return `${y}-${m}-${d}`;
+            }
+            return strVal;
           };
 
           for (let i = headerRowIdx + 1; i < jsonRaw.length; i++) {
@@ -709,9 +741,9 @@
             let kontrakData = {
               noSpsa: spsaVal ? String(spsaVal) : "-",
               customer: customerVal ? String(customerVal) : "Lainnya",
-              tglKontrak: formatDate(idxTglKontrak !== -1 ? row[idxTglKontrak] : ""),
-              start: formatDate(idxStart !== -1 ? row[idxStart] : ""),
-              ending: formatDate(idxEnding !== -1 ? row[idxEnding] : ""),
+              tglKontrak: formatDateExact(idxTglKontrak !== -1 ? row[idxTglKontrak] : ""),
+              start: formatDateExact(idxStart !== -1 ? row[idxStart] : ""),
+              ending: formatDateExact(idxEnding !== -1 ? row[idxEnding] : ""),
               jmlAlat: jmlAlatVal,
               jenisAlat: idxJenisAlat !== -1 && row[idxJenisAlat] ? String(row[idxJenisAlat]) : "Truck Mixer",
               nkp: idxNkp !== -1 && row[idxNkp] ? String(row[idxNkp]) : "-",
@@ -721,7 +753,7 @@
               nilaiKontrak: Math.round(nilaiKontrakVal),
               status: idxStatus !== -1 && row[idxStatus] ? String(row[idxStatus]) : "Open",
               kwitansi: idxKwitansi !== -1 && row[idxKwitansi] ? String(row[idxKwitansi]) : "-",
-              tglInvoice: formatDate(idxTglInvoice !== -1 ? row[idxTglInvoice] : ""),
+              tglInvoice: formatDateExact(idxTglInvoice !== -1 ? row[idxTglInvoice] : ""),
               cogm: cogmVal,
               margin: marginVal,
               keterangan: idxKet !== -1 && row[idxKet] ? String(row[idxKet]) : "-"
