@@ -51,10 +51,10 @@
     .btn-primary { background: #f59e0b; color: #0f172a; border-color: #f59e0b; font-weight: 700; }
     .btn-primary:hover { background: #d97706; color: #000; }
 
-    /* KPI Summary Cards (6 Grid Layout) */
+    /* KPI Summary Cards (6 Grid Layout dengan efek bisa diklik) */
     .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 20px; }
     .kpi-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 14px; position: relative; cursor: pointer; transition: all 0.2s ease; }
-    .kpi-card:hover { border-color: #f59e0b; transform: translateY(-2px); background: #131c31; }
+    .kpi-card:hover { border-color: #f59e0b; background: #131c31; transform: translateY(-2px); }
     .kpi-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
     .kpi-label { font-size: 9.5px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
     .kpi-badge-icon { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; }
@@ -155,9 +155,9 @@
     </div>
   </div>
 
-  <!-- KPI Cards Grid (6 Cards Interaktif) -->
+  <!-- KPI Cards Grid (6 Cards dapat diklik) -->
   <div class="kpi-grid">
-    <div class="kpi-card" onclick="filterByKpi('total')">
+    <div class="kpi-card" onclick="filterByKpi('all')" title="Klik untuk melihat semua kontrak">
       <div class="kpi-card-header">
         <div class="kpi-label">Total Kontrak</div>
         <div class="kpi-badge-icon bg-yellow"><i class="fa-solid fa-file-lines"></i></div>
@@ -165,7 +165,7 @@
       <div class="kpi-value" id="kpiTotalKontrak">0</div>
       <div class="kpi-sub" id="kpiTotalNilai">Rp 0 total nilai</div>
     </div>
-    <div class="kpi-card" onclick="filterByKpi('Open')">
+    <div class="kpi-card" onclick="filterByKpi('Open')" title="Klik untuk melihat kontrak aktif">
       <div class="kpi-card-header">
         <div class="kpi-label">Kontrak Aktif</div>
         <div class="kpi-badge-icon bg-green"><i class="fa-solid fa-bolt"></i></div>
@@ -173,7 +173,7 @@
       <div class="kpi-value" id="kpiKontrakAktif">0</div>
       <div class="kpi-sub" id="kpiNilaiAktif">Rp 0 nilai aktif</div>
     </div>
-    <div class="kpi-card" onclick="filterByKpi('segera_expired')">
+    <div class="kpi-card" onclick="filterByKpi('segeraExpired')" title="Klik untuk melihat kontrak segera expired (< 30 hari)">
       <div class="kpi-card-header">
         <div class="kpi-label">Segera Expired</div>
         <div class="kpi-badge-icon bg-orange"><i class="fa-solid fa-clock"></i></div>
@@ -181,7 +181,7 @@
       <div class="kpi-value" id="kpiSegeraExpired">0</div>
       <div class="kpi-sub">< 30 hari lagi</div>
     </div>
-    <div class="kpi-card" onclick="filterByKpi('Expired')">
+    <div class="kpi-card" onclick="filterByKpi('Expired')" title="Klik untuk melihat kontrak expired">
       <div class="kpi-card-header">
         <div class="kpi-label">Expired</div>
         <div class="kpi-badge-icon bg-red"><i class="fa-solid fa-triangle-exclamation"></i></div>
@@ -189,7 +189,7 @@
       <div class="kpi-value" id="kpiKontrakExpired">0</div>
       <div class="kpi-sub">Lewat masa berlaku</div>
     </div>
-    <div class="kpi-card" onclick="filterByKpi('Closed')">
+    <div class="kpi-card" onclick="filterByKpi('Closed')" title="Klik untuk melihat kontrak selesai">
       <div class="kpi-card-header">
         <div class="kpi-label">Kontrak Selesai</div>
         <div class="kpi-badge-icon bg-purple"><i class="fa-solid fa-circle-check"></i></div>
@@ -197,7 +197,7 @@
       <div class="kpi-value" id="kpiKontrakSelesai">0</div>
       <div class="kpi-sub">Status Closed</div>
     </div>
-    <div class="kpi-card" onclick="filterByKpi('total')">
+    <div class="kpi-card" title="Rata-rata profit margin keseluruhan">
       <div class="kpi-card-header">
         <div class="kpi-label">Rata-Rata Margin</div>
         <div class="kpi-badge-icon bg-blue"><i class="fa-solid fa-chart-line"></i></div>
@@ -864,19 +864,6 @@
 
       dataList.forEach((item, index) => {
         const tr = document.createElement("tr");
-        tr.setAttribute("data-id", item.id);
-        tr.setAttribute("data-status", item.status || "Open");
-        
-        let endingDateObj = item.ending ? new Date(item.ending) : null;
-        if (endingDateObj) endingDateObj.setHours(0, 0, 0, 0);
-        let todayObj = new Date();
-        todayObj.setHours(0, 0, 0, 0);
-        let isSegera = false;
-        if (item.status === "Open" && endingDateObj && !isNaN(endingDateObj)) {
-          let diff = (endingDateObj - todayObj) / (1000 * 60 * 60 * 24);
-          if (diff >= 0 && diff <= 30) isSegera = true;
-        }
-        tr.setAttribute("data-segera", isSegera ? "true" : "false");
 
         let statusText = item.status || "Open";
         let statusBadgeClass = "badge-status-open";
@@ -930,63 +917,6 @@
       });
     }
 
-    // Fungsi klik kartu KPI untuk memfilter tabel
-    function filterByKpi(type) {
-      const statusSelect = document.getElementById("filterStatus");
-      const searchInput = document.getElementById("searchInput");
-      searchInput.value = ""; // Reset search agar filter murni berdasarkan kategori KPI
-
-      if (type === 'total') {
-        statusSelect.value = "";
-      } else if (type === 'Open') {
-        statusSelect.value = "Open";
-      } else if (type === 'Expired') {
-        statusSelect.value = "Expired";
-      } else if (type === 'Closed') {
-        statusSelect.value = "Closed";
-      } else if (type === 'segera_expired') {
-        statusSelect.value = ""; // Tampilkan semua lalu saring khusus segera expired
-      }
-      filterTableCustom(type);
-    }
-
-    // Fungsi khusus filter tabel untuk menangani kategori "segera_expired"
-    function filterTableCustom(kpiType) {
-      const input = document.getElementById("searchInput").value.toLowerCase();
-      const statusFilter = document.getElementById("filterStatus").value.toLowerCase();
-      const alatFilter = document.getElementById("filterAlat").value.toLowerCase();
-      const table = document.getElementById("contractTable");
-      const trs = table.getElementsByTagName("tr");
-
-      for (let i = 1; i < trs.length; i++) {
-        const tr = trs[i];
-        const tds = tr.getElementsByTagName("td");
-        let rowText = "";
-        for (let j = 0; j < tds.length; j++) {
-          rowText += tds[j].textContent.toLowerCase() + " ";
-        }
-
-        const statusText = tds[14] ? tds[14].textContent.toLowerCase() : "";
-        const alatText = tds[8] ? tds[8].textContent.toLowerCase() : "";
-        const isSegera = tr.getAttribute("data-segera") === "true";
-
-        const matchesSearch = rowText.includes(input);
-        const matchesStatus = statusFilter === "" || statusText.includes(statusFilter);
-        const matchesAlat = alatFilter === "" || alatText.includes(alatFilter);
-        
-        let matchesKpi = true;
-        if (kpiType === 'segera_expired') {
-          matchesKpi = isSegera;
-        }
-
-        if (matchesSearch && matchesStatus && matchesAlat && matchesKpi) {
-          tr.style.display = "";
-        } else {
-          tr.style.display = "none";
-        }
-      }
-    }
-
     // Fungsi otomatis ubah status ke Closed saat checklist pada badge Expired diklik
     async function ubahStatusClosed(id, event) {
       event.stopPropagation();
@@ -1000,6 +930,49 @@
         console.error("Gagal memperbarui status kontrak:", error);
         alert("Gagal memperbarui status ke Closed.");
       }
+    }
+
+    // Fungsi Klik KPI untuk Memfilter Detail List Kontrak pada Tabel
+    function filterByKpi(type) {
+      const searchInput = document.getElementById("searchInput");
+      const filterStatus = document.getElementById("filterStatus");
+
+      searchInput.value = "";
+      if (type === 'all') {
+        filterStatus.value = "";
+      } else if (type === 'segeraExpired') {
+        filterStatus.value = "Open";
+      } else {
+        filterStatus.value = type;
+      }
+      filterTable();
+
+      // Jika klik "Segera Expired", saring tabel khusus baris yang < 30 hari lagi
+      if (type === 'segeraExpired') {
+        const table = document.getElementById("contractTable");
+        const trs = table.getElementsByTagName("tr");
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        for (let i = 1; i < trs.length; i++) {
+          const tds = trs[i].getElementsByTagName("td");
+          if (tds.length > 6) {
+            let endingText = tds[6].textContent;
+            let isSegera = false;
+            if (endingText && endingText !== "-") {
+              let endDate = new Date(endingText);
+              if (!isNaN(endDate)) {
+                let diffDays = (endDate - today) / (1000 * 60 * 60 * 24);
+                if (diffDays >= 0 && diffDays <= 30) isSegera = true;
+              }
+            }
+            trs[i].style.display = isSegera ? "" : "none";
+          }
+        }
+      }
+
+      // Scroll halus ke area tabel
+      document.getElementById("contractTable").scrollIntoView({ behavior: 'smooth' });
     }
 
     function updateDashboardMetrics(dataList) {
@@ -1211,7 +1184,32 @@
     }
 
     function filterTable() {
-      filterTableCustom('');
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      const statusFilter = document.getElementById("filterStatus").value.toLowerCase();
+      const alatFilter = document.getElementById("filterAlat").value.toLowerCase();
+      const table = document.getElementById("contractTable");
+      const trs = table.getElementsByTagName("tr");
+
+      for (let i = 1; i < trs.length; i++) {
+        const tds = trs[i].getElementsByTagName("td");
+        let rowText = "";
+        for (let j = 0; j < tds.length; j++) {
+          rowText += tds[j].textContent.toLowerCase() + " ";
+        }
+
+        const statusText = tds[14] ? tds[14].textContent.toLowerCase() : "";
+        const alatText = tds[8] ? tds[8].textContent.toLowerCase() : "";
+
+        const matchesSearch = rowText.includes(input);
+        const matchesStatus = statusFilter === "" || statusText.includes(statusFilter);
+        const matchesAlat = alatFilter === "" || alatText.includes(alatFilter);
+
+        if (matchesSearch && matchesStatus && matchesAlat) {
+          trs[i].style.display = "";
+        } else {
+          trs[i].style.display = "none";
+        }
+      }
     }
   </script>
 </body>
