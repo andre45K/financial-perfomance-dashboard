@@ -13,7 +13,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, collection, doc, getDocs, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, doc, getDocs, setDoc, deleteDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
@@ -29,7 +29,7 @@
     const auth = getAuth(app);
 
     window.firebaseDB = db;
-    window.firebaseFns = { collection, doc, getDocs, setDoc, deleteDoc, onSnapshot };
+    window.firebaseFns = { collection, doc, getDocs, setDoc, deleteDoc, updateDoc, onSnapshot };
     window.firebaseAuth = auth;
     window.firebaseAuthFns = { signOut };
   </script>
@@ -51,10 +51,10 @@
     .btn-primary { background: #f59e0b; color: #0f172a; border-color: #f59e0b; font-weight: 700; }
     .btn-primary:hover { background: #d97706; color: #000; }
 
-    /* KPI Summary Cards (6 Kolom) */
+    /* KPI Summary Cards (6 Grid Layout) */
     .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 20px; }
-    .kpi-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; position: relative; }
-    .kpi-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+    .kpi-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 14px; position: relative; }
+    .kpi-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
     .kpi-label { font-size: 9.5px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
     .kpi-badge-icon { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; }
     .bg-yellow { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
@@ -64,7 +64,7 @@
     .bg-blue { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
     .bg-purple { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
     
-    .kpi-value { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 3px; }
+    .kpi-value { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 4px; }
     .kpi-sub { font-size: 10px; color: #94a3b8; }
 
     /* Charts Layout Grid */
@@ -95,10 +95,14 @@
     
     td.text-left { text-align: left; }
     td.text-right { text-align: right; }
-    .badge-status-open { background: rgba(34, 197, 94, 0.2); color: #22c55e; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; display: inline-flex; align-items: center; gap: 4px; }
-    .badge-status-expired { background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; display: inline-flex; align-items: center; gap: 4px; }
-    .badge-status-closed { background: rgba(100, 116, 139, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; display: inline-flex; align-items: center; gap: 4px; }
+    .badge-status-open { background: rgba(34, 197, 94, 0.2); color: #22c55e; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; }
+    .badge-status-expired { background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; }
+    .badge-status-closed { background: rgba(168, 85, 247, 0.2); color: #a855f7; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; }
     
+    /* Checkbox kustom di samping badge expired */
+    .status-cell-wrapper { display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .expired-checkbox { width: 15px; height: 15px; accent-color: #a855f7; cursor: pointer; }
+
     /* Tombol Aksi */
     .action-btns { display: flex; gap: 6px; justify-content: center; align-items: center; }
     .btn-icon-edit { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid #3b82f6; width: 26px; height: 26px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
@@ -121,7 +125,7 @@
     .form-input:focus { border-color: #f59e0b; }
     .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; border-top: 1px solid #1e293b; padding-top: 12px; }
 
-    @media (max-width: 1400px) {
+    @media (max-width: 1300px) {
       .kpi-grid { grid-template-columns: repeat(3, 1fr); }
       .charts-grid-main { grid-template-columns: 1fr; }
     }
@@ -150,7 +154,7 @@
     </div>
   </div>
 
-  <!-- KPI Cards Grid (6 Kolom termasuk Kontrak Selesai) -->
+  <!-- KPI Cards Grid (6 Cards) -->
   <div class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-card-header">
@@ -181,8 +185,8 @@
         <div class="kpi-label">Expired</div>
         <div class="kpi-badge-icon bg-red"><i class="fa-solid fa-triangle-exclamation"></i></div>
       </div>
-      <div class="kpi-value" id="kpiExpired">0</div>
-      <div class="kpi-sub">Lewat tgl ending</div>
+      <div class="kpi-value" id="kpiKontrakExpired">0</div>
+      <div class="kpi-sub">Lewat masa berlaku</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-card-header">
@@ -198,7 +202,7 @@
         <div class="kpi-badge-icon bg-blue"><i class="fa-solid fa-chart-line"></i></div>
       </div>
       <div class="kpi-value" id="kpiRataMargin">0.0%</div>
-      <div class="kpi-sub">Profit margin</div>
+      <div class="kpi-sub">Profit margin rata-rata</div>
     </div>
   </div>
 
@@ -486,7 +490,7 @@
         type: 'doughnut',
         data: {
           labels: ['Aktif', 'Expired', 'Selesai'],
-          datasets: [{ data: [0, 0, 0], backgroundColor: ['#22c55e', '#ef4444', '#64748b'], borderWidth: 0 }]
+          datasets: [{ data: [0, 0, 0], backgroundColor: ['#22c55e', '#ef4444', '#a855f7'], borderWidth: 0 }]
         },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 10 } } } }
       });
@@ -762,7 +766,7 @@
 
             let endingParsed = formatDateExact(idxEnding !== -1 ? row[idxEnding] : "");
             let statusParsed = idxStatus !== -1 && row[idxStatus] ? String(row[idxStatus]) : "Open";
-            if (statusParsed !== "Closed" && endingParsed) {
+            if (endingParsed && statusParsed !== "Closed") {
               let endDateObj = new Date(endingParsed);
               endDateObj.setHours(0, 0, 0, 0);
               let todayObj = new Date();
@@ -825,7 +829,7 @@
             snapshot.forEach((docSnap) => {
               let data = docSnap.id ? { id: docSnap.id, ...docSnap.data() } : docSnap.data();
               
-              if (data.status !== "Closed" && data.ending) {
+              if (data.ending && data.status !== "Closed") {
                 let endDate = new Date(data.ending);
                 endDate.setHours(0, 0, 0, 0);
                 if (!isNaN(endDate)) {
@@ -853,35 +857,6 @@
       }, 100);
     }
 
-    // Fungsi interaksi checklist untuk mengubah status Closed/Open
-    async function toggleStatusClosed(id, currentStatus) {
-      if (!window.firebaseDB || !window.firebaseFns) return;
-      const newStatus = currentStatus === "Closed" ? "Open" : "Closed";
-      try {
-        const { doc, setDoc, getDoc } = window.firebaseFns;
-        const docRef = doc(window.firebaseDB, "monitoringKontrak", id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          let data = docSnap.data();
-          let endingDate = data.ending ? new Date(data.ending) : null;
-          let today = new Date();
-          today.setHours(0, 0, 0, 0);
-          if (endingDate) endingDate.setHours(0, 0, 0, 0);
-
-          // Jika di-uncheck dan lewat dari hari ini, kembalikan ke Expired
-          if (newStatus === "Open" && endingDate && endingDate < today) {
-            data.status = "Expired";
-          } else {
-            data.status = newStatus;
-          }
-
-          await setDoc(docRef, data);
-        }
-      } catch (err) {
-        console.error("Gagal mengubah status:", err);
-      }
-    }
-
     function renderTableData(dataList) {
       const tbody = document.querySelector("#contractTable tbody");
       tbody.innerHTML = "";
@@ -890,10 +865,24 @@
         const tr = document.createElement("tr");
 
         let statusText = item.status || "Open";
-        let isClosed = statusText === "Closed";
         let statusBadgeClass = "badge-status-open";
-        if (statusText === "Closed") statusBadgeClass = "badge-status-closed";
-        else if (statusText === "Expired") statusBadgeClass = "badge-status-expired";
+        let statusHtml = "";
+
+        if (statusText === "Closed") {
+          statusBadgeClass = "badge-status-closed";
+          statusHtml = `<span class="${statusBadgeClass}">Closed</span>`;
+        } else if (statusText === "Expired") {
+          statusBadgeClass = "badge-status-expired";
+          statusHtml = `
+            <div class="status-cell-wrapper">
+              <span class="${statusBadgeClass}">Expired</span>
+              <input type="checkbox" class="expired-checkbox" title="Klik untuk mengubah status menjadi Closed (Selesai)" onclick="ubahStatusClosed('${item.id}', event)">
+            </div>
+          `;
+        } else {
+          statusBadgeClass = "badge-status-open";
+          statusHtml = `<span class="${statusBadgeClass}">Open</span>`;
+        }
 
         tr.innerHTML = `
           <td>${index + 1}</td>
@@ -910,12 +899,7 @@
           <td>${Number(item.lamaSewa || 1).toLocaleString("id-ID")}</td>
           <td class="text-right">Rp ${Number(item.hargaSatuan || 0).toLocaleString("id-ID")}</td>
           <td class="text-right"><b>Rp ${Number(item.nilaiKontrak || 0).toLocaleString("id-ID")}</b></td>
-          <td>
-            <span class="${statusBadgeClass}">
-              <input type="checkbox" ${isClosed ? 'checked' : ''} onchange="toggleStatusClosed('${item.id}', '${statusText}')" style="cursor: pointer; margin-right: 4px;" title="Klik untuk ubah status Closed/Open">
-              ${statusText}
-            </span>
-          </td>
+          <td>${statusHtml}</td>
           <td>${item.kwitansi || "-"}</td>
           <td>${formatTanggalIndo(item.tglInvoice)}</td>
           <td class="text-right">Rp ${Number(item.cogm || 0).toLocaleString("id-ID")}</td>
@@ -932,14 +916,29 @@
       });
     }
 
+    // Fungsi otomatis ubah status ke Closed saat checklist pada badge Expired diklik
+    async function ubahStatusClosed(id, event) {
+      event.stopPropagation();
+      if (!window.firebaseDB || !window.firebaseFns) return;
+      try {
+        const { doc, updateDoc } = window.firebaseFns;
+        await updateDoc(doc(window.firebaseDB, "monitoringKontrak", id), {
+          status: "Closed"
+        });
+      } catch (error) {
+        console.error("Gagal memperbarui status kontrak:", error);
+        alert("Gagal memperbarui status ke Closed.");
+      }
+    }
+
     function updateDashboardMetrics(dataList) {
       let totalKontrak = dataList.length;
       let totalNilaiSemua = 0;
       let kontrakAktifCount = 0;
       let nilaiAktif = 0;
-      let expiredCount = 0;
-      let kontrakSelesaiCount = 0;
       let segeraExpiredCount = 0;
+      let kontrakExpiredCount = 0;
+      let kontrakSelesaiCount = 0;
       let totalMarginVal = 0;
 
       let custMap = {};
@@ -956,11 +955,7 @@
         let marginNum = parseFloat(marginStr) || 0;
         totalMarginVal += marginNum;
 
-        if (item.status === "Closed") {
-          kontrakSelesaiCount++;
-        } else if (item.status === "Expired") {
-          expiredCount++;
-        } else if (item.status === "Open") {
+        if (item.status === "Open") {
           kontrakAktifCount++;
           nilaiAktif += val;
 
@@ -974,6 +969,10 @@
               }
             }
           }
+        } else if (item.status === "Expired") {
+          kontrakExpiredCount++;
+        } else if (item.status === "Closed") {
+          kontrakSelesaiCount++;
         }
 
         let cust = item.customer || "Lainnya";
@@ -995,7 +994,7 @@
       document.getElementById("kpiKontrakAktif").innerText = kontrakAktifCount;
       document.getElementById("kpiNilaiAktif").innerText = `Rp ${(nilaiAktif / 1000000000).toFixed(1)} M nilai aktif`;
       document.getElementById("kpiSegeraExpired").innerText = segeraExpiredCount;
-      document.getElementById("kpiExpired").innerText = expiredCount;
+      document.getElementById("kpiKontrakExpired").innerText = kontrakExpiredCount;
       document.getElementById("kpiKontrakSelesai").innerText = kontrakSelesaiCount;
       document.getElementById("kpiRataMargin").innerText = avgMargin + "%";
 
@@ -1004,7 +1003,7 @@
       chartPelangganInstance.data.datasets[0].data = sortedCust.map(x => Number(x[1].toFixed(2)));
       chartPelangganInstance.update();
 
-      chartStatusInstance.data.datasets[0].data = [kontrakAktifCount, expiredCount, kontrakSelesaiCount];
+      chartStatusInstance.data.datasets[0].data = [kontrakAktifCount, kontrakExpiredCount, kontrakSelesaiCount];
       chartStatusInstance.update();
 
       let sortedAlat = Object.entries(alatMap);
@@ -1023,6 +1022,7 @@
       document.getElementById("modalTitleText").innerHTML = '<i class="fa-solid fa-file-circle-plus" style="color: #f59e0b;"></i> Tambah Kontrak Baru';
       document.getElementById("formKontrakBaru").reset();
       document.getElementById("inputSkemaSewa").value = "Lepas Kunci";
+      document.getElementById("inputStatus").value = "Open";
       document.getElementById("inputJmlAlat").value = "1";
       document.getElementById("inputLamaSewa").value = "1";
       document.getElementById("inputCogm").value = "0";
@@ -1080,7 +1080,7 @@
       let endingVal = document.getElementById("inputEnding").value;
       let statusVal = document.getElementById("inputStatus").value;
 
-      if (statusVal !== "Closed" && endingVal) {
+      if (endingVal && statusVal !== "Closed") {
         let endDate = new Date(endingVal);
         let today = new Date();
         today.setHours(0, 0, 0, 0);
