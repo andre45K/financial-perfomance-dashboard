@@ -51,20 +51,21 @@
     .btn-primary { background: #f59e0b; color: #0f172a; border-color: #f59e0b; font-weight: 700; }
     .btn-primary:hover { background: #d97706; color: #000; }
 
-    /* KPI Summary Cards */
-    .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 20px; }
-    .kpi-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 14px; position: relative; }
-    .kpi-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-    .kpi-label { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
-    .kpi-badge-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+    /* KPI Summary Cards (6 Kolom) */
+    .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 20px; }
+    .kpi-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; position: relative; }
+    .kpi-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+    .kpi-label { font-size: 9.5px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+    .kpi-badge-icon { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; }
     .bg-yellow { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
     .bg-green { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
     .bg-orange { background: rgba(234, 88, 12, 0.15); color: #ea580c; }
     .bg-red { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
     .bg-blue { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+    .bg-purple { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
     
-    .kpi-value { font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 4px; }
-    .kpi-sub { font-size: 10.5px; color: #94a3b8; }
+    .kpi-value { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 3px; }
+    .kpi-sub { font-size: 10px; color: #94a3b8; }
 
     /* Charts Layout Grid */
     .charts-grid-main { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 20px; }
@@ -94,8 +95,9 @@
     
     td.text-left { text-align: left; }
     td.text-right { text-align: right; }
-    .badge-status-open { background: rgba(34, 197, 94, 0.2); color: #22c55e; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; }
-    .badge-status-closed { background: rgba(100, 116, 139, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; }
+    .badge-status-open { background: rgba(34, 197, 94, 0.2); color: #22c55e; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; display: inline-flex; align-items: center; gap: 4px; }
+    .badge-status-expired { background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; display: inline-flex; align-items: center; gap: 4px; }
+    .badge-status-closed { background: rgba(100, 116, 139, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; display: inline-flex; align-items: center; gap: 4px; }
     
     /* Tombol Aksi */
     .action-btns { display: flex; gap: 6px; justify-content: center; align-items: center; }
@@ -119,7 +121,7 @@
     .form-input:focus { border-color: #f59e0b; }
     .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; border-top: 1px solid #1e293b; padding-top: 12px; }
 
-    @media (max-width: 1200px) {
+    @media (max-width: 1400px) {
       .kpi-grid { grid-template-columns: repeat(3, 1fr); }
       .charts-grid-main { grid-template-columns: 1fr; }
     }
@@ -148,7 +150,7 @@
     </div>
   </div>
 
-  <!-- KPI Cards Grid -->
+  <!-- KPI Cards Grid (6 Kolom termasuk Kontrak Selesai) -->
   <div class="kpi-grid">
     <div class="kpi-card">
       <div class="kpi-card-header">
@@ -177,7 +179,15 @@
     <div class="kpi-card">
       <div class="kpi-card-header">
         <div class="kpi-label">Expired</div>
-        <div class="kpi-badge-icon bg-red"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="kpi-badge-icon bg-red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      </div>
+      <div class="kpi-value" id="kpiExpired">0</div>
+      <div class="kpi-sub">Lewat tgl ending</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-card-header">
+        <div class="kpi-label">Kontrak Selesai</div>
+        <div class="kpi-badge-icon bg-purple"><i class="fa-solid fa-circle-check"></i></div>
       </div>
       <div class="kpi-value" id="kpiKontrakSelesai">0</div>
       <div class="kpi-sub">Status Closed</div>
@@ -188,7 +198,7 @@
         <div class="kpi-badge-icon bg-blue"><i class="fa-solid fa-chart-line"></i></div>
       </div>
       <div class="kpi-value" id="kpiRataMargin">0.0%</div>
-      <div class="kpi-sub">Profit margin rata-rata</div>
+      <div class="kpi-sub">Profit margin</div>
     </div>
   </div>
 
@@ -226,6 +236,7 @@
       <select id="filterStatus" class="filter-dropdown" onchange="filterTable()">
         <option value="">Semua Status</option>
         <option value="Open">Open (Aktif)</option>
+        <option value="Expired">Expired</option>
         <option value="Closed">Closed (Selesai)</option>
       </select>
       <select id="filterAlat" class="filter-dropdown" onchange="filterTable()">
@@ -239,7 +250,7 @@
     </div>
   </div>
 
-  <!-- Tabel Data Monitoring Kontrak Lengkap (Kolom Skema Sewa Ditambahkan di Samping Customer) -->
+  <!-- Tabel Data Monitoring Kontrak Lengkap -->
   <div class="table-responsive">
     <table id="contractTable">
       <thead>
@@ -351,6 +362,7 @@
             <label class="form-label">Status Kontrak</label>
             <select class="form-input" id="inputStatus">
               <option value="Open">Open (Aktif)</option>
+              <option value="Expired">Expired</option>
               <option value="Closed">Closed (Selesai)</option>
             </select>
           </div>
@@ -473,8 +485,8 @@
       chartStatusInstance = new Chart(document.getElementById("chartStatus").getContext("2d"), {
         type: 'doughnut',
         data: {
-          labels: ['Aktif', 'Selesai'],
-          datasets: [{ data: [0, 0], backgroundColor: ['#22c55e', '#64748b'], borderWidth: 0 }]
+          labels: ['Aktif', 'Expired', 'Selesai'],
+          datasets: [{ data: [0, 0, 0], backgroundColor: ['#22c55e', '#ef4444', '#64748b'], borderWidth: 0 }]
         },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 10 } } } }
       });
@@ -750,13 +762,13 @@
 
             let endingParsed = formatDateExact(idxEnding !== -1 ? row[idxEnding] : "");
             let statusParsed = idxStatus !== -1 && row[idxStatus] ? String(row[idxStatus]) : "Open";
-            if (endingParsed) {
+            if (statusParsed !== "Closed" && endingParsed) {
               let endDateObj = new Date(endingParsed);
               endDateObj.setHours(0, 0, 0, 0);
               let todayObj = new Date();
               todayObj.setHours(0, 0, 0, 0);
               if (!isNaN(endDateObj)) {
-                statusParsed = endDateObj < todayObj ? "Closed" : "Open";
+                statusParsed = endDateObj < todayObj ? "Expired" : "Open";
               }
             }
 
@@ -813,11 +825,11 @@
             snapshot.forEach((docSnap) => {
               let data = docSnap.id ? { id: docSnap.id, ...docSnap.data() } : docSnap.data();
               
-              if (data.ending) {
+              if (data.status !== "Closed" && data.ending) {
                 let endDate = new Date(data.ending);
                 endDate.setHours(0, 0, 0, 0);
                 if (!isNaN(endDate)) {
-                  data.status = endDate < today ? "Closed" : "Open";
+                  data.status = endDate < today ? "Expired" : "Open";
                 }
               }
 
@@ -841,6 +853,35 @@
       }, 100);
     }
 
+    // Fungsi interaksi checklist untuk mengubah status Closed/Open
+    async function toggleStatusClosed(id, currentStatus) {
+      if (!window.firebaseDB || !window.firebaseFns) return;
+      const newStatus = currentStatus === "Closed" ? "Open" : "Closed";
+      try {
+        const { doc, setDoc, getDoc } = window.firebaseFns;
+        const docRef = doc(window.firebaseDB, "monitoringKontrak", id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          let data = docSnap.data();
+          let endingDate = data.ending ? new Date(data.ending) : null;
+          let today = new Date();
+          today.setHours(0, 0, 0, 0);
+          if (endingDate) endingDate.setHours(0, 0, 0, 0);
+
+          // Jika di-uncheck dan lewat dari hari ini, kembalikan ke Expired
+          if (newStatus === "Open" && endingDate && endingDate < today) {
+            data.status = "Expired";
+          } else {
+            data.status = newStatus;
+          }
+
+          await setDoc(docRef, data);
+        }
+      } catch (err) {
+        console.error("Gagal mengubah status:", err);
+      }
+    }
+
     function renderTableData(dataList) {
       const tbody = document.querySelector("#contractTable tbody");
       tbody.innerHTML = "";
@@ -849,7 +890,10 @@
         const tr = document.createElement("tr");
 
         let statusText = item.status || "Open";
-        let statusBadgeClass = statusText.toLowerCase() === "closed" ? "badge-status-closed" : "badge-status-open";
+        let isClosed = statusText === "Closed";
+        let statusBadgeClass = "badge-status-open";
+        if (statusText === "Closed") statusBadgeClass = "badge-status-closed";
+        else if (statusText === "Expired") statusBadgeClass = "badge-status-expired";
 
         tr.innerHTML = `
           <td>${index + 1}</td>
@@ -866,7 +910,12 @@
           <td>${Number(item.lamaSewa || 1).toLocaleString("id-ID")}</td>
           <td class="text-right">Rp ${Number(item.hargaSatuan || 0).toLocaleString("id-ID")}</td>
           <td class="text-right"><b>Rp ${Number(item.nilaiKontrak || 0).toLocaleString("id-ID")}</b></td>
-          <td><span class="${statusBadgeClass}">${statusText}</span></td>
+          <td>
+            <span class="${statusBadgeClass}">
+              <input type="checkbox" ${isClosed ? 'checked' : ''} onchange="toggleStatusClosed('${item.id}', '${statusText}')" style="cursor: pointer; margin-right: 4px;" title="Klik untuk ubah status Closed/Open">
+              ${statusText}
+            </span>
+          </td>
           <td>${item.kwitansi || "-"}</td>
           <td>${formatTanggalIndo(item.tglInvoice)}</td>
           <td class="text-right">Rp ${Number(item.cogm || 0).toLocaleString("id-ID")}</td>
@@ -888,6 +937,7 @@
       let totalNilaiSemua = 0;
       let kontrakAktifCount = 0;
       let nilaiAktif = 0;
+      let expiredCount = 0;
       let kontrakSelesaiCount = 0;
       let segeraExpiredCount = 0;
       let totalMarginVal = 0;
@@ -906,7 +956,11 @@
         let marginNum = parseFloat(marginStr) || 0;
         totalMarginVal += marginNum;
 
-        if (item.status === "Open") {
+        if (item.status === "Closed") {
+          kontrakSelesaiCount++;
+        } else if (item.status === "Expired") {
+          expiredCount++;
+        } else if (item.status === "Open") {
           kontrakAktifCount++;
           nilaiAktif += val;
 
@@ -920,8 +974,6 @@
               }
             }
           }
-        } else {
-          kontrakSelesaiCount++;
         }
 
         let cust = item.customer || "Lainnya";
@@ -943,6 +995,7 @@
       document.getElementById("kpiKontrakAktif").innerText = kontrakAktifCount;
       document.getElementById("kpiNilaiAktif").innerText = `Rp ${(nilaiAktif / 1000000000).toFixed(1)} M nilai aktif`;
       document.getElementById("kpiSegeraExpired").innerText = segeraExpiredCount;
+      document.getElementById("kpiExpired").innerText = expiredCount;
       document.getElementById("kpiKontrakSelesai").innerText = kontrakSelesaiCount;
       document.getElementById("kpiRataMargin").innerText = avgMargin + "%";
 
@@ -951,7 +1004,7 @@
       chartPelangganInstance.data.datasets[0].data = sortedCust.map(x => Number(x[1].toFixed(2)));
       chartPelangganInstance.update();
 
-      chartStatusInstance.data.datasets[0].data = [kontrakAktifCount, kontrakSelesaiCount];
+      chartStatusInstance.data.datasets[0].data = [kontrakAktifCount, expiredCount, kontrakSelesaiCount];
       chartStatusInstance.update();
 
       let sortedAlat = Object.entries(alatMap);
@@ -1027,13 +1080,13 @@
       let endingVal = document.getElementById("inputEnding").value;
       let statusVal = document.getElementById("inputStatus").value;
 
-      if (endingVal) {
+      if (statusVal !== "Closed" && endingVal) {
         let endDate = new Date(endingVal);
         let today = new Date();
         today.setHours(0, 0, 0, 0);
         endDate.setHours(0, 0, 0, 0);
         if (!isNaN(endDate)) {
-          statusVal = endDate < today ? "Closed" : "Open";
+          statusVal = endDate < today ? "Expired" : "Open";
         }
       }
 
