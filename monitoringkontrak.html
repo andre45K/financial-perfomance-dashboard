@@ -748,13 +748,25 @@
               marginVal = "100.0%";
             }
 
+            let endingParsed = formatDateExact(idxEnding !== -1 ? row[idxEnding] : "");
+            let statusParsed = idxStatus !== -1 && row[idxStatus] ? String(row[idxStatus]) : "Open";
+            if (endingParsed) {
+              let endDateObj = new Date(endingParsed);
+              endDateObj.setHours(0, 0, 0, 0);
+              let todayObj = new Date();
+              todayObj.setHours(0, 0, 0, 0);
+              if (!isNaN(endDateObj)) {
+                statusParsed = endDateObj < todayObj ? "Closed" : "Open";
+              }
+            }
+
             let kontrakData = {
               noSpsa: spsaVal ? String(spsaVal) : "-",
               customer: customerVal ? String(customerVal) : "Lainnya",
               skemaSewa: idxSkemaSewa !== -1 && row[idxSkemaSewa] ? String(row[idxSkemaSewa]) : "Lepas Kunci",
               tglKontrak: formatDateExact(idxTglKontrak !== -1 ? row[idxTglKontrak] : ""),
               start: formatDateExact(idxStart !== -1 ? row[idxStart] : ""),
-              ending: formatDateExact(idxEnding !== -1 ? row[idxEnding] : ""),
+              ending: endingParsed,
               jmlAlat: jmlAlatVal,
               jenisAlat: idxJenisAlat !== -1 && row[idxJenisAlat] ? String(row[idxJenisAlat]) : "Truck Mixer",
               nkp: idxNkp !== -1 && row[idxNkp] ? String(row[idxNkp]) : "-",
@@ -762,7 +774,7 @@
               lamaSewa: lamaSewaVal,
               hargaSatuan: hargaSatuanVal,
               nilaiKontrak: Math.round(nilaiKontrakVal),
-              status: idxStatus !== -1 && row[idxStatus] ? String(row[idxStatus]) : "Open",
+              status: statusParsed,
               kwitansi: idxKwitansi !== -1 && row[idxKwitansi] ? String(row[idxKwitansi]) : "-",
               tglInvoice: formatDateExact(idxTglInvoice !== -1 ? row[idxTglInvoice] : ""),
               cogm: cogmVal,
@@ -805,9 +817,7 @@
                 let endDate = new Date(data.ending);
                 endDate.setHours(0, 0, 0, 0);
                 if (!isNaN(endDate)) {
-                  if (endDate < today) {
-                    data.status = "Closed";
-                  }
+                  data.status = endDate < today ? "Closed" : "Open";
                 }
               }
 
@@ -1022,8 +1032,8 @@
         let today = new Date();
         today.setHours(0, 0, 0, 0);
         endDate.setHours(0, 0, 0, 0);
-        if (!isNaN(endDate) && endDate < today) {
-          statusVal = "Closed";
+        if (!isNaN(endDate)) {
+          statusVal = endDate < today ? "Closed" : "Open";
         }
       }
 
