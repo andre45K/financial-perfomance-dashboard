@@ -239,7 +239,7 @@
     </div>
   </div>
 
-  <!-- Tabel Data Monitoring Kontrak Lengkap -->
+  <!-- Tabel Data Monitoring Kontrak Lengkap (Kolom Skema Sewa Ditambahkan di Samping Customer) -->
   <div class="table-responsive">
     <table id="contractTable">
       <thead>
@@ -247,22 +247,23 @@
           <th onclick="sortTable(0)">No. <i class="fa-solid fa-sort" id="sort-icon-0"></i></th>
           <th onclick="sortTable(1)">No. SPSA <i class="fa-solid fa-sort" id="sort-icon-1"></i></th>
           <th class="text-left" onclick="sortTable(2)">Customer <i class="fa-solid fa-sort" id="sort-icon-2"></i></th>
-          <th onclick="sortTable(3)">Tanggal Kontrak <i class="fa-solid fa-sort" id="sort-icon-3"></i></th>
-          <th onclick="sortTable(4)">Start (BASTA) <i class="fa-solid fa-sort" id="sort-icon-4"></i></th>
-          <th onclick="sortTable(5)">Ending <i class="fa-solid fa-sort" id="sort-icon-5"></i></th>
-          <th onclick="sortTable(6)">Jumlah Alat <i class="fa-solid fa-sort" id="sort-icon-6"></i></th>
-          <th class="text-left" onclick="sortTable(7)">Jenis Alat <i class="fa-solid fa-sort" id="sort-icon-7"></i></th>
-          <th class="text-left" onclick="sortTable(8)">NKP <i class="fa-solid fa-sort" id="sort-icon-8"></i></th>
-          <th onclick="sortTable(9)">Lokasi <i class="fa-solid fa-sort" id="sort-icon-9"></i></th>
-          <th onclick="sortTable(10)">Lama Sewa (Bulan) <i class="fa-solid fa-sort" id="sort-icon-10"></i></th>
-          <th onclick="sortTable(11)">Harga Satuan <i class="fa-solid fa-sort" id="sort-icon-11"></i></th>
-          <th onclick="sortTable(12)">Nilai Kontrak <i class="fa-solid fa-sort" id="sort-icon-12"></i></th>
-          <th onclick="sortTable(13)">Status Kontrak <i class="fa-solid fa-sort" id="sort-icon-13"></i></th>
-          <th onclick="sortTable(14)">No. Kwitansi <i class="fa-solid fa-sort" id="sort-icon-14"></i></th>
-          <th onclick="sortTable(15)">Tanggal Invoice <i class="fa-solid fa-sort" id="sort-icon-15"></i></th>
-          <th onclick="sortTable(16)">COGM <i class="fa-solid fa-sort" id="sort-icon-16"></i></th>
-          <th onclick="sortTable(17)">Margin <i class="fa-solid fa-sort" id="sort-icon-17"></i></th>
-          <th class="text-left" onclick="sortTable(18)">Keterangan <i class="fa-solid fa-sort" id="sort-icon-18"></i></th>
+          <th class="text-left" onclick="sortTable(3)">Skema Sewa <i class="fa-solid fa-sort" id="sort-icon-3"></i></th>
+          <th onclick="sortTable(4)">Tanggal Kontrak <i class="fa-solid fa-sort" id="sort-icon-4"></i></th>
+          <th onclick="sortTable(5)">Start (BASTA) <i class="fa-solid fa-sort" id="sort-icon-5"></i></th>
+          <th onclick="sortTable(6)">Ending <i class="fa-solid fa-sort" id="sort-icon-6"></i></th>
+          <th onclick="sortTable(7)">Jumlah Alat <i class="fa-solid fa-sort" id="sort-icon-7"></i></th>
+          <th class="text-left" onclick="sortTable(8)">Jenis Alat <i class="fa-solid fa-sort" id="sort-icon-8"></i></th>
+          <th class="text-left" onclick="sortTable(9)">NKP <i class="fa-solid fa-sort" id="sort-icon-9"></i></th>
+          <th onclick="sortTable(10)">Lokasi <i class="fa-solid fa-sort" id="sort-icon-10"></i></th>
+          <th onclick="sortTable(11)">Lama Sewa (Bulan) <i class="fa-solid fa-sort" id="sort-icon-11"></i></th>
+          <th onclick="sortTable(12)">Harga Satuan <i class="fa-solid fa-sort" id="sort-icon-12"></i></th>
+          <th onclick="sortTable(13)">Nilai Kontrak <i class="fa-solid fa-sort" id="sort-icon-13"></i></th>
+          <th onclick="sortTable(14)">Status Kontrak <i class="fa-solid fa-sort" id="sort-icon-14"></i></th>
+          <th onclick="sortTable(15)">No. Kwitansi <i class="fa-solid fa-sort" id="sort-icon-15"></i></th>
+          <th onclick="sortTable(16)">Tanggal Invoice <i class="fa-solid fa-sort" id="sort-icon-16"></i></th>
+          <th onclick="sortTable(17)">COGM <i class="fa-solid fa-sort" id="sort-icon-17"></i></th>
+          <th onclick="sortTable(18)">Margin <i class="fa-solid fa-sort" id="sort-icon-18"></i></th>
+          <th class="text-left" onclick="sortTable(19)">Keterangan <i class="fa-solid fa-sort" id="sort-icon-19"></i></th>
           <th>Aksi</th>
         </tr>
       </thead>
@@ -289,6 +290,15 @@
           <div class="form-group">
             <label class="form-label">Customer</label>
             <input type="text" class="form-input" id="inputCustomer" placeholder="Nama Perusahaan Customer" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Skema Sewa</label>
+            <select class="form-input" id="inputSkemaSewa">
+              <option value="Lepas Kunci">Lepas Kunci</option>
+              <option value="Lepas Kunci inc MCR">Lepas Kunci inc MCR</option>
+              <option value="FMC">FMC</option>
+              <option value="Op FMC">Op FMC</option>
+            </select>
           </div>
           <div class="form-group">
             <label class="form-label">Tanggal Kontrak</label>
@@ -528,11 +538,11 @@
     // Sorting tabel
     function sortTable(colIndex) {
       const keysMap = {
-        0: null, 1: 'noSpsa', 2: 'customer', 3: 'tglKontrak', 4: 'start',
-        5: 'ending', 6: 'jmlAlat', 7: 'jenisAlat', 8: 'nkp', 9: 'lokasi',
-        10: 'lamaSewa', 11: 'hargaSatuan', 12: 'nilaiKontrak', 13: 'status', 
-        14: 'kwitansi', 15: 'tglInvoice', 16: 'cogm', 17: 'margin', 
-        18: 'keterangan'
+        0: null, 1: 'noSpsa', 2: 'customer', 3: 'skemaSewa', 4: 'tglKontrak', 5: 'start',
+        6: 'ending', 7: 'jmlAlat', 8: 'jenisAlat', 9: 'nkp', 10: 'lokasi',
+        11: 'lamaSewa', 12: 'hargaSatuan', 13: 'nilaiKontrak', 14: 'status', 
+        15: 'kwitansi', 16: 'tglInvoice', 17: 'cogm', 18: 'margin', 
+        19: 'keterangan'
       };
 
       if (activeSortColumn === colIndex) {
@@ -544,7 +554,7 @@
       sortDirections = { [colIndex]: activeSortDirection };
       const dir = activeSortDirection === 'asc' ? 1 : -1;
 
-      for (let k = 0; k <= 18; k++) {
+      for (let k = 0; k <= 19; k++) {
         const iconEl = document.getElementById(`sort-icon-${k}`);
         if (iconEl) iconEl.className = 'fa-solid fa-sort';
       }
@@ -563,8 +573,8 @@
         const parsed = Date.parse(str);
         return Number.isNaN(parsed) ? NaN : parsed;
       };
-      const numericColumns = new Set([0, 6, 10, 11, 12, 16, 17]);
-      const dateColumns = new Set([3, 4, 5, 15]);
+      const numericColumns = new Set([0, 7, 11, 12, 13, 17, 18]);
+      const dateColumns = new Set([4, 5, 6, 16]);
 
       globalContractsData = globalContractsData.map((item, index) => ({
         ...item,
@@ -656,6 +666,7 @@
 
           const idxSpsa = getColIdx(['spsa']);
           const idxCust = getColIdx(['customer']);
+          const idxSkemaSewa = getColIdx(['skema sewa', 'skema']);
           const idxTglKontrak = getColIdx(['tanggal kontrak', 'tgl kontrak']);
           const idxStart = getColIdx(['start', 'tanggal aktif']);
           const idxEnding = getColIdx(['ending']);
@@ -693,7 +704,6 @@
               }
             }
             let strVal = String(val).trim();
-            // Jika format DD-MMM-YY atau DD/MM/YY (misal: 9-Jan-26 atau 9/Jan/26)
             let matchDateText = strVal.match(/^(\d{1,2})[-\/]([A-Za-z]{3})[-\/](\d{2,4})$/);
             if (matchDateText) {
               let day = matchDateText[1].padStart(2, '0');
@@ -741,6 +751,7 @@
             let kontrakData = {
               noSpsa: spsaVal ? String(spsaVal) : "-",
               customer: customerVal ? String(customerVal) : "Lainnya",
+              skemaSewa: idxSkemaSewa !== -1 && row[idxSkemaSewa] ? String(row[idxSkemaSewa]) : "Lepas Kunci",
               tglKontrak: formatDateExact(idxTglKontrak !== -1 ? row[idxTglKontrak] : ""),
               start: formatDateExact(idxStart !== -1 ? row[idxStart] : ""),
               ending: formatDateExact(idxEnding !== -1 ? row[idxEnding] : ""),
@@ -834,6 +845,7 @@
           <td>${index + 1}</td>
           <td>${item.noSpsa || "-"} ${item.spsaFile ? `<a href="${item.spsaFile}" target="_blank" title="Buka File SPSA (OneDrive)" style="color: #3b82f6; margin-left: 6px; font-size: 13px;"><i class="fa-solid fa-file-pdf"></i></a>` : ""}</td>
           <td class="text-left">${item.customer || "-"}</td>
+          <td class="text-left">${item.skemaSewa || "Lepas Kunci"}</td>
           <td>${formatTanggalIndo(item.tglKontrak)}</td>
           <td>${formatTanggalIndo(item.start)}</td>
           <td>${formatTanggalIndo(item.ending)}</td>
@@ -947,6 +959,7 @@
       document.getElementById("editDocId").value = "";
       document.getElementById("modalTitleText").innerHTML = '<i class="fa-solid fa-file-circle-plus" style="color: #f59e0b;"></i> Tambah Kontrak Baru';
       document.getElementById("formKontrakBaru").reset();
+      document.getElementById("inputSkemaSewa").value = "Lepas Kunci";
       document.getElementById("inputJmlAlat").value = "1";
       document.getElementById("inputLamaSewa").value = "1";
       document.getElementById("inputCogm").value = "0";
@@ -968,6 +981,7 @@
 
       document.getElementById("inputNoSPSA").value = item.noSpsa || "";
       document.getElementById("inputCustomer").value = item.customer || "";
+      document.getElementById("inputSkemaSewa").value = item.skemaSewa || "Lepas Kunci";
       document.getElementById("inputTglKontrak").value = item.tglKontrak || "";
       document.getElementById("inputStart").value = item.start || "";
       document.getElementById("inputEnding").value = item.ending || "";
@@ -1018,6 +1032,7 @@
       const kontrakData = {
         noSpsa: document.getElementById("inputNoSPSA").value,
         customer: document.getElementById("inputCustomer").value,
+        skemaSewa: document.getElementById("inputSkemaSewa").value,
         tglKontrak: document.getElementById("inputTglKontrak").value,
         start: document.getElementById("inputStart").value,
         ending: endingVal,
@@ -1075,8 +1090,8 @@
           rowText += tds[j].textContent.toLowerCase() + " ";
         }
 
-        const statusText = tds[13] ? tds[13].textContent.toLowerCase() : "";
-        const alatText = tds[7] ? tds[7].textContent.toLowerCase() : "";
+        const statusText = tds[14] ? tds[14].textContent.toLowerCase() : "";
+        const alatText = tds[8] ? tds[8].textContent.toLowerCase() : "";
 
         const matchesSearch = rowText.includes(input);
         const matchesStatus = statusFilter === "" || statusText.includes(statusFilter);
