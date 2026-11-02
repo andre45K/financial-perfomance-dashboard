@@ -7,15 +7,13 @@
   <!-- FontAwesome, Chart.js & SheetJS (xlsx) untuk Impor Excel/CSV -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- WAJIB: Tambahkan Plugin datalabels agar angka bisa tampil di atas grafik -->
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <!-- FIREBASE SDK (Modular v10) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, collection, doc, getDocs, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, doc, getDocs, setDoc, deleteDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
@@ -31,7 +29,7 @@
     const auth = getAuth(app);
 
     window.firebaseDB = db;
-    window.firebaseFns = { collection, doc, getDocs, setDoc, deleteDoc, onSnapshot };
+    window.firebaseFns = { collection, doc, getDocs, setDoc, deleteDoc, updateDoc, onSnapshot };
     window.firebaseAuth = auth;
     window.firebaseAuthFns = { signOut };
   </script>
@@ -53,20 +51,22 @@
     .btn-primary { background: #f59e0b; color: #0f172a; border-color: #f59e0b; font-weight: 700; }
     .btn-primary:hover { background: #d97706; color: #000; }
 
-    /* KPI Summary Cards */
-    .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 20px; }
-    .kpi-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 14px; position: relative; }
+    /* KPI Summary Cards (6 Grid Layout dengan efek bisa diklik) */
+    .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 20px; }
+    .kpi-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 14px; position: relative; cursor: pointer; transition: all 0.2s ease; }
+    .kpi-card:hover { border-color: #f59e0b; background: #131c31; transform: translateY(-2px); }
     .kpi-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-    .kpi-label { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
-    .kpi-badge-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+    .kpi-label { font-size: 9.5px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+    .kpi-badge-icon { width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; }
     .bg-yellow { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
     .bg-green { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
     .bg-orange { background: rgba(234, 88, 12, 0.15); color: #ea580c; }
     .bg-red { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
     .bg-blue { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+    .bg-purple { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
     
-    .kpi-value { font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 4px; }
-    .kpi-sub { font-size: 10.5px; color: #94a3b8; }
+    .kpi-value { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 4px; }
+    .kpi-sub { font-size: 10px; color: #94a3b8; }
 
     /* Charts Layout Grid */
     .charts-grid-main { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 20px; }
@@ -97,8 +97,13 @@
     td.text-left { text-align: left; }
     td.text-right { text-align: right; }
     .badge-status-open { background: rgba(34, 197, 94, 0.2); color: #22c55e; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; }
-    .badge-status-closed { background: rgba(100, 116, 139, 0.2); color: #94a3b8; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; }
+    .badge-status-expired { background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; }
+    .badge-status-closed { background: rgba(168, 85, 247, 0.2); color: #a855f7; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; }
     
+    /* Checkbox kustom di samping badge expired */
+    .status-cell-wrapper { display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .expired-checkbox { width: 15px; height: 15px; accent-color: #a855f7; cursor: pointer; }
+
     /* Tombol Aksi */
     .action-btns { display: flex; gap: 6px; justify-content: center; align-items: center; }
     .btn-icon-edit { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid #3b82f6; width: 26px; height: 26px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
@@ -121,7 +126,7 @@
     .form-input:focus { border-color: #f59e0b; }
     .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; border-top: 1px solid #1e293b; padding-top: 12px; }
 
-    @media (max-width: 1200px) {
+    @media (max-width: 1300px) {
       .kpi-grid { grid-template-columns: repeat(3, 1fr); }
       .charts-grid-main { grid-template-columns: 1fr; }
     }
@@ -150,9 +155,9 @@
     </div>
   </div>
 
-  <!-- KPI Cards Grid -->
+  <!-- KPI Cards Grid (6 Cards dapat diklik) -->
   <div class="kpi-grid">
-    <div class="kpi-card">
+    <div class="kpi-card" onclick="filterByKpi('all')" title="Klik untuk melihat semua kontrak">
       <div class="kpi-card-header">
         <div class="kpi-label">Total Kontrak</div>
         <div class="kpi-badge-icon bg-yellow"><i class="fa-solid fa-file-lines"></i></div>
@@ -160,7 +165,7 @@
       <div class="kpi-value" id="kpiTotalKontrak">0</div>
       <div class="kpi-sub" id="kpiTotalNilai">Rp 0 total nilai</div>
     </div>
-    <div class="kpi-card">
+    <div class="kpi-card" onclick="filterByKpi('Open')" title="Klik untuk melihat kontrak aktif">
       <div class="kpi-card-header">
         <div class="kpi-label">Kontrak Aktif</div>
         <div class="kpi-badge-icon bg-green"><i class="fa-solid fa-bolt"></i></div>
@@ -168,23 +173,31 @@
       <div class="kpi-value" id="kpiKontrakAktif">0</div>
       <div class="kpi-sub" id="kpiNilaiAktif">Rp 0 nilai aktif</div>
     </div>
-    <div class="kpi-card">
+    <div class="kpi-card" onclick="filterByKpi('segeraExpired')" title="Klik untuk melihat kontrak segera expired (< 30 hari)">
       <div class="kpi-card-header">
         <div class="kpi-label">Segera Expired</div>
         <div class="kpi-badge-icon bg-orange"><i class="fa-solid fa-clock"></i></div>
       </div>
       <div class="kpi-value" id="kpiSegeraExpired">0</div>
-      <div class="kpi-sub">&lt; 30 hari lagi</div>
+      <div class="kpi-sub">< 30 hari lagi</div>
     </div>
-    <div class="kpi-card">
+    <div class="kpi-card" onclick="filterByKpi('Expired')" title="Klik untuk melihat kontrak expired">
       <div class="kpi-card-header">
-        <div class="kpi-label">Expired / Selesai</div>
-        <div class="kpi-badge-icon bg-red"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="kpi-label">Expired</div>
+        <div class="kpi-badge-icon bg-red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      </div>
+      <div class="kpi-value" id="kpiKontrakExpired">0</div>
+      <div class="kpi-sub">Lewat masa berlaku</div>
+    </div>
+    <div class="kpi-card" onclick="filterByKpi('Closed')" title="Klik untuk melihat kontrak selesai">
+      <div class="kpi-card-header">
+        <div class="kpi-label">Kontrak Selesai</div>
+        <div class="kpi-badge-icon bg-purple"><i class="fa-solid fa-circle-check"></i></div>
       </div>
       <div class="kpi-value" id="kpiKontrakSelesai">0</div>
       <div class="kpi-sub">Status Closed</div>
     </div>
-    <div class="kpi-card">
+    <div class="kpi-card" title="Rata-rata profit margin keseluruhan">
       <div class="kpi-card-header">
         <div class="kpi-label">Rata-Rata Margin</div>
         <div class="kpi-badge-icon bg-blue"><i class="fa-solid fa-chart-line"></i></div>
@@ -228,6 +241,7 @@
       <select id="filterStatus" class="filter-dropdown" onchange="filterTable()">
         <option value="">Semua Status</option>
         <option value="Open">Open (Aktif)</option>
+        <option value="Expired">Expired</option>
         <option value="Closed">Closed (Selesai)</option>
       </select>
       <select id="filterAlat" class="filter-dropdown" onchange="filterTable()">
@@ -249,25 +263,23 @@
           <th onclick="sortTable(0)">No. <i class="fa-solid fa-sort" id="sort-icon-0"></i></th>
           <th onclick="sortTable(1)">No. SPSA <i class="fa-solid fa-sort" id="sort-icon-1"></i></th>
           <th class="text-left" onclick="sortTable(2)">Customer <i class="fa-solid fa-sort" id="sort-icon-2"></i></th>
-          <th onclick="sortTable(3)">Tanggal Kontrak <i class="fa-solid fa-sort" id="sort-icon-3"></i></th>
-          <th onclick="sortTable(4)">Start (BASTA) <i class="fa-solid fa-sort" id="sort-icon-4"></i></th>
-          <th onclick="sortTable(5)">Ending <i class="fa-solid fa-sort" id="sort-icon-5"></i></th>
-          <th onclick="sortTable(6)">Jumlah Alat <i class="fa-solid fa-sort" id="sort-icon-6"></i></th>
-          <th class="text-left" onclick="sortTable(7)">Jenis Alat <i class="fa-solid fa-sort" id="sort-icon-7"></i></th>
-          <th class="text-left" onclick="sortTable(8)">NKP <i class="fa-solid fa-sort" id="sort-icon-8"></i></th>
-          <th onclick="sortTable(9)">Lokasi <i class="fa-solid fa-sort" id="sort-icon-9"></i></th>
-          <th onclick="sortTable(10)">Lama Sewa (Bulan) <i class="fa-solid fa-sort" id="sort-icon-10"></i></th>
-          <th onclick="sortTable(11)">Harga Satuan <i class="fa-solid fa-sort" id="sort-icon-11"></i></th>
-          <th onclick="sortTable(12)">DPP <i class="fa-solid fa-sort" id="sort-icon-12"></i></th>
-          <th onclick="sortTable(13)">PPN 11% <i class="fa-solid fa-sort" id="sort-icon-13"></i></th>
-          <th onclick="sortTable(14)">Nilai Kontrak <i class="fa-solid fa-sort" id="sort-icon-14"></i></th>
-          <th onclick="sortTable(15)">Status Kontrak <i class="fa-solid fa-sort" id="sort-icon-15"></i></th>
-          <th onclick="sortTable(16)">No. Kwitansi <i class="fa-solid fa-sort" id="sort-icon-16"></i></th>
-          <th onclick="sortTable(17)">Tanggal Invoice <i class="fa-solid fa-sort" id="sort-icon-17"></i></th>
-          <th onclick="sortTable(18)">COGM <i class="fa-solid fa-sort" id="sort-icon-18"></i></th>
-          <th onclick="sortTable(19)">COGS <i class="fa-solid fa-sort" id="sort-icon-19"></i></th>
-          <th onclick="sortTable(20)">Margin <i class="fa-solid fa-sort" id="sort-icon-20"></i></th>
-          <th class="text-left" onclick="sortTable(21)">Keterangan <i class="fa-solid fa-sort" id="sort-icon-21"></i></th>
+          <th class="text-left" onclick="sortTable(3)">Skema Sewa <i class="fa-solid fa-sort" id="sort-icon-3"></i></th>
+          <th onclick="sortTable(4)">Tanggal Kontrak <i class="fa-solid fa-sort" id="sort-icon-4"></i></th>
+          <th onclick="sortTable(5)">Start (BASTA) <i class="fa-solid fa-sort" id="sort-icon-5"></i></th>
+          <th onclick="sortTable(6)">Ending <i class="fa-solid fa-sort" id="sort-icon-6"></i></th>
+          <th onclick="sortTable(7)">Jumlah Alat <i class="fa-solid fa-sort" id="sort-icon-7"></i></th>
+          <th class="text-left" onclick="sortTable(8)">Jenis Alat <i class="fa-solid fa-sort" id="sort-icon-8"></i></th>
+          <th class="text-left" onclick="sortTable(9)">NKP <i class="fa-solid fa-sort" id="sort-icon-9"></i></th>
+          <th onclick="sortTable(10)">Lokasi <i class="fa-solid fa-sort" id="sort-icon-10"></i></th>
+          <th onclick="sortTable(11)">Lama Sewa (Bulan) <i class="fa-solid fa-sort" id="sort-icon-11"></i></th>
+          <th onclick="sortTable(12)">Harga Satuan <i class="fa-solid fa-sort" id="sort-icon-12"></i></th>
+          <th onclick="sortTable(13)">Nilai Kontrak <i class="fa-solid fa-sort" id="sort-icon-13"></i></th>
+          <th onclick="sortTable(14)">Status Kontrak <i class="fa-solid fa-sort" id="sort-icon-14"></i></th>
+          <th onclick="sortTable(15)">No. Kwitansi <i class="fa-solid fa-sort" id="sort-icon-15"></i></th>
+          <th onclick="sortTable(16)">Tanggal Invoice <i class="fa-solid fa-sort" id="sort-icon-16"></i></th>
+          <th onclick="sortTable(17)">COGM <i class="fa-solid fa-sort" id="sort-icon-17"></i></th>
+          <th onclick="sortTable(18)">Margin <i class="fa-solid fa-sort" id="sort-icon-18"></i></th>
+          <th class="text-left" onclick="sortTable(19)">Keterangan <i class="fa-solid fa-sort" id="sort-icon-19"></i></th>
           <th>Aksi</th>
         </tr>
       </thead>
@@ -296,6 +308,15 @@
             <input type="text" class="form-input" id="inputCustomer" placeholder="Nama Perusahaan Customer" required>
           </div>
           <div class="form-group">
+            <label class="form-label">Skema Sewa</label>
+            <select class="form-input" id="inputSkemaSewa">
+              <option value="Lepas Kunci">Lepas Kunci</option>
+              <option value="Lepas Kunci inc MCR">Lepas Kunci inc MCR</option>
+              <option value="FMC">FMC</option>
+              <option value="Op FMC">Op FMC</option>
+            </select>
+          </div>
+          <div class="form-group">
             <label class="form-label">Tanggal Kontrak</label>
             <input type="date" class="form-input" id="inputTglKontrak" required>
           </div>
@@ -309,7 +330,7 @@
           </div>
           <div class="form-group">
             <label class="form-label">Jumlah Alat (Unit)</label>
-            <input type="number" class="form-input" id="inputJmlAlat" value="1" min="1" required>
+            <input type="text" class="form-input" id="inputJmlAlat" value="1" required onkeyup="formatRibuan(this); hitungNilaiKontrak()">
           </div>
           <div class="form-group">
             <label class="form-label">Jenis Alat</label>
@@ -332,28 +353,21 @@
           </div>
           <div class="form-group">
             <label class="form-label">Lama Sewa (Bulan)</label>
-            <input type="number" class="form-input" id="inputLamaSewa" value="1" min="1" required>
+            <input type="text" class="form-input" id="inputLamaSewa" value="1" required onkeyup="formatRibuan(this); hitungNilaiKontrak()">
           </div>
           <div class="form-group">
             <label class="form-label">Harga Satuan (Rp)</label>
-            <input type="number" class="form-input" id="inputHargaSatuan" placeholder="Harga Satuan" required>
+            <input type="text" class="form-input" id="inputHargaSatuan" placeholder="Harga Satuan" required onkeyup="formatRibuan(this); hitungNilaiKontrak(); hitungMargin()">
           </div>
           <div class="form-group">
-            <label class="form-label">DPP (Rp)</label>
-            <input type="number" class="form-input" id="inputDpp" placeholder="DPP" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">PPN 11% (Rp)</label>
-            <input type="number" class="form-input" id="inputPpn" placeholder="PPN 11%">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Nilai Kontrak (Rp)</label>
-            <input type="number" class="form-input" id="inputNilaiKontrak" placeholder="Total Nilai Kontrak" required>
+            <label class="form-label">Nilai Kontrak (Rp) <span style="color: #f59e0b; font-weight: normal;">(+ PPN 11%)</span></label>
+            <input type="text" class="form-input" id="inputNilaiKontrak" placeholder="Total Nilai Kontrak (+ PPN 11%)" required onkeyup="formatRibuan(this)">
           </div>
           <div class="form-group">
             <label class="form-label">Status Kontrak</label>
             <select class="form-input" id="inputStatus">
               <option value="Open">Open (Aktif)</option>
+              <option value="Expired">Expired</option>
               <option value="Closed">Closed (Selesai)</option>
             </select>
           </div>
@@ -367,15 +381,11 @@
           </div>
           <div class="form-group">
             <label class="form-label">COGM (Rp)</label>
-            <input type="number" class="form-input" id="inputCogm" value="0">
-          </div>
-          <div class="form-group">
-            <label class="form-label">COGS (Rp)</label>
-            <input type="number" class="form-input" id="inputCogs" value="0">
+            <input type="text" class="form-input" id="inputCogm" value="0" onkeyup="formatRibuan(this); hitungMargin()">
           </div>
           <div class="form-group">
             <label class="form-label">Margin (%)</label>
-            <input type="text" class="form-input" id="inputMargin" placeholder="Contoh: 100%">
+            <input type="text" class="form-input" id="inputMargin" placeholder="Otomatis terhitung" readonly style="background: #090d16; cursor: not-allowed;">
           </div>
           <div class="form-group full">
             <label class="form-label">Keterangan</label>
@@ -396,9 +406,6 @@
 
   <!-- Script Chart & Dynamic Dashboard Integration -->
   <script>
-    // WAJIB: Daftarkan Plugin ChartDataLabels
-    Chart.register(ChartDataLabels);
-
     let globalContractsData = [];
     let chartPelangganInstance = null;
     let chartStatusInstance = null;
@@ -413,138 +420,106 @@
       initFirebaseRealtimeSync();
     });
 
+    // Format inputan angka dengan pemisah ribuan titik (.)
+    function formatRibuan(input) {
+      let value = input.value.replace(/[^,\d]/g, '').toString();
+      let split = value.split(',');
+      let sisa = split[0].length % 3;
+      let rupiah = split[0].substr(0, sisa);
+      let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+      if (ribuan) {
+        let separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+      }
+
+      rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+      input.value = rupiah;
+    }
+
+    // Mengubah string berformat ribuan kembali ke nilai numerik murni
+    function parseRibuan(val) {
+      if (!val) return 0;
+      let cleaned = String(val).replace(/\./g, '').replace(/,/g, '.');
+      return Number(cleaned) || 0;
+    }
+
+    // Otomatis menghitung Nilai Kontrak = Harga Satuan * Lama Sewa * Jumlah Alat * 1.11 (+ PPN 11%)
+    function hitungNilaiKontrak() {
+      const hargaSatuan = parseRibuan(document.getElementById("inputHargaSatuan").value);
+      const lamaSewa = parseRibuan(document.getElementById("inputLamaSewa").value) || 1;
+      const jmlAlat = parseRibuan(document.getElementById("inputJmlAlat").value) || 1;
+      
+      const subtotal = hargaSatuan * lamaSewa * jmlAlat;
+      const nilaiDenganPpn = subtotal * 1.11;
+      
+      const rounded = Math.round(nilaiDenganPpn);
+      document.getElementById("inputNilaiKontrak").value = rounded.toLocaleString("id-ID");
+    }
+
+    // Otomatis menghitung Margin (%) = (Harga Satuan / COGM) - 1
+    function hitungMargin() {
+      const hargaSatuan = parseRibuan(document.getElementById("inputHargaSatuan").value);
+      const cogm = parseRibuan(document.getElementById("inputCogm").value);
+
+      if (cogm > 0) {
+        const marginVal = (hargaSatuan / cogm) - 1;
+        const marginPercent = marginVal * 100;
+        document.getElementById("inputMargin").value = marginPercent.toFixed(1) + "%";
+      } else {
+        document.getElementById("inputMargin").value = "0.0%";
+      }
+    }
+
     function initCharts() {
-      // 1. Chart Pelanggan (Angka dalam juta/M, datalabels di ujung bar)[cite: 7]
+      // 1. Chart Pelanggan
       chartPelangganInstance = new Chart(document.getElementById("chartPelanggan").getContext("2d"), {
         type: "bar",
         data: { labels: [], datasets: [{ data: [], backgroundColor: "#f59e0b", borderRadius: 4 }] },
         options: {
           indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-          plugins: { 
-            legend: { display: false },
-            datalabels: {
-              anchor: 'end',
-              align: 'right',
-              color: '#94a3b8',
-              font: { size: 9, weight: 'bold' },
-              formatter: function(value) {
-                return 'Rp ' + Number(value).toLocaleString('id-ID') + ' M';
-              }
-            }
-          },
+          plugins: { legend: { display: false } },
           scales: {
-            x: { 
-              ticks: { color: "#94a3b8", font: { size: 9 }, callback: val => 'Rp ' + val + ' M' }, 
-              grid: { color: "#1e293b" },
-              // Memberikan ruang agar label tidak terpotong di kanan
-              suggestedMax: function(context) {
-                  let maxVal = 0;
-                  const data = context.chart.data.datasets[0].data;
-                  if (data.length > 0) {
-                      maxVal = Math.max(...data);
-                  }
-                  return maxVal * 1.2; 
-              }
-            },
+            x: { ticks: { color: "#94a3b8", font: { size: 9 }, callback: val => 'Rp ' + val + ' M' }, grid: { color: "#1e293b" } },
             y: { ticks: { color: "#f8fafc", font: { size: 9 } }, grid: { display: false } }
           }
         }
       });
 
-      // 2. Chart Status (Pie/Doughnut bisa ditambahkan label juga di tengah atau persentase jika mau)
+      // 2. Chart Status
       chartStatusInstance = new Chart(document.getElementById("chartStatus").getContext("2d"), {
         type: 'doughnut',
         data: {
-          labels: ['Aktif', 'Selesai'],
-          datasets: [{ data: [0, 0], backgroundColor: ['#22c55e', '#64748b'], borderWidth: 0 }]
+          labels: ['Aktif', 'Expired', 'Selesai'],
+          datasets: [{ data: [0, 0, 0], backgroundColor: ['#22c55e', '#ef4444', '#a855f7'], borderWidth: 0 }]
         },
-        options: { 
-          responsive: true, maintainAspectRatio: false, 
-          plugins: { 
-            legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 10 } },
-            datalabels: {
-              color: '#ffffff',
-              font: { size: 12, weight: 'bold' },
-              formatter: (value, context) => {
-                  let total = context.dataset.data.reduce((acc, val) => acc + val, 0);
-                  if (total === 0 || value === 0) return '';
-                  let percentage = Math.round((value / total) * 100) + "%";
-                  return percentage;
-              }
-            }
-          } 
-        }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 10 } } } }
       });
 
-      // 3. Chart Jenis Alat[cite: 8]
+      // 3. Chart Jenis Alat
       chartAlatInstance = new Chart(document.getElementById("chartAlat").getContext("2d"), {
         type: 'bar',
         data: { labels: [], datasets: [{ data: [], backgroundColor: '#3b82f6', borderRadius: 4 }] },
         options: {
           responsive: true, maintainAspectRatio: false,
-          plugins: { 
-            legend: { display: false },
-            datalabels: {
-              anchor: 'end',
-              align: 'top',
-              color: '#94a3b8',
-              font: { size: 10, weight: 'bold' },
-              formatter: function(value) {
-                return value;
-              }
-            }
-          },
+          plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { display: false } },
-            y: { 
-              ticks: { color: '#94a3b8', font: { size: 9 } }, 
-              grid: { color: '#1e293b' },
-              suggestedMax: function(context) {
-                  let maxVal = 0;
-                  const data = context.chart.data.datasets[0].data;
-                  if (data.length > 0) {
-                      maxVal = Math.max(...data);
-                  }
-                  return maxVal * 1.15; 
-              }
-            }
+            y: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { color: '#1e293b' } }
           }
         }
       });
 
-      // 4. Chart Tren Bulan[cite: 8]
+      // 4. Chart Tren Bulan
       chartTrenInstance = new Chart(document.getElementById("chartTren").getContext("2d"), {
         type: 'line',
         data: { labels: [], datasets: [{ data: [], borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', fill: true, tension: 0.3, pointRadius: 3 }] },
         options: {
           responsive: true, maintainAspectRatio: false,
-          plugins: { 
-            legend: { display: false },
-            datalabels: {
-              anchor: 'bottom',
-              align: 'bottom',
-              color: '#f59e0b',
-              font: { size: 9, weight: 'bold' },
-              formatter: function(value) {
-                 return Number(value).toLocaleString('id-ID') + ' M';
-              },
-              offset: 8
-            }
-          },
+          plugins: { legend: { display: false } },
           scales: {
             x: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { display: false } },
-            y: { 
-              ticks: { color: '#94a3b8', font: { size: 9 }, callback: val => 'Rp ' + val + ' M' }, 
-              grid: { color: '#1e293b' },
-              suggestedMax: function(context) {
-                  let maxVal = 0;
-                  const data = context.chart.data.datasets[0].data;
-                  if (data.length > 0) {
-                      maxVal = Math.max(...data);
-                  }
-                  return maxVal * 1.2; 
-              }
-            }
+            y: { ticks: { color: '#94a3b8', font: { size: 9 }, callback: val => 'Rp ' + val + ' M' }, grid: { color: '#1e293b' } }
           }
         }
       });
@@ -558,6 +533,16 @@
     // Helper Format Tanggal Indonesia (DD MMM YYYY, cth: 17 Jul 2026)
     function formatTanggalIndo(dateStr) {
       if (!dateStr || dateStr === "-") return "-";
+      let parts = dateStr.split('-');
+      if (parts.length === 3 && parts[0].length === 4) {
+        let year = parts[0];
+        let monthIdx = parseInt(parts[1], 10) - 1;
+        let day = parts[2];
+        const bulanIndo = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
+        if (monthIdx >= 0 && monthIdx < 12) {
+          return `${day} ${bulanIndo[monthIdx]} ${year}`;
+        }
+      }
       let d = new Date(dateStr);
       if (isNaN(d)) return dateStr;
       let day = String(d.getDate()).padStart(2, '0');
@@ -567,14 +552,14 @@
       return `${day} ${month} ${year}`;
     }
 
-    // Sorting tabel: mendukung teks A-Z/Z-A, angka, nilai rupiah, dan tanggal.
+    // Sorting tabel
     function sortTable(colIndex) {
       const keysMap = {
-        0: null, 1: 'noSpsa', 2: 'customer', 3: 'tglKontrak', 4: 'start',
-        5: 'ending', 6: 'jmlAlat', 7: 'jenisAlat', 8: 'nkp', 9: 'lokasi',
-        10: 'lamaSewa', 11: 'hargaSatuan', 12: 'dpp', 13: 'ppn',
-        14: 'nilaiKontrak', 15: 'status', 16: 'kwitansi', 17: 'tglInvoice',
-        18: 'cogm', 19: 'cogs', 20: 'margin', 21: 'keterangan'
+        0: null, 1: 'noSpsa', 2: 'customer', 3: 'skemaSewa', 4: 'tglKontrak', 5: 'start',
+        6: 'ending', 7: 'jmlAlat', 8: 'jenisAlat', 9: 'nkp', 10: 'lokasi',
+        11: 'lamaSewa', 12: 'hargaSatuan', 13: 'nilaiKontrak', 14: 'status', 
+        15: 'kwitansi', 16: 'tglInvoice', 17: 'cogm', 18: 'margin', 
+        19: 'keterangan'
       };
 
       if (activeSortColumn === colIndex) {
@@ -586,7 +571,7 @@
       sortDirections = { [colIndex]: activeSortDirection };
       const dir = activeSortDirection === 'asc' ? 1 : -1;
 
-      for (let k = 0; k <= 21; k++) {
+      for (let k = 0; k <= 19; k++) {
         const iconEl = document.getElementById(`sort-icon-${k}`);
         if (iconEl) iconEl.className = 'fa-solid fa-sort';
       }
@@ -605,8 +590,8 @@
         const parsed = Date.parse(str);
         return Number.isNaN(parsed) ? NaN : parsed;
       };
-      const numericColumns = new Set([0, 6, 10, 11, 12, 13, 14, 18, 19]);
-      const dateColumns = new Set([3, 4, 5, 17]);
+      const numericColumns = new Set([0, 7, 11, 12, 13, 17, 18]);
+      const dateColumns = new Set([4, 5, 6, 16]);
 
       globalContractsData = globalContractsData.map((item, index) => ({
         ...item,
@@ -698,6 +683,7 @@
 
           const idxSpsa = getColIdx(['spsa']);
           const idxCust = getColIdx(['customer']);
+          const idxSkemaSewa = getColIdx(['skema sewa', 'skema']);
           const idxTglKontrak = getColIdx(['tanggal kontrak', 'tgl kontrak']);
           const idxStart = getColIdx(['start', 'tanggal aktif']);
           const idxEnding = getColIdx(['ending']);
@@ -707,23 +693,25 @@
           const idxLokasi = getColIdx(['lokasi']);
           const idxLamaSewa = getColIdx(['lama sewa']);
           const idxHargaSatuan = getColIdx(['harga satuan']);
-          const idxDpp = getColIdx(['dpp']);
-          const idxPpn = getColIdx(['ppn']);
           const idxNilaiKontrak = getColIdx(['nilai kontrak']);
           const idxStatus = getColIdx(['status kontrak']);
           const idxKwitansi = getColIdx(['kwitansi']);
           const idxTglInvoice = getColIdx(['tanggal invoice', 'tanggal kwitansi']);
           const idxCogm = getColIdx(['cogm']);
-          const idxCogs = getColIdx(['cogs']);
           const idxMargin = getColIdx(['margin']);
           const idxKet = getColIdx(['keterangan']);
 
           let importedCount = 0;
           const { doc, setDoc } = window.firebaseFns;
 
-          const formatDate = (val) => {
+          const formatDateExact = (val) => {
             if (!val) return "";
-            if (val instanceof Date && !isNaN(val)) return val.toISOString().split('T')[0];
+            if (val instanceof Date && !isNaN(val)) {
+              let y = val.getFullYear();
+              let m = String(val.getMonth() + 1).padStart(2, '0');
+              let d = String(val.getDate()).padStart(2, '0');
+              return `${y}-${m}-${d}`;
+            }
             if (typeof val === 'number') {
               let d = XLSX.SSF.parse_date_code(val);
               if (d) {
@@ -732,9 +720,25 @@
                 return `${d.y}-${m}-${day}`;
               }
             }
-            let parsed = new Date(val);
-            if (!isNaN(parsed)) return parsed.toISOString().split('T')[0];
-            return String(val);
+            let strVal = String(val).trim();
+            let matchDateText = strVal.match(/^(\d{1,2})[-\/]([A-Za-z]{3})[-\/](\d{2,4})$/);
+            if (matchDateText) {
+              let day = matchDateText[1].padStart(2, '0');
+              let monStr = matchDateText[2].toLowerCase();
+              let yr = matchDateText[3];
+              if (yr.length === 2) yr = '20' + yr;
+              const months = {jan:'01', feb:'02', mar:'03', apr:'04', mei:'05', may:'05', jun:'06', jul:'07', ags:'08', aug:'08', sep:'09', okt:'10', oct:'10', nov:'11', des:'12', dec:'12'};
+              let m = months[monStr] || '01';
+              return `${yr}-${m}-${day}`;
+            }
+            let parsed = new Date(strVal);
+            if (!isNaN(parsed)) {
+              let y = parsed.getFullYear();
+              let m = String(parsed.getMonth() + 1).padStart(2, '0');
+              let d = String(parsed.getDate()).padStart(2, '0');
+              return `${y}-${m}-${d}`;
+            }
+            return strVal;
           };
 
           for (let i = headerRowIdx + 1; i < jsonRaw.length; i++) {
@@ -745,27 +749,53 @@
             let spsaVal = idxSpsa !== -1 ? row[idxSpsa] : null;
             if (!customerVal && !spsaVal) continue;
 
+            let hargaSatuanVal = Number(idxHargaSatuan !== -1 ? row[idxHargaSatuan] : 0) || 0;
+            let lamaSewaVal = Number(idxLamaSewa !== -1 ? row[idxLamaSewa] : 1) || 1;
+            let jmlAlatVal = Number(idxJmlUnit !== -1 ? row[idxJmlUnit] : 1) || 1;
+            let nilaiKontrakVal = Number(idxNilaiKontrak !== -1 ? row[idxNilaiKontrak] : 0) || 0;
+            if (nilaiKontrakVal === 0 && hargaSatuanVal > 0) {
+              nilaiKontrakVal = hargaSatuanVal * lamaSewaVal * jmlAlatVal * 1.11;
+            }
+
+            let cogmVal = Number(idxCogm !== -1 ? row[idxCogm] : 0) || 0;
+            let marginVal = idxMargin !== -1 && row[idxMargin] ? String(row[idxMargin]) : "";
+            if (!marginVal && cogmVal > 0) {
+              marginVal = (((hargaSatuanVal / cogmVal) - 1) * 100).toFixed(1) + "%";
+            } else if (!marginVal) {
+              marginVal = "100.0%";
+            }
+
+            let endingParsed = formatDateExact(idxEnding !== -1 ? row[idxEnding] : "");
+            let statusParsed = idxStatus !== -1 && row[idxStatus] ? String(row[idxStatus]) : "Open";
+            if (endingParsed && statusParsed !== "Closed") {
+              let endDateObj = new Date(endingParsed);
+              endDateObj.setHours(0, 0, 0, 0);
+              let todayObj = new Date();
+              todayObj.setHours(0, 0, 0, 0);
+              if (!isNaN(endDateObj)) {
+                statusParsed = endDateObj < todayObj ? "Expired" : "Open";
+              }
+            }
+
             let kontrakData = {
               noSpsa: spsaVal ? String(spsaVal) : "-",
               customer: customerVal ? String(customerVal) : "Lainnya",
-              tglKontrak: formatDate(idxTglKontrak !== -1 ? row[idxTglKontrak] : ""),
-              start: formatDate(idxStart !== -1 ? row[idxStart] : ""),
-              ending: formatDate(idxEnding !== -1 ? row[idxEnding] : ""),
-              jmlAlat: Number(idxJmlUnit !== -1 ? row[idxJmlUnit] : 1) || 1,
+              skemaSewa: idxSkemaSewa !== -1 && row[idxSkemaSewa] ? String(row[idxSkemaSewa]) : "Lepas Kunci",
+              tglKontrak: formatDateExact(idxTglKontrak !== -1 ? row[idxTglKontrak] : ""),
+              start: formatDateExact(idxStart !== -1 ? row[idxStart] : ""),
+              ending: endingParsed,
+              jmlAlat: jmlAlatVal,
               jenisAlat: idxJenisAlat !== -1 && row[idxJenisAlat] ? String(row[idxJenisAlat]) : "Truck Mixer",
               nkp: idxNkp !== -1 && row[idxNkp] ? String(row[idxNkp]) : "-",
               lokasi: idxLokasi !== -1 && row[idxLokasi] ? String(row[idxLokasi]) : "Proyek",
-              lamaSewa: Number(idxLamaSewa !== -1 ? row[idxLamaSewa] : 1) || 1,
-              hargaSatuan: Number(idxHargaSatuan !== -1 ? row[idxHargaSatuan] : 0) || 0,
-              dpp: Number(idxDpp !== -1 ? row[idxDpp] : 0) || 0,
-              ppn: Number(idxPpn !== -1 ? row[idxPpn] : 0) || 0,
-              nilaiKontrak: Number(idxNilaiKontrak !== -1 ? row[idxNilaiKontrak] : 0) || 0,
-              status: idxStatus !== -1 && row[idxStatus] ? String(row[idxStatus]) : "Open",
+              lamaSewa: lamaSewaVal,
+              hargaSatuan: hargaSatuanVal,
+              nilaiKontrak: Math.round(nilaiKontrakVal),
+              status: statusParsed,
               kwitansi: idxKwitansi !== -1 && row[idxKwitansi] ? String(row[idxKwitansi]) : "-",
-              tglInvoice: formatDate(idxTglInvoice !== -1 ? row[idxTglInvoice] : ""),
-              cogm: Number(idxCogm !== -1 ? row[idxCogm] : 0) || 0,
-              cogs: Number(idxCogs !== -1 ? row[idxCogs] : 0) || 0,
-              margin: idxMargin !== -1 && row[idxMargin] ? String(row[idxMargin]) : "100%",
+              tglInvoice: formatDateExact(idxTglInvoice !== -1 ? row[idxTglInvoice] : ""),
+              cogm: cogmVal,
+              margin: marginVal,
               keterangan: idxKet !== -1 && row[idxKet] ? String(row[idxKet]) : "-"
             };
 
@@ -800,13 +830,11 @@
             snapshot.forEach((docSnap) => {
               let data = docSnap.id ? { id: docSnap.id, ...docSnap.data() } : docSnap.data();
               
-              if (data.ending) {
+              if (data.ending && data.status !== "Closed") {
                 let endDate = new Date(data.ending);
                 endDate.setHours(0, 0, 0, 0);
                 if (!isNaN(endDate)) {
-                  if (endDate < today) {
-                    data.status = "Closed";
-                  }
+                  data.status = endDate < today ? "Expired" : "Open";
                 }
               }
 
@@ -838,30 +866,45 @@
         const tr = document.createElement("tr");
 
         let statusText = item.status || "Open";
-        let statusBadgeClass = statusText.toLowerCase() === "closed" ? "badge-status-closed" : "badge-status-open";
+        let statusBadgeClass = "badge-status-open";
+        let statusHtml = "";
+
+        if (statusText === "Closed") {
+          statusBadgeClass = "badge-status-closed";
+          statusHtml = `<span class="${statusBadgeClass}">Closed</span>`;
+        } else if (statusText === "Expired") {
+          statusBadgeClass = "badge-status-expired";
+          statusHtml = `
+            <div class="status-cell-wrapper">
+              <span class="${statusBadgeClass}">Expired</span>
+              <input type="checkbox" class="expired-checkbox" title="Klik untuk mengubah status menjadi Closed (Selesai)" onclick="ubahStatusClosed('${item.id}', event)">
+            </div>
+          `;
+        } else {
+          statusBadgeClass = "badge-status-open";
+          statusHtml = `<span class="${statusBadgeClass}">Open</span>`;
+        }
 
         tr.innerHTML = `
           <td>${index + 1}</td>
           <td>${item.noSpsa || "-"} ${item.spsaFile ? `<a href="${item.spsaFile}" target="_blank" title="Buka File SPSA (OneDrive)" style="color: #3b82f6; margin-left: 6px; font-size: 13px;"><i class="fa-solid fa-file-pdf"></i></a>` : ""}</td>
           <td class="text-left">${item.customer || "-"}</td>
+          <td class="text-left">${item.skemaSewa || "Lepas Kunci"}</td>
           <td>${formatTanggalIndo(item.tglKontrak)}</td>
           <td>${formatTanggalIndo(item.start)}</td>
           <td>${formatTanggalIndo(item.ending)}</td>
-          <td>${item.jmlAlat || 1}</td>
+          <td>${Number(item.jmlAlat || 1).toLocaleString("id-ID")}</td>
           <td class="text-left">${item.jenisAlat || "-"}</td>
           <td class="text-left">${item.nkp || "-"}</td>
           <td class="text-left">${item.lokasi || "-"}</td>
-          <td>${item.lamaSewa || 1}</td>
+          <td>${Number(item.lamaSewa || 1).toLocaleString("id-ID")}</td>
           <td class="text-right">Rp ${Number(item.hargaSatuan || 0).toLocaleString("id-ID")}</td>
-          <td class="text-right">Rp ${Number(item.dpp || 0).toLocaleString("id-ID")}</td>
-          <td class="text-right">Rp ${Number(item.ppn || 0).toLocaleString("id-ID")}</td>
           <td class="text-right"><b>Rp ${Number(item.nilaiKontrak || 0).toLocaleString("id-ID")}</b></td>
-          <td><span class="${statusBadgeClass}">${statusText}</span></td>
+          <td>${statusHtml}</td>
           <td>${item.kwitansi || "-"}</td>
           <td>${formatTanggalIndo(item.tglInvoice)}</td>
           <td class="text-right">Rp ${Number(item.cogm || 0).toLocaleString("id-ID")}</td>
-          <td class="text-right">Rp ${Number(item.cogs || 0).toLocaleString("id-ID")}</td>
-          <td>${item.margin || "100%"}</td>
+          <td>${item.margin || "0.0%"}</td>
           <td class="text-left">${item.keterangan || "-"}</td>
           <td>
             <div class="action-btns">
@@ -874,13 +917,72 @@
       });
     }
 
+    // Fungsi otomatis ubah status ke Closed saat checklist pada badge Expired diklik
+    async function ubahStatusClosed(id, event) {
+      event.stopPropagation();
+      if (!window.firebaseDB || !window.firebaseFns) return;
+      try {
+        const { doc, updateDoc } = window.firebaseFns;
+        await updateDoc(doc(window.firebaseDB, "monitoringKontrak", id), {
+          status: "Closed"
+        });
+      } catch (error) {
+        console.error("Gagal memperbarui status kontrak:", error);
+        alert("Gagal memperbarui status ke Closed.");
+      }
+    }
+
+    // Fungsi Klik KPI untuk Memfilter Detail List Kontrak pada Tabel
+    function filterByKpi(type) {
+      const searchInput = document.getElementById("searchInput");
+      const filterStatus = document.getElementById("filterStatus");
+
+      searchInput.value = "";
+      if (type === 'all') {
+        filterStatus.value = "";
+      } else if (type === 'segeraExpired') {
+        filterStatus.value = "Open";
+      } else {
+        filterStatus.value = type;
+      }
+      filterTable();
+
+      // Jika klik "Segera Expired", saring tabel khusus baris yang < 30 hari lagi
+      if (type === 'segeraExpired') {
+        const table = document.getElementById("contractTable");
+        const trs = table.getElementsByTagName("tr");
+        let today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        for (let i = 1; i < trs.length; i++) {
+          const tds = trs[i].getElementsByTagName("td");
+          if (tds.length > 6) {
+            let endingText = tds[6].textContent;
+            let isSegera = false;
+            if (endingText && endingText !== "-") {
+              let endDate = new Date(endingText);
+              if (!isNaN(endDate)) {
+                let diffDays = (endDate - today) / (1000 * 60 * 60 * 24);
+                if (diffDays >= 0 && diffDays <= 30) isSegera = true;
+              }
+            }
+            trs[i].style.display = isSegera ? "" : "none";
+          }
+        }
+      }
+
+      // Scroll halus ke area tabel
+      document.getElementById("contractTable").scrollIntoView({ behavior: 'smooth' });
+    }
+
     function updateDashboardMetrics(dataList) {
       let totalKontrak = dataList.length;
       let totalNilaiSemua = 0;
       let kontrakAktifCount = 0;
       let nilaiAktif = 0;
-      let kontrakSelesaiCount = 0;
       let segeraExpiredCount = 0;
+      let kontrakExpiredCount = 0;
+      let kontrakSelesaiCount = 0;
       let totalMarginVal = 0;
 
       let custMap = {};
@@ -893,8 +995,8 @@
         let val = Number(item.nilaiKontrak || 0);
         totalNilaiSemua += val;
 
-        let marginStr = String(item.margin || "54.1").replace("%", "");
-        let marginNum = parseFloat(marginStr) || 54.1;
+        let marginStr = String(item.margin || "0").replace("%", "");
+        let marginNum = parseFloat(marginStr) || 0;
         totalMarginVal += marginNum;
 
         if (item.status === "Open") {
@@ -911,13 +1013,14 @@
               }
             }
           }
-        } else {
+        } else if (item.status === "Expired") {
+          kontrakExpiredCount++;
+        } else if (item.status === "Closed") {
           kontrakSelesaiCount++;
         }
 
         let cust = item.customer || "Lainnya";
-        // Dibagi 1.000.000 agar nilai tampil dalam juta
-        custMap[cust] = (custMap[cust] || 0) + (val / 1000000);
+        custMap[cust] = (custMap[cust] || 0) + (val / 1000000000);
 
         let alat = item.jenisAlat || "Lainnya";
         alatMap[alat] = (alatMap[alat] || 0) + 1;
@@ -925,8 +1028,7 @@
         let tgl = item.start || item.tglKontrak || "2026-01";
         let bulanKey = tgl.length >= 7 ? tgl.substring(0, 7) : "2026-01";
         if(!bulanKey.startsWith("20")) bulanKey = "2026-01";
-        // Dibagi 1.000.000 agar nilai tampil dalam juta
-        trenMap[bulanKey] = (trenMap[bulanKey] || 0) + (val / 1000000);
+        trenMap[bulanKey] = (trenMap[bulanKey] || 0) + (val / 1000000000);
       });
 
       let avgMargin = totalKontrak > 0 ? (totalMarginVal / totalKontrak).toFixed(1) : "0.0";
@@ -936,6 +1038,7 @@
       document.getElementById("kpiKontrakAktif").innerText = kontrakAktifCount;
       document.getElementById("kpiNilaiAktif").innerText = `Rp ${(nilaiAktif / 1000000000).toFixed(1)} M nilai aktif`;
       document.getElementById("kpiSegeraExpired").innerText = segeraExpiredCount;
+      document.getElementById("kpiKontrakExpired").innerText = kontrakExpiredCount;
       document.getElementById("kpiKontrakSelesai").innerText = kontrakSelesaiCount;
       document.getElementById("kpiRataMargin").innerText = avgMargin + "%";
 
@@ -944,7 +1047,7 @@
       chartPelangganInstance.data.datasets[0].data = sortedCust.map(x => Number(x[1].toFixed(2)));
       chartPelangganInstance.update();
 
-      chartStatusInstance.data.datasets[0].data = [kontrakAktifCount, kontrakSelesaiCount];
+      chartStatusInstance.data.datasets[0].data = [kontrakAktifCount, kontrakExpiredCount, kontrakSelesaiCount];
       chartStatusInstance.update();
 
       let sortedAlat = Object.entries(alatMap);
@@ -962,6 +1065,12 @@
       document.getElementById("editDocId").value = "";
       document.getElementById("modalTitleText").innerHTML = '<i class="fa-solid fa-file-circle-plus" style="color: #f59e0b;"></i> Tambah Kontrak Baru';
       document.getElementById("formKontrakBaru").reset();
+      document.getElementById("inputSkemaSewa").value = "Lepas Kunci";
+      document.getElementById("inputStatus").value = "Open";
+      document.getElementById("inputJmlAlat").value = "1";
+      document.getElementById("inputLamaSewa").value = "1";
+      document.getElementById("inputCogm").value = "0";
+      document.getElementById("inputMargin").value = "0.0%";
       document.getElementById("modalKontrak").style.display = "flex";
     }
 
@@ -979,24 +1088,22 @@
 
       document.getElementById("inputNoSPSA").value = item.noSpsa || "";
       document.getElementById("inputCustomer").value = item.customer || "";
+      document.getElementById("inputSkemaSewa").value = item.skemaSewa || "Lepas Kunci";
       document.getElementById("inputTglKontrak").value = item.tglKontrak || "";
       document.getElementById("inputStart").value = item.start || "";
       document.getElementById("inputEnding").value = item.ending || "";
-      document.getElementById("inputJmlAlat").value = item.jmlAlat || 1;
+      document.getElementById("inputJmlAlat").value = item.jmlAlat ? Number(item.jmlAlat).toLocaleString("id-ID") : "1";
       document.getElementById("inputJenisAlat").value = item.jenisAlat || "Truck Mixer";
       document.getElementById("inputNkp").value = item.nkp || "";
       document.getElementById("inputLokasi").value = item.lokasi || "";
-      document.getElementById("inputLamaSewa").value = item.lamaSewa || 1;
-      document.getElementById("inputHargaSatuan").value = item.hargaSatuan || "";
-      document.getElementById("inputDpp").value = item.dpp || "";
-      document.getElementById("inputPpn").value = item.ppn || "";
-      document.getElementById("inputNilaiKontrak").value = item.nilaiKontrak || "";
+      document.getElementById("inputLamaSewa").value = item.lamaSewa ? Number(item.lamaSewa).toLocaleString("id-ID") : "1";
+      document.getElementById("inputHargaSatuan").value = item.hargaSatuan ? Number(item.hargaSatuan).toLocaleString("id-ID") : "";
+      document.getElementById("inputNilaiKontrak").value = item.nilaiKontrak ? Number(item.nilaiKontrak).toLocaleString("id-ID") : "";
       document.getElementById("inputStatus").value = item.status || "Open";
       document.getElementById("inputKwitansi").value = item.kwitansi || "";
       document.getElementById("inputTglInvoice").value = item.tglInvoice || "";
-      document.getElementById("inputCogm").value = item.cogm || 0;
-      document.getElementById("inputCogs").value = item.cogs || 0;
-      document.getElementById("inputMargin").value = item.margin || "";
+      document.getElementById("inputCogm").value = item.cogm ? Number(item.cogm).toLocaleString("id-ID") : "0";
+      document.getElementById("inputMargin").value = item.margin || "0.0%";
       document.getElementById("inputKeterangan").value = item.keterangan || "";
       document.getElementById("inputSpsaFile").value = item.spsaFile || "";
 
@@ -1017,13 +1124,13 @@
       let endingVal = document.getElementById("inputEnding").value;
       let statusVal = document.getElementById("inputStatus").value;
 
-      if (endingVal) {
+      if (endingVal && statusVal !== "Closed") {
         let endDate = new Date(endingVal);
         let today = new Date();
         today.setHours(0, 0, 0, 0);
         endDate.setHours(0, 0, 0, 0);
-        if (!isNaN(endDate) && endDate < today) {
-          statusVal = "Closed";
+        if (!isNaN(endDate)) {
+          statusVal = endDate < today ? "Expired" : "Open";
         }
       }
 
@@ -1032,24 +1139,22 @@
       const kontrakData = {
         noSpsa: document.getElementById("inputNoSPSA").value,
         customer: document.getElementById("inputCustomer").value,
+        skemaSewa: document.getElementById("inputSkemaSewa").value,
         tglKontrak: document.getElementById("inputTglKontrak").value,
         start: document.getElementById("inputStart").value,
         ending: endingVal,
-        jmlAlat: Number(document.getElementById("inputJmlAlat").value),
+        jmlAlat: parseRibuan(document.getElementById("inputJmlAlat").value),
         jenisAlat: document.getElementById("inputJenisAlat").value,
         nkp: document.getElementById("inputNkp").value || "-",
         lokasi: document.getElementById("inputLokasi").value,
-        lamaSewa: Number(document.getElementById("inputLamaSewa").value) || 1,
-        hargaSatuan: Number(document.getElementById("inputHargaSatuan").value) || 0,
-        dpp: Number(document.getElementById("inputDpp").value) || 0,
-        ppn: Number(document.getElementById("inputPpn").value) || 0,
-        nilaiKontrak: Number(document.getElementById("inputNilaiKontrak").value) || 0,
+        lamaSewa: parseRibuan(document.getElementById("inputLamaSewa").value) || 1,
+        hargaSatuan: parseRibuan(document.getElementById("inputHargaSatuan").value) || 0,
+        nilaiKontrak: parseRibuan(document.getElementById("inputNilaiKontrak").value) || 0,
         status: statusVal,
         kwitansi: document.getElementById("inputKwitansi").value || "-",
         tglInvoice: document.getElementById("inputTglInvoice").value || "-",
-        cogm: Number(document.getElementById("inputCogm").value) || 0,
-        cogs: Number(document.getElementById("inputCogs").value) || 0,
-        margin: document.getElementById("inputMargin").value || "100%",
+        cogm: parseRibuan(document.getElementById("inputCogm").value) || 0,
+        margin: document.getElementById("inputMargin").value || "0.0%",
         keterangan: document.getElementById("inputKeterangan").value || "-",
         spsaFile: spsaFileVal
       };
@@ -1092,8 +1197,8 @@
           rowText += tds[j].textContent.toLowerCase() + " ";
         }
 
-        const statusText = tds[15] ? tds[15].textContent.toLowerCase() : "";
-        const alatText = tds[7] ? tds[7].textContent.toLowerCase() : "";
+        const statusText = tds[14] ? tds[14].textContent.toLowerCase() : "";
+        const alatText = tds[8] ? tds[8].textContent.toLowerCase() : "";
 
         const matchesSearch = rowText.includes(input);
         const matchesStatus = statusFilter === "" || statusText.includes(statusFilter);
