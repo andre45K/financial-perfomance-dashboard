@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Monitoring Kontrak - PT Waskita Beton Precast, Tbk</title>
-  <!-- FontAwesome, Chart.js & SheetJS (xlsx) untuk Impor Excel/CSV -->
+  <!-- FontAwesome, Chart.js & SheetJS (xlsx) untuk Impor/Ekspor Excel -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Plugin datalabels untuk angka pada grafik -->
@@ -254,7 +254,7 @@
         <option value="Dump Truck">Dump Truck</option>
         <option value="Stone Crusher">Stone Crusher</option>
       </select>
-      <button class="btn-action" style="background:#020617;"><i class="fa-solid fa-file-excel"></i> Ekspor</button>
+      <button class="btn-action" style="background:#020617;" onclick="exportToExcel()"><i class="fa-solid fa-file-excel"></i> Ekspor</button>
     </div>
   </div>
 
@@ -413,6 +413,8 @@
     Chart.register(ChartDataLabels);
 
     let globalContractsData = [];
+    let globalFilteredData = []; // Digunakan untuk menyiapkan data ekspor
+    
     let chartPelangganInstance = null;
     let chartStatusInstance = null;
     let chartAlatInstance = null;
@@ -617,6 +619,46 @@
     // Fungsi Trigger Pilih File Excel/CSV
     function bukaPilihFileExcel() {
       document.getElementById('excelFileInput').click();
+    }
+    
+    // FUNGSI EXPORT KE EXCEL
+    function exportToExcel() {
+      if (globalFilteredData.length === 0) {
+        alert("Tidak ada data yang tersedia untuk diekspor.");
+        return;
+      }
+
+      // Menyiapkan array JSON yang bersih untuk diekspor
+      const exportArray = globalFilteredData.map((item, index) => ({
+        "No.": index + 1,
+        "No. SPSA": item.noSpsa || "-",
+        "Customer": item.customer || "-",
+        "Skema Sewa": item.skemaSewa || "-",
+        "Tanggal Kontrak": formatTanggalIndo(item.tglKontrak),
+        "Start (BASTA)": formatTanggalIndo(item.start),
+        "Ending": formatTanggalIndo(item.ending),
+        "Jumlah Alat": item.jmlAlat || 1,
+        "Jenis Alat": item.jenisAlat || "-",
+        "NKP": item.nkp || "-",
+        "Lokasi": item.lokasi || "-",
+        "Lama Sewa (Bulan)": item.lamaSewa || 1,
+        "Harga Satuan": item.hargaSatuan || 0,
+        "Nilai Kontrak": item.nilaiKontrak || 0,
+        "Status Kontrak": item.status || "Open",
+        "No. Kwitansi": item.kwitansi || "-",
+        "Tanggal Invoice": formatTanggalIndo(item.tglInvoice),
+        "COGM": item.cogm || 0,
+        "Margin": item.margin || "0.0%",
+        "Keterangan": item.keterangan || "-"
+      }));
+
+      // Membuat Worksheet baru dari Array of Object
+      const worksheet = XLSX.utils.json_to_sheet(exportArray);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "List Kontrak");
+      
+      // Simpan file
+      XLSX.writeFile(workbook, "List Kontrak.xlsx");
     }
 
     // Helper Format Tanggal Indonesia (DD MMM YYYY, cth: 17 Jul 2026)
@@ -1045,7 +1087,7 @@
       document.getElementById("contractTable").scrollIntoView({ behavior: 'smooth' });
     }
 
-    // FUNGSI UTAMA: Menyatukan proses Hide/Show elemen HTML Table sekaligus membuat set data tersaring untuk dikirim ke chart
+    // FUNGSI UTAMA: Menyatukan proses Hide/Show elemen HTML Table sekaligus membuat set data tersaring untuk dikirim ke chart dan diekspor
     function filterTable() {
       const input = document.getElementById("searchInput").value.toLowerCase();
       const statusFilter = document.getElementById("filterStatus").value.toLowerCase();
@@ -1058,7 +1100,7 @@
         isSegeraExpiredFilterActive = false;
       }
 
-      let filteredData = [];
+      globalFilteredData = []; // Bersihkan array data filter setiap kali dilakukan penyaringan baru
 
       for (let i = 1; i < trs.length; i++) {
         const tds = trs[i].getElementsByTagName("td");
@@ -1094,17 +1136,17 @@
 
         if (matchesSearch && matchesStatus && matchesAlat && matchesSegeraExpired) {
           trs[i].style.display = "";
-          // Karena data render berurutan sesuai index table globalContractsData
+          // Memasukkan raw data ke array globalFilteredData untuk keperluan export Excel
           if (globalContractsData[i - 1]) {
-             filteredData.push(globalContractsData[i - 1]);
+             globalFilteredData.push(globalContractsData[i - 1]);
           }
         } else {
           trs[i].style.display = "none";
         }
       }
 
-      // KUNCI: Perbarui KPI dan Grafik dengan menggunakan 'filteredData' (Data yang lolos filter pencarian)
-      updateDashboardMetrics(filteredData);
+      // KUNCI: Perbarui KPI dan Grafik dengan menggunakan 'globalFilteredData' (Data yang lolos filter pencarian)
+      updateDashboardMetrics(globalFilteredData);
     }
 
     function updateDashboardMetrics(dataList) {
