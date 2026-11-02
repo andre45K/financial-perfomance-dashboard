@@ -7,7 +7,6 @@
   <!-- FontAwesome, Chart.js & SheetJS (xlsx) untuk Impor/Ekspor Excel -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Plugin datalabels untuk angka pada grafik -->
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
@@ -53,7 +52,7 @@
     .btn-primary { background: #f59e0b; color: #0f172a; border-color: #f59e0b; font-weight: 700; }
     .btn-primary:hover { background: #d97706; color: #000; }
 
-    /* KPI Summary Cards (6 Grid Layout dengan efek bisa diklik) */
+    /* KPI Summary Cards */
     .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 20px; }
     .kpi-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 14px; position: relative; cursor: pointer; transition: all 0.2s ease; }
     .kpi-card:hover { border-color: #f59e0b; background: #131c31; transform: translateY(-2px); }
@@ -102,7 +101,7 @@
     .badge-status-expired { background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; }
     .badge-status-closed { background: rgba(168, 85, 247, 0.2); color: #a855f7; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; }
     
-    /* Checkbox kustom di samping badge expired */
+    /* Checkbox kustom */
     .status-cell-wrapper { display: flex; align-items: center; justify-content: center; gap: 8px; }
     .expired-checkbox { width: 15px; height: 15px; accent-color: #a855f7; cursor: pointer; }
 
@@ -237,7 +236,6 @@
   <div class="filter-bar">
     <div class="search-box">
       <i class="fa-solid fa-magnifying-glass"></i>
-      <!-- Event listener untuk pencarian akan langsung memanggil filterTable() dan memperbarui chart -->
       <input type="text" id="searchInput" class="search-input" placeholder="Cari No. SPSA, pelanggan, alat, lokasi..." onkeyup="filterTable()">
     </div>
     <div class="filter-selects">
@@ -254,6 +252,7 @@
         <option value="Dump Truck">Dump Truck</option>
         <option value="Stone Crusher">Stone Crusher</option>
       </select>
+      <!-- Tombol Ekspor Excel dipasang fungsi onClick -->
       <button class="btn-action" style="background:#020617;" onclick="exportToExcel()"><i class="fa-solid fa-file-excel"></i> Ekspor</button>
     </div>
   </div>
@@ -409,12 +408,10 @@
 
   <!-- Script Chart & Dynamic Dashboard Integration -->
   <script>
-    // WAJIB: Mendaftarkan Plugin ChartDataLabels
     Chart.register(ChartDataLabels);
 
     let globalContractsData = [];
-    let globalFilteredData = []; // Digunakan untuk menyiapkan data ekspor
-    
+    let currentFilteredData = []; // Variabel yang menyimpan data yang lolos filter
     let chartPelangganInstance = null;
     let chartStatusInstance = null;
     let chartAlatInstance = null;
@@ -455,7 +452,7 @@
       return Number(cleaned) || 0;
     }
 
-    // Otomatis menghitung Nilai Kontrak = Harga Satuan * Lama Sewa * Jumlah Alat * 1.11 (+ PPN 11%)
+    // Otomatis menghitung Nilai Kontrak
     function hitungNilaiKontrak() {
       const hargaSatuan = parseRibuan(document.getElementById("inputHargaSatuan").value);
       const lamaSewa = parseRibuan(document.getElementById("inputLamaSewa").value) || 1;
@@ -468,7 +465,7 @@
       document.getElementById("inputNilaiKontrak").value = rounded.toLocaleString("id-ID");
     }
 
-    // Otomatis menghitung Margin (%) = (Harga Satuan / COGM) - 1
+    // Otomatis menghitung Margin (%)
     function hitungMargin() {
       const hargaSatuan = parseRibuan(document.getElementById("inputHargaSatuan").value);
       const cogm = parseRibuan(document.getElementById("inputCogm").value);
@@ -491,29 +488,10 @@
           indexAxis: 'y', responsive: true, maintainAspectRatio: false,
           plugins: { 
             legend: { display: false },
-            datalabels: {
-              anchor: 'end',
-              align: 'right',
-              color: '#94a3b8',
-              font: { size: 9, weight: 'bold' },
-              formatter: function(value) {
-                return 'Rp ' + Number(value).toLocaleString('id-ID') + ' Jt';
-              }
-            }
+            datalabels: { anchor: 'end', align: 'right', color: '#94a3b8', font: { size: 9, weight: 'bold' }, formatter: function(value) { return 'Rp ' + Number(value).toLocaleString('id-ID') + ' Jt'; } }
           },
           scales: {
-            x: { 
-              ticks: { color: "#94a3b8", font: { size: 9 }, callback: val => 'Rp ' + val + ' Jt' }, 
-              grid: { color: "#1e293b" },
-              suggestedMax: function(context) {
-                  let maxVal = 0;
-                  const data = context.chart.data.datasets[0].data;
-                  if (data.length > 0) {
-                      maxVal = Math.max(...data);
-                  }
-                  return maxVal * 1.2; 
-              }
-            },
+            x: { ticks: { color: "#94a3b8", font: { size: 9 }, callback: val => 'Rp ' + val + ' Jt' }, grid: { color: "#1e293b" }, suggestedMax: function(context) { let maxVal = 0; const data = context.chart.data.datasets[0].data; if (data.length > 0) { maxVal = Math.max(...data); } return maxVal * 1.2; } },
             y: { ticks: { color: "#f8fafc", font: { size: 9 } }, grid: { display: false } }
           }
         }
@@ -522,26 +500,8 @@
       // 2. Chart Status
       chartStatusInstance = new Chart(document.getElementById("chartStatus").getContext("2d"), {
         type: 'doughnut',
-        data: {
-          labels: ['Aktif', 'Expired', 'Selesai'],
-          datasets: [{ data: [0, 0, 0], backgroundColor: ['#22c55e', '#ef4444', '#a855f7'], borderWidth: 0 }]
-        },
-        options: { 
-          responsive: true, maintainAspectRatio: false, 
-          plugins: { 
-            legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 10 } },
-            datalabels: {
-              color: '#ffffff',
-              font: { size: 12, weight: 'bold' },
-              formatter: (value, context) => {
-                  let total = context.dataset.data.reduce((acc, val) => acc + val, 0);
-                  if (total === 0 || value === 0) return '';
-                  let percentage = Math.round((value / total) * 100) + "%";
-                  return percentage;
-              }
-            } 
-          } 
-        }
+        data: { labels: ['Aktif', 'Expired', 'Selesai'], datasets: [{ data: [0, 0, 0], backgroundColor: ['#22c55e', '#ef4444', '#a855f7'], borderWidth: 0 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 10 } }, datalabels: { color: '#ffffff', font: { size: 12, weight: 'bold' }, formatter: (value, context) => { let total = context.dataset.data.reduce((acc, val) => acc + val, 0); if (total === 0 || value === 0) return ''; return Math.round((value / total) * 100) + "%"; } } } }
       });
 
       // 3. Chart Jenis Alat
@@ -550,31 +510,8 @@
         data: { labels: [], datasets: [{ data: [], backgroundColor: '#3b82f6', borderRadius: 4 }] },
         options: {
           responsive: true, maintainAspectRatio: false,
-          plugins: { 
-            legend: { display: false },
-            datalabels: {
-              anchor: 'end',
-              align: 'top',
-              color: '#94a3b8',
-              font: { size: 10, weight: 'bold' },
-              formatter: function(value) { return value; }
-            }
-          },
-          scales: {
-            x: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { display: false } },
-            y: { 
-              ticks: { color: '#94a3b8', font: { size: 9 } }, 
-              grid: { color: '#1e293b' },
-              suggestedMax: function(context) {
-                  let maxVal = 0;
-                  const data = context.chart.data.datasets[0].data;
-                  if (data.length > 0) {
-                      maxVal = Math.max(...data);
-                  }
-                  return maxVal * 1.15; 
-              }
-            }
-          }
+          plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', color: '#94a3b8', font: { size: 10, weight: 'bold' }, formatter: function(value) { return value; } } },
+          scales: { x: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { display: false } }, y: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { color: '#1e293b' }, suggestedMax: function(context) { let maxVal = 0; const data = context.chart.data.datasets[0].data; if (data.length > 0) { maxVal = Math.max(...data); } return maxVal * 1.15; } } }
         }
       });
 
@@ -584,34 +521,8 @@
         data: { labels: [], datasets: [{ data: [], borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', fill: true, tension: 0.3, pointRadius: 3 }] },
         options: {
           responsive: true, maintainAspectRatio: false,
-          plugins: { 
-            legend: { display: false },
-            datalabels: {
-              anchor: 'bottom',
-              align: 'bottom',
-              color: '#f59e0b',
-              font: { size: 9, weight: 'bold' },
-              formatter: function(value) { 
-                return 'Rp ' + Number(value).toLocaleString('id-ID') + ' Jt'; 
-              },
-              offset: 8
-            }
-          },
-          scales: {
-            x: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { display: false } },
-            y: { 
-              ticks: { color: '#94a3b8', font: { size: 9 }, callback: val => 'Rp ' + val + ' Jt' }, 
-              grid: { color: '#1e293b' },
-              suggestedMax: function(context) {
-                  let maxVal = 0;
-                  const data = context.chart.data.datasets[0].data;
-                  if (data.length > 0) {
-                      maxVal = Math.max(...data);
-                  }
-                  return maxVal * 1.2; 
-              }
-            }
-          }
+          plugins: { legend: { display: false }, datalabels: { anchor: 'bottom', align: 'bottom', color: '#f59e0b', font: { size: 9, weight: 'bold' }, formatter: function(value) { return 'Rp ' + Number(value).toLocaleString('id-ID') + ' Jt'; }, offset: 8 } },
+          scales: { x: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { display: false } }, y: { ticks: { color: '#94a3b8', font: { size: 9 }, callback: val => 'Rp ' + val + ' Jt' }, grid: { color: '#1e293b' }, suggestedMax: function(context) { let maxVal = 0; const data = context.chart.data.datasets[0].data; if (data.length > 0) { maxVal = Math.max(...data); } return maxVal * 1.2; } } }
         }
       });
     }
@@ -620,48 +531,95 @@
     function bukaPilihFileExcel() {
       document.getElementById('excelFileInput').click();
     }
-    
-    // FUNGSI EXPORT KE EXCEL
+
+    // Ekspor ke Excel (Mengambil referensi dari tabel yang sedang aktif difilter)
     function exportToExcel() {
-      if (globalFilteredData.length === 0) {
-        alert("Tidak ada data yang tersedia untuk diekspor.");
+      // Pastikan ada data (Prioritaskan yg lolos filter, jika kosong tapi filter tidak ada maka export global)
+      const dataToExport = currentFilteredData.length > 0 ? currentFilteredData : globalContractsData;
+      
+      if (dataToExport.length === 0) {
+        alert("Tidak ada data untuk diekspor!");
         return;
       }
 
-      // Menyiapkan array JSON yang bersih untuk diekspor
-      const exportArray = globalFilteredData.map((item, index) => ({
-        "No.": index + 1,
-        "No. SPSA": item.noSpsa || "-",
-        "Customer": item.customer || "-",
-        "Skema Sewa": item.skemaSewa || "-",
-        "Tanggal Kontrak": formatTanggalIndo(item.tglKontrak),
-        "Start (BASTA)": formatTanggalIndo(item.start),
-        "Ending": formatTanggalIndo(item.ending),
-        "Jumlah Alat": item.jmlAlat || 1,
-        "Jenis Alat": item.jenisAlat || "-",
-        "NKP": item.nkp || "-",
-        "Lokasi": item.lokasi || "-",
-        "Lama Sewa (Bulan)": item.lamaSewa || 1,
-        "Harga Satuan": item.hargaSatuan || 0,
-        "Nilai Kontrak": item.nilaiKontrak || 0,
-        "Status Kontrak": item.status || "Open",
-        "No. Kwitansi": item.kwitansi || "-",
-        "Tanggal Invoice": formatTanggalIndo(item.tglInvoice),
-        "COGM": item.cogm || 0,
-        "Margin": item.margin || "0.0%",
-        "Keterangan": item.keterangan || "-"
-      }));
+      // Helper konversi Tanggal Excel
+      const parseDateForExcel = (dateStr) => {
+        if (!dateStr || dateStr === "-") return "-";
+        let d = new Date(dateStr);
+        return isNaN(d) ? dateStr : d;
+      };
 
-      // Membuat Worksheet baru dari Array of Object
-      const worksheet = XLSX.utils.json_to_sheet(exportArray);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "List Kontrak");
+      // MAPPING Struktur JSON sesuai File Excel Standar
+      const excelData = dataToExport.map((item, index) => {
+        return {
+          "No.": index + 1,
+          "No. SPSA": item.noSpsa || "-",
+          "Customer": item.customer || "-",
+          "Skema Sewa": item.skemaSewa || "-",
+          "Tanggal Kontrak": parseDateForExcel(item.tglKontrak),
+          "Start (BASTA)": parseDateForExcel(item.start),
+          "Ending": parseDateForExcel(item.ending),
+          "Jumlah Alat": Number(item.jmlAlat) || 0,
+          "Jenis Alat": item.jenisAlat || "-",
+          "NKP": item.nkp || "-",
+          "Lokasi": item.lokasi || "-",
+          "Lama Sewa (Bulan)": Number(item.lamaSewa) || 0,
+          "Harga Satuan": Number(item.hargaSatuan) || 0,
+          "Nilai Kontrak": Number(item.nilaiKontrak) || 0,
+          "Status Kontrak": item.status || "-",
+          "No. Kwitansi": item.kwitansi || "-",
+          "Tanggal Invoice": parseDateForExcel(item.tglInvoice),
+          "COGM": Number(item.cogm) || 0,
+          "Margin": item.margin || "0.0%",
+          "Keterangan": item.keterangan || "-"
+        };
+      });
+
+      const ws = XLSX.utils.json_to_sheet(excelData);
+
+      // Memformat Cells (Tanggal dan Numerik)
+      const range = XLSX.utils.decode_range(ws['!ref']);
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        for (let R = range.s.r; R <= range.e.r; ++R) {
+          const cellRef = XLSX.utils.encode_cell({c: C, r: R});
+          const cell = ws[cellRef];
+          if (!cell) continue;
+
+          // Melewati baris Header (R=0)
+          if (R > 0) {
+            // Index Kolom Tanggal (berbasis 0): 4 (Tgl Kontrak), 5 (Start), 6 (Ending), 16 (Tgl Invoice)
+            if (C === 4 || C === 5 || C === 6 || C === 16) {
+              if (cell.v instanceof Date && !isNaN(cell.v)) {
+                cell.t = 'd';          // Menjadikannya Date Object
+                cell.z = 'd-mmm-yy';   // Format Excel, e.g. 11-Jun-26
+              }
+            }
+            
+            // Index Kolom Numerik Uang: 12 (Harga Satuan), 13 (Nilai Kontrak), 17 (COGM)
+            if (C === 12 || C === 13 || C === 17) {
+              if (typeof cell.v === 'number') {
+                cell.z = '#,##0'; // Format Number Accounting agar mudah di-SUM tanpa Rp string
+              }
+            }
+          }
+        }
+      }
+
+      // Lebar kolom
+      ws['!cols'] = [
+        {wch: 5}, {wch: 25}, {wch: 35}, {wch: 20}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 12}, 
+        {wch: 22}, {wch: 20}, {wch: 20}, {wch: 18}, {wch: 18}, {wch: 20}, {wch: 15}, {wch: 15}, 
+        {wch: 15}, {wch: 18}, {wch: 12}, {wch: 30}
+      ];
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Data Kontrak");
       
-      // Simpan file
-      XLSX.writeFile(workbook, "List Kontrak.xlsx");
+      // Simpan menggunakan nama file sesuai referensi
+      XLSX.writeFile(wb, "List Kontrak.xlsx");
     }
 
-    // Helper Format Tanggal Indonesia (DD MMM YYYY, cth: 17 Jul 2026)
+    // Helper Format Tanggal Indonesia (DD MMM YYYY, cth: 17 Jul 2026) di HTML
     function formatTanggalIndo(dateStr) {
       if (!dateStr || dateStr === "-") return "-";
       let parts = dateStr.split('-');
@@ -754,10 +712,10 @@
       });
       
       renderTableData(globalContractsData);
-      filterTable(); // SortTable akan otomatis memanggil filterTable agar sinkron dan grafik ikut ter-update
+      filterTable(); // SortTable otomatis sinkron ke filter & export
     }
 
-    // Fungsi Reset / Hapus Seluruh Data Kontrak dari Firestore
+    // Fungsi Reset / Hapus Seluruh Data Kontrak
     async function resetDataKontrakFirestore() {
       if (confirm("PERINGATAN: Apakah Anda yakin ingin menghapus SELURUH data monitoring kontrak? Tindakan ini tidak dapat dibatalkan.")) {
         if (!window.firebaseDB || !window.firebaseFns) {
@@ -783,7 +741,7 @@
       }
     }
 
-    // Fungsi Parsing dan Impor Excel/CSV secara Otomatis
+    // Fungsi Parsing dan Impor Excel/CSV
     async function prosesFileExcel(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -947,7 +905,7 @@
       reader.readAsArrayBuffer(file);
     }
 
-    // Koneksi Realtime Firestore & Pembaruan Dashboard Otomatis
+    // Koneksi Realtime Firestore
     function initFirebaseRealtimeSync() {
       const checkInterval = setInterval(() => {
         if (window.firebaseDB && window.firebaseFns) {
@@ -1050,44 +1008,30 @@
       });
     }
 
-    // Fungsi otomatis ubah status ke Closed saat checklist pada badge Expired diklik
     async function ubahStatusClosed(id, event) {
       event.stopPropagation();
       if (!window.firebaseDB || !window.firebaseFns) return;
       try {
         const { doc, updateDoc } = window.firebaseFns;
-        await updateDoc(doc(window.firebaseDB, "monitoringKontrak", id), {
-          status: "Closed"
-        });
-      } catch (error) {
-        console.error("Gagal memperbarui status kontrak:", error);
-        alert("Gagal memperbarui status ke Closed.");
-      }
+        await updateDoc(doc(window.firebaseDB, "monitoringKontrak", id), { status: "Closed" });
+      } catch (error) { console.error("Gagal memperbarui:", error); alert("Gagal memperbarui status ke Closed."); }
     }
 
-    // Fungsi Klik KPI untuk Memfilter Detail List Kontrak pada Tabel
     function filterByKpi(type) {
       const searchInput = document.getElementById("searchInput");
       const filterStatus = document.getElementById("filterStatus");
 
       searchInput.value = "";
-      isSegeraExpiredFilterActive = false; // Reset trigger segera expired
+      isSegeraExpiredFilterActive = false; 
 
-      if (type === 'all') {
-        filterStatus.value = "";
-      } else if (type === 'segeraExpired') {
-        filterStatus.value = "Open";
-        isSegeraExpiredFilterActive = true; // Aktifkan penanda filter 'segera expired'
-      } else {
-        filterStatus.value = type;
-      }
+      if (type === 'all') { filterStatus.value = ""; } 
+      else if (type === 'segeraExpired') { filterStatus.value = "Open"; isSegeraExpiredFilterActive = true; } 
+      else { filterStatus.value = type; }
       
-      // Panggil filter table, KPI & Chart otomatis akan mengikuti data yang difilter
       filterTable();
       document.getElementById("contractTable").scrollIntoView({ behavior: 'smooth' });
     }
 
-    // FUNGSI UTAMA: Menyatukan proses Hide/Show elemen HTML Table sekaligus membuat set data tersaring untuk dikirim ke chart dan diekspor
     function filterTable() {
       const input = document.getElementById("searchInput").value.toLowerCase();
       const statusFilter = document.getElementById("filterStatus").value.toLowerCase();
@@ -1095,21 +1039,18 @@
       const table = document.getElementById("contractTable");
       const trs = table.getElementsByTagName("tr");
       
-      // Matikan filter "Segera Expired" jika status dropdown diubah secara manual selain Open
       if (statusFilter !== "open") {
         isSegeraExpiredFilterActive = false;
       }
 
-      globalFilteredData = []; // Bersihkan array data filter setiap kali dilakukan penyaringan baru
+      currentFilteredData = [];
 
       for (let i = 1; i < trs.length; i++) {
         const tds = trs[i].getElementsByTagName("td");
         if (tds.length === 0) continue;
 
         let rowText = "";
-        for (let j = 0; j < tds.length; j++) {
-          rowText += tds[j].textContent.toLowerCase() + " ";
-        }
+        for (let j = 0; j < tds.length; j++) { rowText += tds[j].textContent.toLowerCase() + " "; }
 
         const statusText = tds[14] ? tds[14].textContent.toLowerCase() : "";
         const alatText = tds[8] ? tds[8].textContent.toLowerCase() : "";
@@ -1119,7 +1060,6 @@
         const matchesAlat = alatFilter === "" || alatText.includes(alatFilter);
 
         let matchesSegeraExpired = true;
-        // Pengecekan KPI 'Segera Expired'
         if (isSegeraExpiredFilterActive) {
           matchesSegeraExpired = false;
           let dataItem = globalContractsData[i - 1];
@@ -1136,17 +1076,15 @@
 
         if (matchesSearch && matchesStatus && matchesAlat && matchesSegeraExpired) {
           trs[i].style.display = "";
-          // Memasukkan raw data ke array globalFilteredData untuk keperluan export Excel
           if (globalContractsData[i - 1]) {
-             globalFilteredData.push(globalContractsData[i - 1]);
+             currentFilteredData.push(globalContractsData[i - 1]);
           }
         } else {
           trs[i].style.display = "none";
         }
       }
 
-      // KUNCI: Perbarui KPI dan Grafik dengan menggunakan 'globalFilteredData' (Data yang lolos filter pencarian)
-      updateDashboardMetrics(globalFilteredData);
+      updateDashboardMetrics(currentFilteredData);
     }
 
     function updateDashboardMetrics(dataList) {
@@ -1168,7 +1106,6 @@
       dataList.forEach(item => {
         let val = Number(item.nilaiKontrak || 0);
         totalNilaiSemua += val;
-
         let marginStr = String(item.margin || "0").replace("%", "");
         let marginNum = parseFloat(marginStr) || 0;
         totalMarginVal += marginNum;
@@ -1176,25 +1113,18 @@
         if (item.status === "Open") {
           kontrakAktifCount++;
           nilaiAktif += val;
-
           if (item.ending) {
             let endDate = new Date(item.ending);
             endDate.setHours(0, 0, 0, 0);
             if (!isNaN(endDate)) {
               let diffDays = (endDate - today) / (1000 * 60 * 60 * 24);
-              if (diffDays >= 0 && diffDays <= 30) {
-                segeraExpiredCount++;
-              }
+              if (diffDays >= 0 && diffDays <= 30) segeraExpiredCount++;
             }
           }
-        } else if (item.status === "Expired") {
-          kontrakExpiredCount++;
-        } else if (item.status === "Closed") {
-          kontrakSelesaiCount++;
-        }
+        } else if (item.status === "Expired") { kontrakExpiredCount++; } 
+        else if (item.status === "Closed") { kontrakSelesaiCount++; }
 
         let cust = item.customer || "Lainnya";
-        // Dikonversi dan disimpan dalam bentuk Juta
         custMap[cust] = (custMap[cust] || 0) + (val / 1000000);
 
         let alat = item.jenisAlat || "Lainnya";
@@ -1203,7 +1133,6 @@
         let tgl = item.start || item.tglKontrak || "2026-01";
         let bulanKey = tgl.length >= 7 ? tgl.substring(0, 7) : "2026-01";
         if(!bulanKey.startsWith("20")) bulanKey = "2026-01";
-        // Dikonversi dan disimpan dalam bentuk Juta
         trenMap[bulanKey] = (trenMap[bulanKey] || 0) + (val / 1000000);
       });
 
@@ -1250,10 +1179,7 @@
       document.getElementById("modalKontrak").style.display = "flex";
     }
 
-    function tutupModalKontrakBaru() {
-      document.getElementById("modalKontrak").style.display = "none";
-      document.getElementById("formKontrakBaru").reset();
-    }
+    function tutupModalKontrakBaru() { document.getElementById("modalKontrak").style.display = "none"; document.getElementById("formKontrakBaru").reset(); }
 
     function editKontrakFirestore(id) {
       const item = globalContractsData.find(d => d.id === id);
@@ -1288,10 +1214,7 @@
 
     async function simpanKontrakFirestore(event) {
       event.preventDefault();
-      if (!window.firebaseDB || !window.firebaseFns) {
-        alert("Koneksi Database belum siap.");
-        return;
-      }
+      if (!window.firebaseDB || !window.firebaseFns) { alert("Koneksi Database belum siap."); return; }
 
       const { doc, setDoc } = window.firebaseFns;
       const editId = document.getElementById("editDocId").value;
@@ -1302,15 +1225,9 @@
 
       if (endingVal && statusVal !== "Closed") {
         let endDate = new Date(endingVal);
-        let today = new Date();
-        today.setHours(0, 0, 0, 0);
-        endDate.setHours(0, 0, 0, 0);
-        if (!isNaN(endDate)) {
-          statusVal = endDate < today ? "Expired" : "Open";
-        }
+        let today = new Date(); today.setHours(0, 0, 0, 0); endDate.setHours(0, 0, 0, 0);
+        if (!isNaN(endDate)) { statusVal = endDate < today ? "Expired" : "Open"; }
       }
-
-      const spsaFileVal = document.getElementById("inputSpsaFile").value.trim();
 
       const kontrakData = {
         noSpsa: document.getElementById("inputNoSPSA").value,
@@ -1332,17 +1249,14 @@
         cogm: parseRibuan(document.getElementById("inputCogm").value) || 0,
         margin: document.getElementById("inputMargin").value || "0.0%",
         keterangan: document.getElementById("inputKeterangan").value || "-",
-        spsaFile: spsaFileVal
+        spsaFile: document.getElementById("inputSpsaFile").value.trim()
       };
 
       try {
         await setDoc(doc(window.firebaseDB, "monitoringKontrak", docId), kontrakData);
         alert(editId !== "" ? "Data kontrak berhasil diperbarui!" : "Kontrak baru berhasil disimpan secara realtime!");
         tutupModalKontrakBaru();
-      } catch (error) {
-        console.error("Gagal menyimpan ke Firestore:", error);
-        alert("Terjadi kesalahan saat menyimpan data.");
-      }
+      } catch (error) { console.error("Gagal menyimpan ke Firestore:", error); alert("Terjadi kesalahan saat menyimpan data."); }
     }
 
     async function hapusKontrakFirestore(id) {
@@ -1352,10 +1266,7 @@
           const { doc, deleteDoc } = window.firebaseFns;
           await deleteDoc(doc(window.firebaseDB, "monitoringKontrak", id));
           alert("Data berhasil dihapus!");
-        } catch (error) {
-          console.error("Gagal menghapus data:", error);
-          alert("Gagal menghapus data dari database.");
-        }
+        } catch (error) { console.error("Gagal menghapus data:", error); alert("Gagal menghapus data dari database."); }
       }
     }
   </script>
