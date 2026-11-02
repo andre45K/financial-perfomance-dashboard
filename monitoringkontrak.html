@@ -7,7 +7,7 @@
   <!-- FontAwesome, Chart.js & SheetJS (xlsx) untuk Impor Excel/CSV -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- WAJIB: Tambahkan Plugin datalabels agar angka bisa tampil di atas grafik -->
+  <!-- Plugin datalabels untuk angka pada grafik -->
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
@@ -237,6 +237,7 @@
   <div class="filter-bar">
     <div class="search-box">
       <i class="fa-solid fa-magnifying-glass"></i>
+      <!-- Event listener untuk pencarian akan langsung memanggil filterTable() dan memperbarui chart -->
       <input type="text" id="searchInput" class="search-input" placeholder="Cari No. SPSA, pelanggan, alat, lokasi..." onkeyup="filterTable()">
     </div>
     <div class="filter-selects">
@@ -419,6 +420,9 @@
     let sortDirections = {};
     let activeSortColumn = null;
     let activeSortDirection = "asc";
+    
+    // Status global untuk menyimpan apakah filter KPI "Segera Expired" sedang aktif
+    let isSegeraExpiredFilterActive = false;
 
     document.addEventListener("DOMContentLoaded", () => {
       initCharts();
@@ -682,6 +686,7 @@
         ...item,
         __sortOriginalIndex: item.__sortOriginalIndex ?? index
       }));
+      
       globalContractsData.sort((a, b) => {
         const rawA = getValue(a), rawB = getValue(b);
         let cmp = 0;
@@ -705,8 +710,9 @@
         }
         return cmp * dir;
       });
+      
       renderTableData(globalContractsData);
-      filterTable();
+      filterTable(); // SortTable akan otomatis memanggil filterTable agar sinkron dan grafik ikut ter-update
     }
 
     // Fungsi Reset / Hapus Seluruh Data Kontrak dari Firestore
@@ -925,6 +931,7 @@
 
               globalContractsData.push(data);
             });
+            
             if (activeSortColumn !== null) {
               const savedColumn = activeSortColumn;
               const savedDirection = activeSortDirection;
@@ -935,7 +942,6 @@
               renderTableData(globalContractsData);
               filterTable();
             }
-            updateDashboardMetrics(globalContractsData);
           }, (error) => {
             console.error("Gagal menyinkronkan data kontrak realtime:", error);
           });
@@ -1023,41 +1029,82 @@
       const filterStatus = document.getElementById("filterStatus");
 
       searchInput.value = "";
+      isSegeraExpiredFilterActive = false; // Reset trigger segera expired
+
       if (type === 'all') {
         filterStatus.value = "";
       } else if (type === 'segeraExpired') {
         filterStatus.value = "Open";
+        isSegeraExpiredFilterActive = true; // Aktifkan penanda filter 'segera expired'
       } else {
         filterStatus.value = type;
       }
+      
+      // Panggil filter table, KPI & Chart otomatis akan mengikuti data yang difilter
       filterTable();
+      document.getElementById("contractTable").scrollIntoView({ behavior: 'smooth' });
+    }
 
-      // Jika klik "Segera Expired", saring tabel khusus baris yang < 30 hari lagi
-      if (type === 'segeraExpired') {
-        const table = document.getElementById("contractTable");
-        const trs = table.getElementsByTagName("tr");
-        let today = new Date();
-        today.setHours(0, 0, 0, 0);
+    // FUNGSI UTAMA: Menyatukan proses Hide/Show elemen HTML Table sekaligus membuat set data tersaring untuk dikirim ke chart
+    function filterTable() {
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      const statusFilter = document.getElementById("filterStatus").value.toLowerCase();
+      const alatFilter = document.getElementById("filterAlat").value.toLowerCase();
+      const table = document.getElementById("contractTable");
+      const trs = table.getElementsByTagName("tr");
+      
+      // Matikan filter "Segera Expired" jika status dropdown diubah secara manual selain Open
+      if (statusFilter !== "open") {
+        isSegeraExpiredFilterActive = false;
+      }
 
-        for (let i = 1; i < trs.length; i++) {
-          const tds = trs[i].getElementsByTagName("td");
-          if (tds.length > 6) {
-            let endingText = tds[6].textContent;
-            let isSegera = false;
-            if (endingText && endingText !== "-") {
-              let endDate = new Date(endingText);
-              if (!isNaN(endDate)) {
-                let diffDays = (endDate - today) / (1000 * 60 * 60 * 24);
-                if (diffDays >= 0 && diffDays <= 30) isSegera = true;
-              }
+      let filteredData = [];
+
+      for (let i = 1; i < trs.length; i++) {
+        const tds = trs[i].getElementsByTagName("td");
+        if (tds.length === 0) continue;
+
+        let rowText = "";
+        for (let j = 0; j < tds.length; j++) {
+          rowText += tds[j].textContent.toLowerCase() + " ";
+        }
+
+        const statusText = tds[14] ? tds[14].textContent.toLowerCase() : "";
+        const alatText = tds[8] ? tds[8].textContent.toLowerCase() : "";
+
+        const matchesSearch = rowText.includes(input);
+        const matchesStatus = statusFilter === "" || statusText.includes(statusFilter);
+        const matchesAlat = alatFilter === "" || alatText.includes(alatFilter);
+
+        let matchesSegeraExpired = true;
+        // Pengecekan KPI 'Segera Expired'
+        if (isSegeraExpiredFilterActive) {
+          matchesSegeraExpired = false;
+          let dataItem = globalContractsData[i - 1];
+          if (dataItem && dataItem.ending) {
+            let endDate = new Date(dataItem.ending);
+            let today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (!isNaN(endDate)) {
+              let diffDays = (endDate - today) / (1000 * 60 * 60 * 24);
+              if (diffDays >= 0 && diffDays <= 30) matchesSegeraExpired = true;
             }
-            trs[i].style.display = isSegera ? "" : "none";
           }
+        }
+
+        if (matchesSearch && matchesStatus && matchesAlat && matchesSegeraExpired) {
+          trs[i].style.display = "";
+          // Karena data render berurutan sesuai index table globalContractsData
+          if (globalContractsData[i - 1]) {
+             filteredData.push(globalContractsData[i - 1]);
+          }
+        } else {
+          trs[i].style.display = "none";
         }
       }
 
-      // Scroll halus ke area tabel
-      document.getElementById("contractTable").scrollIntoView({ behavior: 'smooth' });
+      // KUNCI: Perbarui KPI dan Grafik dengan menggunakan 'filteredData' (Data yang lolos filter pencarian)
+      updateDashboardMetrics(filteredData);
     }
 
     function updateDashboardMetrics(dataList) {
@@ -1266,35 +1313,6 @@
         } catch (error) {
           console.error("Gagal menghapus data:", error);
           alert("Gagal menghapus data dari database.");
-        }
-      }
-    }
-
-    function filterTable() {
-      const input = document.getElementById("searchInput").value.toLowerCase();
-      const statusFilter = document.getElementById("filterStatus").value.toLowerCase();
-      const alatFilter = document.getElementById("filterAlat").value.toLowerCase();
-      const table = document.getElementById("contractTable");
-      const trs = table.getElementsByTagName("tr");
-
-      for (let i = 1; i < trs.length; i++) {
-        const tds = trs[i].getElementsByTagName("td");
-        let rowText = "";
-        for (let j = 0; j < tds.length; j++) {
-          rowText += tds[j].textContent.toLowerCase() + " ";
-        }
-
-        const statusText = tds[14] ? tds[14].textContent.toLowerCase() : "";
-        const alatText = tds[8] ? tds[8].textContent.toLowerCase() : "";
-
-        const matchesSearch = rowText.includes(input);
-        const matchesStatus = statusFilter === "" || statusText.includes(statusFilter);
-        const matchesAlat = alatFilter === "" || alatText.includes(alatFilter);
-
-        if (matchesSearch && matchesStatus && matchesAlat) {
-          trs[i].style.display = "";
-        } else {
-          trs[i].style.display = "none";
         }
       }
     }
