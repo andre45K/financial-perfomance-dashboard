@@ -759,7 +759,7 @@
                 <th>STATUS</th>
                 <th>REALISASI/PROGNOSA NON-CONTRIBUTING PLANT</th>
                 <th>REALISASI/PROGNOSA BIAYA TIDAK LANGSUNG</th>
-                <th>NET PROFIT</th>
+                <th>NET PROFIT (JUTA)</th>
                 <th>NPM (%)</th>
               </tr>
             </thead>
@@ -870,6 +870,7 @@
               let ncpAct = toNumber(source.ncpActual, defMonth.ncpActual);
               let btlAct = toNumber(source.btlActual, defMonth.btlActual);
 
+              // Jika pada data lama masih utuh, namun setelah pembaruan kita pastikan firebase selalu simpan nilai dalam juta, maka logik di bawah menjaga kompatibilitas.
               if (Math.abs(revPlan) > 10000) revPlan /= 1000000;
               if (Math.abs(revAct) > 10000) revAct /= 1000000;
               if (Math.abs(bppPlan) > 10000) bppPlan /= 1000000;
@@ -1617,6 +1618,9 @@
       const tbody2 = document.getElementById('admin-tbody-2');
       tbody1.innerHTML = ''; tbody2.innerHTML = '';
 
+      // Fungsi bantu mengubah angka di data internal (juta) menjadi form tampilan utuh (dikali 1.000.000)
+      const toFull = (val) => parseFloat((Number(val || 0) * 1000000).toFixed(2));
+
       monthsList.forEach(month => {
         const data = financialData.months[month];
         const monthName = getMonthFullName(month);
@@ -1631,16 +1635,16 @@
               <option value="PROGNOSA" ${data.status === 'PROGNOSA' ? 'selected' : ''}>PROGNOSA</option>
             </select>
           </td>
-          <td><input type="number" id="revPlan_${month}" class="admin-input" value="${data.revenuePlan}"></td>
-          <td><input type="number" id="bppPlan_${month}" class="admin-input" value="${data.bppPlan}"></td>
-          <td><input type="number" id="revAct_${month}" class="admin-input" value="${data.revenueActual}" oninput="calcNetProfit('${month}')"></td>
-          <td><input type="number" id="bppAct_${month}" class="admin-input" value="${data.bppActual}" oninput="calcNetProfit('${month}')"></td>
+          <td><input type="number" id="revPlan_${month}" class="admin-input" value="${toFull(data.revenuePlan)}"></td>
+          <td><input type="number" id="bppPlan_${month}" class="admin-input" value="${toFull(data.bppPlan)}"></td>
+          <td><input type="number" id="revAct_${month}" class="admin-input" value="${toFull(data.revenueActual)}" oninput="calcNetProfit('${month}')"></td>
+          <td><input type="number" id="bppAct_${month}" class="admin-input" value="${toFull(data.bppActual)}" oninput="calcNetProfit('${month}')"></td>
         `;
         tbody1.appendChild(tr1);
 
-        // Perhitungan awal untuk tab 2 
+        // Perhitungan awal untuk tab 2 (masih dikonversi dari satuan juta karena data default masih dalam format internal)
         const gpAct = data.revenueActual - data.bppActual;
-        const npAct = gpAct - data.ncpActual; // BTL tidak dikurangi dalam hitungan default sesuai script user
+        const npAct = gpAct - data.ncpActual; 
         const npmAct = data.revenueActual > 0 ? (npAct / data.revenueActual * 100) : 0;
         const npmColor = npmAct > 0 ? '#22c55e' : (npmAct < 0 ? '#ef4444' : 'white');
 
@@ -1654,8 +1658,8 @@
               <option value="PROGNOSA" ${data.status === 'PROGNOSA' ? 'selected' : ''}>PROGNOSA</option>
             </select>
           </td>
-          <td><input type="number" id="ncpAct_${month}" class="admin-input" value="${data.ncpActual}" oninput="calcNetProfit('${month}')"></td>
-          <td><input type="number" id="btlAct_${month}" class="admin-input" value="${data.btlActual}" oninput="calcNetProfit('${month}')"></td>
+          <td><input type="number" id="ncpAct_${month}" class="admin-input" value="${toFull(data.ncpActual)}" oninput="calcNetProfit('${month}')"></td>
+          <td><input type="number" id="btlAct_${month}" class="admin-input" value="${toFull(data.btlActual)}" oninput="calcNetProfit('${month}')"></td>
           <td id="np_${month}" style="text-align:right; font-weight:bold; color:${npmColor}">${formatNumber(npAct)}</td>
           <td id="npm_${month}" style="text-align:right; font-weight:bold; color:${npmColor}">${npmAct.toFixed(2)}%</td>
         `;
@@ -1670,9 +1674,10 @@
     };
 
     window.calcNetProfit = function(month) {
-      const rev = Number(document.getElementById(`revAct_${month}`).value) || 0;
-      const bpp = Number(document.getElementById(`bppAct_${month}`).value) || 0;
-      const ncp = Number(document.getElementById(`ncpAct_${month}`).value) || 0;
+      // Input form yang di ketik sekarang angka utuh sehingga harus kita bagi sejuta sebelum dikalkulasi
+      const rev = (Number(document.getElementById(`revAct_${month}`).value) || 0) / 1000000;
+      const bpp = (Number(document.getElementById(`bppAct_${month}`).value) || 0) / 1000000;
+      const ncp = (Number(document.getElementById(`ncpAct_${month}`).value) || 0) / 1000000;
       
       const gp = rev - bpp;
       const np = gp - ncp; 
@@ -1680,6 +1685,8 @@
       
       const npEl = document.getElementById(`np_${month}`);
       const npmEl = document.getElementById(`npm_${month}`);
+      
+      // formatNumber akan secara otomatis merubah np dalam juta menjadi tulisan utuh (misal "172")
       npEl.textContent = formatNumber(np);
       npmEl.textContent = npm.toFixed(2) + '%';
       
@@ -1693,14 +1700,15 @@
     window.saveAdminData = async function() {
       const newData = { year: financialData.year, targetGPM: financialData.targetGPM, months: {} };
       monthsList.forEach(month => {
+        // Semua angka utuh yang diinput dari form langsung dikonversi menjadi satuan juta ke dalam storage internal agar fungsi dashboard berjalan identik 
         newData.months[month] = {
           status: document.getElementById(`status_${month}`).value,
-          revenuePlan: Number(document.getElementById(`revPlan_${month}`).value) || 0,
-          bppPlan: Number(document.getElementById(`bppPlan_${month}`).value) || 0,
-          revenueActual: Number(document.getElementById(`revAct_${month}`).value) || 0,
-          bppActual: Number(document.getElementById(`bppAct_${month}`).value) || 0,
-          ncpActual: Number(document.getElementById(`ncpAct_${month}`).value) || 0,
-          btlActual: Number(document.getElementById(`btlAct_${month}`).value) || 0
+          revenuePlan: (Number(document.getElementById(`revPlan_${month}`).value) || 0) / 1000000,
+          bppPlan: (Number(document.getElementById(`bppPlan_${month}`).value) || 0) / 1000000,
+          revenueActual: (Number(document.getElementById(`revAct_${month}`).value) || 0) / 1000000,
+          bppActual: (Number(document.getElementById(`bppAct_${month}`).value) || 0) / 1000000,
+          ncpActual: (Number(document.getElementById(`ncpAct_${month}`).value) || 0) / 1000000,
+          btlActual: (Number(document.getElementById(`btlAct_${month}`).value) || 0) / 1000000
         };
       });
 
