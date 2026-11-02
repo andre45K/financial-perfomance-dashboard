@@ -7,6 +7,8 @@
   <!-- FontAwesome, Chart.js & SheetJS (xlsx) untuk Impor Excel/CSV -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- WAJIB: Tambahkan Plugin datalabels agar angka bisa tampil di atas grafik -->
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <!-- FIREBASE SDK (Modular v10) -->
@@ -406,6 +408,9 @@
 
   <!-- Script Chart & Dynamic Dashboard Integration -->
   <script>
+    // WAJIB: Mendaftarkan Plugin ChartDataLabels
+    Chart.register(ChartDataLabels);
+
     let globalContractsData = [];
     let chartPelangganInstance = null;
     let chartStatusInstance = null;
@@ -478,9 +483,31 @@
         data: { labels: [], datasets: [{ data: [], backgroundColor: "#f59e0b", borderRadius: 4 }] },
         options: {
           indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
+          plugins: { 
+            legend: { display: false },
+            datalabels: {
+              anchor: 'end',
+              align: 'right',
+              color: '#94a3b8',
+              font: { size: 9, weight: 'bold' },
+              formatter: function(value) {
+                return 'Rp ' + Number(value).toLocaleString('id-ID') + ' Jt';
+              }
+            }
+          },
           scales: {
-            x: { ticks: { color: "#94a3b8", font: { size: 9 }, callback: val => 'Rp ' + val + ' M' }, grid: { color: "#1e293b" } },
+            x: { 
+              ticks: { color: "#94a3b8", font: { size: 9 }, callback: val => 'Rp ' + val + ' Jt' }, 
+              grid: { color: "#1e293b" },
+              suggestedMax: function(context) {
+                  let maxVal = 0;
+                  const data = context.chart.data.datasets[0].data;
+                  if (data.length > 0) {
+                      maxVal = Math.max(...data);
+                  }
+                  return maxVal * 1.2; 
+              }
+            },
             y: { ticks: { color: "#f8fafc", font: { size: 9 } }, grid: { display: false } }
           }
         }
@@ -493,7 +520,22 @@
           labels: ['Aktif', 'Expired', 'Selesai'],
           datasets: [{ data: [0, 0, 0], backgroundColor: ['#22c55e', '#ef4444', '#a855f7'], borderWidth: 0 }]
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 10 } } } }
+        options: { 
+          responsive: true, maintainAspectRatio: false, 
+          plugins: { 
+            legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 10 } },
+            datalabels: {
+              color: '#ffffff',
+              font: { size: 12, weight: 'bold' },
+              formatter: (value, context) => {
+                  let total = context.dataset.data.reduce((acc, val) => acc + val, 0);
+                  if (total === 0 || value === 0) return '';
+                  let percentage = Math.round((value / total) * 100) + "%";
+                  return percentage;
+              }
+            } 
+          } 
+        }
       });
 
       // 3. Chart Jenis Alat
@@ -502,10 +544,30 @@
         data: { labels: [], datasets: [{ data: [], backgroundColor: '#3b82f6', borderRadius: 4 }] },
         options: {
           responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
+          plugins: { 
+            legend: { display: false },
+            datalabels: {
+              anchor: 'end',
+              align: 'top',
+              color: '#94a3b8',
+              font: { size: 10, weight: 'bold' },
+              formatter: function(value) { return value; }
+            }
+          },
           scales: {
             x: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { display: false } },
-            y: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { color: '#1e293b' } }
+            y: { 
+              ticks: { color: '#94a3b8', font: { size: 9 } }, 
+              grid: { color: '#1e293b' },
+              suggestedMax: function(context) {
+                  let maxVal = 0;
+                  const data = context.chart.data.datasets[0].data;
+                  if (data.length > 0) {
+                      maxVal = Math.max(...data);
+                  }
+                  return maxVal * 1.15; 
+              }
+            }
           }
         }
       });
@@ -516,10 +578,33 @@
         data: { labels: [], datasets: [{ data: [], borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', fill: true, tension: 0.3, pointRadius: 3 }] },
         options: {
           responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
+          plugins: { 
+            legend: { display: false },
+            datalabels: {
+              anchor: 'bottom',
+              align: 'bottom',
+              color: '#f59e0b',
+              font: { size: 9, weight: 'bold' },
+              formatter: function(value) { 
+                return 'Rp ' + Number(value).toLocaleString('id-ID') + ' Jt'; 
+              },
+              offset: 8
+            }
+          },
           scales: {
             x: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { display: false } },
-            y: { ticks: { color: '#94a3b8', font: { size: 9 }, callback: val => 'Rp ' + val + ' M' }, grid: { color: '#1e293b' } }
+            y: { 
+              ticks: { color: '#94a3b8', font: { size: 9 }, callback: val => 'Rp ' + val + ' Jt' }, 
+              grid: { color: '#1e293b' },
+              suggestedMax: function(context) {
+                  let maxVal = 0;
+                  const data = context.chart.data.datasets[0].data;
+                  if (data.length > 0) {
+                      maxVal = Math.max(...data);
+                  }
+                  return maxVal * 1.2; 
+              }
+            }
           }
         }
       });
@@ -1020,7 +1105,8 @@
         }
 
         let cust = item.customer || "Lainnya";
-        custMap[cust] = (custMap[cust] || 0) + (val / 1000000000);
+        // Dikonversi dan disimpan dalam bentuk Juta
+        custMap[cust] = (custMap[cust] || 0) + (val / 1000000);
 
         let alat = item.jenisAlat || "Lainnya";
         alatMap[alat] = (alatMap[alat] || 0) + 1;
@@ -1028,7 +1114,8 @@
         let tgl = item.start || item.tglKontrak || "2026-01";
         let bulanKey = tgl.length >= 7 ? tgl.substring(0, 7) : "2026-01";
         if(!bulanKey.startsWith("20")) bulanKey = "2026-01";
-        trenMap[bulanKey] = (trenMap[bulanKey] || 0) + (val / 1000000000);
+        // Dikonversi dan disimpan dalam bentuk Juta
+        trenMap[bulanKey] = (trenMap[bulanKey] || 0) + (val / 1000000);
       });
 
       let avgMargin = totalKontrak > 0 ? (totalMarginVal / totalKontrak).toFixed(1) : "0.0";
