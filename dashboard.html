@@ -256,7 +256,7 @@
       .header-info { flex-wrap:wrap; }
     }
 
-    /* ==== TAMBAHAN CSS UNTUK MODAL ADMIN (SESUAI GAMBAR) ==== */
+    /* ==== TAMBAHAN CSS UNTUK MODAL ADMIN ==== */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
     .modal-container { background: #0b1420; width: 95%; max-width: 1100px; border-radius: 8px; border: 1px solid #1e2d42; display: flex; flex-direction: column; max-height: 95vh; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
     .modal-header-info { background: #0f1926; color: #60a5fa; padding: 12px 20px; font-size: 11px; font-weight: bold; border-bottom: 1px solid #1e2d42; border-radius: 8px 8px 0 0; }
@@ -723,7 +723,7 @@
     </div>
   </div>
 
-  <!-- ==== TAMBAHAN KODE HTML MODAL ADMIN (DISINI) ==== -->
+  <!-- ==== TAMBAHAN KODE HTML MODAL ADMIN ==== -->
   <div id="adminModal" class="modal-overlay" style="display: none;">
     <div class="modal-container">
       <div class="modal-header-info">Informasi: Perubahan data di sini akan langsung otomatis memperbarui grafik secara realtime.</div>
@@ -870,7 +870,6 @@
               let ncpAct = toNumber(source.ncpActual, defMonth.ncpActual);
               let btlAct = toNumber(source.btlActual, defMonth.btlActual);
 
-              // Jika pada data lama masih utuh, namun setelah pembaruan kita pastikan firebase selalu simpan nilai dalam juta, maka logik di bawah menjaga kompatibilitas.
               if (Math.abs(revPlan) > 10000) revPlan /= 1000000;
               if (Math.abs(revAct) > 10000) revAct /= 1000000;
               if (Math.abs(bppPlan) > 10000) bppPlan /= 1000000;
@@ -1606,6 +1605,16 @@
     // TAMBAHAN LOGIC UNTUK FITUR MODAL ADMIN 
     // ============================================
     
+    // Fungsi untuk memformat input menjadi ada titik ribuan/jutaan
+    window.formatNumberInput = function(element) {
+        let val = element.value.replace(/\D/g, ''); // Hapus semua karakter selain angka
+        if (val !== '') {
+            element.value = parseInt(val, 10).toLocaleString('id-ID');
+        } else {
+            element.value = '';
+        }
+    };
+
     window.switchAdminTab = function(tabId, ev) {
       document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -1635,10 +1644,10 @@
               <option value="PROGNOSA" ${data.status === 'PROGNOSA' ? 'selected' : ''}>PROGNOSA</option>
             </select>
           </td>
-          <td><input type="number" id="revPlan_${month}" class="admin-input" value="${toFull(data.revenuePlan)}"></td>
-          <td><input type="number" id="bppPlan_${month}" class="admin-input" value="${toFull(data.bppPlan)}"></td>
-          <td><input type="number" id="revAct_${month}" class="admin-input" value="${toFull(data.revenueActual)}" oninput="calcNetProfit('${month}')"></td>
-          <td><input type="number" id="bppAct_${month}" class="admin-input" value="${toFull(data.bppActual)}" oninput="calcNetProfit('${month}')"></td>
+          <td><input type="text" id="revPlan_${month}" class="admin-input" value="${toFull(data.revenuePlan).toLocaleString('id-ID')}" oninput="formatNumberInput(this)"></td>
+          <td><input type="text" id="bppPlan_${month}" class="admin-input" value="${toFull(data.bppPlan).toLocaleString('id-ID')}" oninput="formatNumberInput(this)"></td>
+          <td><input type="text" id="revAct_${month}" class="admin-input" value="${toFull(data.revenueActual).toLocaleString('id-ID')}" oninput="formatNumberInput(this); calcNetProfit('${month}')"></td>
+          <td><input type="text" id="bppAct_${month}" class="admin-input" value="${toFull(data.bppActual).toLocaleString('id-ID')}" oninput="formatNumberInput(this); calcNetProfit('${month}')"></td>
         `;
         tbody1.appendChild(tr1);
 
@@ -1658,8 +1667,8 @@
               <option value="PROGNOSA" ${data.status === 'PROGNOSA' ? 'selected' : ''}>PROGNOSA</option>
             </select>
           </td>
-          <td><input type="number" id="ncpAct_${month}" class="admin-input" value="${toFull(data.ncpActual)}" oninput="calcNetProfit('${month}')"></td>
-          <td><input type="number" id="btlAct_${month}" class="admin-input" value="${toFull(data.btlActual)}" oninput="calcNetProfit('${month}')"></td>
+          <td><input type="text" id="ncpAct_${month}" class="admin-input" value="${toFull(data.ncpActual).toLocaleString('id-ID')}" oninput="formatNumberInput(this); calcNetProfit('${month}')"></td>
+          <td><input type="text" id="btlAct_${month}" class="admin-input" value="${toFull(data.btlActual).toLocaleString('id-ID')}" oninput="formatNumberInput(this); calcNetProfit('${month}')"></td>
           <td id="np_${month}" style="text-align:right; font-weight:bold; color:${npmColor}">${formatNumber(npAct)}</td>
           <td id="npm_${month}" style="text-align:right; font-weight:bold; color:${npmColor}">${npmAct.toFixed(2)}%</td>
         `;
@@ -1674,10 +1683,12 @@
     };
 
     window.calcNetProfit = function(month) {
-      // Input form yang di ketik sekarang angka utuh sehingga harus kita bagi sejuta sebelum dikalkulasi
-      const rev = (Number(document.getElementById(`revAct_${month}`).value) || 0) / 1000000;
-      const bpp = (Number(document.getElementById(`bppAct_${month}`).value) || 0) / 1000000;
-      const ncp = (Number(document.getElementById(`ncpAct_${month}`).value) || 0) / 1000000;
+      // Membersihkan titik ribuan dari form sebelum dihitung
+      const parseValue = (id) => Number(document.getElementById(id).value.replace(/\./g, '')) || 0;
+
+      const rev = parseValue(`revAct_${month}`) / 1000000;
+      const bpp = parseValue(`bppAct_${month}`) / 1000000;
+      const ncp = parseValue(`ncpAct_${month}`) / 1000000;
       
       const gp = rev - bpp;
       const np = gp - ncp; 
@@ -1698,17 +1709,19 @@
     window.closeAdminModal = function() { document.getElementById('adminModal').style.display = 'none'; };
 
     window.saveAdminData = async function() {
+      const getVal = (id) => Number(document.getElementById(id).value.replace(/\./g, '')) || 0;
+      
       const newData = { year: financialData.year, targetGPM: financialData.targetGPM, months: {} };
       monthsList.forEach(month => {
-        // Semua angka utuh yang diinput dari form langsung dikonversi menjadi satuan juta ke dalam storage internal agar fungsi dashboard berjalan identik 
+        // Semua angka utuh yang diinput dari form langsung dikonversi menjadi satuan juta (dihilangkan titik formatnya) ke dalam storage internal agar fungsi dashboard berjalan identik 
         newData.months[month] = {
           status: document.getElementById(`status_${month}`).value,
-          revenuePlan: (Number(document.getElementById(`revPlan_${month}`).value) || 0) / 1000000,
-          bppPlan: (Number(document.getElementById(`bppPlan_${month}`).value) || 0) / 1000000,
-          revenueActual: (Number(document.getElementById(`revAct_${month}`).value) || 0) / 1000000,
-          bppActual: (Number(document.getElementById(`bppAct_${month}`).value) || 0) / 1000000,
-          ncpActual: (Number(document.getElementById(`ncpAct_${month}`).value) || 0) / 1000000,
-          btlActual: (Number(document.getElementById(`btlAct_${month}`).value) || 0) / 1000000
+          revenuePlan: getVal(`revPlan_${month}`) / 1000000,
+          bppPlan: getVal(`bppPlan_${month}`) / 1000000,
+          revenueActual: getVal(`revAct_${month}`) / 1000000,
+          bppActual: getVal(`bppAct_${month}`) / 1000000,
+          ncpActual: getVal(`ncpAct_${month}`) / 1000000,
+          btlActual: getVal(`btlAct_${month}`) / 1000000
         };
       });
 
