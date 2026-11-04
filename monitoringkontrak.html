@@ -70,8 +70,8 @@
     .kpi-sub { font-size: 10px; color: #94a3b8; }
 
     /* Charts Layout Grid */
-    .charts-grid-main { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 20px; }
-    .charts-grid-sub { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .charts-grid-main { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .charts-grid-sub { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
     .card-panel { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; }
     .panel-title { font-size: 12px; font-weight: 800; color: #f8fafc; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; }
     .chart-container { position: relative; height: 260px; width: 100%; }
@@ -130,6 +130,7 @@
     @media (max-width: 1300px) {
       .kpi-grid { grid-template-columns: repeat(3, 1fr); }
       .charts-grid-main { grid-template-columns: 1fr; }
+      .charts-grid-sub { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -156,7 +157,7 @@
     </div>
   </div>
 
-  <!-- KPI Cards Grid (6 Cards dapat diklik) -->
+  <!-- KPI Cards Grid -->
   <div class="kpi-grid">
     <div class="kpi-card" onclick="filterByKpi('all')" title="Klik untuk melihat semua kontrak">
       <div class="kpi-card-header">
@@ -220,12 +221,20 @@
     </div>
   </div>
 
-  <!-- Charts Row 2 -->
+  <!-- Charts Row 2 (BARU: Alat per Customer & Alat per Jenis) -->
   <div class="charts-grid-sub">
     <div class="card-panel">
-      <div class="panel-title">Jumlah Kontrak per Jenis Alat</div>
-      <div class="chart-container"><canvas id="chartAlat"></canvas></div>
+      <div class="panel-title">Jumlah Alat per Pelanggan (Top 8)</div>
+      <div class="chart-container"><canvas id="chartAlatCustomer"></canvas></div>
     </div>
+    <div class="card-panel">
+      <div class="panel-title">Jumlah Alat per Jenis Alat</div>
+      <div class="chart-container"><canvas id="chartAlatJenis"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Charts Row 3 (Tren Kontrak - Lebar Penuh) -->
+  <div class="charts-grid-sub" style="grid-template-columns: 1fr; margin-bottom: 20px;">
     <div class="card-panel">
       <div class="panel-title">Tren Nilai Kontrak per Bulan (Berdasarkan Tgl Mulai)</div>
       <div class="chart-container"><canvas id="chartTren"></canvas></div>
@@ -411,10 +420,11 @@
     Chart.register(ChartDataLabels);
 
     let globalContractsData = [];
-    let currentFilteredData = []; // Variabel yang menyimpan data yang lolos filter
+    let currentFilteredData = []; 
     let chartPelangganInstance = null;
     let chartStatusInstance = null;
-    let chartAlatInstance = null;
+    let chartAlatCustomerInstance = null;
+    let chartAlatJenisInstance = null;
     let chartTrenInstance = null;
     let sortDirections = {};
     let activeSortColumn = null;
@@ -480,7 +490,7 @@
     }
 
     function initCharts() {
-      // 1. Chart Pelanggan
+      // 1. Chart Pelanggan (Nilai)
       chartPelangganInstance = new Chart(document.getElementById("chartPelanggan").getContext("2d"), {
         type: "bar",
         data: { labels: [], datasets: [{ data: [], backgroundColor: "#f59e0b", borderRadius: 4 }] },
@@ -504,18 +514,29 @@
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 10 } }, datalabels: { color: '#ffffff', font: { size: 12, weight: 'bold' }, formatter: (value, context) => { let total = context.dataset.data.reduce((acc, val) => acc + val, 0); if (total === 0 || value === 0) return ''; return Math.round((value / total) * 100) + "%"; } } } }
       });
 
-      // 3. Chart Jenis Alat
-      chartAlatInstance = new Chart(document.getElementById("chartAlat").getContext("2d"), {
+      // 3. Chart Jumlah Alat per Customer
+      chartAlatCustomerInstance = new Chart(document.getElementById("chartAlatCustomer").getContext("2d"), {
         type: 'bar',
-        data: { labels: [], datasets: [{ data: [], backgroundColor: '#3b82f6', borderRadius: 4 }] },
+        data: { labels: [], datasets: [{ data: [], backgroundColor: '#10b981', borderRadius: 4 }] },
         options: {
           responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', color: '#94a3b8', font: { size: 10, weight: 'bold' }, formatter: function(value) { return value; } } },
+          plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', color: '#94a3b8', font: { size: 10, weight: 'bold' } } },
           scales: { x: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { display: false } }, y: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { color: '#1e293b' }, suggestedMax: function(context) { let maxVal = 0; const data = context.chart.data.datasets[0].data; if (data.length > 0) { maxVal = Math.max(...data); } return maxVal * 1.15; } } }
         }
       });
 
-      // 4. Chart Tren Bulan
+      // 4. Chart Jumlah Alat per Jenis Alat
+      chartAlatJenisInstance = new Chart(document.getElementById("chartAlatJenis").getContext("2d"), {
+        type: 'bar',
+        data: { labels: [], datasets: [{ data: [], backgroundColor: '#3b82f6', borderRadius: 4 }] },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', color: '#94a3b8', font: { size: 10, weight: 'bold' } } },
+          scales: { x: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { display: false } }, y: { ticks: { color: '#94a3b8', font: { size: 9 } }, grid: { color: '#1e293b' }, suggestedMax: function(context) { let maxVal = 0; const data = context.chart.data.datasets[0].data; if (data.length > 0) { maxVal = Math.max(...data); } return maxVal * 1.15; } } }
+        }
+      });
+
+      // 5. Chart Tren Bulan
       chartTrenInstance = new Chart(document.getElementById("chartTren").getContext("2d"), {
         type: 'line',
         data: { labels: [], datasets: [{ data: [], borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', fill: true, tension: 0.3, pointRadius: 3 }] },
@@ -534,7 +555,6 @@
 
     // Ekspor ke Excel (Mengambil referensi dari tabel yang sedang aktif difilter)
     function exportToExcel() {
-      // Pastikan ada data (Prioritaskan yg lolos filter, jika kosong tapi filter tidak ada maka export global)
       const dataToExport = currentFilteredData.length > 0 ? currentFilteredData : globalContractsData;
       
       if (dataToExport.length === 0) {
@@ -542,14 +562,12 @@
         return;
       }
 
-      // Helper konversi Tanggal Excel
       const parseDateForExcel = (dateStr) => {
         if (!dateStr || dateStr === "-") return "-";
         let d = new Date(dateStr);
         return isNaN(d) ? dateStr : d;
       };
 
-      // MAPPING Struktur JSON sesuai File Excel Standar
       const excelData = dataToExport.map((item, index) => {
         return {
           "No.": index + 1,
@@ -577,7 +595,6 @@
 
       const ws = XLSX.utils.json_to_sheet(excelData);
 
-      // Memformat Cells (Tanggal dan Numerik)
       const range = XLSX.utils.decode_range(ws['!ref']);
       for (let C = range.s.c; C <= range.e.c; ++C) {
         for (let R = range.s.r; R <= range.e.r; ++R) {
@@ -585,27 +602,22 @@
           const cell = ws[cellRef];
           if (!cell) continue;
 
-          // Melewati baris Header (R=0)
           if (R > 0) {
-            // Index Kolom Tanggal (berbasis 0): 4 (Tgl Kontrak), 5 (Start), 6 (Ending), 16 (Tgl Invoice)
             if (C === 4 || C === 5 || C === 6 || C === 16) {
               if (cell.v instanceof Date && !isNaN(cell.v)) {
-                cell.t = 'd';          // Menjadikannya Date Object
-                cell.z = 'd-mmm-yy';   // Format Excel, e.g. 11-Jun-26
+                cell.t = 'd';
+                cell.z = 'd-mmm-yy';
               }
             }
-            
-            // Index Kolom Numerik Uang: 12 (Harga Satuan), 13 (Nilai Kontrak), 17 (COGM)
             if (C === 12 || C === 13 || C === 17) {
               if (typeof cell.v === 'number') {
-                cell.z = '#,##0'; // Format Number Accounting agar mudah di-SUM tanpa Rp string
+                cell.z = '#,##0';
               }
             }
           }
         }
       }
 
-      // Lebar kolom
       ws['!cols'] = [
         {wch: 5}, {wch: 25}, {wch: 35}, {wch: 20}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 12}, 
         {wch: 22}, {wch: 20}, {wch: 20}, {wch: 18}, {wch: 18}, {wch: 20}, {wch: 15}, {wch: 15}, 
@@ -614,12 +626,9 @@
 
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Data Kontrak");
-      
-      // Simpan menggunakan nama file sesuai referensi
       XLSX.writeFile(wb, "List Kontrak.xlsx");
     }
 
-    // Helper Format Tanggal Indonesia (DD MMM YYYY, cth: 17 Jul 2026) di HTML
     function formatTanggalIndo(dateStr) {
       if (!dateStr || dateStr === "-") return "-";
       let parts = dateStr.split('-');
@@ -641,7 +650,6 @@
       return `${day} ${month} ${year}`;
     }
 
-    // Sorting tabel
     function sortTable(colIndex) {
       const keysMap = {
         0: null, 1: 'noSpsa', 2: 'customer', 3: 'skemaSewa', 4: 'tglKontrak', 5: 'start',
@@ -712,10 +720,9 @@
       });
       
       renderTableData(globalContractsData);
-      filterTable(); // SortTable otomatis sinkron ke filter & export
+      filterTable(); 
     }
 
-    // Fungsi Reset / Hapus Seluruh Data Kontrak
     async function resetDataKontrakFirestore() {
       if (confirm("PERINGATAN: Apakah Anda yakin ingin menghapus SELURUH data monitoring kontrak? Tindakan ini tidak dapat dibatalkan.")) {
         if (!window.firebaseDB || !window.firebaseFns) {
@@ -741,7 +748,6 @@
       }
     }
 
-    // Fungsi Parsing dan Impor Excel/CSV
     async function prosesFileExcel(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -905,7 +911,6 @@
       reader.readAsArrayBuffer(file);
     }
 
-    // Koneksi Realtime Firestore
     function initFirebaseRealtimeSync() {
       const checkInterval = setInterval(() => {
         if (window.firebaseDB && window.firebaseFns) {
@@ -1098,7 +1103,8 @@
       let totalMarginVal = 0;
 
       let custMap = {};
-      let alatMap = {};
+      let alatCustMap = {};
+      let alatJenisMap = {};
       let trenMap = {};
       let today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -1125,10 +1131,13 @@
         else if (item.status === "Closed") { kontrakSelesaiCount++; }
 
         let cust = item.customer || "Lainnya";
-        custMap[cust] = (custMap[cust] || 0) + (val / 1000000);
-
         let alat = item.jenisAlat || "Lainnya";
-        alatMap[alat] = (alatMap[alat] || 0) + 1;
+        let jmlAlat = Number(item.jmlAlat) || 1;
+
+        // Hitung Data Chart
+        custMap[cust] = (custMap[cust] || 0) + (val / 1000000);
+        alatCustMap[cust] = (alatCustMap[cust] || 0) + jmlAlat;
+        alatJenisMap[alat] = (alatJenisMap[alat] || 0) + jmlAlat;
 
         let tgl = item.start || item.tglKontrak || "2026-01";
         let bulanKey = tgl.length >= 7 ? tgl.substring(0, 7) : "2026-01";
@@ -1138,6 +1147,7 @@
 
       let avgMargin = totalKontrak > 0 ? (totalMarginVal / totalKontrak).toFixed(1) : "0.0";
 
+      // Update Teks KPI
       document.getElementById("kpiTotalKontrak").innerText = totalKontrak;
       document.getElementById("kpiTotalNilai").innerText = `Rp ${(totalNilaiSemua / 1000000000).toFixed(1)} M total nilai`;
       document.getElementById("kpiKontrakAktif").innerText = kontrakAktifCount;
@@ -1147,19 +1157,29 @@
       document.getElementById("kpiKontrakSelesai").innerText = kontrakSelesaiCount;
       document.getElementById("kpiRataMargin").innerText = avgMargin + "%";
 
+      // Update Chart Nilai per Pelanggan
       let sortedCust = Object.entries(custMap).sort((a, b) => b[1] - a[1]).slice(0, 8);
       chartPelangganInstance.data.labels = sortedCust.map(x => x[0]);
       chartPelangganInstance.data.datasets[0].data = sortedCust.map(x => Number(x[1].toFixed(2)));
       chartPelangganInstance.update();
 
+      // Update Chart Status
       chartStatusInstance.data.datasets[0].data = [kontrakAktifCount, kontrakExpiredCount, kontrakSelesaiCount];
       chartStatusInstance.update();
 
-      let sortedAlat = Object.entries(alatMap);
-      chartAlatInstance.data.labels = sortedAlat.map(x => x[0]);
-      chartAlatInstance.data.datasets[0].data = sortedAlat.map(x => x[1]);
-      chartAlatInstance.update();
+      // Update Chart Jumlah Alat per Pelanggan
+      let sortedAlatCust = Object.entries(alatCustMap).sort((a, b) => b[1] - a[1]).slice(0, 8);
+      chartAlatCustomerInstance.data.labels = sortedAlatCust.map(x => x[0]);
+      chartAlatCustomerInstance.data.datasets[0].data = sortedAlatCust.map(x => x[1]);
+      chartAlatCustomerInstance.update();
 
+      // Update Chart Jumlah Alat per Jenis Alat
+      let sortedAlatJenis = Object.entries(alatJenisMap).sort((a, b) => b[1] - a[1]);
+      chartAlatJenisInstance.data.labels = sortedAlatJenis.map(x => x[0]);
+      chartAlatJenisInstance.data.datasets[0].data = sortedAlatJenis.map(x => x[1]);
+      chartAlatJenisInstance.update();
+
+      // Update Chart Tren
       let sortedTren = Object.entries(trenMap).sort();
       chartTrenInstance.data.labels = sortedTren.length > 0 ? sortedTren.map(x => x[0]) : ['2026-01'];
       chartTrenInstance.data.datasets[0].data = sortedTren.length > 0 ? sortedTren.map(x => Number(x[1].toFixed(2))) : [0];
