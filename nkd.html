@@ -13,7 +13,7 @@
   <!-- FIREBASE SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
@@ -28,7 +28,7 @@
     const db = getFirestore(app);
 
     window.firebaseDB = db;
-    window.firebaseFns = { doc, getDoc, setDoc, onSnapshot };
+    window.firebaseFns = { doc, getDoc, setDoc, collection, onSnapshot };
   </script>
 
   <style>
@@ -198,6 +198,12 @@
       border-radius: 4px;
       font-size: 11px;
       background: #fff;
+    }
+
+    .form-control[disabled] {
+      background-color: #f1f5f9;
+      cursor: not-allowed;
+      color: #64748b;
     }
 
     .btn-action-form {
@@ -539,8 +545,7 @@
     }
     .btn-edit { background: #d97706; margin-right: 2px; }
     .btn-edit:hover { background: #b45309; }
-    .btn-delete { background: #dc2626; }
-    .btn-delete:hover { background: #b91c1c; }
+    .btn-delete { background: #dc2626; display:none; /* Sembunyikan tombol delete karena bersumber dari Firestore Monitoring */ } 
 
     .note { font-size: 10px; color: #4b5563; font-style: italic; margin-top: 15px; }
 
@@ -579,28 +584,21 @@
       <button class="toggle-panel-btn" onclick="toggleInputPanel()">Tutup/Buka Panel</button>
     </div>
     <div class="admin-panel-body" id="inputPanel">
-      <div class="admin-desc" id="formDescTitle">Tambahkan atau ubah data kontrak proyek pada form di bawah ini. Grafik, KPI, dan tabel rincian akan diperbarui secara otomatis.</div>
+      <div class="admin-desc" id="formDescTitle">Data Customer, Tipe Alat, dan Total Kontrak ter-update otomatis dari Monitoring Kontrak. Tambahkan atau ubah data <b>PU Terealisasi</b> dan <b>PU Tidak Terserap</b> pada form di bawah ini.</div>
       
-      <input type="hidden" id="editIndex" value="-1">
+      <input type="hidden" id="editKey" value="">
       <div class="form-grid">
         <div class="form-group">
           <label>Customer / Proyek</label>
-          <input type="text" id="inCustomer" class="form-control" placeholder="Nama Customer">
+          <input type="text" id="inCustomer" class="form-control" placeholder="Nama Customer" disabled>
         </div>
         <div class="form-group">
           <label>Jenis Alat</label>
-          <select id="inTipeAlat" class="form-control">
-            <option>Truck Mixer</option>
-            <option>Stone Crusher</option>
-            <option>Truck Trailer</option>
-            <option>Mobile Crane+Bucket Cor</option>
-            <option>Dump Truck</option>
-            <option>Silo</option>
-          </select>
+          <input type="text" id="inTipeAlat" class="form-control" disabled>
         </div>
         <div class="form-group">
           <label>Total Kontrak (Rp)</label>
-          <input type="number" id="inTotalKontrak" class="form-control" placeholder="Contoh: 500000000">
+          <input type="number" id="inTotalKontrak" class="form-control" placeholder="0" disabled>
         </div>
         <div class="form-group">
           <label>PU Terealisasi (Rp)</label>
@@ -618,7 +616,7 @@
         </div>
       </div>
 
-      <div class="master-table-title">DAFTAR MASTER KONTRAK (<span id="totalContractCount">15</span> KONTRAK)</div>
+      <div class="master-table-title">DAFTAR MASTER KONTRAK (<span id="totalContractCount">0</span> KONTRAK)</div>
       <div class="master-table-scroll">
         <table class="customer-table" style="margin-bottom: 0;">
           <thead>
@@ -667,13 +665,13 @@
           <div class="filter-card-header">TIPE ALAT</div>
           <div class="filter-card-body">
             <select id="tipeAlatFilter">
-              <option>All</option>
-              <option>Truck Mixer</option>
-              <option>Stone Crusher</option>
-              <option>Truck Trailer</option>
-              <option>Mobile Crane+Bucket Cor</option>
-              <option>Dump Truck</option>
-              <option>Silo</option>
+              <option value="all">All</option>
+              <option value="Truck Mixer">Truck Mixer</option>
+              <option value="Stone Crusher">Stone Crusher</option>
+              <option value="Truck Trailer">Truck Trailer</option>
+              <option value="Mobile Crane+Bucket Cor">Mobile Crane+Bucket Cor</option>
+              <option value="Dump Truck">Dump Truck</option>
+              <option value="Silo">Silo</option>
             </select>
           </div>
         </div>
@@ -687,43 +685,43 @@
       <section class="kpi-grid">
         <div class="kpi-card">
           <div class="kpi-title">TOTAL KONTRAK</div>
-          <div class="kpi-value" id="kpi-total-kontrak">10.956.633.326 <span class="rp">Rp</span></div>
+          <div class="kpi-value" id="kpi-total-kontrak">0 <span class="rp">Rp</span></div>
           <div class="kpi-footer">
             <div class="circle-icon"><i class="fa-solid fa-coins"></i></div>
-            <div class="kpi-foot-text"><span id="kpi-pct-total">100,00%</span><small>dari Total Kontrak</small></div>
+            <div class="kpi-foot-text"><span id="kpi-pct-total">0,00%</span><small>dari Total Kontrak</small></div>
           </div>
         </div>
 
         <div class="kpi-card green">
           <div class="kpi-title">PU TEREALISASI</div>
-          <div class="kpi-value" id="kpi-pu-terealisasi">5.963.602.686 <span class="rp">Rp</span></div>
+          <div class="kpi-value" id="kpi-pu-terealisasi">0 <span class="rp">Rp</span></div>
           <div class="kpi-footer">
             <div class="circle-icon"><i class="fa-solid fa-circle-check"></i></div>
-            <div class="kpi-foot-text"><span id="kpi-pct-pu">54,40%</span><small>dari Total Kontrak</small></div>
+            <div class="kpi-foot-text"><span id="kpi-pct-pu">0,00%</span><small>dari Total Kontrak</small></div>
           </div>
         </div>
 
         <div class="kpi-card orange">
           <div class="kpi-title">PU TIDAK TERSERAP</div>
-          <div class="kpi-value" id="kpi-pu-terserap">1.173.913.978 <span class="rp">Rp</span></div>
+          <div class="kpi-value" id="kpi-pu-terserap">0 <span class="rp">Rp</span></div>
           <div class="kpi-footer">
             <div class="circle-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-            <div class="kpi-foot-text"><span id="kpi-pct-terserap">10,72%</span><small>dari Total Kontrak</small></div>
+            <div class="kpi-foot-text"><span id="kpi-pct-terserap">0,00%</span><small>dari Total Kontrak</small></div>
           </div>
         </div>
 
         <div class="kpi-card blue">
           <div class="kpi-title">SISA KONTRAK</div>
-          <div class="kpi-value" id="kpi-sisa-kontrak">3.819.116.662 <span class="rp">Rp</span></div>
+          <div class="kpi-value" id="kpi-sisa-kontrak">0 <span class="rp">Rp</span></div>
           <div class="kpi-footer">
             <div class="circle-icon"><i class="fa-solid fa-layer-group"></i></div>
-            <div class="kpi-foot-text"><span id="kpi-pct-sisa">34,87%</span><small>dari Total Kontrak</small></div>
+            <div class="kpi-foot-text"><span id="kpi-pct-sisa">0,00%</span><small>dari Total Kontrak</small></div>
           </div>
         </div>
 
         <div class="kpi-card gauge-card">
           <div class="kpi-title">TINGKAT PENYERAPAN (PU)</div>
-          <div class="kpi-value" id="kpi-tingkat-penyerapan">54,40%</div>
+          <div class="kpi-value" id="kpi-tingkat-penyerapan">0,00%</div>
           <div class="gauge-wrap">
             <div class="gauge-arc" id="gaugeArc"></div>
           </div>
@@ -772,10 +770,10 @@
               <tfoot>
                 <tr>
                   <td colspan="3" class="left">Total</td>
-                  <td id="foot-tot-kontrak">10.956.633.326</td>
-                  <td id="foot-tot-pu">5.963.602.686</td>
-                  <td id="foot-tot-tidakterserap">1.173.913.978</td>
-                  <td id="foot-tot-sisakontrak">3.819.116.662</td>
+                  <td id="foot-tot-kontrak">0</td>
+                  <td id="foot-tot-pu">0</td>
+                  <td id="foot-tot-tidakterserap">0</td>
+                  <td id="foot-tot-sisakontrak">0</td>
                 </tr>
               </tfoot>
             </table>
@@ -802,10 +800,10 @@
               <tfoot>
                 <tr>
                   <td colspan="2" class="left">Total</td>
-                  <td id="foot-alat-kontrak">10.956.633.326</td>
-                  <td id="foot-alat-pu">5.963.602.686</td>
-                  <td id="foot-alat-tidakterserap">1.173.913.978</td>
-                  <td id="foot-alat-sisakontrak">3.819.116.662</td>
+                  <td id="foot-alat-kontrak">0</td>
+                  <td id="foot-alat-pu">0</td>
+                  <td id="foot-alat-tidakterserap">0</td>
+                  <td id="foot-alat-sisakontrak">0</td>
                 </tr>
               </tfoot>
             </table>
@@ -813,7 +811,7 @@
         </div>
       </section>
 
-      <div class="note">Catatan: Seluruh angka dalam Rupiah</div>
+      <div class="note">Catatan: Seluruh angka dalam Rupiah. Data terintegrasi dari Monitoring Kontrak.</div>
     </main>
   </div>
 </div>
@@ -822,25 +820,11 @@
   let chartBarInstance = null;
   let chartDonutInstance = null;
   let chartRealisasiInstance = null;
-  let cachedCustomers = [];
-
-  const defaultCustomers = [
-    { customer: "PT Baja Cilegon Energi", tipe: "Truck Mixer", kontrak: 276000000, pu: 103500000, tdkTerserap: 172500000, sisa: 0 },
-    { customer: "PT Baja Comoso Energi", tipe: "Truck Mixer", kontrak: 376000000, pu: 124000000, tdkTerserap: 0, sisa: 252000000 },
-    { customer: "PT Hamori Medical Center", tipe: "Mobile Crane+Bucket Cor", kontrak: 220000000, pu: 220000000, tdkTerserap: 0, sisa: 0 },
-    { customer: "PT Indosarana Jaya Perkasa", tipe: "Dump Truck", kontrak: 138000000, pu: 46000000, tdkTerserap: 0, sisa: 92000000 },
-    { customer: "PT Indosarana Jaya Perkasa", tipe: "Truck Trailer", kontrak: 1075000000, pu: 701586022, tdkTerserap: 73413978, sisa: 300000000 },
-    { customer: "PT Indosarana Nusapersada", tipe: "Truck Mixer", kontrak: 1392000000, pu: 464000000, tdkTerserap: 928000000, sisa: 0 },
-    { customer: "PT Liga Adhi Buana", tipe: "Truck Mixer", kontrak: 459000000, pu: 459000000, tdkTerserap: 0, sisa: 0 },
-    { customer: "PT Sraya Artha Gemilang", tipe: "Truck Mixer", kontrak: 899833326, pu: 433166664, tdkTerserap: 0, sisa: 466666662 },
-    { customer: "PT Sumber Urip Sejati", tipe: "Truck Mixer", kontrak: 2416430000, pu: 2114350000, tdkTerserap: 0, sisa: 302050000 },
-    { customer: "PT Tirta Dan Mitra Pertiwi", tipe: "Stone Crusher", kontrak: 1140000000, pu: 285000000, tdkTerserap: 0, sisa: 855000000 },
-    { customer: "PT Trans Ringo Group", tipe: "Truck Mixer", kontrak: 372000000, pu: 372000000, tdkTerserap: 0, sisa: 0 },
-    { customer: "PT Trimitz Sinergy Mandala", tipe: "Truck Mixer", kontrak: 348000000, pu: 116000000, tdkTerserap: 0, sisa: 232000000 },
-    { customer: "PT Waskita Karya (Persero) Tbk", tipe: "Truck Mixer", kontrak: 1369400000, pu: 140000000, tdkTerserap: 0, sisa: 1229400000 },
-    { customer: "Waskita CAG KSO", tipe: "Truck Mixer", kontrak: 340000000, pu: 340000000, tdkTerserap: 0, sisa: 0 },
-    { customer: "Waskita WKI KSO", tipe: "Silo", kontrak: 135000000, pu: 45000000, tdkTerserap: 0, sisa: 90000000 }
-  ];
+  
+  // Data gabungan dari Monitoring Kontrak (customer, tipe, kontrak) dan input manual NKD (pu, tdkTerserap)
+  let mergedCustomersData = []; 
+  // Data input manual NKD (menyimpan nilai pu & tdkTerserap berdasarkan key kombinasi customer+tipe)
+  let manualNkdData = {}; 
 
   const months = [
     "Januari", "Februari", "Maret", "April", "Mei", "Juni",
@@ -861,6 +845,26 @@
     }
   }
 
+  // Helper untuk parsing periode filter (misal "s.d. Oktober 2026" menjadi batas akhir bulan Oktober 2026)
+  function parsePeriodeLimit(periodeStr) {
+    const parts = periodeStr.split(" ");
+    if (parts.length >= 3) {
+      const monthStr = parts[1];
+      const yearStr = parts[2];
+      const monthIndex = months.indexOf(monthStr);
+      if (monthIndex !== -1) {
+        // Mengembalikan objek Date hari terakhir di bulan & tahun tersebut
+        return new Date(parseInt(yearStr), monthIndex + 1, 0, 23, 59, 59);
+      }
+    }
+    return new Date(); // fallback
+  }
+
+  // Membuat key unik untuk grouping data dari Firestore ke NKD
+  function generateKey(customer, tipeAlat) {
+    return `${(customer || "").trim().toLowerCase()}_${(tipeAlat || "").trim().toLowerCase()}`;
+  }
+
   window.toggleInputPanel = function() {
     const p = document.getElementById("inputPanel");
     p.classList.toggle("active");
@@ -868,43 +872,31 @@
 
   window.resetForm = function() {
     document.getElementById("inCustomer").value = "";
+    document.getElementById("inTipeAlat").value = "";
     document.getElementById("inTotalKontrak").value = "";
     document.getElementById("inPU").value = "";
     document.getElementById("inTdkTerserap").value = "";
-    document.getElementById("editIndex").value = "-1";
+    document.getElementById("editKey").value = "";
   }
 
   window.saveCustomerData = async function() {
-    const cust = document.getElementById("inCustomer").value.trim();
-    const tipe = document.getElementById("inTipeAlat").value;
-    const kont = Number(document.getElementById("inTotalKontrak").value) || 0;
+    const editKey = document.getElementById("editKey").value;
     const pu = Number(document.getElementById("inPU").value) || 0;
     const tdkTerserap = Number(document.getElementById("inTdkTerserap").value) || 0;
-    const editIdx = Number(document.getElementById("editIndex").value);
 
-    if (!cust) {
-      alert("Nama customer harus diisi!");
+    if (!editKey) {
+      alert("Silakan pilih data kontrak pada tabel di bawah dengan mengklik tombol edit terlebih dahulu.");
       return;
     }
 
-    const sisa = Math.max(0, kont - pu - tdkTerserap);
-    const newEntry = { customer: cust, tipe: tipe, kontrak: kont, pu: pu, tdkTerserap: tdkTerserap, sisa: sisa };
-
     if (window.firebaseDB && window.firebaseFns) {
-      const { doc, getDoc, setDoc } = window.firebaseFns;
-      const ref = doc(window.firebaseDB, "dashboardNKD", "data_2026");
+      const { doc, setDoc } = window.firebaseFns;
+      const ref = doc(window.firebaseDB, "dashboardNKD", "data_manual_nkd");
+      
       try {
-        const snap = await getDoc(ref);
-        let currentList = snap.exists() ? (snap.data().customers || defaultCustomers) : defaultCustomers;
-        
-        if (editIdx >= 0 && editIdx < currentList.length) {
-          currentList[editIdx] = newEntry;
-        } else {
-          currentList.push(newEntry);
-        }
-
-        await setDoc(ref, { customers: currentList }, { merge: true });
-        alert("Data berhasil disimpan ke database realtime!");
+        manualNkdData[editKey] = { pu: pu, tdkTerserap: tdkTerserap };
+        await setDoc(ref, { data: manualNkdData }, { merge: true });
+        alert("Data PU berhasil disimpan ke database realtime!");
         resetForm();
       } catch (err) {
         console.error("Gagal menyimpan:", err);
@@ -913,36 +905,19 @@
     }
   }
 
-  window.editCustomerData = function(idx) {
-    const c = cachedCustomers[idx];
-    if (!c) return;
-    document.getElementById("inCustomer").value = c.customer;
-    document.getElementById("inTipeAlat").value = c.tipe;
-    document.getElementById("inTotalKontrak").value = c.kontrak;
-    document.getElementById("inPU").value = c.pu;
-    document.getElementById("inTdkTerserap").value = c.tdkTerserap || 0;
-    document.getElementById("editIndex").value = idx;
+  window.editCustomerData = function(key) {
+    const item = mergedCustomersData.find(c => c.key === key);
+    if (!item) return;
+    document.getElementById("inCustomer").value = item.customer;
+    document.getElementById("inTipeAlat").value = item.tipe;
+    document.getElementById("inTotalKontrak").value = item.kontrak;
+    document.getElementById("inPU").value = item.pu || 0;
+    document.getElementById("inTdkTerserap").value = item.tdkTerserap || 0;
+    document.getElementById("editKey").value = key;
     
     const p = document.getElementById("inputPanel");
     if(!p.classList.contains("active")) p.classList.add("active");
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  window.deleteCustomerData = async function(idx) {
-    if (!confirm("Apakah Anda yakin ingin menghapus data kontrak ini?")) return;
-    if (window.firebaseDB && window.firebaseFns) {
-      const { doc, setDoc } = window.firebaseFns;
-      const ref = doc(window.firebaseDB, "dashboardNKD", "data_2026");
-      try {
-        let currentList = [...cachedCustomers];
-        currentList.splice(idx, 1);
-        await setDoc(ref, { customers: currentList }, { merge: true });
-        alert("Data berhasil dihapus.");
-      } catch (err) {
-        console.error("Gagal menghapus:", err);
-        alert("Gagal menghapus data.");
-      }
-    }
   }
 
   window.downloadDashboardJPG = function() {
@@ -962,6 +937,15 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     generatePeriodeOptions();
+    // Default set ke bulan saat ini
+    const d = new Date();
+    const currentPeriode = `s.d. ${months[d.getMonth()]} ${d.getFullYear()}`;
+    const pFilter = document.getElementById("periodeFilter");
+    if(pFilter) {
+      // Cari opsi yang sesuai, jika ada
+      const match = Array.from(pFilter.options).find(opt => opt.value === currentPeriode);
+      if(match) pFilter.value = currentPeriode;
+    }
 
     if (typeof ChartDataLabels !== 'undefined') {
       Chart.register(ChartDataLabels);
@@ -969,45 +953,113 @@
 
     const fmt = (value) => Number(value || 0).toLocaleString("id-ID");
 
+    let monitoringKontrakRawData = [];
+
     function initListener() {
       const check = setInterval(() => {
         if (window.firebaseDB && window.firebaseFns) {
           clearInterval(check);
-          const { doc, onSnapshot, setDoc, getDoc } = window.firebaseFns;
-          const ref = doc(window.firebaseDB, "dashboardNKD", "data_2026");
-
-          onSnapshot(ref, async (snap) => {
-            let customers = defaultCustomers;
-            let savedPeriode = "s.d. Juli 2026";
-
-            if (snap.exists()) {
-              const data = snap.data();
-              if (data.customers) customers = data.customers;
-              if (data.periode) savedPeriode = data.periode;
-            } else {
-              await setDoc(ref, { customers: defaultCustomers, periode: savedPeriode });
-            }
-
-            cachedCustomers = customers;
-            const periodeEl = document.getElementById("periodeFilter");
-            if (periodeEl) {
-              periodeEl.value = savedPeriode;
-            }
-            updatePeriodeLabel(savedPeriode);
-            renderDashboard(customers);
+          const { doc, collection, onSnapshot } = window.firebaseFns;
+          
+          // 1. Listen data Monitoring Kontrak (Sumber Utama)
+          const monitoringRef = collection(window.firebaseDB, "monitoringKontrak");
+          onSnapshot(monitoringRef, (snap) => {
+            monitoringKontrakRawData = [];
+            snap.forEach((docSnap) => {
+              monitoringKontrakRawData.push({ id: docSnap.id, ...docSnap.data() });
+            });
+            processMergedData();
           }, (err) => {
-            console.error("Sync error:", err);
-            cachedCustomers = defaultCustomers;
-            renderDashboard(defaultCustomers);
+            console.error("Sync Monitoring Kontrak error:", err);
+          });
+
+          // 2. Listen data input manual NKD (PU & Tidak Terserap)
+          const manualNkdRef = doc(window.firebaseDB, "dashboardNKD", "data_manual_nkd");
+          onSnapshot(manualNkdRef, (snap) => {
+            if (snap.exists()) {
+              manualNkdData = snap.data().data || {};
+            } else {
+              manualNkdData = {};
+            }
+            processMergedData();
+          }, (err) => {
+            console.error("Sync Manual NKD error:", err);
+          });
+          
+          // 3. Listen pengaturan filter tersimpan (opsional)
+          const settingsRef = doc(window.firebaseDB, "dashboardNKD", "settings");
+          onSnapshot(settingsRef, (snap) => {
+             if(snap.exists() && snap.data().periode) {
+                 const p = document.getElementById("periodeFilter");
+                 if(p && Array.from(p.options).some(o=>o.value === snap.data().periode)) {
+                     p.value = snap.data().periode;
+                     updatePeriodeLabel(snap.data().periode);
+                     processMergedData(); // re-filter
+                 }
+             }
           });
         }
       }, 100);
     }
 
+    function processMergedData() {
+      const selectedPeriodeStr = document.getElementById("periodeFilter").value;
+      const limitDate = parsePeriodeLimit(selectedPeriodeStr);
+      
+      let tempMap = {};
+
+      monitoringKontrakRawData.forEach(item => {
+        // PERBAIKAN FILTER PERIODE DATA:
+        // Gunakan item.start, jika kosong gunakan item.tglKontrak. Jika keduanya kosong, abaikan filter tgl
+        let dateStr = item.start || item.tglKontrak;
+        if (dateStr) {
+           let itemDate = new Date(dateStr);
+           if (!isNaN(itemDate) && itemDate > limitDate) {
+               return; // Skip data ini karena melewati batas periode yang dipilih
+           }
+        }
+
+        const customer = item.customer || "Lainnya";
+        const tipe = item.jenisAlat || "Lainnya";
+        const key = generateKey(customer, tipe);
+        
+        // PERBAIKAN: Jika ADD (Pejabat), nilai kontrak diset 0, jika tidak gunakan nilaiKontrak yang ada.
+        let isAddPejabat = item.addendum === "ADD (Pejabat)";
+        const valKontrak = isAddPejabat ? 0 : (Number(item.nilaiKontrak) || 0);
+
+        if (!tempMap[key]) {
+          tempMap[key] = {
+            key: key,
+            customer: customer,
+            tipe: tipe,
+            kontrak: 0,
+            pu: 0,
+            tdkTerserap: 0,
+            sisa: 0
+          };
+        }
+        tempMap[key].kontrak += valKontrak;
+      });
+
+      // Gabungkan dengan data manual (PU dan Tidak Terserap)
+      mergedCustomersData = Object.values(tempMap).map(c => {
+         const manual = manualNkdData[c.key] || { pu: 0, tdkTerserap: 0 };
+         c.pu = Number(manual.pu) || 0;
+         c.tdkTerserap = Number(manual.tdkTerserap) || 0;
+         c.sisa = Math.max(0, c.kontrak - c.pu - c.tdkTerserap);
+         return c;
+      });
+      
+      // Sort abjad customer
+      mergedCustomersData.sort((a,b) => a.customer.localeCompare(b.customer));
+      
+      renderDashboard(mergedCustomersData);
+    }
+
     function updatePeriodeLabel(val) {
       const labelEl = document.getElementById("labelPeriodeDisplay");
       if (labelEl) {
-        labelEl.textContent = val.toUpperCase();
+        labelEl.textContent = (val||"").toUpperCase();
       }
     }
 
@@ -1015,16 +1067,21 @@
     periodeSelect.addEventListener("change", async () => {
       const selectedVal = periodeSelect.value;
       updatePeriodeLabel(selectedVal);
+      processMergedData(); // Update tampilan dgn filter baru
 
       if (window.firebaseDB && window.firebaseFns) {
         const { doc, setDoc } = window.firebaseFns;
-        const ref = doc(window.firebaseDB, "dashboardNKD", "data_2026");
+        const ref = doc(window.firebaseDB, "dashboardNKD", "settings");
         try {
           await setDoc(ref, { periode: selectedVal }, { merge: true });
         } catch (e) {
-          console.error("Gagal menyimpan periode:", e);
+          console.error("Gagal menyimpan periode setting:", e);
         }
       }
+    });
+
+    document.getElementById("tipeAlatFilter").addEventListener("change", () => {
+      processMergedData();
     });
 
     function renderDashboard(customers) {
@@ -1042,8 +1099,7 @@
           <td>${fmt(c.tdkTerserap)}</td>
           <td>${fmt(c.sisa)}</td>
           <td class="center">
-            <button class="btn-table-action btn-edit" onclick="editCustomerData(${idx})"><i class="fa-solid fa-pen"></i></button>
-            <button class="btn-table-action btn-delete" onclick="deleteCustomerData(${idx})"><i class="fa-solid fa-trash"></i></button>
+            <button class="btn-table-action btn-edit" onclick="editCustomerData('${c.key}')"><i class="fa-solid fa-pen"></i> Edit PU</button>
           </td>
         </tr>`;
       });
@@ -1068,7 +1124,6 @@
       document.getElementById("kpi-pu-terserap").innerHTML = fmt(totTdkTerserap) + ' <span class="rp">Rp</span>';
       document.getElementById("kpi-sisa-kontrak").innerHTML = fmt(totSisa) + ' <span class="rp">Rp</span>';
 
-      // Hitung persentase aktual berdasarkan total kontrak
       const pctTotal = totKontrak > 0 ? 100 : 0;
       const pctPU = totKontrak > 0 ? (totPU / totKontrak * 100) : 0;
       const pctTdkTerserap = totKontrak > 0 ? (totTdkTerserap / totKontrak * 100) : 0;
@@ -1108,7 +1163,7 @@
       document.getElementById("foot-tot-sisakontrak").textContent = fmt(totSisa);
 
       const alatMap = {};
-      customers.forEach(c => {
+      filtered.forEach(c => {
         if (!alatMap[c.tipe]) {
           alatMap[c.tipe] = { kontrak: 0, pu: 0, tdkTerserap: 0, sisa: 0 };
         }
@@ -1226,10 +1281,6 @@
         plugins: [ChartDataLabels]
       });
     }
-
-    document.getElementById("tipeAlatFilter").addEventListener("change", () => {
-      initListener();
-    });
 
     initListener();
   });
