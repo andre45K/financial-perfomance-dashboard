@@ -273,23 +273,24 @@
         <tr>
           <th onclick="sortTable(0)">No. <i class="fa-solid fa-sort" id="sort-icon-0"></i></th>
           <th onclick="sortTable(1)">No. SPSA <i class="fa-solid fa-sort" id="sort-icon-1"></i></th>
-          <th class="text-left" onclick="sortTable(2)">Customer <i class="fa-solid fa-sort" id="sort-icon-2"></i></th>
-          <th class="text-left" onclick="sortTable(3)">Skema Sewa <i class="fa-solid fa-sort" id="sort-icon-3"></i></th>
-          <th onclick="sortTable(4)">Tanggal Kontrak <i class="fa-solid fa-sort" id="sort-icon-4"></i></th>
-          <th onclick="sortTable(5)">Start (BASTA) <i class="fa-solid fa-sort" id="sort-icon-5"></i></th>
-          <th onclick="sortTable(6)">Ending <i class="fa-solid fa-sort" id="sort-icon-6"></i></th>
-          <th onclick="sortTable(7)">SNK / NKB <i class="fa-solid fa-sort" id="sort-icon-7"></i></th>
-          <th onclick="sortTable(8)">Jumlah Alat <i class="fa-solid fa-sort" id="sort-icon-8"></i></th>
-          <th class="text-left" onclick="sortTable(9)">Jenis Alat <i class="fa-solid fa-sort" id="sort-icon-9"></i></th>
-          <th class="text-left" onclick="sortTable(10)">NKP <i class="fa-solid fa-sort" id="sort-icon-10"></i></th>
-          <th onclick="sortTable(11)">Lokasi <i class="fa-solid fa-sort" id="sort-icon-11"></i></th>
-          <th onclick="sortTable(12)">Lama Sewa (Bulan) <i class="fa-solid fa-sort" id="sort-icon-12"></i></th>
-          <th onclick="sortTable(13)">Harga Satuan <i class="fa-solid fa-sort" id="sort-icon-13"></i></th>
-          <th onclick="sortTable(14)">Nilai Kontrak <i class="fa-solid fa-sort" id="sort-icon-14"></i></th>
-          <th onclick="sortTable(15)">Status Kontrak <i class="fa-solid fa-sort" id="sort-icon-15"></i></th>
-          <th onclick="sortTable(16)">COGM <i class="fa-solid fa-sort" id="sort-icon-16"></i></th>
-          <th onclick="sortTable(17)">Margin <i class="fa-solid fa-sort" id="sort-icon-17"></i></th>
-          <th class="text-left" onclick="sortTable(18)">Keterangan <i class="fa-solid fa-sort" id="sort-icon-18"></i></th>
+          <th onclick="sortTable(2)">ADD <i class="fa-solid fa-sort" id="sort-icon-2"></i></th>
+          <th class="text-left" onclick="sortTable(3)">Customer <i class="fa-solid fa-sort" id="sort-icon-3"></i></th>
+          <th class="text-left" onclick="sortTable(4)">Skema Sewa <i class="fa-solid fa-sort" id="sort-icon-4"></i></th>
+          <th onclick="sortTable(5)">Tanggal Kontrak <i class="fa-solid fa-sort" id="sort-icon-5"></i></th>
+          <th onclick="sortTable(6)">Start (BASTA) <i class="fa-solid fa-sort" id="sort-icon-6"></i></th>
+          <th onclick="sortTable(7)">Ending <i class="fa-solid fa-sort" id="sort-icon-7"></i></th>
+          <th onclick="sortTable(8)">SNK / NKB <i class="fa-solid fa-sort" id="sort-icon-8"></i></th>
+          <th onclick="sortTable(9)">Jumlah Alat <i class="fa-solid fa-sort" id="sort-icon-9"></i></th>
+          <th class="text-left" onclick="sortTable(10)">Jenis Alat <i class="fa-solid fa-sort" id="sort-icon-10"></i></th>
+          <th class="text-left" onclick="sortTable(11)">NKP <i class="fa-solid fa-sort" id="sort-icon-11"></i></th>
+          <th onclick="sortTable(12)">Lokasi <i class="fa-solid fa-sort" id="sort-icon-12"></i></th>
+          <th onclick="sortTable(13)">Lama Sewa (Bulan) <i class="fa-solid fa-sort" id="sort-icon-13"></i></th>
+          <th onclick="sortTable(14)">Harga Satuan <i class="fa-solid fa-sort" id="sort-icon-14"></i></th>
+          <th onclick="sortTable(15)">Nilai Kontrak <i class="fa-solid fa-sort" id="sort-icon-15"></i></th>
+          <th onclick="sortTable(16)">Status Kontrak <i class="fa-solid fa-sort" id="sort-icon-16"></i></th>
+          <th onclick="sortTable(17)">COGM <i class="fa-solid fa-sort" id="sort-icon-17"></i></th>
+          <th onclick="sortTable(18)">Margin <i class="fa-solid fa-sort" id="sort-icon-18"></i></th>
+          <th class="text-left" onclick="sortTable(19)">Keterangan <i class="fa-solid fa-sort" id="sort-icon-19"></i></th>
           <th>Aksi</th>
         </tr>
       </thead>
@@ -314,6 +315,14 @@
             <input type="text" class="form-input" id="inputNoSPSA" placeholder="Contoh: 009/SP5A/WSBP/2026" required>
           </div>
           <div class="form-group">
+            <label class="form-label">ADD</label>
+            <select class="form-input" id="inputAddendum">
+              <option value="-">-</option>
+              <option value="ADD (Pejabat)">ADD (Pejabat)</option>
+              <option value="ADD (Waktu)">ADD (Waktu)</option>
+            </select>
+          </div>
+          <div class="form-group">
             <label class="form-label">Customer</label>
             <input type="text" class="form-input" id="inputCustomer" placeholder="Nama Perusahaan Customer" required>
           </div>
@@ -332,7 +341,6 @@
           </div>
           <div class="form-group">
             <label class="form-label">Tanggal Start</label>
-            <!-- Perubahan: Tambahkan onchange="hitungTanggalEnding()" -->
             <input type="date" class="form-input" id="inputStart" required onchange="hitungTanggalEnding()">
           </div>
           <div class="form-group">
@@ -372,7 +380,6 @@
           </div>
           <div class="form-group">
             <label class="form-label">Lama Sewa (Bulan)</label>
-            <!-- Perubahan: Tambahkan hitungTanggalEnding() pada onkeyup -->
             <input type="text" class="form-input" id="inputLamaSewa" value="1" required onkeyup="formatRibuan(this); hitungNilaiKontrak(); hitungTanggalEnding()">
           </div>
           <div class="form-group">
@@ -380,7 +387,6 @@
             <input type="text" class="form-input" id="inputHargaSatuan" placeholder="Harga Satuan" required onkeyup="formatRibuan(this); hitungNilaiKontrak(); hitungMargin()">
           </div>
           <div class="form-group">
-            <!-- Perubahan label menjadi (DPP) -->
             <label class="form-label">Nilai Kontrak (Rp) <span style="color: #f59e0b; font-weight: normal;">(DPP)</span></label>
             <input type="text" class="form-input" id="inputNilaiKontrak" placeholder="Total Nilai Kontrak (DPP)" required onkeyup="formatRibuan(this)">
           </div>
@@ -471,12 +477,9 @@
       
       if (startDateStr && lamaSewa > 0) {
         const startDate = new Date(startDateStr);
-        // Menambahkan bulan sesuai lama sewa
         startDate.setMonth(startDate.getMonth() + lamaSewa);
-        // Mengurangi 1 hari agar ending pas
         startDate.setDate(startDate.getDate() - 1);
         
-        // Format YYYY-MM-DD untuk input type="date"
         const year = startDate.getFullYear();
         const month = String(startDate.getMonth() + 1).padStart(2, '0');
         const day = String(startDate.getDate()).padStart(2, '0');
@@ -491,9 +494,7 @@
       const lamaSewa = parseRibuan(document.getElementById("inputLamaSewa").value) || 1;
       const jmlAlat = parseRibuan(document.getElementById("inputJmlAlat").value) || 1;
       
-      // PERBAIKAN: Menghapus perkalian 1.11, sekarang nilai murni (DPP)
       const subtotal = hargaSatuan * lamaSewa * jmlAlat;
-      
       const rounded = Math.round(subtotal);
       document.getElementById("inputNilaiKontrak").value = rounded.toLocaleString("id-ID");
     }
@@ -595,6 +596,7 @@
         return {
           "No.": index + 1,
           "No. SPSA": item.noSpsa || "-",
+          "ADD": item.addendum || "-",
           "Customer": item.customer || "-",
           "Skema Sewa": item.skemaSewa || "-",
           "Tanggal Kontrak": parseDateForExcel(item.tglKontrak),
@@ -625,13 +627,15 @@
           if (!cell) continue;
 
           if (R > 0) {
-            if (C === 4 || C === 5 || C === 6) { 
+            // Kolom Tanggal: Tgl Kontrak(5), Start(6), Ending(7)
+            if (C === 5 || C === 6 || C === 7) { 
               if (cell.v instanceof Date && !isNaN(cell.v)) {
                 cell.t = 'd';
                 cell.z = 'd-mmm-yy';
               }
             }
-            if (C === 13 || C === 14 || C === 16) { 
+            // Kolom Harga/Uang: Harga Satuan(14), Nilai Kontrak(15), COGM(17)
+            if (C === 14 || C === 15 || C === 17) { 
               if (typeof cell.v === 'number') {
                 cell.z = '#,##0';
               }
@@ -641,7 +645,7 @@
       }
 
       ws['!cols'] = [
-        {wch: 5}, {wch: 25}, {wch: 35}, {wch: 20}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 12}, 
+        {wch: 5}, {wch: 25}, {wch: 15}, {wch: 35}, {wch: 20}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 12}, 
         {wch: 12}, {wch: 22}, {wch: 20}, {wch: 20}, {wch: 18}, {wch: 18}, {wch: 20}, {wch: 15}, 
         {wch: 18}, {wch: 12}, {wch: 30}
       ];
@@ -674,10 +678,10 @@
 
     function sortTable(colIndex) {
       const keysMap = {
-        0: null, 1: 'noSpsa', 2: 'customer', 3: 'skemaSewa', 4: 'tglKontrak', 5: 'start',
-        6: 'ending', 7: 'snkNkb', 8: 'jmlAlat', 9: 'jenisAlat', 10: 'nkp', 11: 'lokasi',
-        12: 'lamaSewa', 13: 'hargaSatuan', 14: 'nilaiKontrak', 15: 'status', 
-        16: 'cogm', 17: 'margin', 18: 'keterangan'
+        0: null, 1: 'noSpsa', 2: 'addendum', 3: 'customer', 4: 'skemaSewa', 5: 'tglKontrak', 6: 'start',
+        7: 'ending', 8: 'snkNkb', 9: 'jmlAlat', 10: 'jenisAlat', 11: 'nkp', 12: 'lokasi',
+        13: 'lamaSewa', 14: 'hargaSatuan', 15: 'nilaiKontrak', 16: 'status', 
+        17: 'cogm', 18: 'margin', 19: 'keterangan'
       };
 
       if (activeSortColumn === colIndex) {
@@ -689,7 +693,7 @@
       sortDirections = { [colIndex]: activeSortDirection };
       const dir = activeSortDirection === 'asc' ? 1 : -1;
 
-      for (let k = 0; k <= 18; k++) {
+      for (let k = 0; k <= 19; k++) {
         const iconEl = document.getElementById(`sort-icon-${k}`);
         if (iconEl) iconEl.className = 'fa-solid fa-sort';
       }
@@ -708,8 +712,10 @@
         const parsed = Date.parse(str);
         return Number.isNaN(parsed) ? NaN : parsed;
       };
-      const numericColumns = new Set([0, 8, 12, 13, 14, 16, 17]);
-      const dateColumns = new Set([4, 5, 6]);
+      // Kolom angka: 0(No), 9(Jml Alat), 13(Lama), 14(Harga), 15(Nilai), 17(COGM), 18(Margin)
+      const numericColumns = new Set([0, 9, 13, 14, 15, 17, 18]);
+      // Kolom tanggal: 5(Tgl), 6(Start), 7(Ending)
+      const dateColumns = new Set([5, 6, 7]);
 
       globalContractsData = globalContractsData.map((item, index) => ({
         ...item,
@@ -800,6 +806,7 @@
           };
 
           const idxSpsa = getColIdx(['spsa']);
+          const idxAddendum = getColIdx(['add', 'addendum']);
           const idxCust = getColIdx(['customer']);
           const idxSkemaSewa = getColIdx(['skema sewa', 'skema']);
           const idxTglKontrak = getColIdx(['tanggal kontrak', 'tgl kontrak']);
@@ -871,7 +878,6 @@
             let jmlAlatVal = Number(idxJmlUnit !== -1 ? row[idxJmlUnit] : 1) || 1;
             let nilaiKontrakVal = Number(idxNilaiKontrak !== -1 ? row[idxNilaiKontrak] : 0) || 0;
             
-            // PERBAIKAN IMPOR: Jika kosong, hitung nilai tanpa * 1.11 (DPP murni)
             if (nilaiKontrakVal === 0 && hargaSatuanVal > 0) {
               nilaiKontrakVal = hargaSatuanVal * lamaSewaVal * jmlAlatVal;
             }
@@ -898,6 +904,7 @@
 
             let kontrakData = {
               noSpsa: spsaVal ? String(spsaVal) : "-",
+              addendum: idxAddendum !== -1 && row[idxAddendum] ? String(row[idxAddendum]) : "-",
               customer: customerVal ? String(customerVal) : "Lainnya",
               skemaSewa: idxSkemaSewa !== -1 && row[idxSkemaSewa] ? String(row[idxSkemaSewa]) : "Lepas Kunci",
               tglKontrak: formatDateExact(idxTglKontrak !== -1 ? row[idxTglKontrak] : ""),
@@ -1005,6 +1012,7 @@
         tr.innerHTML = `
           <td>${index + 1}</td>
           <td>${item.noSpsa || "-"} ${item.spsaFile ? `<a href="${item.spsaFile}" target="_blank" title="Buka File SPSA (OneDrive)" style="color: #3b82f6; margin-left: 6px; font-size: 13px;"><i class="fa-solid fa-file-pdf"></i></a>` : ""}</td>
+          <td>${item.addendum || "-"}</td>
           <td class="text-left">${item.customer || "-"}</td>
           <td class="text-left">${item.skemaSewa || "Lepas Kunci"}</td>
           <td>${formatTanggalIndo(item.tglKontrak)}</td>
@@ -1077,8 +1085,9 @@
         let rowText = "";
         for (let j = 0; j < tds.length; j++) { rowText += tds[j].textContent.toLowerCase() + " "; }
 
-        const statusText = tds[15] ? tds[15].textContent.toLowerCase() : "";
-        const alatText = tds[9] ? tds[9].textContent.toLowerCase() : "";
+        // Kolom status index 16, Alat index 10
+        const statusText = tds[16] ? tds[16].textContent.toLowerCase() : "";
+        const alatText = tds[10] ? tds[10].textContent.toLowerCase() : "";
 
         const matchesSearch = rowText.includes(input);
         const matchesStatus = statusFilter === "" || statusText.includes(statusFilter);
@@ -1210,6 +1219,7 @@
       document.getElementById("editDocId").value = "";
       document.getElementById("modalTitleText").innerHTML = '<i class="fa-solid fa-file-circle-plus" style="color: #f59e0b;"></i> Tambah Kontrak Baru';
       document.getElementById("formKontrakBaru").reset();
+      document.getElementById("inputAddendum").value = "-";
       document.getElementById("inputSkemaSewa").value = "Lepas Kunci";
       document.getElementById("inputSnkNkb").value = "-";
       document.getElementById("inputStatus").value = "Open";
@@ -1230,6 +1240,7 @@
       document.getElementById("modalTitleText").innerHTML = '<i class="fa-solid fa-pen-to-square" style="color: #3b82f6;"></i> Edit Data Kontrak';
 
       document.getElementById("inputNoSPSA").value = item.noSpsa || "";
+      document.getElementById("inputAddendum").value = item.addendum || "-";
       document.getElementById("inputCustomer").value = item.customer || "";
       document.getElementById("inputSkemaSewa").value = item.skemaSewa || "Lepas Kunci";
       document.getElementById("inputTglKontrak").value = item.tglKontrak || "";
@@ -1271,6 +1282,7 @@
 
       const kontrakData = {
         noSpsa: document.getElementById("inputNoSPSA").value,
+        addendum: document.getElementById("inputAddendum").value,
         customer: document.getElementById("inputCustomer").value,
         skemaSewa: document.getElementById("inputSkemaSewa").value,
         tglKontrak: document.getElementById("inputTglKontrak").value,
