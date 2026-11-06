@@ -1139,10 +1139,14 @@
       today.setHours(0, 0, 0, 0);
 
       dataList.forEach(item => {
-        let val = Number(item.nilaiKontrak || 0);
+        // PERBAIKAN: Jika ADD = "ADD (Pejabat)", abaikan perhitungan nilai kontrak
+        let isAddPejabat = item.addendum === "ADD (Pejabat)";
+        
+        let val = isAddPejabat ? 0 : Number(item.nilaiKontrak || 0);
         totalNilaiSemua += val;
+        
         let marginStr = String(item.margin || "0").replace("%", "");
-        let marginNum = parseFloat(marginStr) || 0;
+        let marginNum = isAddPejabat ? 0 : (parseFloat(marginStr) || 0);
         totalMarginVal += marginNum;
 
         if (item.status === "Open") {
@@ -1161,7 +1165,9 @@
 
         let cust = item.customer || "Lainnya";
         let alat = item.jenisAlat || "Lainnya";
-        let jmlAlat = Number(item.jmlAlat) || 1;
+        
+        // PERBAIKAN: Jika ADD = "ADD (Pejabat)", jangan tambahkan ke jumlah alat (opsional, disesuaikan)
+        let jmlAlat = isAddPejabat ? 0 : (Number(item.jmlAlat) || 1);
 
         // Hitung Data Chart
         custMap[cust] = (custMap[cust] || 0) + (val / 1000000);
