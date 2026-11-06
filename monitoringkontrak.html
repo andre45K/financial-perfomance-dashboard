@@ -278,7 +278,7 @@
           <th onclick="sortTable(4)">Tanggal Kontrak <i class="fa-solid fa-sort" id="sort-icon-4"></i></th>
           <th onclick="sortTable(5)">Start (BASTA) <i class="fa-solid fa-sort" id="sort-icon-5"></i></th>
           <th onclick="sortTable(6)">Ending <i class="fa-solid fa-sort" id="sort-icon-6"></i></th>
-          <th onclick="sortTable(7)">SNK / NKB <i class="fa-solid fa-sort" id="sort-icon-7"></i></th> <!-- Kolom Baru -->
+          <th onclick="sortTable(7)">SNK / NKB <i class="fa-solid fa-sort" id="sort-icon-7"></i></th>
           <th onclick="sortTable(8)">Jumlah Alat <i class="fa-solid fa-sort" id="sort-icon-8"></i></th>
           <th class="text-left" onclick="sortTable(9)">Jenis Alat <i class="fa-solid fa-sort" id="sort-icon-9"></i></th>
           <th class="text-left" onclick="sortTable(10)">NKP <i class="fa-solid fa-sort" id="sort-icon-10"></i></th>
@@ -332,7 +332,8 @@
           </div>
           <div class="form-group">
             <label class="form-label">Tanggal Start</label>
-            <input type="date" class="form-input" id="inputStart" required>
+            <!-- Perubahan: Tambahkan onchange="hitungTanggalEnding()" -->
+            <input type="date" class="form-input" id="inputStart" required onchange="hitungTanggalEnding()">
           </div>
           <div class="form-group">
             <label class="form-label">Tanggal Ending</label>
@@ -371,15 +372,17 @@
           </div>
           <div class="form-group">
             <label class="form-label">Lama Sewa (Bulan)</label>
-            <input type="text" class="form-input" id="inputLamaSewa" value="1" required onkeyup="formatRibuan(this); hitungNilaiKontrak()">
+            <!-- Perubahan: Tambahkan hitungTanggalEnding() pada onkeyup -->
+            <input type="text" class="form-input" id="inputLamaSewa" value="1" required onkeyup="formatRibuan(this); hitungNilaiKontrak(); hitungTanggalEnding()">
           </div>
           <div class="form-group">
             <label class="form-label">Harga Satuan (Rp)</label>
             <input type="text" class="form-input" id="inputHargaSatuan" placeholder="Harga Satuan" required onkeyup="formatRibuan(this); hitungNilaiKontrak(); hitungMargin()">
           </div>
           <div class="form-group">
-            <label class="form-label">Nilai Kontrak (Rp) <span style="color: #f59e0b; font-weight: normal;">(+ PPN 11%)</span></label>
-            <input type="text" class="form-input" id="inputNilaiKontrak" placeholder="Total Nilai Kontrak (+ PPN 11%)" required onkeyup="formatRibuan(this)">
+            <!-- Perubahan label menjadi (DPP) -->
+            <label class="form-label">Nilai Kontrak (Rp) <span style="color: #f59e0b; font-weight: normal;">(DPP)</span></label>
+            <input type="text" class="form-input" id="inputNilaiKontrak" placeholder="Total Nilai Kontrak (DPP)" required onkeyup="formatRibuan(this)">
           </div>
           <div class="form-group">
             <label class="form-label">Status Kontrak</label>
@@ -461,16 +464,37 @@
       return Number(cleaned) || 0;
     }
 
-    // Otomatis menghitung Nilai Kontrak
+    // Perhitungan Tanggal Ending Otomatis
+    function hitungTanggalEnding() {
+      const startDateStr = document.getElementById("inputStart").value;
+      const lamaSewa = parseRibuan(document.getElementById("inputLamaSewa").value);
+      
+      if (startDateStr && lamaSewa > 0) {
+        const startDate = new Date(startDateStr);
+        // Menambahkan bulan sesuai lama sewa
+        startDate.setMonth(startDate.getMonth() + lamaSewa);
+        // Mengurangi 1 hari agar ending pas
+        startDate.setDate(startDate.getDate() - 1);
+        
+        // Format YYYY-MM-DD untuk input type="date"
+        const year = startDate.getFullYear();
+        const month = String(startDate.getMonth() + 1).padStart(2, '0');
+        const day = String(startDate.getDate()).padStart(2, '0');
+        
+        document.getElementById("inputEnding").value = `${year}-${month}-${day}`;
+      }
+    }
+
+    // Otomatis menghitung Nilai Kontrak (TANPA PPN 11%)
     function hitungNilaiKontrak() {
       const hargaSatuan = parseRibuan(document.getElementById("inputHargaSatuan").value);
       const lamaSewa = parseRibuan(document.getElementById("inputLamaSewa").value) || 1;
       const jmlAlat = parseRibuan(document.getElementById("inputJmlAlat").value) || 1;
       
+      // PERBAIKAN: Menghapus perkalian 1.11, sekarang nilai murni (DPP)
       const subtotal = hargaSatuan * lamaSewa * jmlAlat;
-      const nilaiDenganPpn = subtotal * 1.11;
       
-      const rounded = Math.round(nilaiDenganPpn);
+      const rounded = Math.round(subtotal);
       document.getElementById("inputNilaiKontrak").value = rounded.toLocaleString("id-ID");
     }
 
@@ -480,7 +504,6 @@
       const cogm = parseRibuan(document.getElementById("inputCogm").value);
 
       if (cogm > 0) {
-        // PERBAIKAN RUMUS MARGIN: (Harga Satuan - COGM) / COGM * 100
         const marginVal = (hargaSatuan - cogm) / cogm;
         const marginPercent = marginVal * 100;
         document.getElementById("inputMargin").value = marginPercent.toFixed(1) + "%";
@@ -577,7 +600,7 @@
           "Tanggal Kontrak": parseDateForExcel(item.tglKontrak),
           "Start (BASTA)": parseDateForExcel(item.start),
           "Ending": parseDateForExcel(item.ending),
-          "SNK / NKB": item.snkNkb || "-", // Tambahan kolom SNK/NKB
+          "SNK / NKB": item.snkNkb || "-",
           "Jumlah Alat": Number(item.jmlAlat) || 0,
           "Jenis Alat": item.jenisAlat || "-",
           "NKP": item.nkp || "-",
@@ -602,13 +625,13 @@
           if (!cell) continue;
 
           if (R > 0) {
-            if (C === 4 || C === 5 || C === 6) { // Index berubah karena kwitansi dan invoice dihapus
+            if (C === 4 || C === 5 || C === 6) { 
               if (cell.v instanceof Date && !isNaN(cell.v)) {
                 cell.t = 'd';
                 cell.z = 'd-mmm-yy';
               }
             }
-            if (C === 13 || C === 14 || C === 16) { // Index harga, nilai, cogm
+            if (C === 13 || C === 14 || C === 16) { 
               if (typeof cell.v === 'number') {
                 cell.z = '#,##0';
               }
@@ -847,14 +870,15 @@
             let lamaSewaVal = Number(idxLamaSewa !== -1 ? row[idxLamaSewa] : 1) || 1;
             let jmlAlatVal = Number(idxJmlUnit !== -1 ? row[idxJmlUnit] : 1) || 1;
             let nilaiKontrakVal = Number(idxNilaiKontrak !== -1 ? row[idxNilaiKontrak] : 0) || 0;
+            
+            // PERBAIKAN IMPOR: Jika kosong, hitung nilai tanpa * 1.11 (DPP murni)
             if (nilaiKontrakVal === 0 && hargaSatuanVal > 0) {
-              nilaiKontrakVal = hargaSatuanVal * lamaSewaVal * jmlAlatVal * 1.11;
+              nilaiKontrakVal = hargaSatuanVal * lamaSewaVal * jmlAlatVal;
             }
 
             let cogmVal = Number(idxCogm !== -1 ? row[idxCogm] : 0) || 0;
             let marginVal = idxMargin !== -1 && row[idxMargin] ? String(row[idxMargin]) : "";
             if (!marginVal && cogmVal > 0) {
-              // PERBAIKAN RUMUS MARGIN SAAT IMPOR
               marginVal = (((hargaSatuanVal - cogmVal) / cogmVal) * 100).toFixed(1) + "%";
             } else if (!marginVal) {
               marginVal = "100.0%";
