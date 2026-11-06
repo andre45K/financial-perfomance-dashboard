@@ -221,7 +221,7 @@
     </div>
   </div>
 
-  <!-- Charts Row 2 (BARU: Alat per Customer & Alat per Jenis) -->
+  <!-- Charts Row 2 (Alat per Customer & Alat per Jenis) -->
   <div class="charts-grid-sub">
     <div class="card-panel">
       <div class="panel-title">Jumlah Alat per Pelanggan (Top 8)</div>
@@ -261,7 +261,6 @@
         <option value="Dump Truck">Dump Truck</option>
         <option value="Stone Crusher">Stone Crusher</option>
       </select>
-      <!-- Tombol Ekspor Excel dipasang fungsi onClick -->
       <button class="btn-action" style="background:#020617;" onclick="exportToExcel()"><i class="fa-solid fa-file-excel"></i> Ekspor</button>
     </div>
   </div>
@@ -286,11 +285,10 @@
           <th onclick="sortTable(12)">Harga Satuan <i class="fa-solid fa-sort" id="sort-icon-12"></i></th>
           <th onclick="sortTable(13)">Nilai Kontrak <i class="fa-solid fa-sort" id="sort-icon-13"></i></th>
           <th onclick="sortTable(14)">Status Kontrak <i class="fa-solid fa-sort" id="sort-icon-14"></i></th>
-          <th onclick="sortTable(15)">No. Kwitansi <i class="fa-solid fa-sort" id="sort-icon-15"></i></th>
-          <th onclick="sortTable(16)">Tanggal Invoice <i class="fa-solid fa-sort" id="sort-icon-16"></i></th>
-          <th onclick="sortTable(17)">COGM <i class="fa-solid fa-sort" id="sort-icon-17"></i></th>
-          <th onclick="sortTable(18)">Margin <i class="fa-solid fa-sort" id="sort-icon-18"></i></th>
-          <th class="text-left" onclick="sortTable(19)">Keterangan <i class="fa-solid fa-sort" id="sort-icon-19"></i></th>
+          <th onclick="sortTable(15)">SNK / NKB <i class="fa-solid fa-sort" id="sort-icon-15"></i></th>
+          <th onclick="sortTable(16)">COGM <i class="fa-solid fa-sort" id="sort-icon-16"></i></th>
+          <th onclick="sortTable(17)">Margin <i class="fa-solid fa-sort" id="sort-icon-17"></i></th>
+          <th class="text-left" onclick="sortTable(18)">Keterangan <i class="fa-solid fa-sort" id="sort-icon-18"></i></th>
           <th>Aksi</th>
         </tr>
       </thead>
@@ -382,13 +380,14 @@
               <option value="Closed">Closed (Selesai)</option>
             </select>
           </div>
+          <!-- KOLOM SNK / NKB DITAMBAHKAN -->
           <div class="form-group">
-            <label class="form-label">No. Kwitansi</label>
-            <input type="text" class="form-input" id="inputKwitansi" placeholder="No. Kwitansi / -">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Tanggal Invoice</label>
-            <input type="date" class="form-input" id="inputTglInvoice">
+            <label class="form-label">SNK / NKB</label>
+            <select class="form-input" id="inputSnkNkb">
+              <option value="-">-</option>
+              <option value="SNK">SNK</option>
+              <option value="NKB">NKB</option>
+            </select>
           </div>
           <div class="form-group">
             <label class="form-label">COGM (Rp)</label>
@@ -475,14 +474,13 @@
       document.getElementById("inputNilaiKontrak").value = rounded.toLocaleString("id-ID");
     }
 
-    // Otomatis menghitung Margin (%)
+    // Otomatis menghitung Margin (%) dengan rumus ((Harga - COGM) / COGM) * 100
     function hitungMargin() {
       const hargaSatuan = parseRibuan(document.getElementById("inputHargaSatuan").value);
       const cogm = parseRibuan(document.getElementById("inputCogm").value);
 
       if (cogm > 0) {
-        const marginVal = (hargaSatuan / cogm) - 1;
-        const marginPercent = marginVal * 100;
+        const marginPercent = ((hargaSatuan - cogm) / cogm) * 100;
         document.getElementById("inputMargin").value = marginPercent.toFixed(1) + "%";
       } else {
         document.getElementById("inputMargin").value = "0.0%";
@@ -553,7 +551,7 @@
       document.getElementById('excelFileInput').click();
     }
 
-    // Ekspor ke Excel (Mengambil referensi dari tabel yang sedang aktif difilter)
+    // Ekspor ke Excel
     function exportToExcel() {
       const dataToExport = currentFilteredData.length > 0 ? currentFilteredData : globalContractsData;
       
@@ -585,8 +583,7 @@
           "Harga Satuan": Number(item.hargaSatuan) || 0,
           "Nilai Kontrak": Number(item.nilaiKontrak) || 0,
           "Status Kontrak": item.status || "-",
-          "No. Kwitansi": item.kwitansi || "-",
-          "Tanggal Invoice": parseDateForExcel(item.tglInvoice),
+          "SNK / NKB": item.snkNkb || "-",
           "COGM": Number(item.cogm) || 0,
           "Margin": item.margin || "0.0%",
           "Keterangan": item.keterangan || "-"
@@ -603,13 +600,15 @@
           if (!cell) continue;
 
           if (R > 0) {
-            if (C === 4 || C === 5 || C === 6 || C === 16) {
+            // Index format Tanggal Excel
+            if (C === 4 || C === 5 || C === 6) {
               if (cell.v instanceof Date && !isNaN(cell.v)) {
                 cell.t = 'd';
                 cell.z = 'd-mmm-yy';
               }
             }
-            if (C === 12 || C === 13 || C === 17) {
+            // Index format Angka/Numerik
+            if (C === 12 || C === 13 || C === 16) {
               if (typeof cell.v === 'number') {
                 cell.z = '#,##0';
               }
@@ -620,8 +619,8 @@
 
       ws['!cols'] = [
         {wch: 5}, {wch: 25}, {wch: 35}, {wch: 20}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 12}, 
-        {wch: 22}, {wch: 20}, {wch: 20}, {wch: 18}, {wch: 18}, {wch: 20}, {wch: 15}, {wch: 15}, 
-        {wch: 15}, {wch: 18}, {wch: 12}, {wch: 30}
+        {wch: 22}, {wch: 20}, {wch: 20}, {wch: 18}, {wch: 18}, {wch: 20}, {wch: 15}, {wch: 12}, 
+        {wch: 18}, {wch: 12}, {wch: 30}
       ];
 
       const wb = XLSX.utils.book_new();
@@ -655,8 +654,7 @@
         0: null, 1: 'noSpsa', 2: 'customer', 3: 'skemaSewa', 4: 'tglKontrak', 5: 'start',
         6: 'ending', 7: 'jmlAlat', 8: 'jenisAlat', 9: 'nkp', 10: 'lokasi',
         11: 'lamaSewa', 12: 'hargaSatuan', 13: 'nilaiKontrak', 14: 'status', 
-        15: 'kwitansi', 16: 'tglInvoice', 17: 'cogm', 18: 'margin', 
-        19: 'keterangan'
+        15: 'snkNkb', 16: 'cogm', 17: 'margin', 18: 'keterangan'
       };
 
       if (activeSortColumn === colIndex) {
@@ -668,7 +666,7 @@
       sortDirections = { [colIndex]: activeSortDirection };
       const dir = activeSortDirection === 'asc' ? 1 : -1;
 
-      for (let k = 0; k <= 19; k++) {
+      for (let k = 0; k <= 18; k++) {
         const iconEl = document.getElementById(`sort-icon-${k}`);
         if (iconEl) iconEl.className = 'fa-solid fa-sort';
       }
@@ -687,8 +685,9 @@
         const parsed = Date.parse(str);
         return Number.isNaN(parsed) ? NaN : parsed;
       };
-      const numericColumns = new Set([0, 7, 11, 12, 13, 17, 18]);
-      const dateColumns = new Set([4, 5, 6, 16]);
+      
+      const numericColumns = new Set([0, 7, 11, 12, 13, 16, 17]);
+      const dateColumns = new Set([4, 5, 6]);
 
       globalContractsData = globalContractsData.map((item, index) => ({
         ...item,
@@ -792,8 +791,7 @@
           const idxHargaSatuan = getColIdx(['harga satuan']);
           const idxNilaiKontrak = getColIdx(['nilai kontrak']);
           const idxStatus = getColIdx(['status kontrak']);
-          const idxKwitansi = getColIdx(['kwitansi']);
-          const idxTglInvoice = getColIdx(['tanggal invoice', 'tanggal kwitansi']);
+          const idxSnkNkb = getColIdx(['snk', 'nkb', 'snk / nkb']);
           const idxCogm = getColIdx(['cogm']);
           const idxMargin = getColIdx(['margin']);
           const idxKet = getColIdx(['keterangan']);
@@ -856,8 +854,10 @@
 
             let cogmVal = Number(idxCogm !== -1 ? row[idxCogm] : 0) || 0;
             let marginVal = idxMargin !== -1 && row[idxMargin] ? String(row[idxMargin]) : "";
+            
+            // Perbaikan import rumus margin
             if (!marginVal && cogmVal > 0) {
-              marginVal = (((hargaSatuanVal / cogmVal) - 1) * 100).toFixed(1) + "%";
+              marginVal = (((hargaSatuanVal - cogmVal) / cogmVal) * 100).toFixed(1) + "%";
             } else if (!marginVal) {
               marginVal = "100.0%";
             }
@@ -874,6 +874,8 @@
               }
             }
 
+            let snkNkbVal = idxSnkNkb !== -1 && row[idxSnkNkb] ? String(row[idxSnkNkb]) : "-";
+
             let kontrakData = {
               noSpsa: spsaVal ? String(spsaVal) : "-",
               customer: customerVal ? String(customerVal) : "Lainnya",
@@ -889,8 +891,7 @@
               hargaSatuan: hargaSatuanVal,
               nilaiKontrak: Math.round(nilaiKontrakVal),
               status: statusParsed,
-              kwitansi: idxKwitansi !== -1 && row[idxKwitansi] ? String(row[idxKwitansi]) : "-",
-              tglInvoice: formatDateExact(idxTglInvoice !== -1 ? row[idxTglInvoice] : ""),
+              snkNkb: snkNkbVal,
               cogm: cogmVal,
               margin: marginVal,
               keterangan: idxKet !== -1 && row[idxKet] ? String(row[idxKet]) : "-"
@@ -997,8 +998,7 @@
           <td class="text-right">Rp ${Number(item.hargaSatuan || 0).toLocaleString("id-ID")}</td>
           <td class="text-right"><b>Rp ${Number(item.nilaiKontrak || 0).toLocaleString("id-ID")}</b></td>
           <td>${statusHtml}</td>
-          <td>${item.kwitansi || "-"}</td>
-          <td>${formatTanggalIndo(item.tglInvoice)}</td>
+          <td>${item.snkNkb || "-"}</td>
           <td class="text-right">Rp ${Number(item.cogm || 0).toLocaleString("id-ID")}</td>
           <td>${item.margin || "0.0%"}</td>
           <td class="text-left">${item.keterangan || "-"}</td>
@@ -1194,6 +1194,7 @@
       document.getElementById("inputStatus").value = "Open";
       document.getElementById("inputJmlAlat").value = "1";
       document.getElementById("inputLamaSewa").value = "1";
+      document.getElementById("inputSnkNkb").value = "-";
       document.getElementById("inputCogm").value = "0";
       document.getElementById("inputMargin").value = "0.0%";
       document.getElementById("modalKontrak").style.display = "flex";
@@ -1222,8 +1223,7 @@
       document.getElementById("inputHargaSatuan").value = item.hargaSatuan ? Number(item.hargaSatuan).toLocaleString("id-ID") : "";
       document.getElementById("inputNilaiKontrak").value = item.nilaiKontrak ? Number(item.nilaiKontrak).toLocaleString("id-ID") : "";
       document.getElementById("inputStatus").value = item.status || "Open";
-      document.getElementById("inputKwitansi").value = item.kwitansi || "";
-      document.getElementById("inputTglInvoice").value = item.tglInvoice || "";
+      document.getElementById("inputSnkNkb").value = item.snkNkb || "-";
       document.getElementById("inputCogm").value = item.cogm ? Number(item.cogm).toLocaleString("id-ID") : "0";
       document.getElementById("inputMargin").value = item.margin || "0.0%";
       document.getElementById("inputKeterangan").value = item.keterangan || "";
@@ -1264,8 +1264,7 @@
         hargaSatuan: parseRibuan(document.getElementById("inputHargaSatuan").value) || 0,
         nilaiKontrak: parseRibuan(document.getElementById("inputNilaiKontrak").value) || 0,
         status: statusVal,
-        kwitansi: document.getElementById("inputKwitansi").value || "-",
-        tglInvoice: document.getElementById("inputTglInvoice").value || "-",
+        snkNkb: document.getElementById("inputSnkNkb").value,
         cogm: parseRibuan(document.getElementById("inputCogm").value) || 0,
         margin: document.getElementById("inputMargin").value || "0.0%",
         keterangan: document.getElementById("inputKeterangan").value || "-",
