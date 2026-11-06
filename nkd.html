@@ -823,7 +823,7 @@
   
   // Data gabungan dari Monitoring Kontrak (customer, tipe, kontrak) dan input manual NKD (pu, tdkTerserap)
   let mergedCustomersData = []; 
-  // Data input manual NKD (menyimpan nilai pu & tdkTerserap berdasarkan key kombinasi customer+tipe)
+  // Data input manual NKD (menyimpan nilai pu & tdkTerserap berdasarkan key kombinasi customer+tipe+periode)
   let manualNkdData = {}; 
 
   const months = [
@@ -860,9 +860,9 @@
     return new Date(); // fallback
   }
 
-  // Membuat key unik untuk grouping data dari Firestore ke NKD
-  function generateKey(customer, tipeAlat) {
-    return `${(customer || "").trim().toLowerCase()}_${(tipeAlat || "").trim().toLowerCase()}`;
+  // PERBAIKAN LOGIKA: Membuat key unik untuk grouping data dari Firestore ke NKD, dipisah per PERIODE
+  function generateKey(customer, tipeAlat, periode) {
+    return `${(customer || "").trim().toLowerCase()}_${(tipeAlat || "").trim().toLowerCase()}_${(periode || "").trim().toLowerCase()}`;
   }
 
   window.toggleInputPanel = function() {
@@ -1021,7 +1021,9 @@
 
         const customer = item.customer || "Lainnya";
         const tipe = item.jenisAlat || "Lainnya";
-        const key = generateKey(customer, tipe);
+        
+        // PERBAIKAN: Generate Key sekarang menyertakan selectedPeriodeStr
+        const key = generateKey(customer, tipe, selectedPeriodeStr);
         
         // PERBAIKAN: Jika ADD (Pejabat), nilai kontrak diset 0, jika tidak gunakan nilaiKontrak yang ada.
         let isAddPejabat = item.addendum === "ADD (Pejabat)";
