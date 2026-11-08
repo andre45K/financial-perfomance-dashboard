@@ -160,7 +160,8 @@
             browserSessionPersistence,
             onAuthStateChanged,
             signInWithEmailAndPassword,
-            sendPasswordResetEmail
+            sendPasswordResetEmail,
+            signOut
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         /*
@@ -176,6 +177,22 @@
             appId: "1:136866453174:web:b69a3e14672eb96cc53817"
         };
 
+        // Daftar akun yang diizinkan beserta hak aksesnya.
+        // Hak akses ditentukan berdasarkan UID Firebase, bukan berdasarkan email saja.
+        const AUTHORIZED_USERS = {
+            "rg0qCJrTmAeXXRjIf3jBv5Olkj03": {
+                email: "sar.peralatan@gmail.com",
+                role: "viewer",
+                label: "VIEW ONLY"
+            },
+            "XYzt5Ig4F7cyn2T0H3cb6w80i8o2": {
+                email: "andre45krisnadi@gmail.com",
+                role: "admin",
+                label: "EDIT ALL"
+            }
+        };
+        const ACCESS_STORAGE_KEY = "fpd_access";
+
         const form = document.getElementById("loginForm");
         const emailInput = document.getElementById("email");
         const passwordInput = document.getElementById("password");
@@ -183,6 +200,50 @@
         const message = document.getElementById("loginMessage");
         const loginButton = document.getElementById("loginButton");
         const forgotPassword = document.getElementById("forgotPassword");
+
+        function saveUserAccess(user, account) {
+            const accessData = {
+                uid: user.uid,
+                email: account.email,
+                role: account.role,
+                roleLabel: account.label
+            };
+
+            // Hapus data lama agar hak akses akun sebelumnya tidak tertinggal.
+            localStorage.removeItem(ACCESS_STORAGE_KEY);
+            sessionStorage.removeItem(ACCESS_STORAGE_KEY);
+
+            // Simpan sesi akses; dashboard perlu membaca data ini untuk mengatur UI.
+            sessionStorage.setItem(ACCESS_STORAGE_KEY, JSON.stringify(accessData));
+            if (rememberMe.checked) {
+                localStorage.setItem(ACCESS_STORAGE_KEY, JSON.stringify(accessData));
+            }
+        }
+
+        function getAuthorizedAccount(user) {
+            if (!user) return null;
+            const account = AUTHORIZED_USERS[user.uid];
+            if (!account) return null;
+
+            // Pastikan UID dan email yang sedang login sesuai dengan daftar akun.
+            if ((user.email || "").toLowerCase() !== account.email.toLowerCase()) {
+                return null;
+            }
+            return account;
+        }
+
+        async function rejectUnauthorizedUser(auth) {
+            localStorage.removeItem(ACCESS_STORAGE_KEY);
+            sessionStorage.removeItem(ACCESS_STORAGE_KEY);
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Gagal mengakhiri sesi pengguna:", error);
+            }
+            showMessage("Akun ini tidak memiliki izin untuk mengakses aplikasi.");
+            loginButton.disabled = false;
+            loginButton.textContent = "login";
+        }
 
         function showMessage(text, isError = true) {
             message.textContent = text;
@@ -204,9 +265,22 @@
                 const app = initializeApp(firebaseConfig);
                 const auth = getAuth(app);
 
-                // Jika sesi login masih aktif, langsung buka dashboard utama.
-                onAuthStateChanged(auth, (user) => {
-                    if (user) window.location.replace("dashboard.html");
+                // Periksa kembali hak akses setiap kali Firebase memulihkan sesi login.
+                onAuthStateChanged(auth, async (user) => {
+                    if (!user) {
+                        localStorage.removeItem(ACCESS_STORAGE_KEY);
+                        sessionStorage.removeItem(ACCESS_STORAGE_KEY);
+                        return;
+                    }
+
+                    const account = getAuthorizedAccount(user);
+                    if (!account) {
+                        await rejectUnauthorizedUser(auth);
+                        return;
+                    }
+
+                    saveUserAccess(user, account);
+                    window.location.replace("dashboard.html");
                 });
 
                 form.addEventListener("submit", async (event) => {
@@ -228,8 +302,16 @@
                             auth,
                             rememberMe.checked ? browserLocalPersistence : browserSessionPersistence
                         );
-                        await signInWithEmailAndPassword(auth, email, password);
-                        showMessage("Login berhasil. Membuka dashboard...", false);
+                        const credential = await signInWithEmailAndPassword(auth, email, password);
+                        const account = getAuthorizedAccount(credential.user);
+
+                        if (!account) {
+                            await rejectUnauthorizedUser(auth);
+                            return;
+                        }
+
+                        saveUserAccess(credential.user, account);
+                        showMessage("Login berhasil (" + account.label + "). Membuka dashboard...", false);
                         window.location.assign(new URL("dashboard.html", window.location.href).href);
                     } catch (error) {
                         const messages = {
