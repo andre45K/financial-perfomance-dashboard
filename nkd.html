@@ -937,14 +937,17 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     generatePeriodeOptions();
-    // Default set ke bulan saat ini
+    // Default set ke bulan saat ini untuk lokal, tidak bergantung database setting
     const d = new Date();
     const currentPeriode = `s.d. ${months[d.getMonth()]} ${d.getFullYear()}`;
     const pFilter = document.getElementById("periodeFilter");
     if(pFilter) {
       // Cari opsi yang sesuai, jika ada
       const match = Array.from(pFilter.options).find(opt => opt.value === currentPeriode);
-      if(match) pFilter.value = currentPeriode;
+      if(match) {
+          pFilter.value = currentPeriode;
+          updatePeriodeLabel(currentPeriode);
+      }
     }
 
     if (typeof ChartDataLabels !== 'undefined') {
@@ -986,18 +989,7 @@
             console.error("Sync Manual NKD error:", err);
           });
           
-          // 3. Listen pengaturan filter tersimpan (opsional)
-          const settingsRef = doc(window.firebaseDB, "dashboardNKD", "settings");
-          onSnapshot(settingsRef, (snap) => {
-             if(snap.exists() && snap.data().periode) {
-                 const p = document.getElementById("periodeFilter");
-                 if(p && Array.from(p.options).some(o=>o.value === snap.data().periode)) {
-                     p.value = snap.data().periode;
-                     updatePeriodeLabel(snap.data().periode);
-                     processMergedData(); // re-filter
-                 }
-             }
-          });
+          // Fitur pengaturan sinkron filter global (settings) DIHAPUS agar filter bersifat LOKAL per perangkat
         }
       }, 100);
     }
@@ -1071,20 +1063,11 @@
     }
 
     const periodeSelect = document.getElementById("periodeFilter");
-    periodeSelect.addEventListener("change", async () => {
+    // HAPUS sinkronisasi write ke firestore untuk mencegah user lain berubah layarnya
+    periodeSelect.addEventListener("change", () => {
       const selectedVal = periodeSelect.value;
       updatePeriodeLabel(selectedVal);
       processMergedData(); // Update tampilan dgn filter baru
-
-      if (window.firebaseDB && window.firebaseFns) {
-        const { doc, setDoc } = window.firebaseFns;
-        const ref = doc(window.firebaseDB, "dashboardNKD", "settings");
-        try {
-          await setDoc(ref, { periode: selectedVal }, { merge: true });
-        } catch (e) {
-          console.error("Gagal menyimpan periode setting:", e);
-        }
-      }
     });
 
     document.getElementById("tipeAlatFilter").addEventListener("change", () => {
