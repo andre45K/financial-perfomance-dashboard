@@ -860,7 +860,7 @@
     return new Date(); // fallback
   }
 
-  // PERBAIKAN LOGIKA: Membuat key unik untuk grouping data dari Firestore ke NKD, dipisah per PERIODE
+  // Membuat key unik untuk grouping data dari Firestore ke NKD, dipisah per PERIODE
   function generateKey(customer, tipeAlat, periode) {
     return `${(customer || "").trim().toLowerCase()}_${(tipeAlat || "").trim().toLowerCase()}_${(periode || "").trim().toLowerCase()}`;
   }
@@ -1009,9 +1009,8 @@
       let tempMap = {};
 
       monitoringKontrakRawData.forEach(item => {
-        // PERBAIKAN FILTER PERIODE DATA:
         // Gunakan item.start, jika kosong gunakan item.tglKontrak. Jika keduanya kosong, abaikan filter tgl
-        let dateStr = item.start || item.tglKontrak;
+        let dateStr = item.tglKontrak || item.start; // Sesuai permintaan: sesuai kolom tanggal kontrak
         if (dateStr) {
            let itemDate = new Date(dateStr);
            if (!isNaN(itemDate) && itemDate > limitDate) {
@@ -1022,12 +1021,18 @@
         const customer = item.customer || "Lainnya";
         const tipe = item.jenisAlat || "Lainnya";
         
-        // PERBAIKAN: Generate Key sekarang menyertakan selectedPeriodeStr
+        // Generate Key sekarang menyertakan selectedPeriodeStr
         const key = generateKey(customer, tipe, selectedPeriodeStr);
         
-        // PERBAIKAN: Jika ADD (Pejabat), nilai kontrak diset 0, jika tidak gunakan nilaiKontrak yang ada.
+        // PERBAIKAN: Jika kolom SNK/NKB bukan SNK atau NKB (misal '-' atau kosong), jangan masukkan nilai kontraknya (dianggap 0).
+        // Begitu juga jika ADD = "ADD (Pejabat)".
         let isAddPejabat = item.addendum === "ADD (Pejabat)";
-        const valKontrak = isAddPejabat ? 0 : (Number(item.nilaiKontrak) || 0);
+        let isSnkNkbValid = item.snkNkb === "SNK" || item.snkNkb === "NKB";
+        
+        let valKontrak = 0;
+        if (!isAddPejabat && isSnkNkbValid) {
+            valKontrak = Number(item.nilaiKontrak) || 0;
+        }
 
         if (!tempMap[key]) {
           tempMap[key] = {
