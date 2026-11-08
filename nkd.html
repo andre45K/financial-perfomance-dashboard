@@ -477,36 +477,36 @@
     .table-panel .panel-title { margin-bottom: 8px; }
     .table-scroll { width: 100%; overflow-x: auto; }
 
-    /* Mengubah table-layout ke auto agar ruang menyesuaikan panjang angka dan tidak terpotong */
     table {
       width: 100%;
       border-collapse: collapse;
-      table-layout: auto; 
+      table-layout: fixed;
       font-size: 9.5px;
       color: #111827;
     }
-    
     th {
       background: var(--navy);
       color: #fff;
       border: 1px solid #cbd5e1;
       height: 26px;
-      padding: 6px 8px; /* Padding ditambah sedikit agar lega */
+      padding: 4px 4px;
       font-weight: 800;
       line-height: 1.1;
       text-align: center;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    
     td {
       border: 1px solid #e2e8f0;
       height: 25px;
-      padding: 6px 8px; /* Padding ditambah sedikit agar lega */
+      padding: 4px 5px;
       text-align: right;
       background: #fff;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    
     td.left { text-align: left; }
     td.center { text-align: center; }
     tbody tr:nth-child(even) td { background: #f8fafc; }
@@ -519,14 +519,22 @@
     }
     tfoot td.left { text-align: left; }
 
-    /* CSS Master Admin / Tambah sedikit pengaturan */
-    .customer-table th:nth-child(1), .customer-table td:nth-child(1) { width: auto; }
-    .customer-table th:nth-child(2), .customer-table td:nth-child(2) { width: auto; text-align: left; }
-    .customer-table th:nth-child(3), .customer-table td:nth-child(3) { width: auto; text-align: left; }
-    
-    /* Tabel Rincian per Tipe Alat */
-    .alat-table th:nth-child(1), .alat-table td:nth-child(1) { width: auto; }
-    .alat-table th:nth-child(2), .alat-table td:nth-child(2) { width: auto; text-align: left; }
+    /* PERBAIKAN LEBAR KOLOM TABEL AGAR TIDAK TERPOTONG */
+    .customer-table th:nth-child(1), .customer-table td:nth-child(1) { width: 30px; }
+    .customer-table th:nth-child(2), .customer-table td:nth-child(2) { width: 22%; text-align: left; }
+    .customer-table th:nth-child(3), .customer-table td:nth-child(3) { width: 15%; text-align: left; }
+    .customer-table th:nth-child(4), .customer-table td:nth-child(4) { width: 15%; }
+    .customer-table th:nth-child(5), .customer-table td:nth-child(5) { width: 13%; }
+    .customer-table th:nth-child(6), .customer-table td:nth-child(6) { width: 17%; } /* PU Tdk Terserap diperlebar */
+    .customer-table th:nth-child(7), .customer-table td:nth-child(7) { width: 15%; }
+    .customer-table th:nth-child(8), .customer-table td:nth-child(8) { width: 60px; }
+
+    .alat-table th:nth-child(1), .alat-table td:nth-child(1) { width: 30px; }
+    .alat-table th:nth-child(2), .alat-table td:nth-child(2) { width: 31%; text-align: left; }
+    .alat-table th:nth-child(3), .alat-table td:nth-child(3) { width: 16%; }
+    .alat-table th:nth-child(4), .alat-table td:nth-child(4) { width: 15%; }
+    .alat-table th:nth-child(5), .alat-table td:nth-child(5) { width: 17%; }
+    .alat-table th:nth-child(6), .alat-table td:nth-child(6) { width: 17%; }
 
     .btn-table-action {
       padding: 2px 6px;
@@ -614,14 +622,14 @@
         <table class="customer-table" style="margin-bottom: 0;">
           <thead>
             <tr>
-              <th>NO</th>
+              <th style="width: 30px;">NO</th>
               <th style="text-align: left;">CUSTOMER</th>
               <th style="text-align: left;">TIPE ALAT</th>
               <th>TOTAL KONTRAK (RP)</th>
               <th>PU TEREALISASI (RP)</th>
               <th>PU TDK TERSERAP (RP)</th>
               <th>SISA KONTRAK (RP)</th>
-              <th>AKSI</th>
+              <th style="width: 70px;">AKSI</th>
             </tr>
           </thead>
           <tbody id="master-table-body">
@@ -981,8 +989,6 @@
           }, (err) => {
             console.error("Sync Manual NKD error:", err);
           });
-          
-          // Fitur pengaturan sinkron filter global (settings) DIHAPUS agar filter bersifat LOKAL per perangkat
         }
       }, 100);
     }
@@ -1197,9 +1203,12 @@
           datasets: [{ data: barData, backgroundColor: "#0b3267", borderRadius: 1, barThickness: 18 }]
         },
         options: {
-          responsive: true, maintainAspectRatio: false, indexAxis: "y", animation: false,
+          responsive: true, 
+          maintainAspectRatio: false, 
+          indexAxis: "y", 
+          animation: false,
           layout: {
-            padding: { right: 60 } /* Memberikan margin kanan agar angka bar tidak terpotong */
+            padding: { right: 50 } // PERBAIKAN: Menambahkan padding kanan agar angka ribuan yang panjang tidak terpotong
           },
           plugins: {
             legend: { display: false },
@@ -1210,8 +1219,7 @@
             x: {
               beginAtZero: true,
               grid: { color: "#e6e8eb", borderDash: [2, 3] },
-              ticks: { color: "#222", font: { size: 8.5 }, callback: (v) => v >= 1000000 ? (v / 1000000).toFixed(0) + " M" : v },
-              grace: '20%' /* Menambahkan ekstra ruang di ujung chart */
+              ticks: { color: "#222", font: { size: 8.5 }, callback: (v) => v >= 1000000 ? (v / 1000000).toFixed(0) + " M" : v }
             },
             y: { grid: { display: false }, ticks: { color: "#222", font: { size: 8.5 } } }
           }
