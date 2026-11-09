@@ -470,19 +470,19 @@
       return Number(cleaned) || 0;
     }
 
-    // Perhitungan Tanggal Ending Otomatis
+// Perhitungan Tanggal Ending Otomatis berdasarkan Tanggal Kontrak
     function hitungTanggalEnding() {
-      const startDateStr = document.getElementById("inputStart").value;
+      const kontrakDateStr = document.getElementById("inputTglKontrak").value;
       const lamaSewa = parseRibuan(document.getElementById("inputLamaSewa").value);
       
-      if (startDateStr && lamaSewa > 0) {
-        const startDate = new Date(startDateStr);
-        startDate.setMonth(startDate.getMonth() + lamaSewa);
-        startDate.setDate(startDate.getDate() - 1);
+      if (kontrakDateStr && lamaSewa > 0) {
+        const kontrakDate = new Date(kontrakDateStr);
+        kontrakDate.setMonth(kontrakDate.getMonth() + lamaSewa);
+        kontrakDate.setDate(kontrakDate.getDate() - 1);
         
-        const year = startDate.getFullYear();
-        const month = String(startDate.getMonth() + 1).padStart(2, '0');
-        const day = String(startDate.getDate()).padStart(2, '0');
+        const year = kontrakDate.getFullYear();
+        const month = String(kontrakDate.getMonth() + 1).padStart(2, '0');
+        const day = String(kontrakDate.getDate()).padStart(2, '0');
         
         document.getElementById("inputEnding").value = `${year}-${month}-${day}`;
       }
