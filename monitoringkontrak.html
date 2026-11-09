@@ -1138,6 +1138,9 @@
       let today = new Date();
       today.setHours(0, 0, 0, 0);
 
+      // Map untuk menyimpan data alat yang unik berdasarkan No SPSA (induk)
+      let uniqueAlatMap = {};
+
       dataList.forEach(item => {
         // PERBAIKAN: Jika ADD = "ADD (Pejabat)", abaikan perhitungan nilai kontrak
         let isAddPejabat = item.addendum === "ADD (Pejabat)";
@@ -1165,19 +1168,33 @@
 
         let cust = item.customer || "Lainnya";
         let alat = item.jenisAlat || "Lainnya";
-        
-        // PERBAIKAN: Jika ADD = "ADD (Pejabat)", jangan tambahkan ke jumlah alat (opsional, disesuaikan)
-        let jmlAlat = isAddPejabat ? 0 : (Number(item.jmlAlat) || 1);
 
-        // Hitung Data Chart
+        // Hitung Data Chart Nilai
         custMap[cust] = (custMap[cust] || 0) + (val / 1000000);
-        alatCustMap[cust] = (alatCustMap[cust] || 0) + jmlAlat;
-        alatJenisMap[alat] = (alatJenisMap[alat] || 0) + jmlAlat;
+
+        // PERBAIKAN: Logika Pengelompokan Jumlah Alat per SPSA Induk
+        // Mengekstrak baseSpsa (contoh dari "010/ADD-I/..." menjadi "010")
+        let baseSpsa = item.noSpsa ? item.noSpsa.split('/')[0] : "unknown";
+        let uniqueKey = cust + "_" + alat + "_" + baseSpsa;
+        let jmlAlat = isAddPejabat ? 0 : (Number(item.jmlAlat) || 1);
+        
+        // Simpan nilai maksimal jika ada duplikasi SPSA
+        if (!uniqueAlatMap[uniqueKey]) {
+            uniqueAlatMap[uniqueKey] = { cust: cust, alat: alat, count: jmlAlat };
+        } else {
+            uniqueAlatMap[uniqueKey].count = Math.max(uniqueAlatMap[uniqueKey].count, jmlAlat);
+        }
 
         let tgl = item.start || item.tglKontrak || "2026-01";
         let bulanKey = tgl.length >= 7 ? tgl.substring(0, 7) : "2026-01";
         if(!bulanKey.startsWith("20")) bulanKey = "2026-01";
         trenMap[bulanKey] = (trenMap[bulanKey] || 0) + (val / 1000000);
+      });
+
+      // Akumulasi jumlah alat dari data yang sudah disatukan/dijadikan unik per SPSA induk
+      Object.values(uniqueAlatMap).forEach(data => {
+        alatCustMap[data.cust] = (alatCustMap[data.cust] || 0) + data.count;
+        alatJenisMap[data.alat] = (alatJenisMap[data.alat] || 0) + data.count;
       });
 
       let avgMargin = totalKontrak > 0 ? (totalMarginVal / totalKontrak).toFixed(1) : "0.0";
@@ -1192,7 +1209,7 @@
       document.getElementById("kpiKontrakSelesai").innerText = kontrakSelesaiCount;
       document.getElementById("kpiRataMargin").innerText = avgMargin + "%";
 
-      // Update Chart Nilai per Pelanggan (Menampilkan Seluruh Pelanggan)
+      // Update Chart Nilai per Pelanggan
       let sortedCust = Object.entries(custMap).sort((a, b) => b[1] - a[1]);
       chartPelangganInstance.data.labels = sortedCust.map(x => x[0]);
       chartPelangganInstance.data.datasets[0].data = sortedCust.map(x => Number(x[1].toFixed(2)));
@@ -1202,7 +1219,7 @@
       chartStatusInstance.data.datasets[0].data = [kontrakAktifCount, kontrakExpiredCount, kontrakSelesaiCount];
       chartStatusInstance.update();
 
-      // Update Chart Jumlah Alat per Pelanggan (Menampilkan Seluruh Pelanggan)
+      // Update Chart Jumlah Alat per Pelanggan
       let sortedAlatCust = Object.entries(alatCustMap).sort((a, b) => b[1] - a[1]);
       chartAlatCustomerInstance.data.labels = sortedAlatCust.map(x => x[0]);
       chartAlatCustomerInstance.data.datasets[0].data = sortedAlatCust.map(x => x[1]);
