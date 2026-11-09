@@ -613,7 +613,8 @@
           "Status Kontrak": item.status || "-",
           "COGM": Number(item.cogm) || 0,
           "Margin": item.margin || "0.0%",
-          "Keterangan": item.keterangan || "-"
+          "Keterangan": item.keterangan || "-",
+          "Link Dokumen SPSA": item.spsaFile || "-" // MENAMBAHKAN KOLOM LINK DOKUMEN SPSA
         };
       });
 
@@ -647,7 +648,7 @@
       ws['!cols'] = [
         {wch: 5}, {wch: 25}, {wch: 15}, {wch: 35}, {wch: 20}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 12}, 
         {wch: 12}, {wch: 22}, {wch: 20}, {wch: 20}, {wch: 18}, {wch: 18}, {wch: 20}, {wch: 15}, 
-        {wch: 18}, {wch: 12}, {wch: 30}
+        {wch: 18}, {wch: 12}, {wch: 30}, {wch: 40} // MENYESUAIKAN LEBAR KOLOM TAMBAHAN
       ];
 
       const wb = XLSX.utils.book_new();
