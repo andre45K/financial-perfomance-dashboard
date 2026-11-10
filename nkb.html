@@ -791,88 +791,15 @@
         <!-- ADMIN INPUT PANEL UNTUK DASHBOARD 2 -->
         <div class="d1-table-card" style="margin-bottom: 20px; border-top: 4px solid #0b63ce; background: #f8fafc; color: #1e293b;">
           <div class="d1-table-header" style="display: flex; justify-content: space-between; align-items: center; background: #0b2246;">
-            <span><i class="fa-solid fa-gear"></i> <span id="d2AdminHeaderLabel">Panel Admin: Input, Edit & Perbarui Data Nilai Kontrak Baru (s.d Agustus 2026)</span></span>
-            <button onclick="toggleAdminPanelD2()" style="background: rgba(255,255,255,0.2); border: 1px solid white; color: white; padding: 2px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold;">Tutup/Buka Panel</button>
+            <span><i class="fa-solid fa-gear"></i> <span id="d2AdminHeaderLabel">Daftar Master Data Nilai Kontrak Baru (Sinkron Otomatis dari Monitoring Kontrak) (s.d Agustus 2026)</span></span>
+
           </div>
           <div id="adminFormBodyD2" style="padding: 16px;">
             <p style="font-size: 11.5px; color: #475569; margin-bottom: 12px; font-weight: 600;">
-              Tambahkan, edit, atau hapus data kontrak pada tabel master di bawah ini dengan menyertakan Nomor SPSA dan Bulan Kontrak.
+              Data ditarik otomatis dari Monitoring Kontrak dan hanya menampilkan baris dengan keterangan NKB pada kolom SNK / NKB.
             </p>
-            
-            <!-- FORM TAMBAH / EDIT KONTRAK D2 -->
-            <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; margin-bottom: 15px;">
-              <div id="d2FormTitleMode" style="font-size: 11px; font-weight: 800; color: #0b2246; margin-bottom: 8px; text-transform: uppercase;">Form Tambah Data Kontrak Baru (Dashboard 2)</div>
-              <input type="hidden" id="d2EditIndex" value="-1">
-              <div style="display: grid; grid-template-columns: 1.5fr 1.5fr 0.6fr 0.6fr 1fr 1fr 1.2fr 1fr 1.2fr; gap: 5px; align-items: flex-end; margin-bottom: 8px;">
-                <div>
-                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">NO. SPSA</label>
-                  <input type="text" id="d2InNoSpsa" placeholder="Cth: 00001/HAMORI/SPK/01/2026" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px;">
-                </div>
-                <div>
-                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">CUSTOMER / PROYEK</label>
-                  <input type="text" id="d2InCust" placeholder="Nama Customer" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px;">
-                </div>
-                <div>
-                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">BULAN</label>
-                  <select id="d2InBulan" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px; background: white;">
-                    <option value="0">Januari</option>
-                    <option value="1">Februari</option>
-                    <option value="2">Maret</option>
-                    <option value="3">April</option>
-                    <option value="4">Mei</option>
-                    <option value="5">Juni</option>
-                    <option value="6">Juli</option>
-                    <option value="7" selected>Agustus</option>
-                    <option value="8">September</option>
-                    <option value="9">Oktober</option>
-                    <option value="10">November</option>
-                    <option value="11">Desember</option>
-                  </select>
-                </div>
-                <div>
-                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">UNIT</label>
-                  <input type="number" id="d2InUnit" placeholder="Unit" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px;">
-                </div>
-                <div>
-                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">KONTRAK</label>
-                  <input type="number" id="d2InKontrak" placeholder="Kontrak" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px;">
-                </div>
-                <div>
-                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">TIPE ALAT</label>
-                  <select id="d2InAlat" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px; background: white;">
-                    <option value="Truck Mixer">Truck Mixer</option>
-                    <option value="Truck Trailer">Truck Trailer</option>
-                    <option value="Stone Crusher">Stone Crusher</option>
-                    <option value="Mobile Crane + Bucket Cor">Mobile Crane + Bucket Cor</option>
-                    <option value="Dump Truck">Dump Truck</option>
-                    <option value="Silo">Silo</option>
-                  </select>
-                </div>
-                <!-- SEARCHABLE PROVINSI DROPDOWN -->
-                <div style="position: relative;">
-                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">PROVINSI (PETA)</label>
-                  <input type="text" id="d2InProvinsiSearch" placeholder="Cari provinsi..." autocomplete="off" oninput="syncProvinceInput(); filterProvinceDropdown()" onfocus="showProvinceDropdown()" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px; background: white;">
-                  <input type="hidden" id="d2InProvinsi" value="Aceh">
-                  <div id="provinceDropdownList" style="display: none; position: absolute; top: 100%; left: 0; width: 100%; max-height: 160px; overflow-y: auto; background: white; border: 1px solid #cbd5e1; border-radius: 4px; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.15);"></div>
-                </div>
-                <div>
-                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">LOKASI</label>
-                  <input type="text" id="d2InLokasi" placeholder="Lokasi" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px;">
-                </div>
-                <div>
-                  <label style="display: block; font-size: 8.5px; font-weight: 800; color: #334155; margin-bottom: 2px;">NILAI (IDR)</label>
-                  <input type="number" id="d2InNilai" placeholder="Rupiah" style="width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 9.5px;">
-                </div>
-              </div>
-              <div style="display: flex; gap: 5px; margin-top: 8px; width: 220px;">
-                <button type="button" id="d2SaveUpdateBtn" onclick="saveD2Item(event)" style="background: #0b63ce; color: white; border: none; padding: 7px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 10px; width: 100%;">
-                  <i class="fa-solid fa-plus"></i> Simpan
-                </button>
-                <button onclick="resetD2Form()" style="background: #64748b; color: white; border: none; padding: 7px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 10px;">
-                  Reset
-                </button>
-              </div>
-            </div>
+            <!-- Data Dashboard 2 sepenuhnya disinkronkan dari Monitoring Kontrak. -->
+
 
             <!-- TABEL MASTER DATA D2 -->
             <div style="font-size: 11px; font-weight: 800; color: #0b2246; margin-bottom: 6px; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center;">
@@ -893,7 +820,7 @@
                     <th>Provinsi</th>
                     <th>Lokasi</th>
                     <th class="text-right">Nilai Kontrak (Rp)</th>
-                    <th class="text-center" style="width: 80px;">Aksi</th>
+
                   </tr>
                 </thead>
                 <tbody id="adminD2Body">
@@ -1733,31 +1660,29 @@ function downloadDashboardJPG(dashboardNum) {
 
     function renderD2AdminTable() {
       const tbody = document.getElementById('adminD2Body');
-      document.getElementById('totalD2Count').innerText = d2MasterData.length;
+      const count = document.getElementById('totalD2Count');
+      if (!tbody || !count) return;
+      count.innerText = d2MasterData.length;
       if (d2MasterData.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="11" class="text-center" style="color: #94a3b8; font-style: italic;">Belum ada data kontrak.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" class="text-center" style="color: #94a3b8; font-style: italic;">Belum ada kontrak dengan keterangan NKB pada Monitoring Kontrak.</td></tr>';
         return;
       }
-      let html = '';
-      d2MasterData.forEach((item, idx) => {
-        html += `<tr>
-          <td class="text-center">${idx + 1}</td>
-          <td style="font-family: monospace; font-size: 9.5px; font-weight: bold; color: #0b63ce;">${item.spsa || '-'}</td>
-          <td class="font-bold">${item.customer}</td>
-          <td>${monthNames[item.bulan !== undefined ? item.bulan : 7]}</td>
-          <td class="text-center">${item.unit}</td>
-          <td class="text-center">${item.kontrak}</td>
-          <td>${item.alat}</td>
-          <td><span style="background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #0b2246;">${item.provinsi}</span></td>
-          <td>${item.lokasi}</td>
-          <td class="text-right">${formatRupiah(item.nilai)}</td>
-          <td class="text-center">
-            <button onclick="editD2Item(${idx})" style="background: #f59e0b; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px; margin-right: 2px;" title="Edit"><i class="fa-solid fa-pen"></i></button>
-            <button onclick="deleteD2Item(${idx})" style="background: #ef4444; color: white; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 10px;" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-          </td>
-        </tr>`;
-      });
-      tbody.innerHTML = html;
+      tbody.innerHTML = d2MasterData.map((item, idx) => `<tr>
+        <td class="text-center">${idx + 1}</td>
+        <td style="font-family: monospace; font-size: 9.5px; font-weight: bold; color: #0b63ce;">${escapeD2Html(item.spsa || '-')}</td>
+        <td class="font-bold">${escapeD2Html(item.customer || '-')}</td>
+        <td>${monthNames[item.bulan] || '-'}</td>
+        <td class="text-center">${Number(item.unit) || 0}</td>
+        <td class="text-center">${Number(item.kontrak) || 0}</td>
+        <td>${escapeD2Html(item.alat || '-')}</td>
+        <td><span style="background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #0b2246;">${escapeD2Html(item.provinsi || '-')}</span></td>
+        <td>${escapeD2Html(item.lokasi || '-')}</td>
+        <td class="text-right">${formatRupiah(Number(item.nilai) || 0)}</td>
+      </tr>`).join('');
+    }
+
+    function escapeD2Html(value) {
+      return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
     }
 
     function saveD2Item(event) {
@@ -1867,7 +1792,7 @@ function downloadDashboardJPG(dashboardNum) {
       if (elTab) elTab.innerText = `Dashboard Nilai Kontrak Baru (${dynamicStr})`;
 
       const elAdmin = document.getElementById('d2AdminHeaderLabel');
-      if (elAdmin) elAdmin.innerText = `Panel Admin: Input, Edit & Perbarui Data Nilai Kontrak Baru (${dynamicStr})`;
+      if (elAdmin) elAdmin.innerText = `Daftar Master Data Nilai Kontrak Baru (Sinkron Otomatis dari Monitoring Kontrak) (${dynamicStr})`;
 
       const elTblTitle = document.getElementById('d2TableTitleLabel');
       if (elTblTitle) elTblTitle.innerText = dynamicStr;
@@ -1883,8 +1808,8 @@ function downloadDashboardJPG(dashboardNum) {
         totalUnit += item.unit;
         totalKontrak += item.kontrak;
 
-        const prov = item.provinsi || '';
-        const lok = item.lokasi || prov || '-';
+        const prov = item.provinsi || 'Aceh';
+        const lok = item.lokasi || prov;
 
         if (!custMap[item.customer]) {
           custMap[item.customer] = { nilai: 0, lokasiSet: new Set() };
@@ -1895,11 +1820,11 @@ function downloadDashboardJPG(dashboardNum) {
         if (!alatMap[item.alat]) alatMap[item.alat] = 0;
         alatMap[item.alat] += item.nilai;
 
-        if (prov && provinceMapCoords[prov]) {
-          if (!provMap[prov]) provMap[prov] = { nilai: 0, count: 0 };
-          provMap[prov].nilai += item.nilai;
-          provMap[prov].count += 1;
+        if (!provMap[prov]) {
+          provMap[prov] = { nilai: 0, count: 0 };
         }
+        provMap[prov].nilai += item.nilai;
+        provMap[prov].count += 1;
 
       });
 
@@ -1993,107 +1918,6 @@ function downloadDashboardJPG(dashboardNum) {
         'NTB': 'Nusa Tenggara Barat', 'NTT': 'Nusa Tenggara Timur'
       };
       return aliases[n] || n;
-    }
-
-    // =========================================================
-    // SINKRONISASI OTOMATIS DARI MONITORING KONTRAK
-    // Hanya mengambil record dengan kolom SNK / NKB = "NKB".
-    // =========================================================
-    function resolveNkbProvince(locationValue) {
-      const raw = String(locationValue || '').trim();
-      if (!raw) return '';
-
-      const normalized = normalizeProvinceName(raw);
-      const provinceMatch = allIndonesianProvinces.find(prov =>
-        normalized.toLowerCase().includes(prov.toLowerCase())
-      );
-      if (provinceMatch) return provinceMatch;
-
-      // Lokasi pada Monitoring Kontrak umumnya berupa nama kota/kabupaten.
-      // Pemetaan kota yang umum dipakai agar titik peta dapat ditempatkan.
-      const cityToProvince = {
-        'jakarta':'DKI Jakarta','jakarta selatan':'DKI Jakarta','jakarta utara':'DKI Jakarta',
-        'jakarta barat':'DKI Jakarta','jakarta timur':'DKI Jakarta','jakarta pusat':'DKI Jakarta',
-        'subang':'Jawa Barat','bandung':'Jawa Barat','bekasi':'Jawa Barat','bogor':'Jawa Barat',
-        'cikarang':'Jawa Barat','karawang':'Jawa Barat','purwakarta':'Jawa Barat','cilegon':'Banten',
-        'serang':'Banten','tangerang':'Banten','pandeglang':'Banten','tegal':'Jawa Tengah',
-        'semarang':'Jawa Tengah','solo':'Jawa Tengah','surakarta':'Jawa Tengah','kudus':'Jawa Tengah',
-        'gresik':'Jawa Timur','surabaya':'Jawa Timur','sampang':'Jawa Timur','tuban':'Jawa Timur',
-        'malang':'Jawa Timur','sidoarjo':'Jawa Timur','pasuruan':'Jawa Timur',
-        'lampung selatan':'Lampung','bandar lampung':'Lampung','penajam paser utara':'Kalimantan Timur',
-        'samarinda':'Kalimantan Timur','balikpapan':'Kalimantan Timur','berau':'Kalimantan Timur',
-        'pontianak':'Kalimantan Barat','banjarmasin':'Kalimantan Selatan','palangkaraya':'Kalimantan Tengah',
-        'medan':'Sumatera Utara','aceh tengah':'Aceh','banda aceh':'Aceh','palembang':'Sumatera Selatan',
-        'padang':'Sumatera Barat','pekanbaru':'Riau','jambi':'Jambi','bengkulu':'Bengkulu',
-        'makassar':'Sulawesi Selatan','kendari':'Sulawesi Tenggara','manado':'Sulawesi Utara',
-        'mataram':'Nusa Tenggara Barat','kupang':'Nusa Tenggara Timur','jayapura':'Papua'
-      };
-      const lower = raw.toLowerCase();
-      const match = Object.keys(cityToProvince).sort((a,b) => b.length-a.length)
-        .find(city => lower.includes(city));
-      return match ? cityToProvince[match] : '';
-    }
-
-    function mapMonitoringNkbRecord(record, docId) {
-      const dateSource = record.start || record.tglKontrak || '';
-      let monthIndex = 0;
-      if (dateSource) {
-        const parsed = new Date(String(dateSource).length === 10 ? dateSource + 'T00:00:00' : dateSource);
-        if (!isNaN(parsed.getTime())) monthIndex = parsed.getMonth();
-      }
-
-      const location = String(record.lokasi || '').trim();
-      const equipment = String(record.jenisAlat || 'Truck Mixer').trim();
-      const equipmentAliases = {
-        'Mobile Crane+Bucket Cor': 'Mobile Crane + Bucket Cor',
-        'Mobile Crane - Bucket Cor': 'Mobile Crane + Bucket Cor'
-      };
-
-      return {
-        sourceId: docId || '',
-        spsa: String(record.noSpsa || '').trim() || '-',
-        customer: String(record.customer || '').trim() || '-',
-        bulan: monthIndex,
-        unit: Number(record.jmlAlat) || 0,
-        kontrak: 1,
-        alat: equipmentAliases[equipment] || equipment,
-        provinsi: resolveNkbProvince(location),
-        lokasi: location || '-',
-        nilai: Math.round(Number(record.nilaiKontrak) || 0)
-      };
-    }
-
-    function initMonitoringNkbSync() {
-      const checkInterval = setInterval(() => {
-        if (!window.firebaseDB || !window.firebaseFns || !window.firebaseFns.collection) return;
-        clearInterval(checkInterval);
-
-        const { collection, onSnapshot } = window.firebaseFns;
-        const sourceRef = collection(window.firebaseDB, 'monitoringKontrak');
-
-        onSnapshot(sourceRef, (snapshot) => {
-          const syncedRows = [];
-          snapshot.forEach((docSnap) => {
-            const record = docSnap.data() || {};
-            if (String(record.snkNkb || '').trim().toUpperCase() !== 'NKB') return;
-            syncedRows.push(mapMonitoringNkbRecord(record, docSnap.id));
-          });
-
-          // Satu record Monitoring NKB = satu baris Dashboard Nilai Kontrak Baru.
-          syncedRows.sort((a, b) =>
-            a.bulan - b.bulan ||
-            a.customer.localeCompare(b.customer, 'id') ||
-            a.spsa.localeCompare(b.spsa, 'id')
-          );
-
-          d2MasterData = syncedRows;
-          recalculateDashboard2();
-          renderD2AdminTable();
-          console.log(`Sinkronisasi Monitoring Kontrak → Dashboard NKB berhasil: ${syncedRows.length} record NKB.`);
-        }, (error) => {
-          console.error('Gagal mengambil data NKB dari Monitoring Kontrak:', error);
-        });
-      }, 100);
     }
 
     // =========================================================
@@ -2603,6 +2427,97 @@ function downloadDashboardJPG(dashboardNum) {
 
 
     // =========================================================
+    // SINKRON OTOMATIS DARI MONITORING KONTRAK (SNK / NKB = NKB)
+    // =========================================================
+    const NKB_LOCATION_PROVINCE = {
+      'subang':'Jawa Barat','bandung':'Jawa Barat','garut':'Jawa Barat','cirebon':'Jawa Barat','bogor':'Jawa Barat','bekasi':'Jawa Barat','karawang':'Jawa Barat','sukabumi':'Jawa Barat','tasikmalaya':'Jawa Barat','sumedang':'Jawa Barat',
+      'tegal':'Jawa Tengah','semarang':'Jawa Tengah','solo':'Jawa Tengah','surakarta':'Jawa Tengah','kudus':'Jawa Tengah','demak':'Jawa Tengah','cilacap':'Jawa Tengah','pekalongan':'Jawa Tengah','kendal':'Jawa Tengah','magelang':'Jawa Tengah',
+      'gresik':'Jawa Timur','sampang':'Jawa Timur','tuban':'Jawa Timur','surabaya':'Jawa Timur','sidoarjo':'Jawa Timur','malang':'Jawa Timur','pasuruan':'Jawa Timur','probolinggo':'Jawa Timur','jember':'Jawa Timur','banyuwangi':'Jawa Timur',
+      'cilegon':'Banten','serang':'Banten','tangerang':'Banten','pandeglang':'Banten','lebak':'Banten',
+      'jakarta':'DKI Jakarta','jakarta pusat':'DKI Jakarta','jakarta utara':'DKI Jakarta','jakarta selatan':'DKI Jakarta','jakarta timur':'DKI Jakarta','jakarta barat':'DKI Jakarta',
+      'lampung selatan':'Lampung','bandar lampung':'Lampung','lampung':'Lampung','penajam paser utara':'Kalimantan Timur','samarinda':'Kalimantan Timur','balikpapan':'Kalimantan Timur','berau':'Kalimantan Timur','kutai kartanegara':'Kalimantan Timur',
+      'ogan komering ilir':'Sumatera Selatan','palembang':'Sumatera Selatan','muara enim':'Sumatera Selatan','aceh tengah':'Aceh','banda aceh':'Aceh','medan':'Sumatera Utara','deli serdang':'Sumatera Utara','padang':'Sumatera Barat','pekanbaru':'Riau','jambi':'Jambi','bengkulu':'Bengkulu','pangkal pinang':'Kepulauan Bangka Belitung','tanjung pinang':'Kepulauan Riau',
+      'pontianak':'Kalimantan Barat','banjarmasin':'Kalimantan Selatan','palangka raya':'Kalimantan Tengah','palangkaraya':'Kalimantan Tengah','tarakan':'Kalimantan Utara',
+      'denpasar':'Bali','mataram':'Nusa Tenggara Barat','kupang':'Nusa Tenggara Timur','makassar':'Sulawesi Selatan','kendari':'Sulawesi Tenggara','palu':'Sulawesi Tengah','manado':'Sulawesi Utara','gorontalo':'Gorontalo','mamuju':'Sulawesi Barat',
+      'ambon':'Maluku','ternate':'Maluku Utara','jayapura':'Papua','manokwari':'Papua Barat'
+    };
+
+    function getNkbProvince(contract) {
+      if (contract.provinsi) return normalizeProvinceName(contract.provinsi);
+      const loc = String(contract.lokasi || '').trim();
+      if (!loc) return '-';
+      const normalized = loc.toLowerCase().replace(/\s+/g, ' ');
+      const exact = NKB_LOCATION_PROVINCE[normalized];
+      if (exact) return exact;
+      // Jika lokasi memuat nama provinsi lengkap, gunakan nama tersebut.
+      const provinceInText = allIndonesianProvinces.find(p => normalized.includes(p.toLowerCase()));
+      if (provinceInText) return provinceInText;
+      // Gunakan pasangan lokasi yang sudah pernah tercatat pada master NKB lama.
+      const oldMatch = d2MasterData.find(x => String(x.lokasi || '').toLowerCase() === normalized && x.provinsi);
+      return oldMatch ? oldMatch.provinsi : '-';
+    }
+
+    function getNkbMonthIndex(dateValue) {
+      if (!dateValue) return -1;
+      let d;
+      if (dateValue instanceof Date) d = dateValue;
+      else if (typeof dateValue === 'object' && dateValue.seconds) d = new Date(dateValue.seconds * 1000);
+      else d = new Date(String(dateValue).length === 10 ? `${dateValue}T00:00:00` : dateValue);
+      return Number.isNaN(d.getTime()) ? -1 : d.getMonth();
+    }
+
+    function mapMonitoringContractToNkb(docSnap) {
+      const c = docSnap.data() || {};
+      const dateSource = c.tglKontrak || c.start || c.ending;
+      const bulan = getNkbMonthIndex(dateSource);
+      const nilai = Number(c.nilaiKontrak) || 0;
+      const unit = Number(String(c.jmlAlat ?? 1).replace(/[^0-9.-]/g, '')) || 1;
+      const lokasi = String(c.lokasi || '-').trim();
+      return {
+        sourceId: docSnap.id,
+        spsa: String(c.noSpsa || c.spsa || '').trim(),
+        customer: String(c.customer || '-').trim(),
+        bulan: bulan >= 0 ? bulan : 7,
+        unit,
+        kontrak: 1,
+        alat: String(c.jenisAlat || '-').trim(),
+        provinsi: getNkbProvince(c),
+        lokasi,
+        nilai,
+        _date: dateSource || ''
+      };
+    }
+
+    function initMonitoringNkbSync() {
+      const checkInterval = setInterval(() => {
+        if (!window.firebaseDB || !window.firebaseFns?.collection || !window.firebaseFns?.onSnapshot) return;
+        clearInterval(checkInterval);
+        const { collection, onSnapshot } = window.firebaseFns;
+        onSnapshot(collection(window.firebaseDB, 'monitoringKontrak'), snapshot => {
+          const rows = [];
+          snapshot.forEach(docSnap => {
+            const raw = docSnap.data() || {};
+            if (String(raw.snkNkb || '').trim().toUpperCase() !== 'NKB') return;
+            const mapped = mapMonitoringContractToNkb(docSnap);
+            // Dashboard ini khusus tahun 2026; tanggal tanpa tahun tetap dipertahankan.
+            const dateText = String(mapped._date || '');
+            if (/^\d{4}/.test(dateText) && !dateText.startsWith('2026')) return;
+            rows.push(mapped);
+          });
+          rows.sort((a, b) => {
+            const da = new Date(a._date || '2026-08-01').getTime() || 0;
+            const db = new Date(b._date || '2026-08-01').getTime() || 0;
+            return da - db || a.spsa.localeCompare(b.spsa, 'id', {numeric:true});
+          });
+          d2MasterData = rows.map(({_date, ...item}) => item);
+          renderD2AdminTable();
+          recalculateDashboard2();
+          console.log(`Sinkronisasi NKB selesai: ${d2MasterData.length} kontrak dari Monitoring Kontrak.`);
+        }, error => console.error('Gagal sinkronisasi Monitoring Kontrak ke Dashboard NKB:', error));
+      }, 100);
+    }
+
+    // =========================================================
     // FIREBASE REALTIME SYNC - SAMA SETTING DENGAN index.html
     // Semua data Dashboard NKB disimpan pada 1 dokumen Firestore.
     // Perubahan dari device mana pun akan diterima device lain via onSnapshot.
@@ -2637,8 +2552,6 @@ function downloadDashboardJPG(dashboardNum) {
           masterContracts = data.masterContracts;
         }
 
-        // d2MasterData tidak diambil dari dokumen NKB terpisah.
-        // Sumber tunggal Dashboard 2 adalah koleksi monitoringKontrak (SNK/NKB = NKB).
 
         if (data.d2MapPositions && typeof data.d2MapPositions === 'object') {
           d2MapPositions = data.d2MapPositions;
