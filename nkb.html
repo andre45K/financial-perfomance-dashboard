@@ -18,7 +18,7 @@
   <!-- FIREBASE SDK (Modular v10) - SAMA SEPERTI index.html -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
@@ -33,7 +33,7 @@
     const db = getFirestore(app);
 
     window.firebaseDB = db;
-    window.firebaseFns = { doc, getDoc, setDoc, onSnapshot };
+    window.firebaseFns = { collection, doc, getDoc, setDoc, onSnapshot };
   </script>
 
 
@@ -1883,8 +1883,8 @@ function downloadDashboardJPG(dashboardNum) {
         totalUnit += item.unit;
         totalKontrak += item.kontrak;
 
-        const prov = item.provinsi || 'Aceh';
-        const lok = item.lokasi || prov;
+        const prov = item.provinsi || '';
+        const lok = item.lokasi || prov || '-';
 
         if (!custMap[item.customer]) {
           custMap[item.customer] = { nilai: 0, lokasiSet: new Set() };
@@ -1895,11 +1895,11 @@ function downloadDashboardJPG(dashboardNum) {
         if (!alatMap[item.alat]) alatMap[item.alat] = 0;
         alatMap[item.alat] += item.nilai;
 
-        if (!provMap[prov]) {
-          provMap[prov] = { nilai: 0, count: 0 };
+        if (prov && provinceMapCoords[prov]) {
+          if (!provMap[prov]) provMap[prov] = { nilai: 0, count: 0 };
+          provMap[prov].nilai += item.nilai;
+          provMap[prov].count += 1;
         }
-        provMap[prov].nilai += item.nilai;
-        provMap[prov].count += 1;
 
       });
 
@@ -1993,6 +1993,107 @@ function downloadDashboardJPG(dashboardNum) {
         'NTB': 'Nusa Tenggara Barat', 'NTT': 'Nusa Tenggara Timur'
       };
       return aliases[n] || n;
+    }
+
+    // =========================================================
+    // SINKRONISASI OTOMATIS DARI MONITORING KONTRAK
+    // Hanya mengambil record dengan kolom SNK / NKB = "NKB".
+    // =========================================================
+    function resolveNkbProvince(locationValue) {
+      const raw = String(locationValue || '').trim();
+      if (!raw) return '';
+
+      const normalized = normalizeProvinceName(raw);
+      const provinceMatch = allIndonesianProvinces.find(prov =>
+        normalized.toLowerCase().includes(prov.toLowerCase())
+      );
+      if (provinceMatch) return provinceMatch;
+
+      // Lokasi pada Monitoring Kontrak umumnya berupa nama kota/kabupaten.
+      // Pemetaan kota yang umum dipakai agar titik peta dapat ditempatkan.
+      const cityToProvince = {
+        'jakarta':'DKI Jakarta','jakarta selatan':'DKI Jakarta','jakarta utara':'DKI Jakarta',
+        'jakarta barat':'DKI Jakarta','jakarta timur':'DKI Jakarta','jakarta pusat':'DKI Jakarta',
+        'subang':'Jawa Barat','bandung':'Jawa Barat','bekasi':'Jawa Barat','bogor':'Jawa Barat',
+        'cikarang':'Jawa Barat','karawang':'Jawa Barat','purwakarta':'Jawa Barat','cilegon':'Banten',
+        'serang':'Banten','tangerang':'Banten','pandeglang':'Banten','tegal':'Jawa Tengah',
+        'semarang':'Jawa Tengah','solo':'Jawa Tengah','surakarta':'Jawa Tengah','kudus':'Jawa Tengah',
+        'gresik':'Jawa Timur','surabaya':'Jawa Timur','sampang':'Jawa Timur','tuban':'Jawa Timur',
+        'malang':'Jawa Timur','sidoarjo':'Jawa Timur','pasuruan':'Jawa Timur',
+        'lampung selatan':'Lampung','bandar lampung':'Lampung','penajam paser utara':'Kalimantan Timur',
+        'samarinda':'Kalimantan Timur','balikpapan':'Kalimantan Timur','berau':'Kalimantan Timur',
+        'pontianak':'Kalimantan Barat','banjarmasin':'Kalimantan Selatan','palangkaraya':'Kalimantan Tengah',
+        'medan':'Sumatera Utara','aceh tengah':'Aceh','banda aceh':'Aceh','palembang':'Sumatera Selatan',
+        'padang':'Sumatera Barat','pekanbaru':'Riau','jambi':'Jambi','bengkulu':'Bengkulu',
+        'makassar':'Sulawesi Selatan','kendari':'Sulawesi Tenggara','manado':'Sulawesi Utara',
+        'mataram':'Nusa Tenggara Barat','kupang':'Nusa Tenggara Timur','jayapura':'Papua'
+      };
+      const lower = raw.toLowerCase();
+      const match = Object.keys(cityToProvince).sort((a,b) => b.length-a.length)
+        .find(city => lower.includes(city));
+      return match ? cityToProvince[match] : '';
+    }
+
+    function mapMonitoringNkbRecord(record, docId) {
+      const dateSource = record.start || record.tglKontrak || '';
+      let monthIndex = 0;
+      if (dateSource) {
+        const parsed = new Date(String(dateSource).length === 10 ? dateSource + 'T00:00:00' : dateSource);
+        if (!isNaN(parsed.getTime())) monthIndex = parsed.getMonth();
+      }
+
+      const location = String(record.lokasi || '').trim();
+      const equipment = String(record.jenisAlat || 'Truck Mixer').trim();
+      const equipmentAliases = {
+        'Mobile Crane+Bucket Cor': 'Mobile Crane + Bucket Cor',
+        'Mobile Crane - Bucket Cor': 'Mobile Crane + Bucket Cor'
+      };
+
+      return {
+        sourceId: docId || '',
+        spsa: String(record.noSpsa || '').trim() || '-',
+        customer: String(record.customer || '').trim() || '-',
+        bulan: monthIndex,
+        unit: Number(record.jmlAlat) || 0,
+        kontrak: 1,
+        alat: equipmentAliases[equipment] || equipment,
+        provinsi: resolveNkbProvince(location),
+        lokasi: location || '-',
+        nilai: Math.round(Number(record.nilaiKontrak) || 0)
+      };
+    }
+
+    function initMonitoringNkbSync() {
+      const checkInterval = setInterval(() => {
+        if (!window.firebaseDB || !window.firebaseFns || !window.firebaseFns.collection) return;
+        clearInterval(checkInterval);
+
+        const { collection, onSnapshot } = window.firebaseFns;
+        const sourceRef = collection(window.firebaseDB, 'monitoringKontrak');
+
+        onSnapshot(sourceRef, (snapshot) => {
+          const syncedRows = [];
+          snapshot.forEach((docSnap) => {
+            const record = docSnap.data() || {};
+            if (String(record.snkNkb || '').trim().toUpperCase() !== 'NKB') return;
+            syncedRows.push(mapMonitoringNkbRecord(record, docSnap.id));
+          });
+
+          // Satu record Monitoring NKB = satu baris Dashboard Nilai Kontrak Baru.
+          syncedRows.sort((a, b) =>
+            a.bulan - b.bulan ||
+            a.customer.localeCompare(b.customer, 'id') ||
+            a.spsa.localeCompare(b.spsa, 'id')
+          );
+
+          d2MasterData = syncedRows;
+          recalculateDashboard2();
+          renderD2AdminTable();
+          console.log(`Sinkronisasi Monitoring Kontrak → Dashboard NKB berhasil: ${syncedRows.length} record NKB.`);
+        }, (error) => {
+          console.error('Gagal mengambil data NKB dari Monitoring Kontrak:', error);
+        });
+      }, 100);
     }
 
     // =========================================================
@@ -2536,9 +2637,8 @@ function downloadDashboardJPG(dashboardNum) {
           masterContracts = data.masterContracts;
         }
 
-        if (Array.isArray(data.d2MasterData)) {
-          d2MasterData = data.d2MasterData;
-        }
+        // d2MasterData tidak diambil dari dokumen NKB terpisah.
+        // Sumber tunggal Dashboard 2 adalah koleksi monitoringKontrak (SNK/NKB = NKB).
 
         if (data.d2MapPositions && typeof data.d2MapPositions === 'object') {
           d2MapPositions = data.d2MapPositions;
@@ -2625,6 +2725,7 @@ function downloadDashboardJPG(dashboardNum) {
 
     window.addEventListener('DOMContentLoaded', () => {
       initNkbFirebaseListener();
+      initMonitoringNkbSync();
       initD2Charts();
       renderAdminTable();
       recalculateDashboard1();
