@@ -614,7 +614,7 @@
           "COGM": Number(item.cogm) || 0,
           "Margin": item.margin || "0.0%",
           "Keterangan": item.keterangan || "-",
-          "Link Dokumen SPSA": item.spsaFile || "-" // MENAMBAHKAN KOLOM LINK DOKUMEN SPSA
+          "Link Dokumen SPSA": item.spsaFile || "-"
         };
       });
 
@@ -648,7 +648,7 @@
       ws['!cols'] = [
         {wch: 5}, {wch: 25}, {wch: 15}, {wch: 35}, {wch: 20}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 12}, 
         {wch: 12}, {wch: 22}, {wch: 20}, {wch: 20}, {wch: 18}, {wch: 18}, {wch: 20}, {wch: 15}, 
-        {wch: 18}, {wch: 12}, {wch: 30}, {wch: 40} // MENYESUAIKAN LEBAR KOLOM TAMBAHAN
+        {wch: 18}, {wch: 12}, {wch: 30}, {wch: 40}
       ];
 
       const wb = XLSX.utils.book_new();
@@ -825,6 +825,8 @@
           const idxCogm = getColIdx(['cogm']);
           const idxMargin = getColIdx(['margin']);
           const idxKet = getColIdx(['keterangan']);
+          // MENAMBAHKAN INDEX UNTUK KOLOM LINK DOKUMEN SPSA
+          const idxLinkSpsa = getColIdx(['link dokumen spsa', 'link dokumen', 'spsa file', 'onedrive', 'cloud url']);
 
           let importedCount = 0;
           const { doc, setDoc } = window.firebaseFns;
@@ -922,7 +924,9 @@
               status: statusParsed,
               cogm: cogmVal,
               margin: marginVal,
-              keterangan: idxKet !== -1 && row[idxKet] ? String(row[idxKet]) : "-"
+              keterangan: idxKet !== -1 && row[idxKet] ? String(row[idxKet]) : "-",
+              // MENGAMBIL NILAI LINK DARI EXCEL JIKA ADA
+              spsaFile: idxLinkSpsa !== -1 && row[idxLinkSpsa] ? String(row[idxLinkSpsa]).trim() : ""
             };
 
             let docId = "import_" + Date.now() + "_" + i;
