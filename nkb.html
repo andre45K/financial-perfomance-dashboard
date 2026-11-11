@@ -2491,15 +2491,25 @@ function downloadDashboardJPG(dashboardNum) {
       const rows = [];
       snapshot.forEach(docSnap => {
         const data = docSnap.data() || {};
-        if (String(data.snkNkb || '').trim().toUpperCase() !== 'NKB') return;
+
+        // Hanya data yang kolom SNK / NKB-nya bernilai NKB yang disinkronkan.
+        const kategori = String(data.snkNkb || '').trim().toUpperCase();
+        if (kategori !== 'NKB') return;
 
         const spsa = String(data.noSpsa || '').trim();
         const old = existingById.get(String(docSnap.id)) ||
           existingBySpsa.get(spsa.toLowerCase()) || {};
 
-        // Bulan kontrak mengikuti Tanggal Kontrak; bila kosong, gunakan tanggal Start (BASTA).
+        // Bulan mengikuti Tanggal Kontrak; jika kosong gunakan Tanggal Start (BASTA).
         const monthIdx = monthIndexFromMonitoringDate(data.tglKontrak) ??
           monthIndexFromMonitoringDate(data.start);
+
+        // Provinsi selalu mengutamakan sumber Monitoring Kontrak.
+        // Data lama hanya menjadi fallback jika kolom Provinsi sumber masih kosong/"-".
+        const provinceFromMonitoring = String(data.provinsi || '').trim();
+        const provinceValue = provinceFromMonitoring && provinceFromMonitoring !== '-'
+          ? provinceFromMonitoring
+          : (old.provinsi || '');
 
         rows.push({
           monitoringId: String(docSnap.id),
@@ -2509,7 +2519,7 @@ function downloadDashboardJPG(dashboardNum) {
           unit: Number(data.jmlAlat) || 0,
           kontrak: 1,
           alat: String(data.jenisAlat || ''),
-          provinsi: normalizeProvinceName(old.provinsi || ''),
+          provinsi: normalizeProvinceName(provinceValue),
           lokasi: String(data.lokasi || ''),
           nilai: Number(data.nilaiKontrak) || 0
         });
