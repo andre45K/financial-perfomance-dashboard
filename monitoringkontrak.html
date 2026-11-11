@@ -284,14 +284,15 @@
           <th class="text-left" onclick="sortTable(10)">Jenis Alat <i class="fa-solid fa-sort" id="sort-icon-10"></i></th>
           <th class="text-left" onclick="sortTable(11)">NKP <i class="fa-solid fa-sort" id="sort-icon-11"></i></th>
           <th onclick="sortTable(12)">Lokasi <i class="fa-solid fa-sort" id="sort-icon-12"></i></th>
-          <th onclick="sortTable(13)">Lama Sewa (Bulan) <i class="fa-solid fa-sort" id="sort-icon-13"></i></th>
-          <th onclick="sortTable(14)">Harga Satuan <i class="fa-solid fa-sort" id="sort-icon-14"></i></th>
-          <th onclick="sortTable(15)">Mob Demob <i class="fa-solid fa-sort" id="sort-icon-15"></i></th>
-          <th onclick="sortTable(16)">Nilai Kontrak <i class="fa-solid fa-sort" id="sort-icon-16"></i></th>
-          <th onclick="sortTable(17)">Status Kontrak <i class="fa-solid fa-sort" id="sort-icon-17"></i></th>
-          <th onclick="sortTable(18)">COGM <i class="fa-solid fa-sort" id="sort-icon-18"></i></th>
-          <th onclick="sortTable(19)">Margin <i class="fa-solid fa-sort" id="sort-icon-19"></i></th>
-          <th class="text-left" onclick="sortTable(20)">Keterangan <i class="fa-solid fa-sort" id="sort-icon-20"></i></th>
+          <th onclick="sortTable(13)">Provinsi <i class="fa-solid fa-sort" id="sort-icon-13"></i></th>
+          <th onclick="sortTable(14)">Lama Sewa (Bulan) <i class="fa-solid fa-sort" id="sort-icon-14"></i></th>
+          <th onclick="sortTable(15)">Harga Satuan <i class="fa-solid fa-sort" id="sort-icon-15"></i></th>
+          <th onclick="sortTable(16)">Mob Demob <i class="fa-solid fa-sort" id="sort-icon-16"></i></th>
+          <th onclick="sortTable(17)">Nilai Kontrak <i class="fa-solid fa-sort" id="sort-icon-17"></i></th>
+          <th onclick="sortTable(18)">Status Kontrak <i class="fa-solid fa-sort" id="sort-icon-18"></i></th>
+          <th onclick="sortTable(19)">COGM <i class="fa-solid fa-sort" id="sort-icon-19"></i></th>
+          <th onclick="sortTable(20)">Margin <i class="fa-solid fa-sort" id="sort-icon-20"></i></th>
+          <th class="text-left" onclick="sortTable(21)">Keterangan <i class="fa-solid fa-sort" id="sort-icon-21"></i></th>
           <th>Aksi</th>
         </tr>
       </thead>
@@ -378,6 +379,10 @@
           <div class="form-group">
             <label class="form-label">Lokasi</label>
             <input type="text" class="form-input" id="inputLokasi" placeholder="Lokasi Proyek" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Provinsi</label>
+            <input type="text" class="form-input" id="inputProvinsi" placeholder="Provinsi Lokasi" required>
           </div>
           <div class="form-group">
             <label class="form-label">Lama Sewa (Bulan)</label>
@@ -613,6 +618,7 @@
           "Jenis Alat": item.jenisAlat || "-",
           "NKP": item.nkp || "-",
           "Lokasi": item.lokasi || "-",
+          "Provinsi": item.provinsi || "-",
           "Lama Sewa (Bulan)": Number(item.lamaSewa) || 0,
           "Harga Satuan": Number(item.hargaSatuan) || 0,
           "Mob Demob": Number(item.mobDemob) || 0,
@@ -642,8 +648,8 @@
                 cell.z = 'd-mmm-yy';
               }
             }
-            // Kolom Harga/Uang: Harga Satuan(14), Mob Demob(15), Nilai Kontrak(16), COGM(18)
-            if (C === 14 || C === 15 || C === 16 || C === 18) { 
+            // Kolom Harga/Uang: Harga Satuan(15), Mob Demob(16), Nilai Kontrak(17), COGM(19) (Indeks bergeser +1 karena ada kolom Provinsi)
+            if (C === 15 || C === 16 || C === 17 || C === 19) { 
               if (typeof cell.v === 'number') {
                 cell.z = '#,##0';
               }
@@ -654,8 +660,8 @@
 
       ws['!cols'] = [
         {wch: 5}, {wch: 25}, {wch: 15}, {wch: 35}, {wch: 20}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 12}, 
-        {wch: 12}, {wch: 22}, {wch: 20}, {wch: 20}, {wch: 18}, {wch: 18}, {wch: 18}, {wch: 20}, {wch: 15}, 
-        {wch: 18}, {wch: 12}, {wch: 30}, {wch: 40}
+        {wch: 12}, {wch: 22}, {wch: 20}, {wch: 20}, {wch: 20}, {wch: 18}, {wch: 18}, {wch: 18}, {wch: 20}, 
+        {wch: 15}, {wch: 18}, {wch: 12}, {wch: 30}, {wch: 40}
       ];
 
       const wb = XLSX.utils.book_new();
@@ -687,9 +693,9 @@
     function sortTable(colIndex) {
       const keysMap = {
         0: null, 1: 'noSpsa', 2: 'addendum', 3: 'customer', 4: 'skemaSewa', 5: 'tglKontrak', 6: 'start',
-        7: 'ending', 8: 'snkNkb', 9: 'jmlAlat', 10: 'jenisAlat', 11: 'nkp', 12: 'lokasi',
-        13: 'lamaSewa', 14: 'hargaSatuan', 15: 'mobDemob', 16: 'nilaiKontrak', 17: 'status', 
-        18: 'cogm', 19: 'margin', 20: 'keterangan'
+        7: 'ending', 8: 'snkNkb', 9: 'jmlAlat', 10: 'jenisAlat', 11: 'nkp', 12: 'lokasi', 13: 'provinsi',
+        14: 'lamaSewa', 15: 'hargaSatuan', 16: 'mobDemob', 17: 'nilaiKontrak', 18: 'status', 
+        19: 'cogm', 20: 'margin', 21: 'keterangan'
       };
 
       if (activeSortColumn === colIndex) {
@@ -701,7 +707,7 @@
       sortDirections = { [colIndex]: activeSortDirection };
       const dir = activeSortDirection === 'asc' ? 1 : -1;
 
-      for (let k = 0; k <= 20; k++) {
+      for (let k = 0; k <= 21; k++) {
         const iconEl = document.getElementById(`sort-icon-${k}`);
         if (iconEl) iconEl.className = 'fa-solid fa-sort';
       }
@@ -720,9 +726,8 @@
         const parsed = Date.parse(str);
         return Number.isNaN(parsed) ? NaN : parsed;
       };
-      // Kolom angka: 0(No), 9(Jml Alat), 13(Lama), 14(Harga), 15(MobDemob), 16(Nilai), 18(COGM), 19(Margin)
-      const numericColumns = new Set([0, 9, 13, 14, 15, 16, 18, 19]);
-      // Kolom tanggal: 5(Tgl), 6(Start), 7(Ending)
+      // Kolom angka dan tanggal disesuaikan indeksnya
+      const numericColumns = new Set([0, 9, 14, 15, 16, 17, 19, 20]);
       const dateColumns = new Set([5, 6, 7]);
 
       globalContractsData = globalContractsData.map((item, index) => ({
@@ -825,6 +830,7 @@
           const idxJenisAlat = getColIdx(['jenis alat', 'tipe alat']);
           const idxNkp = getColIdx(['nkp']);
           const idxLokasi = getColIdx(['lokasi']);
+          const idxProvinsi = getColIdx(['provinsi']);
           const idxLamaSewa = getColIdx(['lama sewa']);
           const idxHargaSatuan = getColIdx(['harga satuan']);
           const idxMobDemob = getColIdx(['mob demob', 'mob', 'demob']);
@@ -926,6 +932,7 @@
               jenisAlat: idxJenisAlat !== -1 && row[idxJenisAlat] ? String(row[idxJenisAlat]) : "Truck Mixer",
               nkp: idxNkp !== -1 && row[idxNkp] ? String(row[idxNkp]) : "-",
               lokasi: idxLokasi !== -1 && row[idxLokasi] ? String(row[idxLokasi]) : "Proyek",
+              provinsi: idxProvinsi !== -1 && row[idxProvinsi] ? String(row[idxProvinsi]) : "-",
               lamaSewa: lamaSewaVal,
               hargaSatuan: hargaSatuanVal,
               mobDemob: mobDemobVal,
@@ -1036,6 +1043,7 @@
           <td class="text-left">${item.jenisAlat || "-"}</td>
           <td class="text-left">${item.nkp || "-"}</td>
           <td class="text-left">${item.lokasi || "-"}</td>
+          <td class="text-left">${item.provinsi || "-"}</td>
           <td>${Number(item.lamaSewa || 1).toLocaleString("id-ID")}</td>
           <td class="text-right">Rp ${Number(item.hargaSatuan || 0).toLocaleString("id-ID")}</td>
           <td class="text-right">Rp ${Number(item.mobDemob || 0).toLocaleString("id-ID")}</td>
@@ -1099,8 +1107,8 @@
         let rowText = "";
         for (let j = 0; j < tds.length; j++) { rowText += tds[j].textContent.toLowerCase() + " "; }
 
-        // Kolom status index 17, Alat index 10
-        const statusText = tds[17] ? tds[17].textContent.toLowerCase() : "";
+        // Kolom status index bergeser jadi 18, Alat tetap index 10
+        const statusText = tds[18] ? tds[18].textContent.toLowerCase() : "";
         const alatText = tds[10] ? tds[10].textContent.toLowerCase() : "";
 
         const matchesSearch = rowText.includes(input);
@@ -1276,6 +1284,7 @@
       document.getElementById("inputJenisAlat").value = item.jenisAlat || "Truck Mixer";
       document.getElementById("inputNkp").value = item.nkp || "";
       document.getElementById("inputLokasi").value = item.lokasi || "";
+      document.getElementById("inputProvinsi").value = item.provinsi || "";
       document.getElementById("inputLamaSewa").value = item.lamaSewa ? Number(item.lamaSewa).toLocaleString("id-ID") : "1";
       document.getElementById("inputHargaSatuan").value = item.hargaSatuan ? Number(item.hargaSatuan).toLocaleString("id-ID") : "";
       document.getElementById("inputMobDemob").value = item.mobDemob ? Number(item.mobDemob).toLocaleString("id-ID") : "0";
@@ -1319,6 +1328,7 @@
         jenisAlat: document.getElementById("inputJenisAlat").value,
         nkp: document.getElementById("inputNkp").value || "-",
         lokasi: document.getElementById("inputLokasi").value,
+        provinsi: document.getElementById("inputProvinsi").value || "-",
         lamaSewa: parseRibuan(document.getElementById("inputLamaSewa").value) || 1,
         hargaSatuan: parseRibuan(document.getElementById("inputHargaSatuan").value) || 0,
         mobDemob: parseRibuan(document.getElementById("inputMobDemob").value) || 0,
