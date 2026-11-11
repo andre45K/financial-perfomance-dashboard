@@ -149,6 +149,25 @@
     .map-label-box .region-name { font-size: 9px; font-weight: 700; color: #0b2246; }
     .map-label-box .region-val { font-size: 9.5px; font-weight: 900; color: #0b63ce; }
 
+    /* Garis penghubung titik lokasi ke label provinsi */
+    .map-connector-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 6;
+      pointer-events: none;
+      overflow: visible;
+    }
+    .map-connector-line {
+      fill: none;
+      stroke: #facc15;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      vector-effect: non-scaling-stroke;
+      filter: drop-shadow(0 1px 1px rgba(0,0,0,.85));
+    }
     .map-location-point { position:absolute; width:9px; height:9px; border-radius:50%; background:#ffffff; border:2px solid #0b2246; box-shadow:0 1px 4px rgba(0,0,0,.35); transform:translate(-50%,-50%); z-index:9; cursor:move; user-select:none; touch-action:none; }
     .map-location-point:hover { box-shadow:0 0 0 4px rgba(11,99,206,.18), 0 1px 4px rgba(0,0,0,.35); }
 
@@ -1947,6 +1966,7 @@ function downloadDashboardJPG(dashboardNum) {
             badge.style.left = safeLeft + '%';
           }
         }
+        updateD2MapConnectors();
       };
 
       element.addEventListener('pointerdown', (event) => {
@@ -1982,10 +2002,51 @@ function downloadDashboardJPG(dashboardNum) {
       });
     }
 
+    function updateD2MapConnectors() {
+      const mapCanvas = document.getElementById('d2MapCanvasContainer');
+      if (!mapCanvas) return;
+
+      const svg = mapCanvas.querySelector('.map-connector-layer');
+      if (!svg) return;
+
+      const canvasRect = mapCanvas.getBoundingClientRect();
+      if (!canvasRect.width || !canvasRect.height) return;
+
+      svg.setAttribute('viewBox', `0 0 ${canvasRect.width} ${canvasRect.height}`);
+      const paths = [];
+
+      mapCanvas.querySelectorAll('.map-location-point').forEach(point => {
+        const provName = point.dataset.prov;
+        const label = Array.from(mapCanvas.querySelectorAll('.map-label-box'))
+          .find(el => el.dataset.prov === provName);
+        if (!label) return;
+
+        const pointRect = point.getBoundingClientRect();
+        const labelRect = label.getBoundingClientRect();
+
+        // Garis berakhir di sisi bawah label dan berawal dari pusat titik.
+        const x1 = pointRect.left + pointRect.width / 2 - canvasRect.left;
+        const y1 = pointRect.top + pointRect.height / 2 - canvasRect.top;
+        const x2 = labelRect.left + labelRect.width / 2 - canvasRect.left;
+        const y2 = labelRect.bottom - canvasRect.top;
+
+        paths.push(
+          `<line class="map-connector-line" data-prov="${provName}"
+             x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"></line>`
+        );
+      });
+
+      svg.innerHTML = paths.join('');
+    }
+
+    window.addEventListener('resize', () => {
+      requestAnimationFrame(updateD2MapConnectors);
+    });
+
     function renderDynamicMapPins(provMap) {
       const mapCanvas = document.getElementById('d2MapCanvasContainer');
       if (!mapCanvas) return;
-      let mapHtml = '';
+      let mapHtml = '<svg class="map-connector-layer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg>';
 
       const entries = Object.keys(provMap).map(rawName => ({
         provName: normalizeProvinceName(rawName),
@@ -2031,6 +2092,9 @@ function downloadDashboardJPG(dashboardNum) {
         enableD2MapDrag(point, provName, 'point');
         enableD2MapDrag(label, provName, 'label');
       });
+
+      // Pastikan posisi garis sesuai koordinat titik dan label setelah dirender.
+      requestAnimationFrame(updateD2MapConnectors);
     }
 
 
