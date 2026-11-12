@@ -1093,6 +1093,9 @@
     
     // Fungsi membuat Mock-up Checklist dinamis untuk tiap kontrak jika belum ada
     function ensureChecklistData(item) {
+      let isFileFilled = item.spsaFile && item.spsaFile.trim() !== "";
+      let fileTeks = isFileFilled ? `File: ${(item.noSpsa || 'dok').replace(/[\/\\]/g, '_')}.pdf` : "-";
+
       if (!item.checklist) {
          let hash = (item.customer || "a").length + (item.noSpsa || "b").length + (item.lamaSewa || 0);
          let completed = 0;
@@ -1101,14 +1104,19 @@
          else if (item.status === 'Expired') { completed = 1; }
          else { completed = hash % 5; } // Assign mock progress (0 to 4 steps)
          
-         let fileTeks = item.spsaFile ? `File: ${(item.noSpsa || 'dok').replace(/[\/\\]/g, '_')}.pdf` : "-";
-         
          item.checklist = [
            { name: "Paraf & TTD Customer", status: completed >= 1, date: item.tglKontrak || "10 Nov 2026", desc: "-" },
            { name: "Paraf Manajer (WBP)", status: completed >= 2, date: item.tglKontrak || "10 Nov 2026", desc: "-" },
            { name: "TTD Kadiv (WBP)", status: completed >= 3, date: item.tglKontrak || "10 Nov 2026", desc: "-" },
-           { name: "Scan Dok", status: completed >= 4, date: item.tglKontrak || "10 Nov 2026", desc: fileTeks }
+           { name: "Scan Dok", status: isFileFilled ? true : (completed >= 4), date: item.tglKontrak || "10 Nov 2026", desc: fileTeks }
          ];
+      } else {
+         // Jika link SPSA sudah terisi, pastikan Scan Dok otomatis berubah menjadi lengkap
+         let scanDokIdx = item.checklist.findIndex(c => c.name === "Scan Dok");
+         if (scanDokIdx !== -1 && isFileFilled) {
+            item.checklist[scanDokIdx].status = true;
+            item.checklist[scanDokIdx].desc = fileTeks;
+         }
       }
     }
 
