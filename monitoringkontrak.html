@@ -52,6 +52,37 @@
     .btn-primary { background: #f59e0b; color: #0f172a; border-color: #f59e0b; font-weight: 700; }
     .btn-primary:hover { background: #d97706; color: #000; }
 
+    /* ==============================================================
+       NEW: KPI Progress Addendum Banner Styles
+       ============================================================== */
+    .kpi-progress-banner { display: flex; justify-content: space-between; align-items: center; background: #0f172a; border: 2px solid #3b82f6; border-radius: 12px; padding: 16px 24px; margin-bottom: 20px; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4), inset 0 0 10px rgba(59, 130, 246, 0.2); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; }
+    .kpi-progress-banner::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%); pointer-events: none; }
+    .kpi-progress-banner:hover { box-shadow: 0 0 25px rgba(59, 130, 246, 0.6), inset 0 0 15px rgba(59, 130, 246, 0.3); transform: translateY(-2px); }
+    
+    .kpi-prog-left { display: flex; align-items: center; gap: 16px; z-index: 1; }
+    .kpi-prog-icon-box { background: #1e3a8a; color: #60a5fa; width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+    .kpi-prog-text h4 { font-size: 13px; color: #e2e8f0; font-weight: 600; margin-bottom: 2px; }
+    .kpi-prog-text h3 { font-size: 17px; color: #fff; font-weight: 800; letter-spacing: 0.5px; }
+
+    .kpi-prog-mid { flex: 1; margin: 0 40px; display: flex; flex-direction: column; gap: 8px; z-index: 1; border-left: 1px solid rgba(255,255,255,0.1); border-right: 1px solid rgba(255,255,255,0.1); padding: 0 40px; }
+    .kpi-prog-header { display: flex; align-items: baseline; gap: 10px; }
+    .kpi-prog-pct { font-size: 28px; font-weight: 900; color: #fff; }
+    .kpi-prog-sub { font-size: 11px; color: #94a3b8; }
+    .kpi-prog-bar-bg { background: #1e293b; height: 8px; border-radius: 4px; width: 100%; overflow: hidden; position: relative; }
+    .kpi-prog-bar-fill { background: linear-gradient(90deg, #3b82f6, #a855f7); height: 100%; border-radius: 4px; transition: width 0.5s ease-in-out; }
+    .kpi-prog-desc { font-size: 11px; color: #94a3b8; }
+
+    .kpi-prog-right { display: flex; align-items: center; gap: 24px; z-index: 1; position: relative; padding-bottom: 12px; }
+    .kpi-stats-col { display: flex; gap: 30px; }
+    .stat-box { display: flex; flex-direction: column; align-items: flex-start; }
+    .stat-box .lbl { font-size: 11px; color: #94a3b8; margin-bottom: 4px; }
+    .stat-box .val { font-size: 20px; font-weight: 900; }
+    .val.green { color: #34d399; }
+    .val.orange { color: #fbbf24; }
+    .btn-circle { background: #1e293b; color: #fff; border: 1px solid #334155; width: 36px; height: 36px; border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: all 0.2s; }
+    .kpi-progress-banner:hover .btn-circle { background: #3b82f6; border-color: #3b82f6; }
+    .kpi-prog-info { position: absolute; bottom: -8px; left: 0; font-size: 10px; color: #818cf8; white-space: nowrap; }
+
     /* KPI Summary Cards */
     .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 20px; }
     .kpi-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 14px; position: relative; cursor: pointer; transition: all 0.2s ease; }
@@ -101,24 +132,72 @@
     .badge-status-expired { background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; }
     .badge-status-closed { background: rgba(168, 85, 247, 0.2); color: #a855f7; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; }
     
-    /* Checkbox kustom */
     .status-cell-wrapper { display: flex; align-items: center; justify-content: center; gap: 8px; }
     .expired-checkbox { width: 15px; height: 15px; accent-color: #a855f7; cursor: pointer; }
 
-    /* Tombol Aksi */
     .action-btns { display: flex; gap: 6px; justify-content: center; align-items: center; }
     .btn-icon-edit { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid #3b82f6; width: 26px; height: 26px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
     .btn-icon-edit:hover { background: #3b82f6; color: #fff; }
     .btn-icon-delete { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid #ef4444; width: 26px; height: 26px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
     .btn-icon-delete:hover { background: #ef4444; color: #fff; }
 
-    /* Modal Form Kontrak */
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; }
+    /* Modals */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
     .modal-container { background: #0f172a; border: 1px solid #334155; width: 680px; max-width: 95%; max-height: 90vh; overflow-y: auto; border-radius: 10px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 10px; margin-bottom: 15px; }
-    .modal-title { font-size: 15px; font-weight: 800; color: #fff; }
-    .modal-close { background: none; border: none; color: #94a3b8; font-size: 16px; cursor: pointer; }
+    
+    /* ==============================================================
+       NEW: Progress Addendum Modal Styles
+       ============================================================== */
+    .progress-modal { width: 950px; max-width: 98%; padding: 24px; }
+    .progress-modal .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 15px; margin-bottom: 20px; }
+    .progress-modal .modal-title { display: flex; align-items: center; gap: 12px; }
+    .pm-icon { background: #3b82f6; color: #fff; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .pm-title-text h3 { font-size: 16px; font-weight: 800; color: #fff; }
+    .pm-title-text p { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+    .modal-close { background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer; transition: color 0.2s; }
     .modal-close:hover { color: #fff; }
+
+    .split-layout { display: flex; gap: 20px; }
+    .pane-left { flex: 0 0 45%; background: #0B1120; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; }
+    .pane-right { flex: 0 0 55%; background: #0B1120; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; }
+    
+    .filter-bar-mini { display: flex; gap: 10px; margin-bottom: 12px; }
+    .search-box-mini { position: relative; flex: 1; }
+    .search-box-mini i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 12px; }
+    .search-box-mini input { width: 100%; background: #0f172a; border: 1px solid #334155; padding: 8px 10px 8px 32px; border-radius: 6px; color: #fff; font-size: 12px; outline: none; }
+    .search-box-mini input:focus { border-color: #3b82f6; }
+    .filter-bar-mini select { background: #0f172a; color: #e2e8f0; border: 1px solid #334155; padding: 8px 12px; border-radius: 6px; font-size: 12px; outline: none; cursor: pointer; }
+
+    .table-responsive-mini { overflow-x: auto; flex: 1; max-height: 400px; border: 1px solid #1e293b; border-radius: 6px; }
+    .table-responsive-mini table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+    .table-responsive-mini th { background: #131c31; color: #94a3b8; padding: 10px; font-weight: 700; text-align: left; position: sticky; top: 0; z-index: 2; border-bottom: 1px solid #1e293b; }
+    .table-responsive-mini td { padding: 10px; border-bottom: 1px solid #1e293b; color: #cbd5e1; text-align: left; }
+    .table-responsive-mini tbody tr:hover { background: rgba(30, 41, 59, 0.7); }
+    .table-responsive-mini tbody tr.active-row { background: rgba(59, 130, 246, 0.15); border-left: 3px solid #3b82f6; }
+
+    .detail-header-panel { display: flex; justify-content: space-between; align-items: center; background: #131c31; border: 1px solid #1e293b; padding: 14px; border-radius: 8px; margin-bottom: 16px; }
+    .detail-h-left { display: flex; align-items: center; gap: 12px; }
+    .detail-h-left i { font-size: 24px; color: #3b82f6; }
+    .dh-title { font-size: 14px; font-weight: 700; color: #fff; }
+    .dh-sub { font-size: 12px; color: #94a3b8; margin-top: 3px; }
+    
+    .prog-detail-badge { padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 12px; display: flex; align-items: center; gap: 6px; }
+    .prog-detail-badge.green { background: rgba(34, 197, 94, 0.2); color: #34d399; }
+    .prog-detail-badge.orange { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .prog-detail-badge.red { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+    
+    .prog-badge-green { background: rgba(34, 197, 94, 0.2); color: #34d399; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
+    .prog-badge-orange { background: rgba(245, 158, 11, 0.2); color: #fbbf24; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
+    .prog-badge-red { background: rgba(239, 68, 68, 0.2); color: #f87171; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
+    
+    .stat-badge-selesai { color: #34d399; display: flex; align-items: center; gap: 6px; font-weight: bold; }
+    .stat-badge-proses { color: #fbbf24; display: flex; align-items: center; gap: 6px; font-weight: bold; }
+    .stat-badge-belum { color: #f87171; display: flex; align-items: center; gap: 6px; font-weight: bold; }
+
+    .detail-footer-info { margin-top: 16px; padding: 12px; background: #1e3a8a; border-radius: 8px; color: #93c5fd; font-size: 12px; display: flex; align-items: center; gap: 8px; font-weight: 600; }
+    .progress-modal .modal-footer { border-top: 1px solid #1e293b; padding-top: 15px; margin-top: 20px; display: flex; justify-content: flex-end; }
+
+    /* Form Kontrak Modal existing styles */
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
     .form-group.full { grid-column: span 2; }
@@ -154,6 +233,41 @@
       <button class="btn-action" onclick="resetDataKontrakFirestore()" style="border-color: rgba(239,68,68,0.4); color: #ef4444;"><i class="fa-solid fa-trash-can"></i> Reset Data</button>
       <button class="btn-action" onclick="bukaPilihFileExcel()"><i class="fa-solid fa-file-excel"></i> Impor CSV</button>
       <button class="btn-action btn-primary" onclick="bukaModalKontrakBaru()"><i class="fa-solid fa-plus"></i> Kontrak Baru</button>
+    </div>
+  </div>
+
+  <!-- KPI Progress Addendum Kontrak Banner -->
+  <div class="kpi-progress-banner" onclick="bukaModalProgress()">
+    <div class="kpi-prog-left">
+      <div class="kpi-prog-icon-box"><i class="fa-solid fa-file-invoice"></i></div>
+      <div class="kpi-prog-text">
+        <h4>KPI Progress</h4>
+        <h3>Addendum Kontrak</h3>
+      </div>
+    </div>
+    <div class="kpi-prog-mid">
+      <div class="kpi-prog-header">
+        <div class="kpi-prog-pct" id="kpiAddendumPct">0.0%</div>
+        <div class="kpi-prog-sub" id="kpiAddendumSub">0 dari 0 checklist selesai</div>
+      </div>
+      <div class="kpi-prog-bar-bg">
+        <div class="kpi-prog-bar-fill" id="kpiAddendumBar" style="width: 0%;"></div>
+      </div>
+      <div class="kpi-prog-desc" id="kpiAddendumSub2">0 nomor kontrak x 4 tahapan checklist = 0 tahapan</div>
+    </div>
+    <div class="kpi-prog-right">
+      <div class="kpi-stats-col">
+        <div class="stat-box">
+          <span class="lbl">Selesai</span>
+          <span class="val green" id="kpiAddendumSelesai">0</span>
+        </div>
+        <div class="stat-box">
+          <span class="lbl">Belum Selesai</span>
+          <span class="val orange" id="kpiAddendumBelum">0</span>
+        </div>
+      </div>
+      <button class="btn-circle"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="kpi-prog-info"><i class="fa-solid fa-circle-info"></i> Klik KPI untuk melihat rincian setiap nomor kontrak.</div>
     </div>
   </div>
 
@@ -261,7 +375,6 @@
         <option value="Dump Truck">Dump Truck</option>
         <option value="Stone Crusher">Stone Crusher</option>
       </select>
-      <!-- Tombol Ekspor Excel dipasang fungsi onClick -->
       <button class="btn-action" style="background:#020617;" onclick="exportToExcel()"><i class="fa-solid fa-file-excel"></i> Ekspor</button>
     </div>
   </div>
@@ -306,7 +419,7 @@
   <div class="modal-overlay" id="modalKontrak">
     <div class="modal-container">
       <div class="modal-header">
-        <div class="modal-title" id="modalTitleText"><i class="fa-solid fa-file-circle-plus" style="color: #f59e0b;"></i> Tambah Kontrak Baru</div>
+        <div class="modal-title" id="modalTitleText" style="font-size: 15px; font-weight: 800; color: #fff;"><i class="fa-solid fa-file-circle-plus" style="color: #f59e0b;"></i> Tambah Kontrak Baru</div>
         <button class="modal-close" onclick="tutupModalKontrakBaru()"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <form id="formKontrakBaru" onsubmit="simpanKontrakFirestore(event)">
@@ -433,6 +546,95 @@
     </div>
   </div>
 
+  <!-- Modal KPI Progress Addendum Kontrak (Fitur Baru) -->
+  <div class="modal-overlay" id="modalProgressAddendum">
+    <div class="modal-container progress-modal">
+      <div class="modal-header">
+        <div class="modal-title">
+          <div class="pm-icon"><i class="fa-solid fa-file-invoice"></i></div>
+          <div class="pm-title-text">
+            <h3>KPI Progress Addendum Kontrak</h3>
+            <p>Detail Progress dan Status Checklist per Nomor Kontrak</p>
+          </div>
+        </div>
+        <button class="modal-close" onclick="tutupModalProgress()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      
+      <div class="split-layout">
+        <!-- Panel Kiri: List Kontrak -->
+        <div class="pane-left">
+          <div class="filter-bar-mini">
+            <div class="search-box-mini">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="searchProgress" placeholder="Cari Nomor Kontrak..." onkeyup="renderModalProgressList()">
+            </div>
+            <select id="filterProgress" onchange="renderModalProgressList()">
+              <option value="Semua Status">Semua Status</option>
+              <option value="Selesai">Selesai</option>
+              <option value="Proses">Proses</option>
+              <option value="Belum">Belum</option>
+            </select>
+          </div>
+          <div class="table-responsive-mini">
+            <table id="tableProgressLeft">
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>Nomor Kontrak</th>
+                  <th>Customer</th>
+                  <th>Progress</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyProgressList">
+                <!-- Diisi dari JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Panel Kanan: Checklist Detail -->
+        <div class="pane-right">
+          <div class="detail-header-panel">
+            <div class="detail-h-left">
+              <i class="fa-solid fa-building"></i>
+              <div>
+                <div class="dh-title" id="detailChecklistHeader">Detail Checklist - -</div>
+                <div class="dh-sub" id="detailChecklistSub">-</div>
+              </div>
+            </div>
+            <div class="detail-h-right">
+              <div class="prog-detail-badge green" id="detailChecklistBadge"><i class="fa-solid fa-circle-check"></i> 0% (0 dari 0)</div>
+            </div>
+          </div>
+          <div class="table-responsive-mini" style="border: none;">
+            <table id="tableProgressRight">
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>Checklist</th>
+                  <th>Status</th>
+                  <th>Tanggal</th>
+                  <th>Keterangan</th>
+                </tr>
+              </thead>
+              <tbody id="tbodyChecklistDetail">
+                <!-- Diisi dari JS -->
+              </tbody>
+            </table>
+          </div>
+          <div class="detail-footer-info">
+            <i class="fa-solid fa-circle-info"></i> <span id="modalFooterInfo">Progress Addendum Kontrak keseluruhan: 0% (0 dari 0 checklist)</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button class="btn-action" style="background:#1e293b; border:1px solid #334155; padding: 8px 16px;" onclick="tutupModalProgress()"><i class="fa-solid fa-xmark"></i> Tutup</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Script Chart & Dynamic Dashboard Integration -->
   <script>
     Chart.register(ChartDataLabels);
@@ -448,8 +650,9 @@
     let activeSortColumn = null;
     let activeSortDirection = "asc";
     
-    // Status global untuk menyimpan apakah filter KPI "Segera Expired" sedang aktif
+    // Status global filter
     let isSegeraExpiredFilterActive = false;
+    let selectedContractId = null; // Menyimpan state kontrak yang aktif di modal
 
     document.addEventListener("DOMContentLoaded", () => {
       initCharts();
@@ -591,11 +794,7 @@
     // Ekspor ke Excel
     function exportToExcel() {
       const dataToExport = currentFilteredData.length > 0 ? currentFilteredData : globalContractsData;
-      
-      if (dataToExport.length === 0) {
-        alert("Tidak ada data untuk diekspor!");
-        return;
-      }
+      if (dataToExport.length === 0) { alert("Tidak ada data untuk diekspor!"); return; }
 
       const parseDateForExcel = (dateStr) => {
         if (!dateStr || dateStr === "-") return "-";
@@ -632,7 +831,6 @@
       });
 
       const ws = XLSX.utils.json_to_sheet(excelData);
-
       const range = XLSX.utils.decode_range(ws['!ref']);
       for (let C = range.s.c; C <= range.e.c; ++C) {
         for (let R = range.s.r; R <= range.e.r; ++R) {
@@ -641,18 +839,11 @@
           if (!cell) continue;
 
           if (R > 0) {
-            // Kolom Tanggal: Tgl Kontrak(5), Start(6), Ending(7)
             if (C === 5 || C === 6 || C === 7) { 
-              if (cell.v instanceof Date && !isNaN(cell.v)) {
-                cell.t = 'd';
-                cell.z = 'd-mmm-yy';
-              }
+              if (cell.v instanceof Date && !isNaN(cell.v)) { cell.t = 'd'; cell.z = 'd-mmm-yy'; }
             }
-            // Kolom Harga/Uang: Harga Satuan(15), Mob Demob(16), Nilai Kontrak(17), COGM(19) (Indeks bergeser +1 karena ada kolom Provinsi)
             if (C === 15 || C === 16 || C === 17 || C === 19) { 
-              if (typeof cell.v === 'number') {
-                cell.z = '#,##0';
-              }
+              if (typeof cell.v === 'number') { cell.z = '#,##0'; }
             }
           }
         }
@@ -698,12 +889,8 @@
         19: 'cogm', 20: 'margin', 21: 'keterangan'
       };
 
-      if (activeSortColumn === colIndex) {
-        activeSortDirection = activeSortDirection === 'asc' ? 'desc' : 'asc';
-      } else {
-        activeSortColumn = colIndex;
-        activeSortDirection = 'asc';
-      }
+      if (activeSortColumn === colIndex) { activeSortDirection = activeSortDirection === 'asc' ? 'desc' : 'asc'; } 
+      else { activeSortColumn = colIndex; activeSortDirection = 'asc'; }
       sortDirections = { [colIndex]: activeSortDirection };
       const dir = activeSortDirection === 'asc' ? 1 : -1;
 
@@ -726,13 +913,12 @@
         const parsed = Date.parse(str);
         return Number.isNaN(parsed) ? NaN : parsed;
       };
-      // Kolom angka dan tanggal disesuaikan indeksnya
+      
       const numericColumns = new Set([0, 9, 14, 15, 16, 17, 19, 20]);
       const dateColumns = new Set([5, 6, 7]);
 
       globalContractsData = globalContractsData.map((item, index) => ({
-        ...item,
-        __sortOriginalIndex: item.__sortOriginalIndex ?? index
+        ...item, __sortOriginalIndex: item.__sortOriginalIndex ?? index
       }));
       
       globalContractsData.sort((a, b) => {
@@ -764,11 +950,8 @@
     }
 
     async function resetDataKontrakFirestore() {
-      if (confirm("PERINGATAN: Apakah Anda yakin ingin menghapus SELURUH data monitoring kontrak? Tindakan ini tidak dapat dibatalkan.")) {
-        if (!window.firebaseDB || !window.firebaseFns) {
-          alert("Koneksi Database belum siap.");
-          return;
-        }
+      if (confirm("PERINGATAN: Apakah Anda yakin ingin menghapus SELURUH data monitoring kontrak?")) {
+        if (!window.firebaseDB || !window.firebaseFns) { alert("Koneksi Database belum siap."); return; }
         try {
           const { collection, getDocs, doc, deleteDoc } = window.firebaseFns;
           const colRef = collection(window.firebaseDB, "monitoringKontrak");
@@ -781,10 +964,7 @@
 
           await Promise.all(deletePromises);
           alert("Semua data kontrak berhasil di-reset (dihapus).");
-        } catch (error) {
-          console.error("Gagal mereset data:", error);
-          alert("Terjadi kesalahan saat menghapus data dari database.");
-        }
+        } catch (error) { console.error("Gagal mereset data:", error); alert("Terjadi kesalahan saat menghapus data dari database."); }
       }
     }
 
@@ -805,79 +985,32 @@
           let headerRowIdx = -1;
           for (let i = 0; i < Math.min(jsonRaw.length, 10); i++) {
             let rowStr = JSON.stringify(jsonRaw[i]).toLowerCase();
-            if (rowStr.includes('spsa') || rowStr.includes('customer')) {
-              headerRowIdx = i;
-              break;
-            }
+            if (rowStr.includes('spsa') || rowStr.includes('customer')) { headerRowIdx = i; break; }
           }
           if (headerRowIdx === -1) headerRowIdx = 1;
 
           const headers = jsonRaw[headerRowIdx].map(h => String(h || "").trim().toLowerCase());
-          
-          const getColIdx = (keywords) => {
-            return headers.findIndex(h => keywords.some(k => h.includes(k)));
-          };
+          const getColIdx = (keywords) => { return headers.findIndex(h => keywords.some(k => h.includes(k))); };
 
-          const idxSpsa = getColIdx(['spsa']);
-          const idxAddendum = getColIdx(['add', 'addendum']);
-          const idxCust = getColIdx(['customer']);
-          const idxSkemaSewa = getColIdx(['skema sewa', 'skema']);
-          const idxTglKontrak = getColIdx(['tanggal kontrak', 'tgl kontrak']);
-          const idxStart = getColIdx(['start', 'tanggal aktif']);
-          const idxEnding = getColIdx(['ending']);
-          const idxSnkNkb = getColIdx(['snk', 'nkb']);
-          const idxJmlUnit = getColIdx(['jumlah unit', 'jumlah alat', 'jml alat']);
-          const idxJenisAlat = getColIdx(['jenis alat', 'tipe alat']);
-          const idxNkp = getColIdx(['nkp']);
-          const idxLokasi = getColIdx(['lokasi']);
-          const idxProvinsi = getColIdx(['provinsi']);
-          const idxLamaSewa = getColIdx(['lama sewa']);
-          const idxHargaSatuan = getColIdx(['harga satuan']);
-          const idxMobDemob = getColIdx(['mob demob', 'mob', 'demob']);
-          const idxNilaiKontrak = getColIdx(['nilai kontrak']);
-          const idxStatus = getColIdx(['status kontrak']);
-          const idxCogm = getColIdx(['cogm']);
-          const idxMargin = getColIdx(['margin']);
-          const idxKet = getColIdx(['keterangan']);
-          const idxLinkSpsa = getColIdx(['link dokumen spsa', 'link dokumen', 'spsa file', 'onedrive', 'cloud url']);
+          const idxSpsa = getColIdx(['spsa']); const idxAddendum = getColIdx(['add', 'addendum']); const idxCust = getColIdx(['customer']);
+          const idxSkemaSewa = getColIdx(['skema sewa', 'skema']); const idxTglKontrak = getColIdx(['tanggal kontrak', 'tgl kontrak']);
+          const idxStart = getColIdx(['start', 'tanggal aktif']); const idxEnding = getColIdx(['ending']); const idxSnkNkb = getColIdx(['snk', 'nkb']);
+          const idxJmlUnit = getColIdx(['jumlah unit', 'jumlah alat', 'jml alat']); const idxJenisAlat = getColIdx(['jenis alat', 'tipe alat']);
+          const idxNkp = getColIdx(['nkp']); const idxLokasi = getColIdx(['lokasi']); const idxProvinsi = getColIdx(['provinsi']);
+          const idxLamaSewa = getColIdx(['lama sewa']); const idxHargaSatuan = getColIdx(['harga satuan']); const idxMobDemob = getColIdx(['mob demob', 'mob', 'demob']);
+          const idxNilaiKontrak = getColIdx(['nilai kontrak']); const idxStatus = getColIdx(['status kontrak']); const idxCogm = getColIdx(['cogm']);
+          const idxMargin = getColIdx(['margin']); const idxKet = getColIdx(['keterangan']); const idxLinkSpsa = getColIdx(['link dokumen spsa', 'link dokumen', 'spsa file']);
 
           let importedCount = 0;
           const { doc, setDoc } = window.firebaseFns;
 
           const formatDateExact = (val) => {
             if (!val) return "";
-            if (val instanceof Date && !isNaN(val)) {
-              let y = val.getFullYear();
-              let m = String(val.getMonth() + 1).padStart(2, '0');
-              let d = String(val.getDate()).padStart(2, '0');
-              return `${y}-${m}-${d}`;
-            }
-            if (typeof val === 'number') {
-              let d = XLSX.SSF.parse_date_code(val);
-              if (d) {
-                let m = String(d.m).padStart(2, '0');
-                let day = String(d.d).padStart(2, '0');
-                return `${d.y}-${m}-${day}`;
-              }
-            }
+            if (val instanceof Date && !isNaN(val)) { let y = val.getFullYear(); let m = String(val.getMonth() + 1).padStart(2, '0'); let d = String(val.getDate()).padStart(2, '0'); return `${y}-${m}-${d}`; }
+            if (typeof val === 'number') { let d = XLSX.SSF.parse_date_code(val); if (d) { return `${d.y}-${String(d.m).padStart(2, '0')}-${String(d.d).padStart(2, '0')}`; } }
             let strVal = String(val).trim();
-            let matchDateText = strVal.match(/^(\d{1,2})[-\/]([A-Za-z]{3})[-\/](\d{2,4})$/);
-            if (matchDateText) {
-              let day = matchDateText[1].padStart(2, '0');
-              let monStr = matchDateText[2].toLowerCase();
-              let yr = matchDateText[3];
-              if (yr.length === 2) yr = '20' + yr;
-              const months = {jan:'01', feb:'02', mar:'03', apr:'04', mei:'05', may:'05', jun:'06', jul:'07', ags:'08', aug:'08', sep:'09', okt:'10', oct:'10', nov:'11', des:'12', dec:'12'};
-              let m = months[monStr] || '01';
-              return `${yr}-${m}-${day}`;
-            }
             let parsed = new Date(strVal);
-            if (!isNaN(parsed)) {
-              let y = parsed.getFullYear();
-              let m = String(parsed.getMonth() + 1).padStart(2, '0');
-              let d = String(parsed.getDate()).padStart(2, '0');
-              return `${y}-${m}-${d}`;
-            }
+            if (!isNaN(parsed)) { return `${parsed.getFullYear()}-${String(parsed.getMonth() + 1).padStart(2, '0')}-${String(parsed.getDate()).padStart(2, '0')}`; }
             return strVal;
           };
 
@@ -885,79 +1018,253 @@
             let row = jsonRaw[i];
             if (!row || row.length === 0) continue;
 
-            let customerVal = idxCust !== -1 ? row[idxCust] : null;
-            let spsaVal = idxSpsa !== -1 ? row[idxSpsa] : null;
+            let customerVal = idxCust !== -1 ? row[idxCust] : null; let spsaVal = idxSpsa !== -1 ? row[idxSpsa] : null;
             if (!customerVal && !spsaVal) continue;
 
-            let hargaSatuanVal = Number(idxHargaSatuan !== -1 ? row[idxHargaSatuan] : 0) || 0;
-            let lamaSewaVal = Number(idxLamaSewa !== -1 ? row[idxLamaSewa] : 1) || 1;
-            let jmlAlatVal = Number(idxJmlUnit !== -1 ? row[idxJmlUnit] : 1) || 1;
-            let mobDemobVal = Number(idxMobDemob !== -1 ? row[idxMobDemob] : 0) || 0;
+            let hargaSatuanVal = Number(idxHargaSatuan !== -1 ? row[idxHargaSatuan] : 0) || 0; let lamaSewaVal = Number(idxLamaSewa !== -1 ? row[idxLamaSewa] : 1) || 1;
+            let jmlAlatVal = Number(idxJmlUnit !== -1 ? row[idxJmlUnit] : 1) || 1; let mobDemobVal = Number(idxMobDemob !== -1 ? row[idxMobDemob] : 0) || 0;
             let nilaiKontrakVal = Number(idxNilaiKontrak !== -1 ? row[idxNilaiKontrak] : 0) || 0;
             
-            if (nilaiKontrakVal === 0 && (hargaSatuanVal > 0 || mobDemobVal > 0)) {
-              nilaiKontrakVal = (hargaSatuanVal * lamaSewaVal * jmlAlatVal) + mobDemobVal;
-            }
+            if (nilaiKontrakVal === 0 && (hargaSatuanVal > 0 || mobDemobVal > 0)) { nilaiKontrakVal = (hargaSatuanVal * lamaSewaVal * jmlAlatVal) + mobDemobVal; }
 
-            let cogmVal = Number(idxCogm !== -1 ? row[idxCogm] : 0) || 0;
-            let marginVal = idxMargin !== -1 && row[idxMargin] ? String(row[idxMargin]) : "";
-            if (!marginVal && cogmVal > 0) {
-              marginVal = (((hargaSatuanVal - cogmVal) / cogmVal) * 100).toFixed(1) + "%";
-            } else if (!marginVal) {
-              marginVal = "100.0%";
-            }
+            let cogmVal = Number(idxCogm !== -1 ? row[idxCogm] : 0) || 0; let marginVal = idxMargin !== -1 && row[idxMargin] ? String(row[idxMargin]) : "";
+            if (!marginVal && cogmVal > 0) { marginVal = (((hargaSatuanVal - cogmVal) / cogmVal) * 100).toFixed(1) + "%"; } 
+            else if (!marginVal) { marginVal = "100.0%"; }
 
             let endingParsed = formatDateExact(idxEnding !== -1 ? row[idxEnding] : "");
             let statusParsed = idxStatus !== -1 && row[idxStatus] ? String(row[idxStatus]) : "Open";
             if (endingParsed && statusParsed !== "Closed") {
-              let endDateObj = new Date(endingParsed);
-              endDateObj.setHours(0, 0, 0, 0);
-              let todayObj = new Date();
-              todayObj.setHours(0, 0, 0, 0);
-              if (!isNaN(endDateObj)) {
-                statusParsed = endDateObj < todayObj ? "Expired" : "Open";
-              }
+              let endDateObj = new Date(endingParsed); endDateObj.setHours(0, 0, 0, 0);
+              let todayObj = new Date(); todayObj.setHours(0, 0, 0, 0);
+              if (!isNaN(endDateObj)) { statusParsed = endDateObj < todayObj ? "Expired" : "Open"; }
             }
 
             let kontrakData = {
-              noSpsa: spsaVal ? String(spsaVal) : "-",
-              addendum: idxAddendum !== -1 && row[idxAddendum] ? String(row[idxAddendum]) : "-",
-              customer: customerVal ? String(customerVal) : "Lainnya",
-              skemaSewa: idxSkemaSewa !== -1 && row[idxSkemaSewa] ? String(row[idxSkemaSewa]) : "Lepas Kunci",
-              tglKontrak: formatDateExact(idxTglKontrak !== -1 ? row[idxTglKontrak] : ""),
-              start: formatDateExact(idxStart !== -1 ? row[idxStart] : ""),
-              ending: endingParsed,
-              snkNkb: idxSnkNkb !== -1 && row[idxSnkNkb] ? String(row[idxSnkNkb]) : "-",
-              jmlAlat: jmlAlatVal,
-              jenisAlat: idxJenisAlat !== -1 && row[idxJenisAlat] ? String(row[idxJenisAlat]) : "Truck Mixer",
-              nkp: idxNkp !== -1 && row[idxNkp] ? String(row[idxNkp]) : "-",
-              lokasi: idxLokasi !== -1 && row[idxLokasi] ? String(row[idxLokasi]) : "Proyek",
-              provinsi: idxProvinsi !== -1 && row[idxProvinsi] ? String(row[idxProvinsi]) : "-",
-              lamaSewa: lamaSewaVal,
-              hargaSatuan: hargaSatuanVal,
-              mobDemob: mobDemobVal,
-              nilaiKontrak: Math.round(nilaiKontrakVal),
-              status: statusParsed,
-              cogm: cogmVal,
-              margin: marginVal,
-              keterangan: idxKet !== -1 && row[idxKet] ? String(row[idxKet]) : "-",
+              noSpsa: spsaVal ? String(spsaVal) : "-", addendum: idxAddendum !== -1 && row[idxAddendum] ? String(row[idxAddendum]) : "-",
+              customer: customerVal ? String(customerVal) : "Lainnya", skemaSewa: idxSkemaSewa !== -1 && row[idxSkemaSewa] ? String(row[idxSkemaSewa]) : "Lepas Kunci",
+              tglKontrak: formatDateExact(idxTglKontrak !== -1 ? row[idxTglKontrak] : ""), start: formatDateExact(idxStart !== -1 ? row[idxStart] : ""),
+              ending: endingParsed, snkNkb: idxSnkNkb !== -1 && row[idxSnkNkb] ? String(row[idxSnkNkb]) : "-",
+              jmlAlat: jmlAlatVal, jenisAlat: idxJenisAlat !== -1 && row[idxJenisAlat] ? String(row[idxJenisAlat]) : "Truck Mixer",
+              nkp: idxNkp !== -1 && row[idxNkp] ? String(row[idxNkp]) : "-", lokasi: idxLokasi !== -1 && row[idxLokasi] ? String(row[idxLokasi]) : "Proyek",
+              provinsi: idxProvinsi !== -1 && row[idxProvinsi] ? String(row[idxProvinsi]) : "-", lamaSewa: lamaSewaVal,
+              hargaSatuan: hargaSatuanVal, mobDemob: mobDemobVal, nilaiKontrak: Math.round(nilaiKontrakVal),
+              status: statusParsed, cogm: cogmVal, margin: marginVal, keterangan: idxKet !== -1 && row[idxKet] ? String(row[idxKet]) : "-",
               spsaFile: idxLinkSpsa !== -1 && row[idxLinkSpsa] ? String(row[idxLinkSpsa]).trim() : ""
             };
+            ensureChecklistData(kontrakData); // Attach dummy checklist to new data
 
             let docId = "import_" + Date.now() + "_" + i;
             await setDoc(doc(window.firebaseDB, "monitoringKontrak", docId), kontrakData);
             importedCount++;
           }
-
           alert(`Berhasil mengimpor ${importedCount} data kontrak secara otomatis ke database!`);
           event.target.value = "";
-        } catch (err) {
-          console.error("Gagal memproses file Excel/CSV:", err);
-          alert("Terjadi kesalahan saat membaca file. Pastikan format file sesuai.");
-        }
+        } catch (err) { console.error("Gagal memproses:", err); alert("Terjadi kesalahan membaca file."); }
       };
       reader.readAsArrayBuffer(file);
     }
+
+    // --- FITUR BARU: MANAJEMEN CHECKLIST ADDENDUM --- //
+    
+    // Fungsi membuat Mock-up Checklist dinamis untuk tiap kontrak jika belum ada
+    function ensureChecklistData(item) {
+      if (!item.checklist) {
+         let hash = (item.customer || "a").length + (item.noSpsa || "b").length + (item.lamaSewa || 0);
+         let completed = 0;
+         
+         if (item.status === 'Closed') { completed = 4; }
+         else if (item.status === 'Expired') { completed = 1; }
+         else { completed = hash % 5; } // Assign mock progress (0 to 4 steps)
+         
+         let fileTeks = item.spsaFile ? `File: ${(item.noSpsa || 'dok').replace(/[\/\\]/g, '_')}.pdf` : "-";
+         
+         item.checklist = [
+           { name: "Paraf & TTD Customer", status: completed >= 1, date: item.tglKontrak || "10 Nov 2026", desc: "-" },
+           { name: "Paraf Manajer (WBP)", status: completed >= 2, date: item.tglKontrak || "10 Nov 2026", desc: "-" },
+           { name: "TTD Kadiv (WBP)", status: completed >= 3, date: item.tglKontrak || "10 Nov 2026", desc: "-" },
+           { name: "Scan Dok", status: completed >= 4, date: item.tglKontrak || "10 Nov 2026", desc: fileTeks }
+         ];
+      }
+    }
+
+    // Fungsi Render Global Banner KPI Progress
+    function updateProgressKPI() {
+       let totalContracts = globalContractsData.length;
+       let totalChecklists = 0;
+       let completedChecklists = 0;
+       let selesaiCount = 0;
+       let belumCount = 0;
+
+       globalContractsData.forEach(item => {
+         let itemCompleted = 0;
+         item.checklist.forEach(c => {
+            totalChecklists++;
+            if (c.status) { completedChecklists++; itemCompleted++; }
+         });
+         
+         if(itemCompleted === item.checklist.length) { selesaiCount++; } 
+         else { belumCount++; }
+       });
+
+       let pct = totalChecklists > 0 ? (completedChecklists / totalChecklists * 100).toFixed(1) : "0.0";
+       
+       document.getElementById('kpiAddendumPct').innerText = pct + "%";
+       document.getElementById('kpiAddendumSub').innerText = `${completedChecklists} dari ${totalChecklists} checklist selesai`;
+       document.getElementById('kpiAddendumBar').style.width = pct + "%";
+       document.getElementById('kpiAddendumSub2').innerText = `${totalContracts} nomor kontrak x 4 tahapan checklist = ${totalChecklists} tahapan`;
+       document.getElementById('kpiAddendumSelesai').innerText = selesaiCount;
+       document.getElementById('kpiAddendumBelum').innerText = belumCount;
+    }
+
+    // Buka Modal Detail Progress
+    function bukaModalProgress() {
+       document.getElementById("modalProgressAddendum").style.display = "flex";
+       document.getElementById('searchProgress').value = '';
+       document.getElementById('filterProgress').value = 'Semua Status';
+       
+       if(!selectedContractId && globalContractsData.length > 0) {
+          selectedContractId = globalContractsData[0].id;
+       }
+       renderModalProgressList();
+    }
+
+    // Tutup Modal Detail Progress
+    function tutupModalProgress() {
+       document.getElementById("modalProgressAddendum").style.display = "none";
+    }
+
+    // Render Tabel Kiri (List Master Kontrak)
+    function renderModalProgressList() {
+       const filterText = document.getElementById('searchProgress').value.toLowerCase();
+       const statusFilter = document.getElementById('filterProgress').value;
+       const tbody = document.getElementById('tbodyProgressList');
+       tbody.innerHTML = '';
+       
+       let matchedCount = 0;
+
+       globalContractsData.forEach((item, index) => {
+          if(filterText && !(item.noSpsa.toLowerCase().includes(filterText) || item.customer.toLowerCase().includes(filterText))) return;
+          
+          let completed = item.checklist.filter(c => c.status).length;
+          let total = item.checklist.length;
+          let pct = Math.round((completed / total) * 100);
+          
+          let statusText = pct === 100 ? 'Selesai' : (pct > 0 ? 'Proses' : 'Belum');
+          if (statusFilter !== 'Semua Status' && statusText !== statusFilter) return;
+
+          let badgeClass = pct === 100 ? 'prog-badge-green' : (pct > 0 ? 'prog-badge-orange' : 'prog-badge-red');
+          let statHtml = pct === 100 
+              ? `<span class="stat-badge-selesai"><i class="fa-solid fa-circle-check"></i> Selesai</span>` 
+              : (pct > 0 ? `<span class="stat-badge-proses"><i class="fa-solid fa-triangle-exclamation"></i> Proses</span>` 
+                         : `<span class="stat-badge-belum"><i class="fa-regular fa-circle"></i> Belum</span>`);
+
+          const tr = document.createElement('tr');
+          tr.style.cursor = 'pointer';
+          
+          // Row Aktif Highlight
+          if(selectedContractId === item.id) {
+            tr.className = 'active-row';
+          }
+          
+          tr.onclick = () => {
+             selectedContractId = item.id;
+             renderModalProgressList(); 
+             renderChecklistDetail(item);
+          };
+
+          tr.innerHTML = `
+             <td>${index + 1}</td>
+             <td>${item.noSpsa || '-'}</td>
+             <td>${item.customer || '-'}</td>
+             <td><span class="${badgeClass}">${pct}%</span></td>
+             <td>${statHtml}</td>
+          `;
+          tbody.appendChild(tr);
+          matchedCount++;
+          
+          // Auto select first match if currently selected is filtered out
+          if (matchedCount === 1 && !globalContractsData.find(g => g.id === selectedContractId && g.noSpsa.toLowerCase().includes(filterText))) {
+             selectedContractId = item.id;
+             tr.className = 'active-row';
+             renderChecklistDetail(item);
+          }
+       });
+
+       // Jika list terfilter menjadi kosong, kosongkan juga panel kanan
+       if (matchedCount === 0) { renderChecklistDetail(null); }
+       else {
+         let activeItem = globalContractsData.find(d => d.id === selectedContractId);
+         if(activeItem) renderChecklistDetail(activeItem);
+       }
+    }
+
+    // Render Tabel Kanan (Detail Checklist)
+    function renderChecklistDetail(item) {
+       let rightBadge = document.getElementById('detailChecklistBadge');
+       const tbody = document.getElementById('tbodyChecklistDetail');
+       
+       if(!item) {
+           document.getElementById('detailChecklistHeader').innerText = `Detail Checklist - Tidak Ada`;
+           document.getElementById('detailChecklistSub').innerText = '-';
+           rightBadge.innerHTML = `<i class="fa-regular fa-circle"></i> 0% (0 dari 0)`;
+           rightBadge.className = 'prog-detail-badge red';
+           tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px;">Tidak ada data kontrak yang dipilih.</td></tr>`;
+           return;
+       }
+       
+       document.getElementById('detailChecklistHeader').innerText = `Detail Checklist - ${item.noSpsa || '-'}`;
+       document.getElementById('detailChecklistSub').innerText = item.customer || '-';
+       
+       let completed = item.checklist.filter(c => c.status).length;
+       let total = item.checklist.length;
+       let pct = Math.round((completed / total) * 100);
+       
+       rightBadge.innerHTML = pct === 100 ? `<i class="fa-solid fa-circle-check"></i> ${pct}% (${completed} dari ${total})` 
+                                          : `<i class="fa-solid fa-clock-rotate-left"></i> ${pct}% (${completed} dari ${total})`;
+       
+       if(pct === 100) { rightBadge.className = 'prog-detail-badge green'; }
+       else if(pct > 0) { rightBadge.className = 'prog-detail-badge orange'; }
+       else { rightBadge.className = 'prog-detail-badge red'; }
+
+       tbody.innerHTML = '';
+       item.checklist.forEach((c, i) => {
+          const tr = document.createElement('tr');
+          let statusHtml = c.status 
+            ? `<span class="stat-badge-selesai"><i class="fa-solid fa-circle-check"></i> Lengkap</span>` 
+            : `<span class="stat-badge-belum"><i class="fa-solid fa-circle-xmark"></i> Belum</span>`;
+          
+          tr.innerHTML = `
+             <td>${i + 1}</td>
+             <td>${c.name}</td>
+             <td style="cursor:pointer;" onclick="toggleChecklist('${item.id}', ${i})" title="Klik untuk mengubah status">${statusHtml}</td>
+             <td>${c.date}</td>
+             <td>${c.desc}</td>
+          `;
+          tbody.appendChild(tr);
+       });
+       
+       // Update overall footer text
+       let totalChecklists = 0; let completedChecklists = 0;
+       globalContractsData.forEach(g => {
+          g.checklist.forEach(chk => { totalChecklists++; if (chk.status) completedChecklists++; });
+       });
+       let overallPct = totalChecklists > 0 ? (completedChecklists / totalChecklists * 100).toFixed(1) : "0.0";
+       document.getElementById('modalFooterInfo').innerText = `Progress Addendum Kontrak keseluruhan: ${overallPct}% (${completedChecklists} dari ${totalChecklists} checklist)`;
+    }
+
+    // Toggle Check/Uncheck pada List (Interaktif visual realtime)
+    function toggleChecklist(id, index) {
+       let item = globalContractsData.find(d => d.id === id);
+       if(item && item.checklist) {
+          item.checklist[index].status = !item.checklist[index].status;
+          
+          // Re-render UI
+          renderModalProgressList();
+          renderChecklistDetail(item);
+          updateProgressKPI();
+       }
+    }
+    // --- AKHIR FITUR BARU --- //
 
     function initFirebaseRealtimeSync() {
       const checkInterval = setInterval(() => {
@@ -968,20 +1275,18 @@
 
           onSnapshot(colRef, (snapshot) => {
             globalContractsData = [];
-            let today = new Date();
-            today.setHours(0, 0, 0, 0);
+            let today = new Date(); today.setHours(0, 0, 0, 0);
 
             snapshot.forEach((docSnap) => {
               let data = docSnap.id ? { id: docSnap.id, ...docSnap.data() } : docSnap.data();
               
               if (data.ending && data.status !== "Closed") {
-                let endDate = new Date(data.ending);
-                endDate.setHours(0, 0, 0, 0);
-                if (!isNaN(endDate)) {
-                  data.status = endDate < today ? "Expired" : "Open";
-                }
+                let endDate = new Date(data.ending); endDate.setHours(0, 0, 0, 0);
+                if (!isNaN(endDate)) { data.status = endDate < today ? "Expired" : "Open"; }
               }
 
+              // Pastikan data mock checklist tersedia
+              ensureChecklistData(data);
               globalContractsData.push(data);
             });
             
@@ -995,9 +1300,15 @@
               renderTableData(globalContractsData);
               filterTable();
             }
-          }, (error) => {
-            console.error("Gagal menyinkronkan data kontrak realtime:", error);
-          });
+
+            // Panggil render Banner KPI baru
+            updateProgressKPI();
+            
+            // Re-render modal checklist jika sedang terbuka
+            if(document.getElementById("modalProgressAddendum").style.display === "flex") {
+               renderModalProgressList();
+            }
+          }, (error) => { console.error("Gagal menyinkronkan:", error); });
         }
       }, 100);
     }
@@ -1018,12 +1329,7 @@
           statusHtml = `<span class="${statusBadgeClass}">Closed</span>`;
         } else if (statusText === "Expired") {
           statusBadgeClass = "badge-status-expired";
-          statusHtml = `
-            <div class="status-cell-wrapper">
-              <span class="${statusBadgeClass}">Expired</span>
-              <input type="checkbox" class="expired-checkbox" title="Klik untuk mengubah status menjadi Closed (Selesai)" onclick="ubahStatusClosed('${item.id}', event)">
-            </div>
-          `;
+          statusHtml = `<div class="status-cell-wrapper"><span class="${statusBadgeClass}">Expired</span><input type="checkbox" class="expired-checkbox" title="Tutup Kontrak" onclick="ubahStatusClosed('${item.id}', event)"></div>`;
         } else {
           statusBadgeClass = "badge-status-open";
           statusHtml = `<span class="${statusBadgeClass}">Open</span>`;
@@ -1069,15 +1375,13 @@
       try {
         const { doc, updateDoc } = window.firebaseFns;
         await updateDoc(doc(window.firebaseDB, "monitoringKontrak", id), { status: "Closed" });
-      } catch (error) { console.error("Gagal memperbarui:", error); alert("Gagal memperbarui status ke Closed."); }
+      } catch (error) { console.error("Gagal memperbarui:", error); }
     }
 
     function filterByKpi(type) {
       const searchInput = document.getElementById("searchInput");
       const filterStatus = document.getElementById("filterStatus");
-
-      searchInput.value = "";
-      isSegeraExpiredFilterActive = false; 
+      searchInput.value = ""; isSegeraExpiredFilterActive = false; 
 
       if (type === 'all') { filterStatus.value = ""; } 
       else if (type === 'segeraExpired') { filterStatus.value = "Open"; isSegeraExpiredFilterActive = true; } 
@@ -1094,10 +1398,7 @@
       const table = document.getElementById("contractTable");
       const trs = table.getElementsByTagName("tr");
       
-      if (statusFilter !== "open") {
-        isSegeraExpiredFilterActive = false;
-      }
-
+      if (statusFilter !== "open") { isSegeraExpiredFilterActive = false; }
       currentFilteredData = [];
 
       for (let i = 1; i < trs.length; i++) {
@@ -1107,7 +1408,6 @@
         let rowText = "";
         for (let j = 0; j < tds.length; j++) { rowText += tds[j].textContent.toLowerCase() + " "; }
 
-        // Kolom status index bergeser jadi 18, Alat tetap index 10
         const statusText = tds[18] ? tds[18].textContent.toLowerCase() : "";
         const alatText = tds[10] ? tds[10].textContent.toLowerCase() : "";
 
@@ -1121,8 +1421,7 @@
           let dataItem = globalContractsData[i - 1];
           if (dataItem && dataItem.ending) {
             let endDate = new Date(dataItem.ending);
-            let today = new Date();
-            today.setHours(0, 0, 0, 0);
+            let today = new Date(); today.setHours(0, 0, 0, 0);
             if (!isNaN(endDate)) {
               let diffDays = (endDate - today) / (1000 * 60 * 60 * 24);
               if (diffDays >= 0 && diffDays <= 30) matchesSegeraExpired = true;
@@ -1132,39 +1431,20 @@
 
         if (matchesSearch && matchesStatus && matchesAlat && matchesSegeraExpired) {
           trs[i].style.display = "";
-          if (globalContractsData[i - 1]) {
-             currentFilteredData.push(globalContractsData[i - 1]);
-          }
-        } else {
-          trs[i].style.display = "none";
-        }
+          if (globalContractsData[i - 1]) { currentFilteredData.push(globalContractsData[i - 1]); }
+        } else { trs[i].style.display = "none"; }
       }
-
       updateDashboardMetrics(currentFilteredData);
     }
 
     function updateDashboardMetrics(dataList) {
-      let totalKontrak = dataList.length;
-      let totalNilaiSemua = 0;
-      let kontrakAktifCount = 0;
-      let nilaiAktif = 0;
-      let segeraExpiredCount = 0;
-      let kontrakExpiredCount = 0;
-      let kontrakSelesaiCount = 0;
-      let totalMarginVal = 0;
-
-      let custMap = {};
-      let alatCustMap = {};
-      let alatJenisMap = {};
-      let trenMap = {};
-      let today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      let uniqueAlatMap = {};
+      let totalKontrak = dataList.length; let totalNilaiSemua = 0; let kontrakAktifCount = 0; let nilaiAktif = 0;
+      let segeraExpiredCount = 0; let kontrakExpiredCount = 0; let kontrakSelesaiCount = 0; let totalMarginVal = 0;
+      let custMap = {}; let alatCustMap = {}; let alatJenisMap = {}; let trenMap = {}; let uniqueAlatMap = {};
+      let today = new Date(); today.setHours(0, 0, 0, 0);
 
       dataList.forEach(item => {
         let isAddPejabat = item.addendum === "ADD (Pejabat)";
-        
         let val = isAddPejabat ? 0 : Number(item.nilaiKontrak || 0);
         totalNilaiSemua += val;
         
@@ -1173,11 +1453,9 @@
         totalMarginVal += marginNum;
 
         if (item.status === "Open") {
-          kontrakAktifCount++;
-          nilaiAktif += val;
+          kontrakAktifCount++; nilaiAktif += val;
           if (item.ending) {
-            let endDate = new Date(item.ending);
-            endDate.setHours(0, 0, 0, 0);
+            let endDate = new Date(item.ending); endDate.setHours(0, 0, 0, 0);
             if (!isNaN(endDate)) {
               let diffDays = (endDate - today) / (1000 * 60 * 60 * 24);
               if (diffDays >= 0 && diffDays <= 30) segeraExpiredCount++;
@@ -1186,20 +1464,15 @@
         } else if (item.status === "Expired") { kontrakExpiredCount++; } 
         else if (item.status === "Closed") { kontrakSelesaiCount++; }
 
-        let cust = item.customer || "Lainnya";
-        let alat = item.jenisAlat || "Lainnya";
-
+        let cust = item.customer || "Lainnya"; let alat = item.jenisAlat || "Lainnya";
         custMap[cust] = (custMap[cust] || 0) + (val / 1000000);
 
         let baseSpsa = item.noSpsa ? item.noSpsa.split('/')[0] : "unknown";
         let uniqueKey = cust + "_" + alat + "_" + baseSpsa;
         let jmlAlat = isAddPejabat ? 0 : (Number(item.jmlAlat) || 1);
         
-        if (!uniqueAlatMap[uniqueKey]) {
-            uniqueAlatMap[uniqueKey] = { cust: cust, alat: alat, count: jmlAlat };
-        } else {
-            uniqueAlatMap[uniqueKey].count = Math.max(uniqueAlatMap[uniqueKey].count, jmlAlat);
-        }
+        if (!uniqueAlatMap[uniqueKey]) { uniqueAlatMap[uniqueKey] = { cust: cust, alat: alat, count: jmlAlat }; } 
+        else { uniqueAlatMap[uniqueKey].count = Math.max(uniqueAlatMap[uniqueKey].count, jmlAlat); }
 
         let tgl = item.start || item.tglKontrak || "2026-01";
         let bulanKey = tgl.length >= 7 ? tgl.substring(0, 7) : "2026-01";
@@ -1272,29 +1545,20 @@
       document.getElementById("editDocId").value = item.id;
       document.getElementById("modalTitleText").innerHTML = '<i class="fa-solid fa-pen-to-square" style="color: #3b82f6;"></i> Edit Data Kontrak';
 
-      document.getElementById("inputNoSPSA").value = item.noSpsa || "";
-      document.getElementById("inputAddendum").value = item.addendum || "-";
-      document.getElementById("inputCustomer").value = item.customer || "";
-      document.getElementById("inputSkemaSewa").value = item.skemaSewa || "Lepas Kunci";
-      document.getElementById("inputTglKontrak").value = item.tglKontrak || "";
-      document.getElementById("inputStart").value = item.start || "";
-      document.getElementById("inputEnding").value = item.ending || "";
-      document.getElementById("inputSnkNkb").value = item.snkNkb || "-";
+      document.getElementById("inputNoSPSA").value = item.noSpsa || ""; document.getElementById("inputAddendum").value = item.addendum || "-";
+      document.getElementById("inputCustomer").value = item.customer || ""; document.getElementById("inputSkemaSewa").value = item.skemaSewa || "Lepas Kunci";
+      document.getElementById("inputTglKontrak").value = item.tglKontrak || ""; document.getElementById("inputStart").value = item.start || "";
+      document.getElementById("inputEnding").value = item.ending || ""; document.getElementById("inputSnkNkb").value = item.snkNkb || "-";
       document.getElementById("inputJmlAlat").value = item.jmlAlat ? Number(item.jmlAlat).toLocaleString("id-ID") : "1";
-      document.getElementById("inputJenisAlat").value = item.jenisAlat || "Truck Mixer";
-      document.getElementById("inputNkp").value = item.nkp || "";
-      document.getElementById("inputLokasi").value = item.lokasi || "";
-      document.getElementById("inputProvinsi").value = item.provinsi || "";
+      document.getElementById("inputJenisAlat").value = item.jenisAlat || "Truck Mixer"; document.getElementById("inputNkp").value = item.nkp || "";
+      document.getElementById("inputLokasi").value = item.lokasi || ""; document.getElementById("inputProvinsi").value = item.provinsi || "";
       document.getElementById("inputLamaSewa").value = item.lamaSewa ? Number(item.lamaSewa).toLocaleString("id-ID") : "1";
       document.getElementById("inputHargaSatuan").value = item.hargaSatuan ? Number(item.hargaSatuan).toLocaleString("id-ID") : "";
       document.getElementById("inputMobDemob").value = item.mobDemob ? Number(item.mobDemob).toLocaleString("id-ID") : "0";
       document.getElementById("inputNilaiKontrak").value = item.nilaiKontrak ? Number(item.nilaiKontrak).toLocaleString("id-ID") : "";
-      document.getElementById("inputStatus").value = item.status || "Open";
-      document.getElementById("inputCogm").value = item.cogm ? Number(item.cogm).toLocaleString("id-ID") : "0";
-      document.getElementById("inputMargin").value = item.margin || "0.0%";
-      document.getElementById("inputKeterangan").value = item.keterangan || "";
+      document.getElementById("inputStatus").value = item.status || "Open"; document.getElementById("inputCogm").value = item.cogm ? Number(item.cogm).toLocaleString("id-ID") : "0";
+      document.getElementById("inputMargin").value = item.margin || "0.0%"; document.getElementById("inputKeterangan").value = item.keterangan || "";
       document.getElementById("inputSpsaFile").value = item.spsaFile || "";
-
       document.getElementById("modalKontrak").style.display = "flex";
     }
 
@@ -1316,28 +1580,17 @@
       }
 
       const kontrakData = {
-        noSpsa: document.getElementById("inputNoSPSA").value,
-        addendum: document.getElementById("inputAddendum").value,
-        customer: document.getElementById("inputCustomer").value,
-        skemaSewa: document.getElementById("inputSkemaSewa").value,
-        tglKontrak: document.getElementById("inputTglKontrak").value,
-        start: document.getElementById("inputStart").value,
-        ending: endingVal,
-        snkNkb: document.getElementById("inputSnkNkb").value,
-        jmlAlat: parseRibuan(document.getElementById("inputJmlAlat").value),
-        jenisAlat: document.getElementById("inputJenisAlat").value,
-        nkp: document.getElementById("inputNkp").value || "-",
-        lokasi: document.getElementById("inputLokasi").value,
-        provinsi: document.getElementById("inputProvinsi").value || "-",
-        lamaSewa: parseRibuan(document.getElementById("inputLamaSewa").value) || 1,
-        hargaSatuan: parseRibuan(document.getElementById("inputHargaSatuan").value) || 0,
-        mobDemob: parseRibuan(document.getElementById("inputMobDemob").value) || 0,
-        nilaiKontrak: parseRibuan(document.getElementById("inputNilaiKontrak").value) || 0,
-        status: statusVal,
-        cogm: parseRibuan(document.getElementById("inputCogm").value) || 0,
-        margin: document.getElementById("inputMargin").value || "0.0%",
-        keterangan: document.getElementById("inputKeterangan").value || "-",
-        spsaFile: document.getElementById("inputSpsaFile").value.trim()
+        noSpsa: document.getElementById("inputNoSPSA").value, addendum: document.getElementById("inputAddendum").value,
+        customer: document.getElementById("inputCustomer").value, skemaSewa: document.getElementById("inputSkemaSewa").value,
+        tglKontrak: document.getElementById("inputTglKontrak").value, start: document.getElementById("inputStart").value,
+        ending: endingVal, snkNkb: document.getElementById("inputSnkNkb").value,
+        jmlAlat: parseRibuan(document.getElementById("inputJmlAlat").value), jenisAlat: document.getElementById("inputJenisAlat").value,
+        nkp: document.getElementById("inputNkp").value || "-", lokasi: document.getElementById("inputLokasi").value,
+        provinsi: document.getElementById("inputProvinsi").value || "-", lamaSewa: parseRibuan(document.getElementById("inputLamaSewa").value) || 1,
+        hargaSatuan: parseRibuan(document.getElementById("inputHargaSatuan").value) || 0, mobDemob: parseRibuan(document.getElementById("inputMobDemob").value) || 0,
+        nilaiKontrak: parseRibuan(document.getElementById("inputNilaiKontrak").value) || 0, status: statusVal,
+        cogm: parseRibuan(document.getElementById("inputCogm").value) || 0, margin: document.getElementById("inputMargin").value || "0.0%",
+        keterangan: document.getElementById("inputKeterangan").value || "-", spsaFile: document.getElementById("inputSpsaFile").value.trim()
       };
 
       try {
