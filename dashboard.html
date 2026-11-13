@@ -11,11 +11,11 @@
   <!-- html2canvas untuk fitur download gambar JPG -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-  <!-- FIREBASE SDK (Modular v10) -->
+<!-- FIREBASE SDK & AUTHENTICATION OBSERVER -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
@@ -31,12 +31,77 @@
     const auth = getAuth(app);
 
     window.firebaseDB = db;
-    window.firebaseFns = { doc, getDoc, setDoc, onSnapshot };
+    window.firebaseFns = { collection, doc, getDoc, setDoc, onSnapshot };
     window.firebaseAuth = auth;
     window.firebaseAuthFns = { signOut };
+
+    // DETEKSI AKUN
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.replace("login.html");
+      } else {
+        if (user.email === 'andre45krisnadi@gmail.com') {
+          console.log("Admin login: Memunculkan seluruh fitur Edit/Input");
+          
+          // INJEKSI CSS UNTUK MENGEMBALIKAN TOMBOL BAGI ADMIN
+          const style = document.createElement('style');
+          style.innerHTML = `
+            .action-btns { display: flex !important; }
+            .expired-checkbox { display: inline-block !important; }
+            
+            button[onclick^="edit"], 
+            button[onclick^="delete"], 
+            button[onclick^="toggle"],
+            button[onclick="bukaModalKontrakBaru()"],
+            button[onclick="resetDataKontrakFirestore()"],
+            button[onclick="bukaPilihFileExcel()"],
+            a[href="input.html"], 
+            .admin-link {
+                display: inline-flex !important;
+            }
+            
+            /* Kembalikan panel form jadi block seperti semula */
+            #d1AdminPanel, 
+            #d2AdminPanel, 
+            #d3AdminPanel, 
+            .d3-admin-card {
+                display: block !important;
+            }
+          `;
+          document.head.appendChild(style);
+
+        } else if (user.email === 'sar.peralatan@gmail.com') {
+          console.log("Viewer login: Tombol dibiarkan tersembunyi");
+          // Kita tidak perlu melakukan apa-apa karena CSS di Langkah 1 
+          // sudah mengunci/menyembunyikan tombolnya sejak awal.
+        } else {
+          signOut(auth).then(() => {
+            alert("Akses Ditolak: Email tidak terdaftar di sistem.");
+            window.location.replace("login.html");
+          });
+        }
+      }
+    });
   </script>
 
   <style>
+    /* DEFAULT: SEMBUNYIKAN SELURUH FITUR ADMIN SEBELUM FIREBASE LOADING */
+    .action-btns, 
+    .expired-checkbox,
+    button[onclick^="edit"], 
+    button[onclick^="delete"], 
+    button[onclick^="toggle"],
+    button[onclick="bukaModalKontrakBaru()"],
+    button[onclick="resetDataKontrakFirestore()"],
+    button[onclick="bukaPilihFileExcel()"],
+    a[href="input.html"], 
+    .admin-link,
+    #d1AdminPanel, 
+    #d2AdminPanel, 
+    #d3AdminPanel, 
+    .d3-admin-card {
+      display: none !important;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
     body { background-color: #060d1a; color: #ffffff; padding: 15px; font-size: 13px; overflow-x: hidden; }
     
