@@ -146,10 +146,9 @@
     .modal-container { background: #0f172a; border: 1px solid #334155; width: 680px; max-width: 95%; max-height: 90vh; overflow-y: auto; border-radius: 10px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
     
     /* ==============================================================
-       MODIFIED: Progress Addendum Modal Styles (No Scrolling inside Modal content)
+       MODIFIED: Progress Addendum Modal Styles
        ============================================================== */
-    /* Update width untuk modal progress agar lebih lebar menampung panel tabel dengan baik */
-    .progress-modal { width: 1200px; max-width: 98%; padding: 24px; overflow: hidden; /* Mencegah modal kontainer utama memunculkan scrollbar yang tidak perlu */ } 
+    .progress-modal { width: 1200px; max-width: 98%; padding: 24px; overflow: hidden; } 
     .progress-modal .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 15px; margin-bottom: 20px; }
     .progress-modal .modal-title { display: flex; align-items: center; gap: 12px; }
     .pm-icon { background: #3b82f6; color: #fff; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
@@ -158,10 +157,9 @@
     .modal-close { background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer; transition: color 0.2s; }
     .modal-close:hover { color: #fff; }
 
-    /* Sesuaikan flex basis split layout */
     .split-layout { display: flex; gap: 20px; }
-    .pane-left { flex: 0 0 50%; background: #0B1120; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; }
-    .pane-right { flex: 0 0 48.5%; background: #0B1120; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; }
+    .pane-left { flex: 0 0 46%; background: #0B1120; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; }
+    .pane-right { flex: 0 0 52.5%; background: #0B1120; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; }
     
     .filter-bar-mini { display: flex; gap: 10px; margin-bottom: 12px; }
     .search-box-mini { position: relative; flex: 1; }
@@ -170,16 +168,13 @@
     .search-box-mini input:focus { border-color: #3b82f6; }
     .filter-bar-mini select { background: #0f172a; color: #e2e8f0; border: 1px solid #334155; padding: 8px 12px; border-radius: 6px; font-size: 12px; outline: none; cursor: pointer; }
 
-    /* Perbaikan pada kontainer tabel mini untuk menghilangkan scroll bar horizontal dan vertical secara efektif */
     .table-responsive-mini { flex: 1; border: 1px solid #1e293b; border-radius: 6px; overflow-y: auto; overflow-x: hidden; max-height: 380px; }
-    /* Untuk Firefox */
     .table-responsive-mini { scrollbar-width: thin; scrollbar-color: #334155 #0f172a; }
-    /* Untuk Chrome/Edge/Safari */
     .table-responsive-mini::-webkit-scrollbar { width: 6px; }
     .table-responsive-mini::-webkit-scrollbar-track { background: #0f172a; border-radius: 6px; }
     .table-responsive-mini::-webkit-scrollbar-thumb { background-color: #334155; border-radius: 6px; }
 
-    .table-responsive-mini table { width: 100%; border-collapse: collapse; font-size: 11.5px; table-layout: fixed; /* Mencegah tabel melebar melebihi kontainer */ }
+    .table-responsive-mini table { width: 100%; border-collapse: collapse; font-size: 11.5px; table-layout: fixed; }
     
     /* Pengaturan lebar kolom panel kiri */
     #tableProgressLeft th:nth-child(1), #tableProgressLeft td:nth-child(1) { width: 8%; text-align: center; } /* No */
@@ -189,11 +184,12 @@
     #tableProgressLeft th:nth-child(5), #tableProgressLeft td:nth-child(5) { width: 12%; text-align: center; } /* Status */
     
     /* Pengaturan lebar kolom panel kanan */
-    #tableProgressRight th:nth-child(1), #tableProgressRight td:nth-child(1) { width: 8%; text-align: center; } /* No */
-    #tableProgressRight th:nth-child(2), #tableProgressRight td:nth-child(2) { width: 35%; white-space: normal; } /* Checklist */
+    #tableProgressRight th:nth-child(1), #tableProgressRight td:nth-child(1) { width: 5%; text-align: center; } /* No */
+    #tableProgressRight th:nth-child(2), #tableProgressRight td:nth-child(2) { width: 24%; white-space: normal; } /* Checklist */
     #tableProgressRight th:nth-child(3), #tableProgressRight td:nth-child(3) { width: 15%; text-align: center; } /* Status */
-    #tableProgressRight th:nth-child(4), #tableProgressRight td:nth-child(4) { width: 18%; } /* Tanggal */
-    #tableProgressRight th:nth-child(5), #tableProgressRight td:nth-child(5) { width: 24%; white-space: normal; word-break: break-all; } /* Keterangan */
+    #tableProgressRight th:nth-child(4), #tableProgressRight td:nth-child(4) { width: 14%; } /* Tanggal */
+    #tableProgressRight th:nth-child(5), #tableProgressRight td:nth-child(5) { width: 22%; } /* Posisi Berkas */
+    #tableProgressRight th:nth-child(6), #tableProgressRight td:nth-child(6) { width: 20%; white-space: normal; word-break: break-all; } /* Keterangan */
 
     .table-responsive-mini th { background: #131c31; color: #94a3b8; padding: 10px 8px; font-weight: 700; text-align: left; position: sticky; top: 0; z-index: 2; border-bottom: 1px solid #1e293b; }
     .table-responsive-mini td { padding: 10px 8px; border-bottom: 1px solid #1e293b; color: #cbd5e1; text-align: left; overflow: hidden; text-overflow: ellipsis; }
@@ -640,6 +636,7 @@
                   <th>Checklist</th>
                   <th>Status</th>
                   <th>Tanggal</th>
+                  <th>Posisi Berkas</th>
                   <th>Keterangan</th>
                 </tr>
               </thead>
@@ -1105,10 +1102,10 @@
          else { completed = hash % 5; } // Assign mock progress (0 to 4 steps)
          
          item.checklist = [
-           { name: "Paraf & TTD Customer", status: completed >= 1, date: item.tglKontrak || "10 Nov 2026", desc: "-" },
-           { name: "Paraf Manajer (WBP)", status: completed >= 2, date: item.tglKontrak || "10 Nov 2026", desc: "-" },
-           { name: "TTD Kadiv (WBP)", status: completed >= 3, date: item.tglKontrak || "10 Nov 2026", desc: "-" },
-           { name: "Scan Dok", status: isFileFilled ? true : (completed >= 4), date: item.tglKontrak || "10 Nov 2026", desc: fileTeks }
+           { name: "Paraf & TTD Customer", status: completed >= 1, date: item.tglKontrak || "10 Nov 2026", desc: "-", posisi: "Customer" },
+           { name: "Paraf Manajer (WBP)", status: completed >= 2, date: item.tglKontrak || "10 Nov 2026", desc: "-", posisi: "PT Waskita Beton Precast, Tbk" },
+           { name: "TTD Kadiv (WBP)", status: completed >= 3, date: item.tglKontrak || "10 Nov 2026", desc: "-", posisi: "PT Waskita Beton Precast, Tbk" },
+           { name: "Scan Dok", status: isFileFilled ? true : (completed >= 4), date: item.tglKontrak || "10 Nov 2026", desc: fileTeks, posisi: "PT Waskita Beton Precast, Tbk" }
          ];
       } else {
          // Jika link SPSA sudah terisi, pastikan Scan Dok otomatis berubah menjadi lengkap
@@ -1117,6 +1114,10 @@
             item.checklist[scanDokIdx].status = true;
             item.checklist[scanDokIdx].desc = fileTeks;
          }
+         // Pastikan properti "posisi" ada untuk kompatibilitas data lama
+         item.checklist.forEach(c => {
+             if(!c.posisi) c.posisi = "PT Waskita Beton Precast, Tbk";
+         });
       }
     }
 
@@ -1241,7 +1242,7 @@
            document.getElementById('detailChecklistSub').innerText = '-';
            rightBadge.innerHTML = `<i class="fa-regular fa-circle"></i> 0% (0 dari 0)`;
            rightBadge.className = 'prog-detail-badge red';
-           tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px;">Tidak ada data kontrak yang dipilih.</td></tr>`;
+           tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px;">Tidak ada data kontrak yang dipilih.</td></tr>`;
            return;
        }
        
@@ -1265,12 +1266,20 @@
           let statusHtml = c.status 
             ? `<span class="stat-badge-selesai"><i class="fa-solid fa-circle-check"></i> Lengkap</span>` 
             : `<span class="stat-badge-belum"><i class="fa-solid fa-circle-xmark"></i> Belum</span>`;
+            
+          let posisiOpts = `
+             <select class="posisi-select" onchange="updatePosisi('${item.id}', ${i}, this.value)" style="background:#0f172a; color:#fff; border:1px solid #334155; border-radius:4px; padding:4px; font-size:11px; width:100%; outline:none;">
+                <option value="PT Waskita Beton Precast, Tbk" ${c.posisi === 'PT Waskita Beton Precast, Tbk' ? 'selected' : ''}>PT Waskita Beton Precast, Tbk</option>
+                <option value="Customer" ${c.posisi === 'Customer' ? 'selected' : ''}>Customer</option>
+             </select>
+          `;
           
           tr.innerHTML = `
              <td>${i + 1}</td>
              <td>${c.name}</td>
              <td style="cursor:pointer;" onclick="toggleChecklist('${item.id}', ${i})" title="Klik untuk mengubah status">${statusHtml}</td>
              <td>${c.date}</td>
+             <td>${posisiOpts}</td>
              <td>${c.desc}</td>
           `;
           tbody.appendChild(tr);
@@ -1306,11 +1315,30 @@
                 });
              } catch (error) {
                 console.error("Gagal menyimpan perubahan checklist:", error);
-                // Opsional: kembalikan status jika gagal menyimpannya ke server
                 item.checklist[index].status = !item.checklist[index].status;
                 renderModalProgressList();
                 renderChecklistDetail(item);
                 updateProgressKPI();
+                alert("Gagal menyimpan perubahan ke database. Periksa koneksi Anda.");
+             }
+          }
+       }
+    }
+    
+    // Update Posisi Berkas ke database
+    async function updatePosisi(id, index, newVal) {
+       let item = globalContractsData.find(d => d.id === id);
+       if(item && item.checklist) {
+          item.checklist[index].posisi = newVal;
+          
+          if (window.firebaseDB && window.firebaseFns) {
+             try {
+                const { doc, updateDoc } = window.firebaseFns;
+                await updateDoc(doc(window.firebaseDB, "monitoringKontrak", id), {
+                   checklist: item.checklist
+                });
+             } catch (error) {
+                console.error("Gagal menyimpan perubahan posisi:", error);
                 alert("Gagal menyimpan perubahan ke database. Periksa koneksi Anda.");
              }
           }
