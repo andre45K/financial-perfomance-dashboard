@@ -52,9 +52,7 @@
     .btn-primary { background: #f59e0b; color: #0f172a; border-color: #f59e0b; font-weight: 700; }
     .btn-primary:hover { background: #d97706; color: #000; }
 
-    /* ==============================================================
-       NEW: KPI Progress Addendum Banner Styles
-       ============================================================== */
+    /* KPI Progress Addendum Banner Styles */
     .kpi-progress-banner { display: flex; justify-content: space-between; align-items: center; background: #0f172a; border: 2px solid #3b82f6; border-radius: 12px; padding: 16px 24px; margin-bottom: 20px; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4), inset 0 0 10px rgba(59, 130, 246, 0.2); cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; }
     .kpi-progress-banner::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%); pointer-events: none; }
     .kpi-progress-banner:hover { box-shadow: 0 0 25px rgba(59, 130, 246, 0.6), inset 0 0 15px rgba(59, 130, 246, 0.3); transform: translateY(-2px); }
@@ -145,11 +143,8 @@
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
     .modal-container { background: #0f172a; border: 1px solid #334155; width: 680px; max-width: 95%; max-height: 90vh; overflow-y: auto; border-radius: 10px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
     
-    /* ==============================================================
-       MODIFIED: Progress Addendum Modal Styles (No Scrolling inside Modal content)
-       ============================================================== */
-    /* Update width untuk modal progress agar lebih lebar menampung panel tabel dengan baik */
-    .progress-modal { width: 1200px; max-width: 98%; padding: 24px; overflow: hidden; /* Mencegah modal kontainer utama memunculkan scrollbar yang tidak perlu */ } 
+    /* Progress Addendum Modal Styles */
+    .progress-modal { width: 1200px; max-width: 98%; padding: 24px; overflow: hidden; } 
     .progress-modal .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e293b; padding-bottom: 15px; margin-bottom: 20px; }
     .progress-modal .modal-title { display: flex; align-items: center; gap: 12px; }
     .pm-icon { background: #3b82f6; color: #fff; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
@@ -158,10 +153,9 @@
     .modal-close { background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer; transition: color 0.2s; }
     .modal-close:hover { color: #fff; }
 
-    /* Sesuaikan flex basis split layout */
     .split-layout { display: flex; gap: 20px; }
-    .pane-left { flex: 0 0 50%; background: #0B1120; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; }
-    .pane-right { flex: 0 0 48.5%; background: #0B1120; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; }
+    .pane-left { flex: 0 0 46%; background: #0B1120; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; }
+    .pane-right { flex: 0 0 52.5%; background: #0B1120; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; display: flex; flex-direction: column; }
     
     .filter-bar-mini { display: flex; gap: 10px; margin-bottom: 12px; }
     .search-box-mini { position: relative; flex: 1; }
@@ -170,25 +164,22 @@
     .search-box-mini input:focus { border-color: #3b82f6; }
     .filter-bar-mini select { background: #0f172a; color: #e2e8f0; border: 1px solid #334155; padding: 8px 12px; border-radius: 6px; font-size: 12px; outline: none; cursor: pointer; }
 
-    /* Perbaikan pada kontainer tabel mini untuk menghilangkan scroll bar horizontal dan vertical secara efektif */
     .table-responsive-mini { flex: 1; border: 1px solid #1e293b; border-radius: 6px; overflow-y: auto; overflow-x: hidden; max-height: 380px; }
-    /* Untuk Firefox */
     .table-responsive-mini { scrollbar-width: thin; scrollbar-color: #334155 #0f172a; }
-    /* Untuk Chrome/Edge/Safari */
     .table-responsive-mini::-webkit-scrollbar { width: 6px; }
     .table-responsive-mini::-webkit-scrollbar-track { background: #0f172a; border-radius: 6px; }
     .table-responsive-mini::-webkit-scrollbar-thumb { background-color: #334155; border-radius: 6px; }
 
-    .table-responsive-mini table { width: 100%; border-collapse: collapse; font-size: 11.5px; table-layout: fixed; /* Mencegah tabel melebar melebihi kontainer */ }
+    .table-responsive-mini table { width: 100%; border-collapse: collapse; font-size: 11.5px; table-layout: fixed; }
     
     /* Pengaturan lebar kolom panel kiri */
-    #tableProgressLeft th:nth-child(1), #tableProgressLeft td:nth-child(1) { width: 8%; text-align: center; } /* No */
-    #tableProgressLeft th:nth-child(2), #tableProgressLeft td:nth-child(2) { width: 35%; } /* Nomor Kontrak */
-    #tableProgressLeft th:nth-child(3), #tableProgressLeft td:nth-child(3) { width: 33%; white-space: normal; } /* Customer */
-    #tableProgressLeft th:nth-child(4), #tableProgressLeft td:nth-child(4) { width: 12%; text-align: center; } /* Progress */
-    #tableProgressLeft th:nth-child(5), #tableProgressLeft td:nth-child(5) { width: 12%; text-align: center; } /* Status */
+    #tableProgressLeft th:nth-child(1), #tableProgressLeft td:nth-child(1) { width: 8%; text-align: center; } 
+    #tableProgressLeft th:nth-child(2), #tableProgressLeft td:nth-child(2) { width: 35%; } 
+    #tableProgressLeft th:nth-child(3), #tableProgressLeft td:nth-child(3) { width: 33%; white-space: normal; } 
+    #tableProgressLeft th:nth-child(4), #tableProgressLeft td:nth-child(4) { width: 12%; text-align: center; } 
+    #tableProgressLeft th:nth-child(5), #tableProgressLeft td:nth-child(5) { width: 12%; text-align: center; } 
     
-    /* Pengaturan lebar kolom panel kanan */
+    /* Pengaturan lebar kolom panel kanan DIKEMBALIKAN SEPERTI SEMULA */
     #tableProgressRight th:nth-child(1), #tableProgressRight td:nth-child(1) { width: 8%; text-align: center; } /* No */
     #tableProgressRight th:nth-child(2), #tableProgressRight td:nth-child(2) { width: 35%; white-space: normal; } /* Checklist */
     #tableProgressRight th:nth-child(3), #tableProgressRight td:nth-child(3) { width: 15%; text-align: center; } /* Status */
@@ -199,6 +190,10 @@
     .table-responsive-mini td { padding: 10px 8px; border-bottom: 1px solid #1e293b; color: #cbd5e1; text-align: left; overflow: hidden; text-overflow: ellipsis; }
     .table-responsive-mini tbody tr:hover { background: rgba(30, 41, 59, 0.7); }
     .table-responsive-mini tbody tr.active-row { background: rgba(59, 130, 246, 0.15); border-left: 3px solid #3b82f6; }
+    
+    /* Highlight utk row tambahan Posisi Berkas */
+    .row-posisi-berkas { background: rgba(15, 23, 42, 0.6); border-top: 1px dashed #334155; }
+    .row-posisi-berkas:hover { background: rgba(30, 41, 59, 0.8) !important; }
 
     .detail-header-panel { display: flex; justify-content: space-between; align-items: center; background: #131c31; border: 1px solid #1e293b; padding: 14px; border-radius: 8px; margin-bottom: 16px; }
     .detail-h-left { display: flex; align-items: center; gap: 12px; }
@@ -850,6 +845,7 @@
           "Status Kontrak": item.status || "-",
           "COGM": Number(item.cogm) || 0,
           "Margin": item.margin || "0.0%",
+          "Posisi Berkas Fisik": item.posisiBerkas || "PT Waskita Beton Precast, Tbk",
           "Keterangan": item.keterangan || "-",
           "Link Dokumen SPSA": item.spsaFile || "-"
         };
@@ -877,7 +873,7 @@
       ws['!cols'] = [
         {wch: 5}, {wch: 25}, {wch: 15}, {wch: 35}, {wch: 20}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 12}, 
         {wch: 12}, {wch: 22}, {wch: 20}, {wch: 20}, {wch: 20}, {wch: 18}, {wch: 18}, {wch: 18}, {wch: 20}, 
-        {wch: 15}, {wch: 18}, {wch: 12}, {wch: 30}, {wch: 40}
+        {wch: 15}, {wch: 18}, {wch: 12}, {wch: 30}, {wch: 30}, {wch: 40}
       ];
 
       const wb = XLSX.utils.book_new();
@@ -1076,7 +1072,7 @@
               status: statusParsed, cogm: cogmVal, margin: marginVal, keterangan: idxKet !== -1 && row[idxKet] ? String(row[idxKet]) : "-",
               spsaFile: idxLinkSpsa !== -1 && row[idxLinkSpsa] ? String(row[idxLinkSpsa]).trim() : ""
             };
-            ensureChecklistData(kontrakData); // Attach dummy checklist to new data
+            ensureChecklistData(kontrakData); 
 
             let docId = "import_" + Date.now() + "_" + i;
             await setDoc(doc(window.firebaseDB, "monitoringKontrak", docId), kontrakData);
@@ -1089,12 +1085,16 @@
       reader.readAsArrayBuffer(file);
     }
 
-    // --- FITUR BARU: MANAJEMEN CHECKLIST ADDENDUM --- //
+    // --- FITUR MANAJEMEN CHECKLIST ADDENDUM --- //
     
-    // Fungsi membuat Mock-up Checklist dinamis untuk tiap kontrak jika belum ada
     function ensureChecklistData(item) {
       let isFileFilled = item.spsaFile && item.spsaFile.trim() !== "";
       let fileTeks = isFileFilled ? `File: ${(item.noSpsa || 'dok').replace(/[\/\\]/g, '_')}.pdf` : "-";
+
+      // Menginisialisasi posisi berkas default jika belum ada
+      if (!item.posisiBerkas) {
+          item.posisiBerkas = "PT Waskita Beton Precast, Tbk";
+      }
 
       if (!item.checklist) {
          let hash = (item.customer || "a").length + (item.noSpsa || "b").length + (item.lamaSewa || 0);
@@ -1102,7 +1102,7 @@
          
          if (item.status === 'Closed') { completed = 4; }
          else if (item.status === 'Expired') { completed = 1; }
-         else { completed = hash % 5; } // Assign mock progress (0 to 4 steps)
+         else { completed = hash % 5; } 
          
          item.checklist = [
            { name: "Paraf & TTD Customer", status: completed >= 1, date: item.tglKontrak || "10 Nov 2026", desc: "-" },
@@ -1111,7 +1111,6 @@
            { name: "Scan Dok", status: isFileFilled ? true : (completed >= 4), date: item.tglKontrak || "10 Nov 2026", desc: fileTeks }
          ];
       } else {
-         // Jika link SPSA sudah terisi, pastikan Scan Dok otomatis berubah menjadi lengkap
          let scanDokIdx = item.checklist.findIndex(c => c.name === "Scan Dok");
          if (scanDokIdx !== -1 && isFileFilled) {
             item.checklist[scanDokIdx].status = true;
@@ -1120,7 +1119,6 @@
       }
     }
 
-    // Fungsi Render Global Banner KPI Progress
     function updateProgressKPI() {
        let totalContracts = globalContractsData.length;
        let totalChecklists = 0;
@@ -1149,7 +1147,6 @@
        document.getElementById('kpiAddendumBelum').innerText = belumCount;
     }
 
-    // Buka Modal Detail Progress
     function bukaModalProgress() {
        document.getElementById("modalProgressAddendum").style.display = "flex";
        document.getElementById('searchProgress').value = '';
@@ -1161,12 +1158,10 @@
        renderModalProgressList();
     }
 
-    // Tutup Modal Detail Progress
     function tutupModalProgress() {
        document.getElementById("modalProgressAddendum").style.display = "none";
     }
 
-    // Render Tabel Kiri (List Master Kontrak)
     function renderModalProgressList() {
        const filterText = document.getElementById('searchProgress').value.toLowerCase();
        const statusFilter = document.getElementById('filterProgress').value;
@@ -1194,7 +1189,6 @@
           const tr = document.createElement('tr');
           tr.style.cursor = 'pointer';
           
-          // Row Aktif Highlight
           if(selectedContractId === item.id) {
             tr.className = 'active-row';
           }
@@ -1215,7 +1209,6 @@
           tbody.appendChild(tr);
           matchedCount++;
           
-          // Auto select first match if currently selected is filtered out
           if (matchedCount === 1 && !globalContractsData.find(g => g.id === selectedContractId && g.noSpsa.toLowerCase().includes(filterText))) {
              selectedContractId = item.id;
              tr.className = 'active-row';
@@ -1223,7 +1216,6 @@
           }
        });
 
-       // Jika list terfilter menjadi kosong, kosongkan juga panel kanan
        if (matchedCount === 0) { renderChecklistDetail(null); }
        else {
          let activeItem = globalContractsData.find(d => d.id === selectedContractId);
@@ -1231,7 +1223,6 @@
        }
     }
 
-    // Render Tabel Kanan (Detail Checklist)
     function renderChecklistDetail(item) {
        let rightBadge = document.getElementById('detailChecklistBadge');
        const tbody = document.getElementById('tbodyChecklistDetail');
@@ -1260,6 +1251,8 @@
        else { rightBadge.className = 'prog-detail-badge red'; }
 
        tbody.innerHTML = '';
+       
+       // Render Checklist Normal
        item.checklist.forEach((c, i) => {
           const tr = document.createElement('tr');
           let statusHtml = c.status 
@@ -1276,7 +1269,29 @@
           tbody.appendChild(tr);
        });
        
-       // Update overall footer text
+       // Render Row Posisi Berkas Fisik (Tanpa No)
+       const posisiTr = document.createElement('tr');
+       posisiTr.className = 'row-posisi-berkas';
+       
+       let currentPosisi = item.posisiBerkas || 'PT Waskita Beton Precast, Tbk';
+       let customerName = item.customer || 'Customer';
+       let isWBP = currentPosisi === 'PT Waskita Beton Precast, Tbk';
+       let isCustomer = !isWBP;
+       
+       let selectHtml = `
+          <select onchange="updatePosisiBerkas('${item.id}', this.value)" style="background:#020617; color:#fff; border:1px solid #3b82f6; border-radius:4px; padding:6px 10px; font-size:11.5px; width:100%; outline:none; cursor:pointer;">
+             <option value="${customerName}" ${isCustomer ? 'selected' : ''}>${customerName}</option>
+             <option value="PT Waskita Beton Precast, Tbk" ${isWBP ? 'selected' : ''}>PT Waskita Beton Precast, Tbk</option>
+          </select>
+       `;
+
+       posisiTr.innerHTML = `
+          <td></td>
+          <td style="font-weight: 700; color: #f8fafc;"><i class="fa-solid fa-folder-open" style="color:#f59e0b; margin-right:6px;"></i> Posisi Berkas Fisik</td>
+          <td colspan="3">${selectHtml}</td>
+       `;
+       tbody.appendChild(posisiTr);
+       
        let totalChecklists = 0; let completedChecklists = 0;
        globalContractsData.forEach(g => {
           g.checklist.forEach(chk => { totalChecklists++; if (chk.status) completedChecklists++; });
@@ -1285,19 +1300,15 @@
        document.getElementById('modalFooterInfo').innerText = `Progress Addendum Kontrak keseluruhan: ${overallPct}% (${completedChecklists} dari ${totalChecklists} checklist)`;
     }
 
-    // Toggle Check/Uncheck pada List (Interaktif visual realtime & Persisten ke Database)
     async function toggleChecklist(id, index) {
        let item = globalContractsData.find(d => d.id === id);
        if(item && item.checklist) {
-          // 1. Ubah status secara lokal
           item.checklist[index].status = !item.checklist[index].status;
           
-          // 2. Re-render UI seketika (Optimistic Update)
           renderModalProgressList();
           renderChecklistDetail(item);
           updateProgressKPI();
 
-          // 3. Simpan perubahan ke Firestore agar persisten saat di-refresh
           if (window.firebaseDB && window.firebaseFns) {
              try {
                 const { doc, updateDoc } = window.firebaseFns;
@@ -1306,7 +1317,6 @@
                 });
              } catch (error) {
                 console.error("Gagal menyimpan perubahan checklist:", error);
-                // Opsional: kembalikan status jika gagal menyimpannya ke server
                 item.checklist[index].status = !item.checklist[index].status;
                 renderModalProgressList();
                 renderChecklistDetail(item);
@@ -1316,7 +1326,26 @@
           }
        }
     }
-    // --- AKHIR FITUR BARU --- //
+    
+    // Fungsi Menyimpan Perubahan Dropdown Posisi Berkas
+    async function updatePosisiBerkas(id, newVal) {
+       let item = globalContractsData.find(d => d.id === id);
+       if(item) {
+          item.posisiBerkas = newVal;
+          
+          if (window.firebaseDB && window.firebaseFns) {
+             try {
+                const { doc, updateDoc } = window.firebaseFns;
+                await updateDoc(doc(window.firebaseDB, "monitoringKontrak", id), {
+                   posisiBerkas: newVal
+                });
+             } catch (error) {
+                console.error("Gagal menyimpan perubahan posisi berkas:", error);
+                alert("Gagal menyimpan perubahan ke database. Periksa koneksi Anda.");
+             }
+          }
+       }
+    }
 
     function initFirebaseRealtimeSync() {
       const checkInterval = setInterval(() => {
@@ -1337,7 +1366,6 @@
                 if (!isNaN(endDate)) { data.status = endDate < today ? "Expired" : "Open"; }
               }
 
-              // Pastikan data mock checklist tersedia
               ensureChecklistData(data);
               globalContractsData.push(data);
             });
@@ -1353,10 +1381,8 @@
               filterTable();
             }
 
-            // Panggil render Banner KPI baru
             updateProgressKPI();
             
-            // Re-render modal checklist jika sedang terbuka
             if(document.getElementById("modalProgressAddendum").style.display === "flex") {
                renderModalProgressList();
             }
