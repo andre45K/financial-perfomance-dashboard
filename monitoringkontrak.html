@@ -1285,16 +1285,35 @@
        document.getElementById('modalFooterInfo').innerText = `Progress Addendum Kontrak keseluruhan: ${overallPct}% (${completedChecklists} dari ${totalChecklists} checklist)`;
     }
 
-    // Toggle Check/Uncheck pada List (Interaktif visual realtime)
-    function toggleChecklist(id, index) {
+    // Toggle Check/Uncheck pada List (Interaktif visual realtime & Persisten ke Database)
+    async function toggleChecklist(id, index) {
        let item = globalContractsData.find(d => d.id === id);
        if(item && item.checklist) {
+          // 1. Ubah status secara lokal
           item.checklist[index].status = !item.checklist[index].status;
           
-          // Re-render UI
+          // 2. Re-render UI seketika (Optimistic Update)
           renderModalProgressList();
           renderChecklistDetail(item);
           updateProgressKPI();
+
+          // 3. Simpan perubahan ke Firestore agar persisten saat di-refresh
+          if (window.firebaseDB && window.firebaseFns) {
+             try {
+                const { doc, updateDoc } = window.firebaseFns;
+                await updateDoc(doc(window.firebaseDB, "monitoringKontrak", id), {
+                   checklist: item.checklist
+                });
+             } catch (error) {
+                console.error("Gagal menyimpan perubahan checklist:", error);
+                // Opsional: kembalikan status jika gagal menyimpannya ke server
+                item.checklist[index].status = !item.checklist[index].status;
+                renderModalProgressList();
+                renderChecklistDetail(item);
+                updateProgressKPI();
+                alert("Gagal menyimpan perubahan ke database. Periksa koneksi Anda.");
+             }
+          }
        }
     }
     // --- AKHIR FITUR BARU --- //
