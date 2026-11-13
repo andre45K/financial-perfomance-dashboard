@@ -15,9 +15,10 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
-  <!-- FIREBASE SDK (Modular v10) - SAMA SEPERTI index.html -->
+<!-- FIREBASE SDK & AUTHENTICATION OBSERVER -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, collection, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -31,9 +32,33 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     window.firebaseDB = db;
     window.firebaseFns = { collection, doc, getDoc, setDoc, onSnapshot };
+    window.firebaseAuth = auth;
+    window.firebaseAuthFns = { signOut };
+
+    // DETEKSI AKUN DAN SEMBUNYIKAN TOMBOL
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.replace("login.html");
+      } else {
+        if (user.email === 'sar.peralatan@gmail.com') {
+          // 1. Sembunyikan semua link/tombol yang menuju halaman Admin Input
+          const adminLinks = document.querySelectorAll('a[href="input.html"], .admin-link');
+          adminLinks.forEach(el => el.style.display = 'none');
+          
+          // 2. Sembunyikan tombol Edit, Hapus, atau Pengaturan di dalam tabel/card
+          const actionButtons = document.querySelectorAll('button[onclick^="edit"], button[onclick^="delete"], button[onclick^="toggle"]');
+          actionButtons.forEach(el => el.style.display = 'none');
+
+        } else if (user.email === 'andre45krisnadi@gmail.com') {
+          // Admin penuh: tidak ada tombol yang disembunyikan
+          console.log("Admin mengakses dashboard");
+        }
+      }
+    });
   </script>
 
 
