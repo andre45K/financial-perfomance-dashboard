@@ -34,30 +34,6 @@
     window.firebaseAuth = auth;
     window.firebaseAuthFns = { signOut };
 
-  <!-- FIREBASE SDK & AUTHENTICATION OBSERVER -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, collection, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
-      authDomain: "financial-perfomance-dashboard.firebaseapp.com",
-      projectId: "financial-perfomance-dashboard",
-      storageBucket: "financial-perfomance-dashboard.firebasestorage.app",
-      messagingSenderId: "136866453174",
-      appId: "1:136866453174:web:b69a3e14672eb96cc53817"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-
-    window.firebaseDB = db;
-    window.firebaseFns = { collection, doc, getDoc, setDoc, onSnapshot };
-    window.firebaseAuth = auth;
-    window.firebaseAuthFns = { signOut };
-
     // DETEKSI AKUN
     onAuthStateChanged(auth, (user) => {
       if (!user) {
