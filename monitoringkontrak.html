@@ -34,47 +34,98 @@
     window.firebaseAuth = auth;
     window.firebaseAuthFns = { signOut };
 
-    // DETEKSI AKUN DAN SEMBUNYIKAN TOMBOL DENGAN INJEKSI CSS
+  <!-- FIREBASE SDK & AUTHENTICATION OBSERVER -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCR0kDRMDjpKfoQq-DRGM-imiU3DlLmoMI",
+      authDomain: "financial-perfomance-dashboard.firebaseapp.com",
+      projectId: "financial-perfomance-dashboard",
+      storageBucket: "financial-perfomance-dashboard.firebasestorage.app",
+      messagingSenderId: "136866453174",
+      appId: "1:136866453174:web:b69a3e14672eb96cc53817"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    window.firebaseDB = db;
+    window.firebaseFns = { collection, doc, getDoc, setDoc, onSnapshot };
+    window.firebaseAuth = auth;
+    window.firebaseAuthFns = { signOut };
+
+    // DETEKSI AKUN
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         window.location.replace("login.html");
       } else {
-        if (user.email === 'sar.peralatan@gmail.com') {
-          console.log("Logged in as View Only");
+        if (user.email === 'andre45krisnadi@gmail.com') {
+          console.log("Admin login: Memunculkan seluruh fitur Edit/Input");
           
-          // Membuat style CSS yang memaksa sembunyi seluruh fungsi admin
+          // INJEKSI CSS UNTUK MENGEMBALIKAN TOMBOL BAGI ADMIN
           const style = document.createElement('style');
           style.innerHTML = `
-            /* Sembunyikan tombol dinamis di dalam tabel kontrak */
-            .action-btns, 
-            .expired-checkbox,
+            .action-btns { display: flex !important; }
+            .expired-checkbox { display: inline-block !important; }
+            
             button[onclick^="edit"], 
             button[onclick^="delete"], 
-            button[onclick^="toggle"] { 
-                display: none !important; 
-            }
-            
-            /* Sembunyikan tombol admin di menu atas (Top Header) */
+            button[onclick^="toggle"],
             button[onclick="bukaModalKontrakBaru()"],
             button[onclick="resetDataKontrakFirestore()"],
             button[onclick="bukaPilihFileExcel()"],
             a[href="input.html"], 
             .admin-link {
-                display: none !important;
+                display: inline-flex !important;
+            }
+            
+            /* Kembalikan panel form jadi block seperti semula */
+            #d1AdminPanel, 
+            #d2AdminPanel, 
+            #d3AdminPanel, 
+            .d3-admin-card {
+                display: block !important;
             }
           `;
-          // Terapkan CSS tersebut ke halaman
           document.head.appendChild(style);
 
-        } else if (user.email === 'andre45krisnadi@gmail.com') {
-          // Admin penuh: biarkan tampilan normal
-          console.log("Admin mengakses dashboard");
+        } else if (user.email === 'sar.peralatan@gmail.com') {
+          console.log("Viewer login: Tombol dibiarkan tersembunyi");
+          // Kita tidak perlu melakukan apa-apa karena CSS di Langkah 1 
+          // sudah mengunci/menyembunyikan tombolnya sejak awal.
+        } else {
+          signOut(auth).then(() => {
+            alert("Akses Ditolak: Email tidak terdaftar di sistem.");
+            window.location.replace("login.html");
+          });
         }
       }
     });
   </script>
   
   <style>
+    /* DEFAULT: SEMBUNYIKAN SELURUH FITUR ADMIN SEBELUM FIREBASE LOADING */
+    .action-btns, 
+    .expired-checkbox,
+    button[onclick^="edit"], 
+    button[onclick^="delete"], 
+    button[onclick^="toggle"],
+    button[onclick="bukaModalKontrakBaru()"],
+    button[onclick="resetDataKontrakFirestore()"],
+    button[onclick="bukaPilihFileExcel()"],
+    a[href="input.html"], 
+    .admin-link,
+    #d1AdminPanel, 
+    #d2AdminPanel, 
+    #d3AdminPanel, 
+    .d3-admin-card {
+      display: none !important;
+    }
+    
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
     body { background-color: #0b1120; color: #f8fafc; padding: 16px; font-size: 13px; }
     
