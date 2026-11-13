@@ -39,30 +39,73 @@
     window.firebaseAuth = auth;
     window.firebaseAuthFns = { signOut };
 
-    // DETEKSI AKUN DAN SEMBUNYIKAN TOMBOL
+    // DETEKSI AKUN
     onAuthStateChanged(auth, (user) => {
       if (!user) {
         window.location.replace("login.html");
       } else {
-        if (user.email === 'sar.peralatan@gmail.com') {
-          // 1. Sembunyikan semua link/tombol yang menuju halaman Admin Input
-          const adminLinks = document.querySelectorAll('a[href="input.html"], .admin-link');
-          adminLinks.forEach(el => el.style.display = 'none');
+        if (user.email === 'andre45krisnadi@gmail.com') {
+          console.log("Admin login: Memunculkan seluruh fitur Edit/Input");
           
-          // 2. Sembunyikan tombol Edit, Hapus, atau Pengaturan di dalam tabel/card
-          const actionButtons = document.querySelectorAll('button[onclick^="edit"], button[onclick^="delete"], button[onclick^="toggle"]');
-          actionButtons.forEach(el => el.style.display = 'none');
+          // INJEKSI CSS UNTUK MENGEMBALIKAN TOMBOL BAGI ADMIN
+          const style = document.createElement('style');
+          style.innerHTML = `
+            .action-btns { display: flex !important; }
+            .expired-checkbox { display: inline-block !important; }
+            
+            button[onclick^="edit"], 
+            button[onclick^="delete"], 
+            button[onclick^="toggle"],
+            button[onclick="bukaModalKontrakBaru()"],
+            button[onclick="resetDataKontrakFirestore()"],
+            button[onclick="bukaPilihFileExcel()"],
+            a[href="input.html"], 
+            .admin-link {
+                display: inline-flex !important;
+            }
+            
+            /* Kembalikan panel form jadi block seperti semula */
+            #d1AdminPanel, 
+            #d2AdminPanel, 
+            #d3AdminPanel, 
+            .d3-admin-card {
+                display: block !important;
+            }
+          `;
+          document.head.appendChild(style);
 
-        } else if (user.email === 'andre45krisnadi@gmail.com') {
-          // Admin penuh: tidak ada tombol yang disembunyikan
-          console.log("Admin mengakses dashboard");
+        } else if (user.email === 'sar.peralatan@gmail.com') {
+          console.log("Viewer login: Tombol dibiarkan tersembunyi");
+          // Kita tidak perlu melakukan apa-apa karena CSS di Langkah 1 
+          // sudah mengunci/menyembunyikan tombolnya sejak awal.
+        } else {
+          signOut(auth).then(() => {
+            alert("Akses Ditolak: Email tidak terdaftar di sistem.");
+            window.location.replace("login.html");
+          });
         }
       }
     });
   </script>
 
-
   <style>
+    /* DEFAULT: SEMBUNYIKAN SELURUH FITUR ADMIN SEBELUM FIREBASE LOADING */
+    .action-btns, 
+    .expired-checkbox,
+    button[onclick^="edit"], 
+    button[onclick^="delete"], 
+    button[onclick^="toggle"],
+    button[onclick="bukaModalKontrakBaru()"],
+    button[onclick="resetDataKontrakFirestore()"],
+    button[onclick="bukaPilihFileExcel()"],
+    a[href="input.html"], 
+    .admin-link,
+    #d1AdminPanel, 
+    #d2AdminPanel, 
+    #d3AdminPanel, 
+    .d3-admin-card {
+      display: none !important;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
     body { background-color: #060d1a; color: #ffffff; padding: 20px; font-size: 13px; }
     
